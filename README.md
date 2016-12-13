@@ -6,7 +6,7 @@
 
 An C# based client library for **HBCI 2.2** and **FinTS 3.0**.
 
-In 1995 the ZKA announced a common standardized online banking standard called *Homebanking Computer Interface* (HBCI). In 2003 they published the next generation of this protocol standard and named it *Financial Transaction Services* (FinTS).
+In 1995 the ZKA announced a common online banking standard called *Homebanking Computer Interface* (HBCI). In 2003 they published the next generation of this protocol standard and named it *Financial Transaction Services* (FinTS).
 
 Today most of all german banks support this online banking standards.
 
@@ -16,7 +16,7 @@ It can be used to read the balance of a bank account, receive an account stateme
 
 # Usage
 
-There are many reasons why you need to use a banking library which can exchange data from your application with the bank. One reason jfor example is to found a [Fintech](https://de.wikipedia.org/wiki/Finanztechnologie).
+There are many reasons why you need to use a banking library which can exchange data from your application with the bank. One reason for example is to found a [Fintech](https://de.wikipedia.org/wiki/Finanztechnologie).
 
 # Target platforms
 
