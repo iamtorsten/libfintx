@@ -229,8 +229,8 @@ public static string Balance(int Account, int BLZ, string IBAN,
 
 # Specification
 
-For exact information please refer to the [German version of the specification](http://www.hbci-zka.de/spec/spezifikation.htm). There is
-also an [unauthorized English translation](http://www.hbci-zka.de/english/specification/engl_2_2.htm).
+For exact information please refer to the [german version of the specification](http://www.hbci-zka.de/spec/spezifikation.htm). There is
+also an [unauthorized english translation](http://www.hbci-zka.de/english/specification/engl_2_2.htm).
 
 # SSL verification
 
