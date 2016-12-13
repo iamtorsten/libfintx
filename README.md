@@ -36,8 +36,8 @@ public static string Balance(int Account, int BLZ, string IBAN,
 
 # Features
 
-* Balance (**HKSAL**)
-* Transactions (**HKKAZ**)
+* Get Balance (**HKSAL**)
+* Request Transactions (**HKKAZ**)
 * Transfer money (**HKCCS**)
 * Transfer money at a certain time (**HKCCS**)
 * Collect money (**HKDSE**)
