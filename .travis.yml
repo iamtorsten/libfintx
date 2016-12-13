@@ -1,5 +1,2 @@
 language: csharp
 solution: libfintx.sln
-environment:
-  my_variable:
-    secure: RJNV8yf+4X+2WFygn3/fvhdzIBYHc5BL1LmQHsCFrScGE/E0bNrkTdgdQxsUG2ir
