@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>libfintx</name>
+    </assembly>
+    <members>
+        <member name="M:libfintx.Main.Synchronization(System.Int32,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Synchronize bank connection
+            </summary>
+            <param name="BLZ"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <returns>
+            Success or failure
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Balance(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Account balance
+            </summary>
+            <param name="Account"></param>
+            <param name="BLZ"></param>
+            <param name="IBAN"></param>
+            <param name="BIC"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <returns>
+            Balance
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Transactions(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Account transactions
+            </summary>
+            <param name="Account"></param>
+            <param name="BLZ"></param>
+            <param name="IBAN"></param>
+            <param name="BIC"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <returns>
+            Transactions
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Transfer(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Transfer money
+            </summary>
+            <param name="BLZ"></param>
+            <param name="AccountHolder"></param>
+            <param name="AccountHolderIBAN"></param>
+            <param name="AccountHolderBIC"></param>
+            <param name="Receiver"></param>
+            <param name="ReceiverIBAN"></param>
+            <param name="ReceiverBIC"></param>
+            <param name="Amount"></param>
+            <param name="Purpose"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Transfer_Terminated(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Transfer money at a certain time
+            </summary>
+            <param name="BLZ"></param>
+            <param name="AccountHolder"></param>
+            <param name="AccountHolderIBAN"></param>
+            <param name="AccountHolderBIC"></param>
+            <param name="Receiver"></param>
+            <param name="ReceiverIBAN"></param>
+            <param name="ReceiverBIC"></param>
+            <param name="Amount"></param>
+            <param name="Purpose"></param>
+            <param name="ExecutionDay"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Collect(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Collect money from another account
+            </summary>
+            <param name="BLZ"></param>
+            <param name="AccountHolder"></param>
+            <param name="AccountHolderIBAN"></param>
+            <param name="AccountHolderBIC"></param>
+            <param name="Payer"></param>
+            <param name="PayerIBAN"></param>
+            <param name="PayerBIC"></param>
+            <param name="Amount"></param>
+            <param name="Purpose"></param>
+            <param name="SettlementDate"></param>
+            <param name="MandateNumber"></param>
+            <param name="MandateDate"></param>
+            <param name="CeditorIDNumber"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.TAN(System.String,System.String,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Confirm order with TAN
+            </summary>
+            <param name="TAN"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="BLZ"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.TAN_Scheme">
+            <summary>
+            TAN scheme
+            </summary>
+            <returns>
+            TAN mechanism
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Assembly(System.String,System.String)">
+            <summary>
+            Set assembly informations
+            </summary>
+            <param name="Buildname"></param>
+            <param name="Version"></param>
+        </member>
+        <member name="M:libfintx.Main.Buildname">
+            <summary>
+            Get assembly buildname
+            </summary>
+            <returns>
+            Buildname
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Version">
+            <summary>
+            Get assembly version
+            </summary>
+            <returns>
+            Version
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Transaction_Output">
+            <summary>
+            Transactions output console
+            </summary>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,115 @@
+﻿/*	
+ * 	
+ *  This file is part of libfintx.
+ *  
+ *  Copyright (c) 2016 Torsten Klinger
+ * 	E-Mail: torsten.klinger@googlemail.com
+ * 	
+ * 	libfintx is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU Lesser General Public
+ * 	License as published by the Free Software Foundation; either
+ * 	version 2.1 of the License, or (at your option) any later version.
+ *	
+ * 	libfintx is distributed in the hope that it will be useful,
+ * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * 	Lesser General Public License for more details.
+ *	
+ * 	You should have received a copy of the GNU Lesser General Public
+ * 	License along with libfintx; if not, write to the Free Software
+ * 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * 	
+ */
+
+using System;
+
+namespace libfintx
+{
+    public static class pain00100203
+    {
+        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string ExecutionDay)
+        {
+            var RndNr = Guid.NewGuid().ToString();
+
+            if (RndNr.Length > 20)
+                RndNr = RndNr.Substring(0, 20);
+
+            var RndNr_ = Guid.NewGuid().ToString();
+
+            if (RndNr_.Length > 20)
+                RndNr_ = RndNr_.Substring(0, 20);
+
+            DateTime datetime = DateTime.Now;
+            var datetime_ = string.Format("{0:s}", datetime);
+
+            var Amount_ = Amount.ToString().Replace(",", ".");
+
+            string Message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03 pain.001.002.03.xsd\">" +
+                "<CstmrCdtTrfInitn>" + 
+                "<GrpHdr>" + 
+                "<MsgId>" + Program.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" + 
+                "<CreDtTm>" + datetime_ + "</CreDtTm>" + 
+                "<NbOfTxs>1</NbOfTxs>" + 
+                "<CtrlSum>" + Amount_ + "</CtrlSum>" + 
+                "<InitgPty>" +
+                "<Nm>" + Accountholder + "</Nm>" + 
+                "</InitgPty>" + 
+                "</GrpHdr>" + 
+                "<PmtInf>" + 
+                "<PmtInfId>" + Program.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" + 
+                "<PmtMtd>TRF</PmtMtd>" + 
+                "<NbOfTxs>1</NbOfTxs>" + 
+                "<CtrlSum>" + Amount_ + "</CtrlSum>" +
+                "<PmtTpInf>" + 
+                "<SvcLvl>" + 
+                "<Cd>SEPA</Cd>" + 
+                "</SvcLvl>" + 
+                "</PmtTpInf>" + 
+                "<ReqdExctnDt>" + ExecutionDay + "</ReqdExctnDt>" + 
+                "<Dbtr>" +
+                "<Nm>" + Accountholder + "</Nm>" + 
+                "</Dbtr>" +
+                "<DbtrAcct>" +
+                "<Id>" +
+                "<IBAN>" + AccountholderIBAN + "</IBAN>" + 
+                "</Id>" + 
+                "</DbtrAcct>" +
+                "<DbtrAgt>" +
+                "<FinInstnId>" +
+                "<BIC>" + AccountholderBIC + "</BIC>" + 
+                "</FinInstnId>" +
+                "</DbtrAgt>" + 
+                "<ChrgBr>SLEV</ChrgBr>" + 
+                "<CdtTrfTxInf>" + 
+                "<PmtId>" + 
+                "<EndToEndId>NOTPROVIDED</EndToEndId>" + 
+                "</PmtId>" +
+                "<Amt>" +
+                "<InstdAmt Ccy=\"EUR\">" + Amount_ + "</InstdAmt>" + 
+                "</Amt>" +
+                "<CdtrAgt>" +
+                "<FinInstnId>" +
+                "<BIC>" + ReceiverBIC + "</BIC>" + 
+                "</FinInstnId>" +
+                "</CdtrAgt>" +
+                "<Cdtr>" +
+                "<Nm>" + Receiver + "</Nm>" + 
+                "</Cdtr>" + 
+                "<CdtrAcct>" +
+                "<Id>" + 
+                "<IBAN>" + ReceiverIBAN + "</IBAN>" + 
+                "</Id>" + "</CdtrAcct>" +
+                "<RmtInf>" +
+                "<Ustrd>" + Usage + "</Ustrd>" +
+                "</RmtInf>" +
+                "</CdtTrfTxInf>" +
+                "</PmtInf>" +
+                "</CstmrCdtTrfInitn>"+
+                "</Document>" +
+                "'";
+
+            return Message;
+        }
+    }
+}
