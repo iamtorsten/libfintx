@@ -1,6 +1,5 @@
 # libfintx
 
-[![Coverage Status](https://coveralls.io/repos/github/mrklintscher/libfintx/badge.svg?branch=master)](https://coveralls.io/github/mrklintscher/libfintx?branch=master)
 [![Build Status](https://travis-ci.org/mrklintscher/libfintx.svg?branch=master)](https://travis-ci.org/mrklintscher/libfintx)
 
 An C# based client library for **HBCI 2.2** and **FinTS 3.0**.
