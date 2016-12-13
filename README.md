@@ -236,7 +236,7 @@ also an [unauthorized english translation](http://www.hbci-zka.de/english/specif
 
 # SSL verification
 
-The verification process is done by using the default **WebRequest** class.
+The verification process is done by using the default [**WebRequest**](https://msdn.microsoft.com/de-de/library/system.net.webrequest(v=vs.110).aspx) class.
 
 # Copyright & License
 
