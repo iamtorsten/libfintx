@@ -1,6 +1,7 @@
 # libfintx
 
 [![Build Status](https://travis-ci.org/mrklintscher/libfintx.svg?branch=master)](https://travis-ci.org/mrklintscher/libfintx)
+[![Issue Count](https://codeclimate.com/github/mrklintscher/libfintx/badges/issue_count.svg)](https://codeclimate.com/github/mrklintscher/libfintx)
 
 An C# based client library for **HBCI 2.2** and **FinTS 3.0**.
 
