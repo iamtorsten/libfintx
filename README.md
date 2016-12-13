@@ -31,9 +31,11 @@ There are many reasons why you need to use a banking library which can exchange 
 
 e.g. read balance
 
-```
+```cs
 public static string Balance(int Account, int BLZ, string IBAN, 
                              string BIC, string URL, int HBCIVersion, int UserID, string PIN)
+
+libfintx.Balance ( ... );
 ```
 
 # Features
@@ -46,7 +48,7 @@ public static string Balance(int Account, int BLZ, string IBAN,
 
 # Documentation
 
-```
+```xml
 <?xml version="1.0"?>
 <doc>
     <assembly>
