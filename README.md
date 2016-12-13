@@ -17,6 +17,15 @@ It can be used to read the balance of a bank account, receive an account stateme
 
 There are many reasons why you need to use a banking library which can exchange data from your application with the bank. One reason jfor example is to found a [Fintech](https://de.wikipedia.org/wiki/Finanztechnologie).
 
+# Target platforms
+
+* .NET Framework 4.5 and higher
+* MONO (Windows, MacOS, Linux)
+* Windows Phone 8
+* WinRT
+* Xamarin.Android
+* Xamarin.iOS
+
 # Sample
 
 e.g. read balance
