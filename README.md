@@ -1,7 +1,5 @@
 # libfintx
 
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/928e912657d44a6090d329343aa13346)](https://www.codacy.com/app/torsten-klinger/libfintx?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mrklintscher/libfintx&amp;utm_campaign=badger)
 [![Build Status](https://travis-ci.org/mrklintscher/libfintx.svg?branch=master)](https://travis-ci.org/mrklintscher/libfintx)
 [![Issue Count](https://codeclimate.com/github/mrklintscher/libfintx/badges/issue_count.svg)](https://codeclimate.com/github/mrklintscher/libfintx)
 [![GitHub version](https://badge.fury.io/gh/mrklintscher%2Flibfintx.svg)](https://badge.fury.io/gh/mrklintscher%2Flibfintx)
