@@ -266,6 +266,8 @@ namespace libfintx
             // Version 5, Process 2
             if (Segment.HITANS.Substring(0, 1).Equals("5+2"))
                 segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
+            else
+                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN));
         }
