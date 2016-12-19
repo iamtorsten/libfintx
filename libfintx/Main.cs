@@ -571,7 +571,59 @@ namespace libfintx
             }
         }
 
-		/// <summary>
+        /// <summary>
+        /// Confirm order with TAN
+        /// </summary>
+        /// <param name="TAN"></param>
+        /// <param name="URL"></param>
+        /// <param name="HBCIVersion"></param>
+        /// <param name="BLZ"></param>
+        /// <param name="UserID"></param>
+        /// <param name="PIN"></param>
+        /// <param name="MediumName"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN, string MediumName)
+        {
+            var BankCode = Transaction.TAN4(TAN, URL, HBCIVersion, BLZ, UserID, PIN, MediumName);
+
+            if (BankCode.Contains("+0020::"))
+            {
+                var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+                String[] values = BankCode_.Split('+');
+
+                string msg = string.Empty;
+
+                foreach (var item in values)
+                {
+                    if (!item.StartsWith("HIRMS"))
+                        msg = msg + "??" + item.Replace("::", ": ");
+                }
+
+                return msg;
+            }
+            else
+            {
+                // Error
+                var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+                String[] values = BankCode_.Split('+');
+
+                string msg = string.Empty;
+
+                foreach (var item in values)
+                {
+                    if (!item.StartsWith("HIRMS"))
+                        msg = msg + "??" + item.Replace("::", ": ");
+                }
+
+                return msg;
+            }
+        }
+
+        /// <summary>
         /// TAN scheme
         /// </summary>
         /// <returns>

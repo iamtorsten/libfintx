@@ -19,7 +19,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,7 +38,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
@@ -60,9 +60,7 @@
     <Compile Include="Transactions\Transaction.cs" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Documentation\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Documentation\Documentation.xml" />
   </ItemGroup>

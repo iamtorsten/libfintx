@@ -271,5 +271,25 @@ namespace libfintx
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN));
         }
+
+        /// <summary>
+        /// TAN process 4
+        /// </summary>
+        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN, string MediumName)
+        {
+            string segments = string.Empty;
+
+            // Version 3, Process 4
+            if (Segment.HITANS.Substring(0, 1).Equals("3+4"))
+                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
+            // Version 4, Process 4
+            if (Segment.HITANS.Substring(0, 1).Equals("4+4"))
+                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
+            // Version 5, Process 4
+            if (Segment.HITANS.Substring(0, 1).Equals("5+4"))
+                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
+
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN));
+        }
     }
 }
