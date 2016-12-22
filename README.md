@@ -45,7 +45,7 @@ libfintx.Balance ( ... );
 * Transfer money (**HKCCS**)
 * Transfer money at a certain time (**HKCCS**)
 * Collect money (**HKDSE**)
-* Load prepaid card (**HKPPD**)
+* Load mobile phone prepaid card (**HKPPD**)
 * Get banker's orders (**HKCSB**)
 
 # Documentation
