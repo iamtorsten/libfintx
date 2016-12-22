@@ -45,6 +45,8 @@ libfintx.Balance ( ... );
 * Transfer money (**HKCCS**)
 * Transfer money at a certain time (**HKCCS**)
 * Collect money (**HKDSE**)
+* Load prepaid card (**HKPPD**)
+* Get banker's orders (**HKCSB**)
 
 # Documentation
 
@@ -172,6 +174,41 @@ libfintx.Balance ( ... );
             <param name="pictureBox"></param>
             <returns>
             Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.Prepaid(System.Int32,System.String,System.String,System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Load mobile phone prepaid card
+            </summary>
+            <param name="BLZ"></param>
+            <param name="IBAN"></param>
+            <param name="BIC"></param>
+            <param name="MobileServiceProvider"></param>
+            <param name="PhoneNumber"></param>
+            <param name="Amount"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.BankersOrder(System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Get banker's order
+            </summary>
+            <param name="BLZ"></param>
+            <param name="IBAN"></param>
+            <param name="BIC"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <returns>
+            Banker's order
             </returns>
         </member>
         <member name="M:libfintx.Main.TAN(System.String,System.String,System.Int32,System.Int32,System.Int32,System.String)">
