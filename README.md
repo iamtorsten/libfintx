@@ -35,7 +35,7 @@ e.g. read balance
 public static string Balance(int Account, int BLZ, string IBAN, 
                              string BIC, string URL, int HBCIVersion, int UserID, string PIN)
 
-libfintx.Balance ( ... );
+libfintx.Main.Balance ( ... );
 ```
 
 # Features
