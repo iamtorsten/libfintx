@@ -248,6 +248,34 @@ namespace libfintx
         }
 
         /// <summary>
+        /// Load prepaid
+        /// </summary>
+        public static string HKPPD(int BLZ, string IBAN, string BIC, int MobileServiceProvider, int PhoneNumber, int Amount, string URL, int HBCIVersion, int UserID, string PIN)
+        {
+            string segments = "HKPPD:3:2+" + IBAN + ":" +BIC + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
+
+            segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
+
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+
+            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+
+            Helper.Parse_Message(TAN);
+
+            return TAN;
+        }
+
+        /// <summary>
+        /// Bankers orders
+        /// </summary>
+        public static string HKCSB(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
+        {
+            string segments = "HKCSB:3:1+" + IBAN + ":" + BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
+
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+        }
+
+        /// <summary>
         /// TAN
         /// </summary>
         public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN)

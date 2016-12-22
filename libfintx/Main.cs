@@ -521,6 +521,171 @@ namespace libfintx
         }
 
         /// <summary>
+        /// Load mobile phone prepaid card
+        /// </summary>
+        /// <param name="BLZ"></param>
+        /// <param name="IBAN"></param>
+        /// <param name="BIC"></param>
+        /// <param name="MobileServiceProvider"></param>
+        /// <param name="PhoneNumber"></param>
+        /// <param name="Amount"></param>
+        /// <param name="URL"></param>
+        /// <param name="HBCIVersion"></param>
+        /// <param name="UserID"></param>
+        /// <param name="PIN"></param>
+        /// <param name="HIRMS"></param>
+        /// <param name="pictureBox"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string Prepaid(int BLZ, string IBAN, string BIC, int MobileServiceProvider, int PhoneNumber, int Amount, string URL, int HBCIVersion, int UserID, string PIN,
+            string HIRMS, PictureBox pictureBox)
+        {
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            {
+                TransactionConsole.Output = string.Empty;
+
+                if (!String.IsNullOrEmpty(HIRMS))
+                    Segment.HIRMS = HIRMS;
+
+                var BankCode = Transaction.HKPPD(BLZ, IBAN, BIC, MobileServiceProvider, PhoneNumber, Amount, URL, HBCIVersion, UserID, PIN);
+
+                if (BankCode.Contains("+0030::"))
+                {
+                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+                    String[] values = BankCode_.Split('+');
+
+                    string msg = string.Empty;
+
+                    foreach (var item in values)
+                    {
+                        if (!item.StartsWith("HIRMS"))
+                            TransactionConsole.Output = item.Replace("::", ": ");
+                    }
+
+                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
+
+                    string HITANFlicker = string.Empty;
+
+                    if (Segment.HIRMS.Equals("972"))
+                    {
+                        HITANFlicker = HITAN;
+                    }
+
+                    String[] values_ = HITAN.Split('+');
+
+                    int i = 1;
+
+                    foreach (var item in values_)
+                    {
+                        i = i + 1;
+
+                        if (i == 6)
+                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
+                    }
+
+                    if (Segment.HIRMS.Equals("972"))
+                    {
+                        HITANFlicker = HITAN.Replace("?@", "??");
+
+                        string FlickerCode = string.Empty;
+
+                        String[] values__ = HITANFlicker.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii == 4)
+                                FlickerCode = item;
+                        }
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
+
+                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        flickerCodeRenderer.Start();
+
+                        System.Threading.Thread.Sleep(30000);
+
+                        flickerCodeRenderer.Stop();
+                    }
+
+                    return "OK";
+                }
+                else
+                {
+                    // Error
+                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+                    String[] values = BankCode_.Split('+');
+
+                    string msg = string.Empty;
+
+                    foreach (var item in values)
+                    {
+                        if (!item.StartsWith("HIRMS"))
+                            msg = msg + "??" + item.Replace("::", ": ");
+                    }
+
+                    return msg;
+                }
+            }
+            else
+                return "Error";
+        }
+
+        /// <summary>
+        /// Get banker's orders
+        /// </summary>
+        /// <param name="BLZ"></param>
+        /// <param name="IBAN"></param>
+        /// <param name="BIC"></param>
+        /// <param name="URL"></param>
+        /// <param name="HBCIVersion"></param>
+        /// <param name="UserID"></param>
+        /// <param name="PIN"></param>
+        /// <returns>
+        /// Banker's orders
+        /// </returns>
+        public static string BankersOrders(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
+        {
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            {
+                // Success
+                var BankCode = Transaction.HKCSB(BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN);
+
+                if (BankCode.Contains("+0020::"))
+                {
+                    // Success
+                    return BankCode;
+                }
+                else
+                {
+                    // Error
+                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+                    String[] values = BankCode_.Split('+');
+
+                    string msg = string.Empty;
+
+                    foreach (var item in values)
+                    {
+                        if (!item.StartsWith("HIRMS"))
+                            msg = msg + "??" + item.Replace("::", ": ");
+                    }
+
+                    return msg;
+                }
+            }
+            else
+                return "Error";
+        }
+
+        /// <summary>
         /// Confirm order with TAN
         /// </summary>
         /// <param name="TAN"></param>
