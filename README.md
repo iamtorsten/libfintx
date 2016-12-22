@@ -196,9 +196,9 @@ libfintx.Balance ( ... );
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.BankersOrder(System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:libfintx.Main.BankersOrders(System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
             <summary>
-            Get banker's order
+            Get banker's orders
             </summary>
             <param name="BLZ"></param>
             <param name="IBAN"></param>
@@ -208,7 +208,7 @@ libfintx.Balance ( ... );
             <param name="UserID"></param>
             <param name="PIN"></param>
             <returns>
-            Banker's order
+            Banker's orders
             </returns>
         </member>
         <member name="M:libfintx.Main.TAN(System.String,System.String,System.Int32,System.Int32,System.Int32,System.String)">
