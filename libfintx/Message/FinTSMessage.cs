@@ -50,7 +50,7 @@ namespace libfintx
 
             var secRef = Math.Round(Convert.ToDecimal(RndNr.ToString().Replace("-", "")) * 999999 + 1000000);
 
-            string date = Convert.ToString(DateTime.Now.Year) + DateTime.Now.ToString("MM") + Convert.ToString(DateTime.Now.Day);
+            string date = Convert.ToString(DateTime.Now.Year) + DateTime.Now.ToString("MM") + DateTime.Now.ToString("dd");
             string time = Convert.ToString(DateTime.Now.TimeOfDay).Substring(0, 8).Replace(":", "");
 
             string TAN_ = string.Empty;
