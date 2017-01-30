@@ -538,7 +538,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Prepaid(int BLZ, string IBAN, string BIC, int MobileServiceProvider, int PhoneNumber, int Amount, string URL, int HBCIVersion, int UserID, string PIN,
+        public static string Prepaid(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, int UserID, string PIN,
             string HIRMS, PictureBox pictureBox)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)

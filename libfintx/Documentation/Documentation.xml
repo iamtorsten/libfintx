@@ -123,7 +123,7 @@
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Prepaid(System.Int32,System.String,System.String,System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Prepaid(System.Int32,System.String,System.String,System.Int32,System.String,System.Int32,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
             <summary>
             Load mobile phone prepaid card
             </summary>
