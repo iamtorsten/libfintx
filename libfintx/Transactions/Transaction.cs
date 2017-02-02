@@ -275,6 +275,28 @@ namespace libfintx
         }
 
         /// <summary>
+        /// Rebooking
+        /// </summary>
+        public static string HKCUM(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string URL, int HBCIVersion, int UserID, string PIN)
+        {
+            string segments = "HKCUM:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+
+            var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, "1999-01-01");
+
+            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
+
+            segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
+
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+
+            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+
+            Helper.Parse_Message(TAN);
+
+            return TAN;
+        }
+
+        /// <summary>
         /// Collect
         /// </summary>
         public static string HKDSE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, int UserID, string PIN)
