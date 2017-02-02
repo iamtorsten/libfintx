@@ -48,6 +48,7 @@ libfintx.Main.Balance ( ... );
 * Collect money (**HKDSE**)
 * Collective collect money (**HKDME**)
 * Load mobile phone prepaid card (**HKPPD**)
+* Submit banker's order (**HKCDE**)
 * Get banker's orders (**HKCSB**)
 
 # Documentation
