@@ -45,6 +45,7 @@ libfintx.Main.Balance ( ... );
 * Transfer money at a certain time (**HKCCS**)
 * Collective transfer money (**HKCCM**)
 * Collective transfer money terminated (**HKCME**)
+* Rebook money from one to another account (**HKCUM**)
 * Collect money (**HKDSE**)
 * Collective collect money (**HKDME**)
 * Load mobile phone prepaid card (**HKPPD**)
@@ -195,6 +196,29 @@ libfintx.Main.Balance ( ... );
             Bank return codes
             </returns>
         </member>
+        <member name="M:libfintx.Main.Rebooking(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Rebook money from one to another account
+            </summary>
+            <param name="BLZ"></param>
+            <param name="AccountHolder"></param>
+            <param name="AccountHolderIBAN"></param>
+            <param name="AccountHolderBIC"></param>
+            <param name="Receiver"></param>
+            <param name="ReceiverIBAN"></param>
+            <param name="ReceiverBIC"></param>
+            <param name="Amount"></param>
+            <param name="Purpose"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
         <member name="M:libfintx.Main.Collect(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
             <summary>
             Collect money from another account
@@ -264,7 +288,34 @@ libfintx.Main.Balance ( ... );
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.BankersOrders(System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:libfintx.Main.SubmitBankersOrder(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Submit bankers order
+            </summary>
+            <param name="BLZ"></param>
+            <param name="AccountHolder"></param>
+            <param name="AccountHolderIBAN"></param>
+            <param name="AccountHolderBIC"></param>
+            <param name="Receiver"></param>
+            <param name="ReceiverIBAN"></param>
+            <param name="ReceiverBIC"></param>
+            <param name="Amount"></param>
+            <param name="Purpose"></param>
+            <param name="FirstTimeExecutionDay"></param>
+            <param name="TimeUnit"></param>
+            <param name="Rota"></param>
+            <param name="ExecutionDay"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.GetBankersOrders(System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Get banker's orders
             </summary>
