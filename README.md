@@ -43,7 +43,10 @@ libfintx.Main.Balance ( ... );
 * Request Transactions (**HKKAZ**)
 * Transfer money (**HKCCS**)
 * Transfer money at a certain time (**HKCCS**)
+* Collective transfer money (**HKCCM**)
+* Collective transfer money terminated (**HKCME**)
 * Collect money (**HKDSE**)
+* Collective collect money (**HKDME**)
 * Load mobile phone prepaid card (**HKPPD**)
 * Get banker's orders (**HKCSB**)
 
@@ -148,6 +151,49 @@ libfintx.Main.Balance ( ... );
             Bank return codes
             </returns>
         </member>
+        <member name="M:libfintx.Main.CollectiveTransfer(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Collective transfer money
+            </summary>
+            <param name="BLZ"></param>
+            <param name="AccountHolder"></param>
+            <param name="AccountHolderIBAN"></param>
+            <param name="AccountHolderBIC"></param>
+            <param name="PainData"></param>
+            <param name="NumberofTransactions"></param>
+            <param name="TotalAmount"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.CollectiveTransfer_Terminated(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Collective transfer money terminated
+            </summary>
+            <param name="BLZ"></param>
+            <param name="AccountHolder"></param>
+            <param name="AccountHolderIBAN"></param>
+            <param name="AccountHolderBIC"></param>
+            <param name="PainData"></param>
+            <param name="NumberofTransactions"></param>
+            <param name="TotalAmount"></param>
+            <param name="ExecutionDay"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
         <member name="M:libfintx.Main.Collect(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
             <summary>
             Collect money from another account
@@ -165,6 +211,28 @@ libfintx.Main.Balance ( ... );
             <param name="MandateNumber"></param>
             <param name="MandateDate"></param>
             <param name="CeditorIDNumber"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <param name="HIRMS"></param>
+            <param name="pictureBox"></param>
+            <returns>
+            Bank return codes
+            </returns>
+        </member>
+        <member name="M:libfintx.Main.CollectiveCollect(System.Int32,System.String,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00800202_cc_data},System.String,System.Decimal,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+            <summary>
+            Collective collect money from other accounts
+            </summary>
+            <param name="BLZ"></param>
+            <param name="AccountHolder"></param>
+            <param name="AccountHolderIBAN"></param>
+            <param name="AccountHolderBIC"></param>
+            <param name="SettlementDate"></param>
+            <param name="PainData"></param>
+            <param name="NumberofTransactions"></param>
+            <param name="TotalAmount"></param>
             <param name="URL"></param>
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
