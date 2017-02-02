@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace libfintx
 {
@@ -226,6 +227,54 @@ namespace libfintx
         }
 
         /// <summary>
+        /// Collective transfer
+        /// </summary>
+        public static string HKCCM(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, int UserID, string PIN)
+        {
+            var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
+
+            string segments = "HKCCM:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+
+            var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, PainData, NumberofTransactions, TotalAmount, "1999-01-01");
+
+            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
+
+            segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
+
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+
+            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+
+            Helper.Parse_Message(TAN);
+
+            return TAN;
+        }
+
+        /// <summary>
+        /// Collective transfer terminated
+        /// </summary>
+        public static string HKCME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN)
+        {
+            var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
+
+            string segments = "HKCME:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+
+            var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
+
+            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
+
+            segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
+
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+
+            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+
+            Helper.Parse_Message(TAN);
+
+            return TAN;
+        }
+
+        /// <summary>
         /// Collect
         /// </summary>
         public static string HKDSE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, int UserID, string PIN)
@@ -233,6 +282,30 @@ namespace libfintx
             string segments = "HKDSE:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
 
             var message = pain00800202.Create(Accountholder, AccountholderIBAN, AccountholderBIC, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber);
+
+            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
+
+            segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
+
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+
+            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+
+            Helper.Parse_Message(TAN);
+
+            return TAN;
+        }
+
+        /// <summary>
+        /// Collective collect
+        /// </summary>
+        public static string HKDME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, int UserID, string PIN)
+        {
+            var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
+
+            string segments = "HKDME:3:2+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
+
+            var message = pain00800202.Create(Accountholder, AccountholderIBAN, AccountholderBIC, SettlementDate, PainData, NumberofTransactions, TotalAmount);
 
             segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
 

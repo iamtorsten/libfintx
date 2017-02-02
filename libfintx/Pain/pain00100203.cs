@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace libfintx
 {
@@ -108,6 +109,98 @@ namespace libfintx
                 "</CstmrCdtTrfInitn>"+
                 "</Document>" +
                 "'";
+
+            return Message;
+        }
+
+        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string ExecutionDay)
+        {
+            var RndNr = Guid.NewGuid().ToString();
+
+            if (RndNr.Length > 20)
+                RndNr = RndNr.Substring(0, 20);
+
+            var RndNr_ = Guid.NewGuid().ToString();
+
+            if (RndNr_.Length > 20)
+                RndNr_ = RndNr_.Substring(0, 20);
+
+            DateTime datetime = DateTime.Now;
+            var datetime_ = string.Format("{0:s}", datetime);
+
+            var Amount_ = TotalAmount.ToString().Replace(",", ".");
+
+            string Message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03 pain.001.002.03.xsd\">" +
+                "<CstmrCdtTrfInitn>" +
+                "<GrpHdr>" +
+                "<MsgId>" + Program.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
+                "<CreDtTm>" + datetime_ + "</CreDtTm>" +
+                "<NbOfTxs>" + NumberofTransactions + "</NbOfTxs>" +
+                "<CtrlSum>" + Amount_ + "</CtrlSum>" +
+                "<InitgPty>" +
+                "<Nm>" + Accountholder + "</Nm>" +
+                "</InitgPty>" +
+                "</GrpHdr>" +
+                "<PmtInf>" +
+                "<PmtInfId>" + Program.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
+                "<PmtMtd>TRF</PmtMtd>" +
+                "<Cd>SEPA</Cd>" +
+                "</SvcLvl>" +
+                "</PmtTpInf>" +
+                "<ReqdExctnDt>" + ExecutionDay + "</ReqdExctnDt>" +
+                "<Dbtr>" +
+                "<Nm>" + Accountholder + "</Nm>" +
+                "</Dbtr>" +
+                "<DbtrAcct>" +
+                "<Id>" +
+                "<IBAN>" + AccountholderIBAN + "</IBAN>" +
+                "</Id>" +
+                "</DbtrAcct>" +
+                "<DbtrAgt>" +
+                "<FinInstnId>" +
+                "<BIC>" + AccountholderBIC + "</BIC>" +
+                "</FinInstnId>" +
+                "</DbtrAgt>" +
+                "<ChrgBr>SLEV</ChrgBr>" +
+                "<CdtTrfTxInf>";
+                
+                foreach (var transaction in PainData)
+                {
+                    var Amount__ = transaction.Amount.ToString().Replace(",", ".");
+
+                    string Message_ = "<PmtId>" +
+                        "<EndToEndId>NOTPROVIDED</EndToEndId>" +
+                        "</PmtId>" +
+                        "<Amt>" +
+                        "<InstdAmt Ccy=\"EUR\">" + Amount__ + "</InstdAmt>" +
+                        "</Amt>" +
+                        "<CdtrAgt>" +
+                        "<FinInstnId>" +
+                        "<BIC>" + transaction.ReceiverBIC + "</BIC>" +
+                        "</FinInstnId>" +
+                        "</CdtrAgt>" +
+                        "<Cdtr>" +
+                        "<Nm>" + transaction.Receiver + "</Nm>" +
+                        "</Cdtr>" +
+                        "<CdtrAcct>" +
+                        "<Id>" +
+                        "<IBAN>" + transaction.ReceiverIBAN + "</IBAN>" +
+                        "</Id>" + "</CdtrAcct>" +
+                        "<RmtInf>" +
+                        "<Ustrd>" + transaction.Usage + "</Ustrd>" +
+                        "</RmtInf>" +
+                        "</CdtTrfTxInf>" +
+                        "</PmtInf>";
+
+                    Message = Message + Message_;
+                }
+
+                string Message__ = "</CstmrCdtTrfInitn>" +
+                    "</Document>" +
+                    "'";
+
+                Message = Message + Message__;
 
             return Message;
         }

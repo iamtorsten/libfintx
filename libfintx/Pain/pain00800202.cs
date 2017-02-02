@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace libfintx
 {
@@ -128,6 +129,120 @@ namespace libfintx
 				"</CstmrDrctDbtInitn>" +
 				"</Document>" +
 				"'";
+
+            return Message;
+        }
+
+        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount)
+        {
+            var RndNr = Guid.NewGuid().ToString();
+
+            if (RndNr.Length > 20)
+                RndNr = RndNr.Substring(0, 20);
+
+            var RndNr_ = Guid.NewGuid().ToString();
+
+            if (RndNr_.Length > 20)
+                RndNr_ = RndNr_.Substring(0, 20);
+
+            DateTime datetime = DateTime.Now;
+            var datetime_ = string.Format("{0:s}", datetime);
+
+            var Amount_ = TotalAmount.ToString().Replace(",", ".");
+
+            string Message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.008.002.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.008.002.02 pain.008.002.02.xsd\">" +
+                "<CstmrDrctDbtInitn>" +
+                "<GrpHdr>" +
+                "<MsgId>" + Program.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
+                "<CreDtTm>" + datetime_ + "</CreDtTm>" +
+                "<NbOfTxs>" + NumberofTransactions + "</NbOfTxs>" +
+                "<CtrlSum>" + Amount_ + "</CtrlSum>" +
+                "<InitgPty>" +
+                "<Nm>" + Accountholder + "</Nm>" +
+                "</InitgPty>" +
+                "</GrpHdr>" +
+                "<PmtInf>" +
+                "<PmtInfId>" + Program.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
+                "<PmtMtd>DD</PmtMtd>" +
+                "<PmtTpInf>" +
+                "<SvcLvl>" +
+                "<Cd>SEPA</Cd>" +
+                "</SvcLvl>" +
+                "<LclInstrm>" +
+                "<Cd>CORE</Cd>" +
+                "</LclInstrm>" +
+                "<SeqTp>OOFF</SeqTp>" +
+                "</PmtTpInf>" +
+                "<ReqdColltnDt>" + SettlementDate + "</ReqdColltnDt>" +
+                "<Cdtr>" +
+                "<Nm>" + Accountholder + "</Nm>" +
+                "</Cdtr>" +
+                "<CdtrAcct>" +
+                "<Id>" +
+                "<IBAN>" + AccountholderIBAN + "</IBAN>" +
+                "</Id>" +
+                "</CdtrAcct>" +
+                "<CdtrAgt>" +
+                "<FinInstnId>" +
+                "<BIC>" + AccountholderBIC + "</BIC>" +
+                "</FinInstnId>" +
+                "</CdtrAgt>" +
+                "<ChrgBr>SLEV</ChrgBr>" +
+                "<DrctDbtTxInf>";
+
+                foreach (var transaction in PainData)
+                {
+                    var Amount__ = transaction.Amount.ToString().Replace(",", ".");
+
+                    string Message_ = "<PmtId>" +
+                        "<EndToEndId>NOTPROVIDED</EndToEndId>" +
+                        "</PmtId>" +
+                        "<InstdAmt Ccy=\"EUR\">" + Amount__ + "</InstdAmt>" +
+                        "<DrctDbtTx>" +
+                        "<MndtRltdInf>" +
+                        "<MndtId>" + transaction.MandateNumber + "</MndtId>" +
+                        "<DtOfSgntr>" + transaction.MandateDate + "</DtOfSgntr>" +
+                        "</MndtRltdInf>" +
+                        "<CdtrSchmeId>" +
+                        "<Id>" +
+                        "<PrvtId>" +
+                        "<Othr>" +
+                        "<Id>" + transaction.CeditorIDNumber + "</Id>" +
+                        "<SchmeNm>" +
+                        "<Prtry>SEPA</Prtry>" +
+                        "</SchmeNm>" +
+                        "</Othr>" +
+                        "</PrvtId>" +
+                        "</Id>" +
+                        "</CdtrSchmeId>" +
+                        "</DrctDbtTx>" +
+                        "<DbtrAgt>" +
+                        "<FinInstnId>" +
+                        "<BIC>" + transaction.PayerBIC + "</BIC>" +
+                        "</FinInstnId>" +
+                        "</DbtrAgt>" +
+                        "<Dbtr>" +
+                        "<Nm>" + transaction.Payer + "</Nm>" +
+                        "</Dbtr>" + "<DbtrAcct>" +
+                        "<Id>" +
+                        "<IBAN>" + transaction.PayerIBAN + "</IBAN>" +
+                        "</Id>" +
+                        "</DbtrAcct>" +
+                        "<RmtInf>" +
+                        "<Ustrd>" + transaction.Usage + "</Ustrd>" +
+                        "</RmtInf>" +
+                        "</DrctDbtTxInf>" +
+                        "</PmtInf>";
+
+                    Message = Message + Message_;
+                }
+
+                string Message__ = "</CstmrDrctDbtInitn>" +
+                        "</Document>" +
+                        "'";
+
+                Message = Message + Message__;
 
             return Message;
         }
