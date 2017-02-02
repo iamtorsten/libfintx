@@ -339,7 +339,31 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Bankers orders
+        /// Submit bankers order
+        /// </summary>
+        public static string HKCDE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string FirstTimeExecutionDay, string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN)
+        {
+            string segments = "HKCDE:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+
+            var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, "1999-01-01");
+
+            message = message.Replace("'", "") + "+" + FirstTimeExecutionDay + ":" + TimeUnit + ":" + Rota + ":" + ExecutionDay + "'";
+
+            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
+
+            segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
+
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+
+            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+
+            Helper.Parse_Message(TAN);
+
+            return TAN;
+        }
+
+        /// <summary>
+        /// Get bankers orders
         /// </summary>
         public static string HKCSB(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
         {
