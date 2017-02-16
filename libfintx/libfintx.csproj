@@ -19,7 +19,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,6 +47,7 @@
     <Compile Include="Data\pain00800202_cc_data.cs" />
     <Compile Include="Helper\Helper.cs" />
     <Compile Include="Helper\Program.cs" />
+    <Compile Include="Logging\Log.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Message\FinTSMessage.cs" />
     <Compile Include="MT940\MT940.cs" />

@@ -12,7 +12,7 @@
  *	
  * 	libfintx is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
- * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * 	Lesser General Public License for more details.
  *	
  * 	You should have received a copy of the GNU Lesser General Public
@@ -38,6 +38,8 @@ namespace libfintx
             /// </summary>
             try
             {
+                Log.Write("Starting Synchronisation");
+
                 string segments;
 
                 if (HBCIVersion == 220)
@@ -61,12 +63,15 @@ namespace libfintx
                     UserID = 0;
                     PIN = null;
 
+                    Log.Write("HBCI version not supported");
+
                     throw new Exception("HBCI version not supported");
                 }
 
                 if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, "0", segments, null))))
                 {
                     // Sync OK
+                    Log.Write("Synchronisation ok");
 
                     /// <summary>
                     /// INI
@@ -90,6 +95,8 @@ namespace libfintx
                         UserID = 0;
                         PIN = null;
 
+                        Log.Write("HBCI version not supported");
+
                         throw new Exception ("HBCI version not supported");
                     }
 
@@ -100,6 +107,8 @@ namespace libfintx
                         UserID = 0;
                         PIN = null;
 
+                        Log.Write("Initialisation failed");
+
                         throw new Exception ("Initialisation failed");
                     }
                 }
@@ -108,13 +117,17 @@ namespace libfintx
                     UserID = 0;
                     PIN = null;
 
+                    Log.Write("Sync failed");
+
                     return false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 UserID = 0;
                 PIN = null;
+
+                Log.Write(ex.ToString());
 
                 throw new Exception("Software error");
             }
@@ -125,6 +138,8 @@ namespace libfintx
         /// </summary>
         public static string HKSAL(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKSAL: Request balance");
+
             string segments = string.Empty;
 
             if (Convert.ToInt16(Segment.HISALS) >= 7)
@@ -142,6 +157,8 @@ namespace libfintx
         /// </summary>
         public static string HKKAZ(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN, string FromDate, string Startpoint)
         {
+            Log.Write("Starting job HKKAZ: Request transactions");
+
             string segments = string.Empty;
 
             if (String.IsNullOrEmpty(FromDate))
@@ -187,6 +204,8 @@ namespace libfintx
         /// </summary>
         public static string HKCCS(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKCCS: Transfer money");
+
             string segments = "HKCCS:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
             var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, "1999-01-01");
@@ -209,6 +228,8 @@ namespace libfintx
         /// </summary>
         public static string HKCCSt(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKCCS: Transfer money terminated");
+
             string segments = "HKCCS:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
             var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
@@ -231,6 +252,8 @@ namespace libfintx
         /// </summary>
         public static string HKCCM(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKCCM: Collective transfer money");
+
             var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
             string segments = "HKCCM:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
@@ -255,6 +278,8 @@ namespace libfintx
         /// </summary>
         public static string HKCME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKCME: Collective transfer money terminated");
+
             var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
             string segments = "HKCME:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
@@ -279,6 +304,8 @@ namespace libfintx
         /// </summary>
         public static string HKCUM(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKCUM: Rebooking money");
+
             string segments = "HKCUM:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
             var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, "1999-01-01");
@@ -301,6 +328,8 @@ namespace libfintx
         /// </summary>
         public static string HKDSE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKDSE: Collect money");
+
             string segments = "HKDSE:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
 
             var message = pain00800202.Create(Accountholder, AccountholderIBAN, AccountholderBIC, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber);
@@ -323,6 +352,8 @@ namespace libfintx
         /// </summary>
         public static string HKDME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKDME: Collective collect money");
+
             var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
             string segments = "HKDME:3:2+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
@@ -347,6 +378,8 @@ namespace libfintx
         /// </summary>
         public static string HKPPD(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKPPD: Load prepaid");
+
             string segments = "HKPPD:3:2+" + IBAN + ":" +BIC + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
@@ -365,6 +398,8 @@ namespace libfintx
         /// </summary>
         public static string HKCDE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string FirstTimeExecutionDay, string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKCDE: Submit bankers order");
+
             string segments = "HKCDE:3:1+" + AccountholderIBAN + ":" + AccountholderBIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
             var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, "1999-01-01");
@@ -389,6 +424,8 @@ namespace libfintx
         /// </summary>
         public static string HKCSB(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
         {
+            Log.Write("Starting job HKCSB: Get bankers order");
+
             string segments = "HKCSB:3:1+" + IBAN + ":" + BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
@@ -399,6 +436,8 @@ namespace libfintx
         /// </summary>
         public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN)
         {
+            Log.Write("Starting TAN process");
+
             string segments = string.Empty;
 
             // Version 2, Process 2
@@ -424,6 +463,8 @@ namespace libfintx
         /// </summary>
         public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN, string MediumName)
         {
+            Log.Write("Starting job TAN process 4");
+
             string segments = string.Empty;
 
             // Version 3, Process 4

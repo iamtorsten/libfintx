@@ -12,7 +12,7 @@
  *	
  * 	libfintx is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
- * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * 	Lesser General Public License for more details.
  *	
  * 	You should have received a copy of the GNU Lesser General Public
@@ -90,6 +90,8 @@ namespace libfintx
                         if (!item.StartsWith("HIRMS"))
                             msg = msg + "??"+ item.Replace("::", ": ");
                     }
+
+                    Log.Write(msg);
 
                     return msg;
                 }
@@ -266,6 +268,8 @@ namespace libfintx
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
 
+                    Log.Write(msg);
+
                     return msg;
                 }
             }
@@ -389,7 +393,9 @@ namespace libfintx
 							msg = msg + "??" + item.Replace("::", ": ");
 					}
 
-					return msg;
+                    Log.Write(msg);
+
+                    return msg;
 				}
 			}
 			else
@@ -508,6 +514,8 @@ namespace libfintx
                         if (!item.StartsWith("HIRMS"))
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
+
+                    Log.Write(msg);
 
                     return msg;
                 }
@@ -630,6 +638,8 @@ namespace libfintx
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
 
+                    Log.Write(msg);
+
                     return msg;
                 }
             }
@@ -751,6 +761,8 @@ namespace libfintx
                         if (!item.StartsWith("HIRMS"))
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
+
+                    Log.Write(msg);
 
                     return msg;
                 }
@@ -877,6 +889,8 @@ namespace libfintx
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
 
+                    Log.Write(msg);
+
                     return msg;
                 }
             }
@@ -996,6 +1010,8 @@ namespace libfintx
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
 
+                    Log.Write(msg);
+
                     return msg;
                 }
             }
@@ -1113,6 +1129,8 @@ namespace libfintx
                         if (!item.StartsWith("HIRMS"))
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
+
+                    Log.Write(msg);
 
                     return msg;
                 }
@@ -1241,6 +1259,8 @@ namespace libfintx
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
 
+                    Log.Write(msg);
+
                     return msg;
                 }
             }
@@ -1287,6 +1307,8 @@ namespace libfintx
                         if (!item.StartsWith("HIRMS"))
                             msg = msg + "??" + item.Replace("::", ": ");
                     }
+
+                    Log.Write(msg);
 
                     return msg;
                 }
@@ -1342,6 +1364,8 @@ namespace libfintx
                         msg = msg + "??" + item.Replace("::", ": ");
                 }
 
+                Log.Write(msg);
+
                 return msg;
             }
         }
@@ -1394,6 +1418,8 @@ namespace libfintx
                         msg = msg + "??" + item.Replace("::", ": ");
                 }
 
+                Log.Write(msg);
+
                 return msg;
             }
         }
@@ -1418,7 +1444,10 @@ namespace libfintx
 		{
 			Program.Buildname = Buildname;
 			Program.Version = Version;
-		}
+
+            Log.Write(Buildname);
+            Log.Write(Version);
+        }
 
 		/// <summary>
         /// Get assembly buildname

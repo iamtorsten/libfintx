@@ -12,7 +12,7 @@
  *	
  * 	libfintx is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
- * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * 	Lesser General Public License for more details.
  *	
  * 	You should have received a copy of the GNU Lesser General Public
@@ -68,37 +68,84 @@ namespace libfintx
             {
                 encHead = "HNVSK:998:2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+280:" + BLZ + ":" + UserID + ":V:0:0+0'";
 
+                Log.Write(encHead);
+
                 sigHead = string.Empty;
 
                 if (TAN == null)
+                {
                     sigHead = "HNSHK:2:3+" + "900" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
+
+                    Log.Write(sigHead);
+                }
+                    
                 else
+                {
                     sigHead = "HNSHK:2:3+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
 
+                    Log.Write(sigHead);
+                }
+
                 if (String.IsNullOrEmpty(TAN_))
+                {
                     sigTrail = "HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + PIN + "'";
+
+                    Log.Write("HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + "XXXXXX" + "'");
+                }
+                    
                 else
+                {
                     sigTrail = "HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + PIN + TAN_ + "'";
 
+                    Log.Write("HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
+                }
             }
             else if (Version == 300)
             {
                 encHead = "HNVSK:998:3+PIN:2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+280:" + BLZ + ":" + UserID + ":V:0:0+0'";
 
+                Log.Write(encHead);
+
                 if (TAN == null)
+                {
                     sigHead = "HNSHK:2:4+PIN:1+" + "999" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
+
+                    Log.Write(sigHead);
+                }
                 else
+                {
                     sigHead = "HNSHK:2:4+PIN:2+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
 
+                    Log.Write(sigHead);
+                }
+                    
                 if (String.IsNullOrEmpty(TAN_))
+                {
                     sigTrail = "HNSHA:" + (Segments.Length + 3) + ":2+" + secRef + "++" + PIN + "'";
+
+                    Log.Write("HNSHA:" + (Segments.Length + 3) + ":2+" + secRef + "++" + "XXXXXX" + "'");
+                }
+                    
                 else
+                {
                     sigTrail = "HNSHA:" + (Segments.Length + 3) + ":2+" + secRef + "++" + PIN + TAN_ + "'";
+
+                    Log.Write("HNSHA:" + (Segments.Length + 3) + ":2+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
+                }
+            }
+            else
+            {
+                Log.Write("HBCI version not supported");
+
+                return string.Empty;
             }
 
             Segments = sigHead + Segments + sigTrail;
 
             var payload = Helper.Encrypt(Segments);
+
+            Log.Write(payload);
+
             var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length * 2 + DialogID.Length + payload.Length + encHead.Length;
 
             var paddedLen = ("000000000000").Substring(0, 12 - Convert.ToString(msgLen).Length) + Convert.ToString(msgLen);
@@ -108,15 +155,25 @@ namespace libfintx
             if (Version == 220)
             {
                 msgHead = "HNHBK:1:3+" + paddedLen + "+" + ("220") + "+" + DialogID + "+" + MsgNum + "'";
+
+                Log.Write(msgHead);
             }
             else if (Version == 300)
             {
                 msgHead = "HNHBK:1:3+" + paddedLen + "+" + ("300") + "+" + DialogID + "+" + MsgNum + "'";
+
+                Log.Write(msgHead);
             }
             else
+            {
+                Log.Write("HBCI version not supported");
+
                 return string.Empty;
+            }
 
             var msgEnd = "HNHBS:" + (Segments.Length + 2) + ":1+" + MsgNum + "'";
+
+            Log.Write(msgEnd);
 
             UserID = 0;
             PIN = null;
@@ -126,36 +183,48 @@ namespace libfintx
 
         public static string Send(string Url, string Message)
         {
-            var req = WebRequest.Create(Url) as HttpWebRequest;
+            Log.Write("Connect to FinTS Server");
+            Log.Write("Url: " + Url);
 
-            byte[] data = Encoding.ASCII.GetBytes(Helper.EncodeTo64(Message));
-
-            req.Method = "POST";
-            req.Timeout = 10000;
-            req.ContentType = "application/octet-stream";
-            req.ContentLength = data.Length;
-            req.KeepAlive = false;
-
-            using (Stream reqStream = req.GetRequestStream())
+            try
             {
-                reqStream.Write(data, 0, data.Length);
-                reqStream.Flush();
-            }
+                var req = WebRequest.Create(Url) as HttpWebRequest;
 
-            string FinTSMessage = string.Empty;
+                byte[] data = Encoding.ASCII.GetBytes(Helper.EncodeTo64(Message));
 
-            using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
-            {
-                using (Stream resStream = res.GetResponseStream())
+                req.Method = "POST";
+                req.Timeout = 10000;
+                req.ContentType = "application/octet-stream";
+                req.ContentLength = data.Length;
+                req.KeepAlive = false;
+
+                using (Stream reqStream = req.GetRequestStream())
                 {
-                    using (StreamReader streamReader = new StreamReader(resStream, Encoding.UTF8))
+                    reqStream.Write(data, 0, data.Length);
+                    reqStream.Flush();
+                }
+
+                string FinTSMessage = string.Empty;
+
+                using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
+                {
+                    using (Stream resStream = res.GetResponseStream())
                     {
-                        FinTSMessage = Helper.DecodeFrom64(streamReader.ReadToEnd());
+                        using (StreamReader streamReader = new StreamReader(resStream, Encoding.UTF8))
+                        {
+                            FinTSMessage = Helper.DecodeFrom64(streamReader.ReadToEnd());
+                        }
                     }
                 }
-            }
 
-            return FinTSMessage;
+                return FinTSMessage;
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex.ToString());
+
+                return string.Empty;
+            }
         }
     }
 }

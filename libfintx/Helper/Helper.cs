@@ -12,7 +12,7 @@
  *	
  * 	libfintx is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
- * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * 	Lesser General Public License for more details.
  *	
  * 	You should have received a copy of the GNU Lesser General Public
@@ -215,17 +215,24 @@ namespace libfintx
                     foreach (var item in values_)
                     {
                         if (!item.StartsWith("HIRMG"))
+                        {
                             Console.WriteLine(item.Replace("::", ": "));
+
+                            Log.Write(item.Replace("::", ": "));
+                        } 
                     }
 
                     return false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 UserID = 0;
-                
+
+                Log.Write(ex.ToString());
+
                 Console.WriteLine("Software error");
+
                 return false;
             }
         }
@@ -256,8 +263,10 @@ namespace libfintx
                 else
                     return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Write(ex.ToString());
+
                 return false;
             }
         }
