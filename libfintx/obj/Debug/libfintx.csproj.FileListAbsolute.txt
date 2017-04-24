@@ -1,5 +1,0 @@
-C:\Users\Torsten Klinger\Documents\GitHub\libfintx\libfintx\bin\Debug\libfintx.xml
-C:\Users\Torsten Klinger\Documents\GitHub\libfintx\libfintx\bin\Debug\libfintx.dll
-C:\Users\Torsten Klinger\Documents\GitHub\libfintx\libfintx\bin\Debug\libfintx.pdb
-C:\Users\Torsten Klinger\Documents\GitHub\libfintx\libfintx\obj\Debug\libfintx.dll
-C:\Users\Torsten Klinger\Documents\GitHub\libfintx\libfintx\obj\Debug\libfintx.pdb
