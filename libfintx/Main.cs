@@ -40,7 +40,7 @@ namespace libfintx
         /// <returns>
         /// Success or failure
         /// </returns>
-        public static bool Synchronization(int BLZ, string URL, int HBCIVersion, int UserID, string PIN)
+        public static bool Synchronization(int BLZ, string URL, int HBCIVersion, string UserID, string PIN)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -64,7 +64,7 @@ namespace libfintx
         /// <returns>
         /// Balance
         /// </returns>
-        public static string Balance(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string Balance(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
         {			
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -114,7 +114,7 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static string Transactions(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string Transactions(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -175,7 +175,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string Transfer(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string URL, int HBCIVersion, int UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -300,7 +300,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string Transfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-			string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN, string HIRMS, PictureBox pictureBox)
+			string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
 		{
 			if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
 			{
@@ -422,7 +422,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string CollectiveTransfer(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, List<pain00100203_ct_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, int UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -545,7 +545,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string CollectiveTransfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, List<pain00100203_ct_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -669,7 +669,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string Rebooking(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string URL, int HBCIVersion, int UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -797,7 +797,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string Collect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Payer, string PayerIBAN, string PayerBIC,
-            decimal Amount, string Purpose, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, int UserID,
+            decimal Amount, string Purpose, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, string UserID,
             string PIN, string HIRMS, PictureBox pictureBox)
         {			
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
@@ -919,7 +919,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string CollectiveCollect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string SettlementDate, List<pain00800202_cc_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, int UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -1037,7 +1037,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Prepaid(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, int UserID, string PIN,
+        public static string Prepaid(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, string UserID, string PIN,
             string HIRMS, PictureBox pictureBox)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
@@ -1165,7 +1165,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string SubmitBankersOrder(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string FirstTimeExecutionDay, string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN, string HIRMS,
+            string Amount, string Purpose, string FirstTimeExecutionDay, string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS,
             PictureBox pictureBox)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
@@ -1281,7 +1281,7 @@ namespace libfintx
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public static string GetBankersOrders(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string GetBankersOrders(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
             {
@@ -1329,7 +1329,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN)
+        public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN)
         {			
             var BankCode = Transaction.TAN(TAN, URL, HBCIVersion, BLZ, UserID, PIN);
 
@@ -1383,7 +1383,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN, string MediumName)
+        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN, string MediumName)
         {
             var BankCode = Transaction.TAN4(TAN, URL, HBCIVersion, BLZ, UserID, PIN, MediumName);
 

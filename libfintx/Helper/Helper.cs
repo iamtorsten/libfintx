@@ -68,7 +68,7 @@ namespace libfintx
             }
         }
 
-        public static bool Parse_Segment(int UserID, int BLZ, int HBCIVersion, string Message)
+        public static bool Parse_Segment(string UserID, int BLZ, int HBCIVersion, string Message)
         {
             try
             {
@@ -200,12 +200,12 @@ namespace libfintx
 
                 if (!String.IsNullOrEmpty(Segment.HIRMS))
                 {
-                    UserID = 0;
+                    UserID = string.Empty;
                     return true;
                 }
                 else
                 {
-                    UserID = 0;
+                    UserID = string.Empty;
 
                     // Error
                     var BankCode = "HIRMG" + Helper.Parse_String(msg_, "HIRMG", "HNHBS");
@@ -227,7 +227,7 @@ namespace libfintx
             }
             catch (Exception ex)
             {
-                UserID = 0;
+                UserID = string.Empty;
 
                 Log.Write(ex.ToString());
 

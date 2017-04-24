@@ -30,7 +30,7 @@ namespace libfintx
 {
     public static class FinTSMessage
     {
-        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, int UserID, string PIN, string SystemID, string Segments, string TAN)
+        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN, string SystemID, string Segments, string TAN)
         {
             if (String.IsNullOrEmpty(MsgNum))
                 MsgNum = "1";
@@ -175,7 +175,7 @@ namespace libfintx
 
             Log.Write(msgEnd);
 
-            UserID = 0;
+            UserID = string.Empty;
             PIN = null;
 
             return msgHead + encHead + payload + msgEnd;

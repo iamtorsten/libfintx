@@ -31,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static bool INI(int BLZ, string URL, int HBCIVersion, int UserID, string PIN)
+        public static bool INI(int BLZ, string URL, int HBCIVersion, string UserID, string PIN)
         {
             /// <summary>
             /// Sync
@@ -60,7 +60,7 @@ namespace libfintx
                 }
                 else
                 {
-                    UserID = 0;
+                    UserID = string.Empty;
                     PIN = null;
 
                     Log.Write("HBCI version not supported");
@@ -92,7 +92,7 @@ namespace libfintx
                     }
                     else
                     {
-                        UserID = 0;
+                        UserID = string.Empty;
                         PIN = null;
 
                         Log.Write("HBCI version not supported");
@@ -104,7 +104,7 @@ namespace libfintx
                         return true;
                     else
                     {
-                        UserID = 0;
+                        UserID = string.Empty;
                         PIN = null;
 
                         Log.Write("Initialisation failed");
@@ -114,7 +114,7 @@ namespace libfintx
                 }
                 else
                 {
-                    UserID = 0;
+                    UserID = string.Empty;
                     PIN = null;
 
                     Log.Write("Sync failed");
@@ -124,7 +124,7 @@ namespace libfintx
             }
             catch (Exception ex)
             {
-                UserID = 0;
+                UserID = string.Empty;
                 PIN = null;
 
                 Log.Write(ex.ToString());
@@ -136,7 +136,7 @@ namespace libfintx
         /// <summary>
         /// Balance
         /// </summary>
-        public static string HKSAL(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKSAL(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKSAL: Request balance");
 
@@ -155,7 +155,7 @@ namespace libfintx
         /// <summary>
         /// Transactions
         /// </summary>
-        public static string HKKAZ(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN, string FromDate, string Startpoint)
+        public static string HKKAZ(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN, string FromDate, string Startpoint)
         {
             Log.Write("Starting job HKKAZ: Request transactions");
 
@@ -202,7 +202,7 @@ namespace libfintx
         /// <summary>
         /// Transfer
         /// </summary>
-        public static string HKCCS(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKCCS(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKCCS: Transfer money");
 
@@ -226,7 +226,7 @@ namespace libfintx
         /// <summary>
         /// Transfer terminated
         /// </summary>
-        public static string HKCCSt(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKCCSt(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKCCS: Transfer money terminated");
 
@@ -250,7 +250,7 @@ namespace libfintx
         /// <summary>
         /// Collective transfer
         /// </summary>
-        public static string HKCCM(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKCCM(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKCCM: Collective transfer money");
 
@@ -276,7 +276,7 @@ namespace libfintx
         /// <summary>
         /// Collective transfer terminated
         /// </summary>
-        public static string HKCME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKCME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKCME: Collective transfer money terminated");
 
@@ -302,7 +302,7 @@ namespace libfintx
         /// <summary>
         /// Rebooking
         /// </summary>
-        public static string HKCUM(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKCUM(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKCUM: Rebooking money");
 
@@ -326,7 +326,7 @@ namespace libfintx
         /// <summary>
         /// Collect
         /// </summary>
-        public static string HKDSE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKDSE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKDSE: Collect money");
 
@@ -350,7 +350,7 @@ namespace libfintx
         /// <summary>
         /// Collective collect
         /// </summary>
-        public static string HKDME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKDME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKDME: Collective collect money");
 
@@ -376,7 +376,7 @@ namespace libfintx
         /// <summary>
         /// Load prepaid
         /// </summary>
-        public static string HKPPD(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKPPD(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKPPD: Load prepaid");
 
@@ -396,7 +396,7 @@ namespace libfintx
         /// <summary>
         /// Submit bankers order
         /// </summary>
-        public static string HKCDE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string FirstTimeExecutionDay, string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKCDE(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string FirstTimeExecutionDay, string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKCDE: Submit bankers order");
 
@@ -422,7 +422,7 @@ namespace libfintx
         /// <summary>
         /// Get bankers orders
         /// </summary>
-        public static string HKCSB(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, int UserID, string PIN)
+        public static string HKCSB(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKCSB: Get bankers order");
 
@@ -434,7 +434,7 @@ namespace libfintx
         /// <summary>
         /// TAN
         /// </summary>
-        public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN)
+        public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN)
         {
             Log.Write("Starting TAN process");
 
@@ -461,7 +461,7 @@ namespace libfintx
         /// <summary>
         /// TAN process 4
         /// </summary>
-        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, int UserID, string PIN, string MediumName)
+        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN, string MediumName)
         {
             Log.Write("Starting job TAN process 4");
 
