@@ -110,7 +110,7 @@ namespace libfintx
                 {
                     sigHead = "HNSHK:2:4+PIN:1+" + "999" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
 
-                    Log.Write(sigHead.Replace(UserID, "XXXXXX").Replace(TAN, "XXXXXX"));
+                    Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
                 else
                 {
@@ -144,7 +144,10 @@ namespace libfintx
 
             var payload = Helper.Encrypt(Segments);
 
-            Log.Write(payload.Replace(UserID, "XXXXXX").Replace(PIN, "XXXXXX"));
+            if (TAN == null)
+                Log.Write(payload.Replace(UserID, "XXXXXX").Replace(PIN, "XXXXXX"));
+            else
+                Log.Write(payload.Replace(UserID, "XXXXXX").Replace(PIN, "XXXXXX").Replace(TAN, "XXXXXX"));
 
             var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length * 2 + DialogID.Length + payload.Length + encHead.Length;
 
