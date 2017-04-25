@@ -68,7 +68,7 @@ namespace libfintx
             {
                 encHead = "HNVSK:998:2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+280:" + BLZ + ":" + UserID + ":V:0:0+0'";
 
-                Log.Write(encHead);
+                Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
                 sigHead = string.Empty;
 
@@ -76,14 +76,14 @@ namespace libfintx
                 {
                     sigHead = "HNSHK:2:3+" + "900" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
 
-                    Log.Write(sigHead);
+                    Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
-                    
+
                 else
                 {
                     sigHead = "HNSHK:2:3+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
 
-                    Log.Write(sigHead);
+                    Log.Write(sigHead.Replace(UserID, "XXXXXX").Replace(TAN, "XXXXXX"));
                 }
 
                 if (String.IsNullOrEmpty(TAN_))
@@ -92,7 +92,7 @@ namespace libfintx
 
                     Log.Write("HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + "XXXXXX" + "'");
                 }
-                    
+
                 else
                 {
                     sigTrail = "HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + PIN + TAN_ + "'";
@@ -104,28 +104,28 @@ namespace libfintx
             {
                 encHead = "HNVSK:998:3+PIN:2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+280:" + BLZ + ":" + UserID + ":V:0:0+0'";
 
-                Log.Write(encHead);
+                Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
                 if (TAN == null)
                 {
                     sigHead = "HNSHK:2:4+PIN:1+" + "999" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
 
-                    Log.Write(sigHead);
+                    Log.Write(sigHead.Replace(UserID, "XXXXXX").Replace(TAN, "XXXXXX"));
                 }
                 else
                 {
                     sigHead = "HNSHK:2:4+PIN:2+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
 
-                    Log.Write(sigHead);
+                    Log.Write(sigHead.Replace(UserID, "XXXXXX").Replace(TAN, "XXXXXX"));
                 }
-                    
+
                 if (String.IsNullOrEmpty(TAN_))
                 {
                     sigTrail = "HNSHA:" + (Segments.Length + 3) + ":2+" + secRef + "++" + PIN + "'";
 
                     Log.Write("HNSHA:" + (Segments.Length + 3) + ":2+" + secRef + "++" + "XXXXXX" + "'");
                 }
-                    
+
                 else
                 {
                     sigTrail = "HNSHA:" + (Segments.Length + 3) + ":2+" + secRef + "++" + PIN + TAN_ + "'";
@@ -144,7 +144,7 @@ namespace libfintx
 
             var payload = Helper.Encrypt(Segments);
 
-            Log.Write(payload);
+            Log.Write(payload.Replace(UserID, "XXXXXX").Replace(PIN, "XXXXXX"));
 
             var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length * 2 + DialogID.Length + payload.Length + encHead.Length;
 
