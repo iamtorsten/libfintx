@@ -31,6 +31,8 @@ There are many reasons why you need to use a banking library which can exchange 
 e.g. read balance
 
 ```cs
+libfintx.Main.Assembly("Your build name", "Your build version");
+
 public static string Balance(int Account, int BLZ, string IBAN, 
                              string BIC, string URL, int HBCIVersion, string UserID, string PIN)
 
