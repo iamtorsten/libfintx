@@ -137,9 +137,12 @@ namespace libfintx
                     {
                         var item_ = item;
 
+                        if (item.Contains("Benutzer."))
+                            item.Replace("Benutzer.", "Benutzer");
+
                         if (item_.Contains("3920"))
                         {
-                            var TAN = Parse_String(item_.ToString(), "Benutzer:", "PIN").Substring(0, 3);
+                            var TAN = Parse_String(item_.ToString(), "Benutzer:", "::").Substring(0, 3);
                             Segment.HIRMS = TAN;
 
                             var TANf = Parse_String(item_.ToString(), "Benutzer:", "+");
