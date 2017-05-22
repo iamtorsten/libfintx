@@ -148,7 +148,8 @@ namespace libfintx
                     if (HBCIVersion == 300)
                     {
                         string segments_ = "HKIDN:2:2+280:" + BLZ + "+" + "9999999999" + "+0+0'" +
-                                    "HKVVB:3:3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
+                                    "HKVVB:3:3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'" +
+                                    "HKSYN:4:3 + 0'";
 
                         segments = segments_;
                     }
@@ -164,8 +165,6 @@ namespace libfintx
 
                     if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessageAnonymous.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, "0", segments, null, 4))))
                     {
-                        Segment.HKSYN = true;
-
                         // Sync OK
                         Log.Write("Synchronisation anonymous ok");
 
@@ -191,8 +190,6 @@ namespace libfintx
 
                         if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4))))
                         {
-                            Segment.HKSYN = false;
-
                             return true;
                         }
                         else

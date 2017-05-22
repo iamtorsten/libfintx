@@ -66,10 +66,5 @@ namespace libfintx
         /// Transactions
         /// </summary>
         public static string HKKAZ { get; set; }
-
-        /// <summary>
-        /// Synchronisation
-        /// </summary>
-        public static bool HKSYN { get; set; }
     }
 }

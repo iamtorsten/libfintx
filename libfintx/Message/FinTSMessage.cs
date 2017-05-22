@@ -122,18 +122,7 @@ namespace libfintx
 
                 if (String.IsNullOrEmpty(TAN_))
                 {
-                    if (Segment.HKSYN)
-                    {
-                        sigTrail = "HKSYN:" + Convert.ToString(SegmentNum + 1) + ":3+0'";
-
-                        Log.Write("HKSYN:" + Convert.ToString(SegmentNum + 1) + ":3+0'");
-
-                        sigTrail = sigTrail + "HNSHA:" + Convert.ToString(SegmentNum + 2) + ":2+" + secRef + "++" + PIN + "'";
-
-                        SegmentNum = SegmentNum + 1;
-                    }
-                    else
-                        sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + "'";
+                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + "'";
 
                     Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + "XXXXXX" + "'");
                 }
