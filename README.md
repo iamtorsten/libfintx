@@ -76,6 +76,19 @@ libfintx.Main.Balance ( ... );
             Success or failure
             </returns>
         </member>
+        <member name="M:libfintx.Main.Synchronization_ANONYMOUS(System.Int32,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Synchronize bank connection anonymous
+            </summary>
+            <param name="BLZ"></param>
+            <param name="URL"></param>
+            <param name="HBCIVersion"></param>
+            <param name="UserID"></param>
+            <param name="PIN"></param>
+            <returns>
+            Success or failure
+            </returns>
+        </member>
         <member name="M:libfintx.Main.Balance(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String)">
             <summary>
             Account balance
