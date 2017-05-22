@@ -149,7 +149,7 @@ namespace libfintx
                     {
                         string segments_ = "HKIDN:2:2+280:" + BLZ + "+" + "9999999999" + "+0+0'" +
                                     "HKVVB:3:3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'" +
-                                    "HKSYN:4:3 + 0'";
+                                    "HKSYN:4:3+0'";
 
                         segments = segments_;
                     }
