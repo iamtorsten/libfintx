@@ -51,6 +51,27 @@ namespace libfintx
         }
 
         /// <summary>
+        /// Synchronize bank connection anonymous
+        /// </summary>
+        /// <param name="BLZ"></param>
+        /// <param name="URL"></param>
+        /// <param name="HBCIVersion"></param>
+        /// <param name="UserID"></param>
+        /// <param name="PIN"></param>
+        /// <returns>
+        /// Success or failure
+        /// </returns>
+        public static bool Synchronization_ANONYMOUS(int BLZ, string URL, int HBCIVersion, string UserID, string PIN)
+        {
+            if (Transaction.INI_ANONYMOUS(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        /// <summary>
         /// Account balance
         /// </summary>
         /// <param name="Account"></param>

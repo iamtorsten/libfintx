@@ -134,6 +134,103 @@ namespace libfintx
         }
 
         /// <summary>
+        /// INI
+        /// </summary>
+        public static bool INI_ANONYMOUS(int BLZ, string URL, int HBCIVersion, string UserID, string PIN)
+        {
+            /// <summary>
+            /// Sync
+            /// </summary>
+            try
+            {
+                Log.Write("Starting Synchronisation anonymous");
+
+                string segments;
+
+                if (HBCIVersion == 300)
+                {
+                    string segments_ = "HKIDN:2:2+280:" + BLZ + "+" + "9999999999" + "+0+0'" +
+                                "HKVVB:3:3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
+
+                    segments = segments_;
+                }
+                else
+                {
+                    UserID = string.Empty;
+                    PIN = null;
+
+                    Log.Write("HBCI version not supported");
+
+                    throw new Exception("HBCI version not supported");
+                }
+                
+                if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create_ANONYMOUS(HBCIVersion, "1", "0", BLZ, UserID, PIN, "0", segments, null))))
+                {
+                    Segment.HKSYN = true;
+
+                    // Sync OK
+                    Log.Write("Synchronisation anonymous ok");
+
+                    /// <summary>
+                    /// INI
+                    /// </summary>
+                    if (HBCIVersion == 300)
+                    {
+                        string segments__ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
+                            "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
+
+                        segments = segments__;
+                    }
+                    else
+                    {
+                        UserID = string.Empty;
+                        PIN = null;
+
+                        Log.Write("HBCI version not supported");
+
+                        throw new Exception("HBCI version not supported");
+                    }
+
+                    if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS))))
+                    {
+                        Segment.HKSYN = false;
+
+                        return true;
+                    }   
+                    else
+                    {
+                        UserID = string.Empty;
+                        PIN = null;
+
+                        Log.Write("Initialisation failed");
+
+                        throw new Exception("Initialisation failed");
+                    }
+                }
+                else
+                {
+                    UserID = string.Empty;
+                    PIN = null;
+
+                    Console.WriteLine("FALSE");
+
+                    Log.Write("Sync failed");
+
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                UserID = string.Empty;
+                PIN = null;
+
+                Log.Write(ex.ToString());
+
+                throw new Exception("Software error");
+            }
+        }
+
+        /// <summary>
         /// Balance
         /// </summary>
         public static string HKSAL(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
