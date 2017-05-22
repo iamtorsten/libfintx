@@ -199,6 +199,14 @@ namespace libfintx
                             Segment.HKKAZ = VER;
                         }
                     }
+                    
+                    if (item.Contains("HIBPA"))
+                    {
+                        if (item.Contains("1822direkt") && String.IsNullOrEmpty(Segment.HIRMS))
+                        {
+                            Segment.HIRMS = "900";
+                        }
+                    }
                 }
 
                 if (!String.IsNullOrEmpty(Segment.HIRMS))
