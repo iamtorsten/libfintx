@@ -148,8 +148,7 @@ namespace libfintx
                     if (HBCIVersion == 300)
                     {
                         string segments_ = "HKIDN:2:2+280:" + BLZ + "+" + "9999999999" + "+0+0'" +
-                                    "HKVVB:3:3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'" +
-                                    "HKSYN:4:3+0'";
+                                    "HKVVB:3:3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
 
                         segments = segments_;
                     }
@@ -174,7 +173,8 @@ namespace libfintx
                         if (HBCIVersion == 300)
                         {
                             string segments__ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
-                                "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
+                                "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
+                                "HKSYN:5:3+0'";
 
                             segments = segments__;
                         }
@@ -188,7 +188,7 @@ namespace libfintx
                             throw new Exception("HBCI version not supported");
                         }
 
-                        if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4))))
+                        if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 5))))
                         {
                             return true;
                         }
