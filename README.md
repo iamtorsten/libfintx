@@ -63,7 +63,7 @@ libfintx.Main.Balance ( ... );
         <name>libfintx</name>
     </assembly>
     <members>
-        <member name="M:libfintx.Main.Synchronization(System.Int32,System.String,System.Int32,System.String,System.String)">
+        <member name="M:libfintx.Main.Synchronization(System.Int32,System.String,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Synchronize bank connection
             </summary>
@@ -72,24 +72,12 @@ libfintx.Main.Balance ( ... );
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
             <param name="PIN"></param>
+            <param name="Anonymous"></param>
             <returns>
             Success or failure
             </returns>
         </member>
-        <member name="M:libfintx.Main.Synchronization_ANONYMOUS(System.Int32,System.String,System.Int32,System.String,System.String)">
-            <summary>
-            Synchronize bank connection anonymous
-            </summary>
-            <param name="BLZ"></param>
-            <param name="URL"></param>
-            <param name="HBCIVersion"></param>
-            <param name="UserID"></param>
-            <param name="PIN"></param>
-            <returns>
-            Success or failure
-            </returns>
-        </member>
-        <member name="M:libfintx.Main.Balance(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String)">
+        <member name="M:libfintx.Main.Balance(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Account balance
             </summary>
@@ -101,11 +89,12 @@ libfintx.Main.Balance ( ... );
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
             <param name="PIN"></param>
+            <param name="Anonymous"></param>
             <returns>
             Balance
             </returns>
         </member>
-        <member name="M:libfintx.Main.Transactions(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String)">
+        <member name="M:libfintx.Main.Transactions(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Account transactions
             </summary>
@@ -117,11 +106,12 @@ libfintx.Main.Balance ( ... );
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
             <param name="PIN"></param>
+            <param name="Anonymous"></param>
             <returns>
             Transactions
             </returns>
         </member>
-        <member name="M:libfintx.Main.Transfer(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Transfer(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Transfer money
             </summary>
@@ -140,11 +130,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Transfer_Terminated(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Transfer_Terminated(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Transfer money at a certain time
             </summary>
@@ -164,11 +155,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.CollectiveTransfer(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.CollectiveTransfer(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Collective transfer money
             </summary>
@@ -185,11 +177,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.CollectiveTransfer_Terminated(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.CollectiveTransfer_Terminated(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Collective transfer money terminated
             </summary>
@@ -207,11 +200,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Rebooking(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Rebooking(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Rebook money from one to another account
             </summary>
@@ -230,11 +224,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Collect(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Collect(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Collect money from another account
             </summary>
@@ -257,11 +252,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.CollectiveCollect(System.Int32,System.String,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00800202_cc_data},System.String,System.Decimal,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.CollectiveCollect(System.Int32,System.String,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00800202_cc_data},System.String,System.Decimal,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Collective collect money from other accounts
             </summary>
@@ -279,11 +275,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Prepaid(System.Int32,System.String,System.String,System.Int32,System.String,System.Int32,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Prepaid(System.Int32,System.String,System.String,System.Int32,System.String,System.Int32,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Load mobile phone prepaid card
             </summary>
@@ -299,11 +296,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.SubmitBankersOrder(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.SubmitBankersOrder(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Submit bankers order
             </summary>
@@ -326,11 +324,12 @@ libfintx.Main.Balance ( ... );
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.GetBankersOrders(System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String)">
+        <member name="M:libfintx.Main.GetBankersOrders(System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Get banker's orders
             </summary>
@@ -341,6 +340,7 @@ libfintx.Main.Balance ( ... );
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
             <param name="PIN"></param>
+            <param name="Anonymous"></param>
             <returns>
             Banker's orders
             </returns>
