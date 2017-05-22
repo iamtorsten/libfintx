@@ -31,155 +31,34 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static bool INI(int BLZ, string URL, int HBCIVersion, string UserID, string PIN)
+        public static bool INI(int BLZ, string URL, int HBCIVersion, string UserID, string PIN, bool Anonymous)
         {
-            /// <summary>
-            /// Sync
-            /// </summary>
-            try
+            if (!Anonymous)
             {
-                Log.Write("Starting Synchronisation");
-
-                string segments;
-
-                if (HBCIVersion == 220)
+                /// <summary>
+                /// Sync
+                /// </summary>
+                try
                 {
-                    string segments_ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+0+1'" +
-                        "HKVVB:4:2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
-                        "HKSYN:5:2+0'";
+                    Log.Write("Starting Synchronisation");
 
-                    segments = segments_;
-                }
-                else if (HBCIVersion == 300)
-                {
-                    string segments_ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+0+1'" +
-                        "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
-                        "HKSYN:5:3+0'";
+                    string segments;
 
-                    segments = segments_;
-                }
-                else
-                {
-                    UserID = string.Empty;
-                    PIN = null;
-
-                    Log.Write("HBCI version not supported");
-
-                    throw new Exception("HBCI version not supported");
-                }
-
-                if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, "0", segments, null))))
-                {
-                    // Sync OK
-                    Log.Write("Synchronisation ok");
-
-                    /// <summary>
-                    /// INI
-                    /// </summary>
                     if (HBCIVersion == 220)
                     {
-                        string segments_ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
-                            "HKVVB:4:2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
+                        string segments_ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+0+1'" +
+                            "HKVVB:4:2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
+                            "HKSYN:5:2+0'";
 
                         segments = segments_;
                     }
                     else if (HBCIVersion == 300)
                     {
-                        string segments_ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
-                            "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
+                        string segments_ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+0+1'" +
+                            "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
+                            "HKSYN:5:3+0'";
 
                         segments = segments_;
-                    }
-                    else
-                    {
-                        UserID = string.Empty;
-                        PIN = null;
-
-                        Log.Write("HBCI version not supported");
-
-                        throw new Exception ("HBCI version not supported");
-                    }
-
-                    if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS))))
-                        return true;
-                    else
-                    {
-                        UserID = string.Empty;
-                        PIN = null;
-
-                        Log.Write("Initialisation failed");
-
-                        throw new Exception ("Initialisation failed");
-                    }
-                }
-                else
-                {
-                    UserID = string.Empty;
-                    PIN = null;
-
-                    Log.Write("Sync failed");
-
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                UserID = string.Empty;
-                PIN = null;
-
-                Log.Write(ex.ToString());
-
-                throw new Exception("Software error");
-            }
-        }
-
-        /// <summary>
-        /// INI
-        /// </summary>
-        public static bool INI_ANONYMOUS(int BLZ, string URL, int HBCIVersion, string UserID, string PIN)
-        {
-            /// <summary>
-            /// Sync
-            /// </summary>
-            try
-            {
-                Log.Write("Starting Synchronisation anonymous");
-
-                string segments;
-
-                if (HBCIVersion == 300)
-                {
-                    string segments_ = "HKIDN:2:2+280:" + BLZ + "+" + "9999999999" + "+0+0'" +
-                                "HKVVB:3:3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
-
-                    segments = segments_;
-                }
-                else
-                {
-                    UserID = string.Empty;
-                    PIN = null;
-
-                    Log.Write("HBCI version not supported");
-
-                    throw new Exception("HBCI version not supported");
-                }
-                
-                if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create_ANONYMOUS(HBCIVersion, "1", "0", BLZ, UserID, PIN, "0", segments, null))))
-                {
-                    Segment.HKSYN = true;
-
-                    // Sync OK
-                    Log.Write("Synchronisation anonymous ok");
-
-                    /// <summary>
-                    /// INI
-                    /// </summary>
-                    if (HBCIVersion == 300)
-                    {
-                        string segments__ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
-                            "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
-
-                        segments = segments__;
                     }
                     else
                     {
@@ -191,42 +70,160 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS))))
+                    if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, "0", segments, null, 5))))
                     {
-                        Segment.HKSYN = false;
+                        // Sync OK
+                        Log.Write("Synchronisation ok");
 
-                        return true;
-                    }   
+                        /// <summary>
+                        /// INI
+                        /// </summary>
+                        if (HBCIVersion == 220)
+                        {
+                            string segments_ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
+                                "HKVVB:4:2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
+
+                            segments = segments_;
+                        }
+                        else if (HBCIVersion == 300)
+                        {
+                            string segments_ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
+                                "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
+
+                            segments = segments_;
+                        }
+                        else
+                        {
+                            UserID = string.Empty;
+                            PIN = null;
+
+                            Log.Write("HBCI version not supported");
+
+                            throw new Exception("HBCI version not supported");
+                        }
+
+                        if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4))))
+                            return true;
+                        else
+                        {
+                            UserID = string.Empty;
+                            PIN = null;
+
+                            Log.Write("Initialisation failed");
+
+                            throw new Exception("Initialisation failed");
+                        }
+                    }
                     else
                     {
                         UserID = string.Empty;
                         PIN = null;
 
-                        Log.Write("Initialisation failed");
+                        Log.Write("Sync failed");
 
-                        throw new Exception("Initialisation failed");
+                        return false;
                     }
                 }
-                else
+                catch (Exception ex)
                 {
                     UserID = string.Empty;
                     PIN = null;
 
-                    Console.WriteLine("FALSE");
+                    Log.Write(ex.ToString());
 
-                    Log.Write("Sync failed");
-
-                    return false;
+                    throw new Exception("Software error");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                UserID = string.Empty;
-                PIN = null;
+                /// <summary>
+                /// Sync
+                /// </summary>
+                try
+                {
+                    Log.Write("Starting Synchronisation anonymous");
 
-                Log.Write(ex.ToString());
+                    string segments;
 
-                throw new Exception("Software error");
+                    if (HBCIVersion == 300)
+                    {
+                        string segments_ = "HKIDN:2:2+280:" + BLZ + "+" + "9999999999" + "+0+0'" +
+                                    "HKVVB:3:3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
+
+                        segments = segments_;
+                    }
+                    else
+                    {
+                        UserID = string.Empty;
+                        PIN = null;
+
+                        Log.Write("HBCI version not supported");
+
+                        throw new Exception("HBCI version not supported");
+                    }
+
+                    if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessageAnonymous.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, "0", segments, null, 4))))
+                    {
+                        Segment.HKSYN = true;
+
+                        // Sync OK
+                        Log.Write("Synchronisation anonymous ok");
+
+                        /// <summary>
+                        /// INI
+                        /// </summary>
+                        if (HBCIVersion == 300)
+                        {
+                            string segments__ = "HKIDN:3:2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
+                                "HKVVB:4:3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
+
+                            segments = segments__;
+                        }
+                        else
+                        {
+                            UserID = string.Empty;
+                            PIN = null;
+
+                            Log.Write("HBCI version not supported");
+
+                            throw new Exception("HBCI version not supported");
+                        }
+
+                        if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4))))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            UserID = string.Empty;
+                            PIN = null;
+
+                            Log.Write("Initialisation failed");
+
+                            throw new Exception("Initialisation failed");
+                        }
+                    }
+                    else
+                    {
+                        UserID = string.Empty;
+                        PIN = null;
+
+                        Console.WriteLine("FALSE");
+
+                        Log.Write("Sync failed");
+
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UserID = string.Empty;
+                    PIN = null;
+
+                    Log.Write(ex.ToString());
+
+                    throw new Exception("Software error");
+                }
             }
         }
 
@@ -246,7 +243,7 @@ namespace libfintx
                 segments = "HKSAL:3:" + Segment.HISALS + "+" + Konto + "::280:" + BLZ + "+N'";
             }
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 3));
         }
 
         /// <summary>
@@ -293,7 +290,7 @@ namespace libfintx
                 }
             }
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 3));
         }
 
         /// <summary>
@@ -311,7 +308,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
             
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -335,7 +332,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -361,7 +358,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -387,7 +384,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -411,7 +408,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -435,7 +432,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -461,7 +458,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -481,7 +478,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -507,7 +504,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
@@ -525,7 +522,7 @@ namespace libfintx
 
             string segments = "HKCSB:3:1+" + IBAN + ":" + BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS));
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 3));
         }
 
         /// <summary>
@@ -552,7 +549,7 @@ namespace libfintx
             else
                 segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN));
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, 3));
         }
 
         /// <summary>
@@ -574,7 +571,7 @@ namespace libfintx
             if (Segment.HITANS.Substring(0, 1).Equals("5+4"))
                 segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN));
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, 3));
         }
     }
 }

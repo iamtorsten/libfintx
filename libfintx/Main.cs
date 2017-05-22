@@ -37,33 +37,13 @@ namespace libfintx
         /// <param name="HBCIVersion"></param>
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Success or failure
         /// </returns>
-        public static bool Synchronization(int BLZ, string URL, int HBCIVersion, string UserID, string PIN)
+        public static bool Synchronization(int BLZ, string URL, int HBCIVersion, string UserID, string PIN, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
-            {
-                return true;
-            }
-            else
-                return false;
-        }
-
-        /// <summary>
-        /// Synchronize bank connection anonymous
-        /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <returns>
-        /// Success or failure
-        /// </returns>
-        public static bool Synchronization_ANONYMOUS(int BLZ, string URL, int HBCIVersion, string UserID, string PIN)
-        {
-            if (Transaction.INI_ANONYMOUS(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 return true;
             }
@@ -82,12 +62,14 @@ namespace libfintx
         /// <param name="HBCIVersion"></param>
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Balance
         /// </returns>
-        public static string Balance(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
-        {			
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+        public static string Balance(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+            string UserID, string PIN, bool Anonymous)
+        {
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 // Success
                 var BankCode = Transaction.HKSAL(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN);
@@ -109,7 +91,7 @@ namespace libfintx
                     foreach (var item in values)
                     {
                         if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??"+ item.Replace("::", ": ");
+                            msg = msg + "??" + item.Replace("::", ": ");
                     }
 
                     Log.Write(msg);
@@ -132,21 +114,23 @@ namespace libfintx
         /// <param name="HBCIVersion"></param>
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Transactions
         /// </returns>
-        public static string Transactions(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
+        public static string Transactions(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+            string UserID, string PIN, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 // Success
                 var BankCode = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, null, null);
 
                 var Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNSHA");
 
-				MT940.Serialize(Transactions, Account);
+                MT940.Serialize(Transactions, Account);
 
-            Further:
+                Further:
 
                 if (BankCode.Contains("+3040::"))
                 {
@@ -158,7 +142,7 @@ namespace libfintx
 
                     var Transactions_ = ":20:STARTUMS" + Helper.Parse_String(BankCode_, ":20:STARTUMS", "'HNSHA");
 
-					MT940.Serialize(Transactions_, Account);
+                    MT940.Serialize(Transactions_, Account);
 
                     if (BankCode_.Contains("+3040::"))
                     {
@@ -192,19 +176,21 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Transfer(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN,
+            string HIRMS, PictureBox pictureBox, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
-				TransactionConsole.Output = string.Empty;
+                TransactionConsole.Output = string.Empty;
 
-				if (!String.IsNullOrEmpty(HIRMS))
-					Segment.HIRMS = HIRMS;
-				
+                if (!String.IsNullOrEmpty(HIRMS))
+                    Segment.HIRMS = HIRMS;
+
                 var BankCode = Transaction.HKCCS(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
                     Convert.ToDecimal(Amount), Purpose, URL, HBCIVersion, UserID, PIN);
 
@@ -219,7 +205,7 @@ namespace libfintx
                     foreach (var item in values)
                     {
                         if (!item.StartsWith("HIRMS"))
-							TransactionConsole.Output = item.Replace("::", ": ");
+                            TransactionConsole.Output = item.Replace("::", ": ");
                     }
 
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
@@ -240,7 +226,7 @@ namespace libfintx
                         i = i + 1;
 
                         if (i == 6)
-							TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
+                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
                     if (Segment.HIRMS.Equals("972"))
@@ -317,111 +303,113 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Transfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-			string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
+			string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID,
+            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
 		{
-			if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
-			{
-				TransactionConsole.Output = string.Empty;
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            {
+                TransactionConsole.Output = string.Empty;
 
-				if (!String.IsNullOrEmpty(HIRMS))
-					Segment.HIRMS = HIRMS;
+                if (!String.IsNullOrEmpty(HIRMS))
+                    Segment.HIRMS = HIRMS;
 
-				var BankCode = Transaction.HKCCSt(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
-					Convert.ToDecimal(Amount), Purpose, ExecutionDay, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKCCSt(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
+                    Convert.ToDecimal(Amount), Purpose, ExecutionDay, URL, HBCIVersion, UserID, PIN);
 
-				if (BankCode.Contains("+0030::"))
-				{
-					var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+                if (BankCode.Contains("+0030::"))
+                {
+                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
 
-					String[] values = BankCode_.Split('+');
+                    String[] values = BankCode_.Split('+');
 
-					string msg = string.Empty;
+                    string msg = string.Empty;
 
-					foreach (var item in values)
-					{
-						if (!item.StartsWith("HIRMS"))
-							TransactionConsole.Output = item.Replace("::", ": ");
-					}
+                    foreach (var item in values)
+                    {
+                        if (!item.StartsWith("HIRMS"))
+                            TransactionConsole.Output = item.Replace("::", ": ");
+                    }
 
-					var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
+                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
-					string HITANFlicker = string.Empty;
+                    string HITANFlicker = string.Empty;
 
-					if (Segment.HIRMS.Equals("972"))
-					{
-						HITANFlicker = HITAN;
-					}
+                    if (Segment.HIRMS.Equals("972"))
+                    {
+                        HITANFlicker = HITAN;
+                    }
 
-					String[] values_ = HITAN.Split('+');
+                    String[] values_ = HITAN.Split('+');
 
-					int i = 1;
+                    int i = 1;
 
-					foreach (var item in values_)
-					{
-						i = i + 1;
+                    foreach (var item in values_)
+                    {
+                        i = i + 1;
 
-						if (i == 6)
-							TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-					}
+                        if (i == 6)
+                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
+                    }
 
-					if (Segment.HIRMS.Equals("972"))
-					{
-						HITANFlicker = HITAN.Replace("?@", "??");
+                    if (Segment.HIRMS.Equals("972"))
+                    {
+                        HITANFlicker = HITAN.Replace("?@", "??");
 
-						string FlickerCode = string.Empty;
+                        string FlickerCode = string.Empty;
 
-						String[] values__ = HITANFlicker.Split('@');
+                        String[] values__ = HITANFlicker.Split('@');
 
-						int ii = 1;
+                        int ii = 1;
 
-						foreach (var item in values__)
-						{
-							ii = ii + 1;
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
 
-							if (ii == 4)
-								FlickerCode = item;
-						}
+                            if (ii == 4)
+                                FlickerCode = item;
+                        }
 
-						FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-						FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-						flickerCodeRenderer.Start();
+                        flickerCodeRenderer.Start();
 
-						System.Threading.Thread.Sleep(30000);
+                        System.Threading.Thread.Sleep(30000);
 
-						flickerCodeRenderer.Stop();
-					}
+                        flickerCodeRenderer.Stop();
+                    }
 
-					return "OK";
-				}
-				else
-				{
-					// Error
-					var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+                    return "OK";
+                }
+                else
+                {
+                    // Error
+                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
 
-					String[] values = BankCode_.Split('+');
+                    String[] values = BankCode_.Split('+');
 
-					string msg = string.Empty;
+                    string msg = string.Empty;
 
-					foreach (var item in values)
-					{
-						if (!item.StartsWith("HIRMS"))
-							msg = msg + "??" + item.Replace("::", ": ");
-					}
+                    foreach (var item in values)
+                    {
+                        if (!item.StartsWith("HIRMS"))
+                            msg = msg + "??" + item.Replace("::", ": ");
+                    }
 
                     Log.Write(msg);
 
                     return msg;
-				}
-			}
-			else
-				return "Error";
-		}
+                }
+            }
+            else
+                return "Error";
+        }
 
         /// <summary>
         /// Collective transfer money
@@ -439,13 +427,15 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string CollectiveTransfer(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, List<pain00100203_ct_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID,
+            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
@@ -562,13 +552,15 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string CollectiveTransfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, List<pain00100203_ct_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion,
+            string UserID, string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
@@ -686,13 +678,15 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Rebooking(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN,
+            string HIRMS, PictureBox pictureBox, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
@@ -814,14 +808,15 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Collect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Payer, string PayerIBAN, string PayerBIC,
             decimal Amount, string Purpose, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, string UserID,
-            string PIN, string HIRMS, PictureBox pictureBox)
+            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
         {			
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
 				TransactionConsole.Output = string.Empty;
 
@@ -936,13 +931,15 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string CollectiveCollect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string SettlementDate, List<pain00800202_cc_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS, PictureBox pictureBox)
+            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN,
+            string HIRMS, PictureBox pictureBox, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
@@ -1055,13 +1052,14 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Prepaid(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox)
+            string HIRMS, PictureBox pictureBox, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
@@ -1182,14 +1180,16 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
         /// <param name="pictureBox"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string SubmitBankersOrder(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string FirstTimeExecutionDay, string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS,
-            PictureBox pictureBox)
+        public static string SubmitBankersOrder(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC,
+            string Receiver, string ReceiverIBAN, string ReceiverBIC, string Amount, string Purpose, string FirstTimeExecutionDay,
+            string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS,
+            PictureBox pictureBox, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
@@ -1299,12 +1299,14 @@ namespace libfintx
         /// <param name="HBCIVersion"></param>
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
+        /// <param name="Anonymous"></param>
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public static string GetBankersOrders(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
+        public static string GetBankersOrders(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+            string UserID, string PIN, bool Anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN) == true)
+            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 // Success
                 var BankCode = Transaction.HKCSB(BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN);

@@ -30,7 +30,8 @@ namespace libfintx
 {
     public static class FinTSMessage
     {
-        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN, string SystemID, string Segments, string TAN)
+        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN, 
+            string SystemID, string Segments, string TAN, int SegmentNum)
         {
             if (String.IsNullOrEmpty(MsgNum))
                 MsgNum = "1";
@@ -88,16 +89,16 @@ namespace libfintx
 
                 if (String.IsNullOrEmpty(TAN_))
                 {
-                    sigTrail = "HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + PIN + "'";
+                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + PIN + "'";
 
-                    Log.Write("HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + "XXXXXX" + "'");
+                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + "XXXXXX" + "'");
                 }
 
                 else
                 {
-                    sigTrail = "HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + PIN + TAN_ + "'";
+                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + PIN + TAN_ + "'";
 
-                    Log.Write("HNSHA:" + (Segments.Length + 3) + ":1+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
+                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
                 }
             }
             else if (Version == 300)
@@ -123,23 +124,25 @@ namespace libfintx
                 {
                     if (Segment.HKSYN)
                     {
-                        sigTrail = "HKSYN:5:3+0'";
+                        sigTrail = "HKSYN:" + Convert.ToString(SegmentNum + 1) + ":3+0'";
 
-                        Log.Write("HKSYN:5:3+0'");
+                        Log.Write("HKSYN:" + Convert.ToString(SegmentNum + 1) + ":3+0'");
 
-                        sigTrail = sigTrail + "HNSHA:" + "6" + ":2+" + secRef + "++" + PIN + "'";
+                        sigTrail = sigTrail + "HNSHA:" + Convert.ToString(SegmentNum + 2) + ":2+" + secRef + "++" + PIN + "'";
+
+                        SegmentNum = SegmentNum + 1;
                     }
                     else
-                        sigTrail = "HNSHA:" + Convert.ToString(Convert.ToInt16(MsgNum) + 5) + ":2+" + secRef + "++" + PIN + "'";
+                        sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + "'";
 
-                    Log.Write("HNSHA:" + Convert.ToString(Convert.ToInt16(MsgNum) + 5) + ":2+" + secRef + "++" + "XXXXXX" + "'");
+                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + "XXXXXX" + "'");
                 }
 
                 else
                 {
-                    sigTrail = "HNSHA:" + Convert.ToString(Convert.ToInt16(MsgNum) + 5) + ":2+" + secRef + "++" + PIN + TAN_ + "'";
+                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + TAN_ + "'";
 
-                    Log.Write("HNSHA:" + Convert.ToString(Convert.ToInt16(MsgNum) + 5) + ":2+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
+                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
                 }
             }
             else
@@ -183,7 +186,7 @@ namespace libfintx
                 return string.Empty;
             }
 
-            var msgEnd = "HNHBS:" + Convert.ToString(Convert.ToInt16(MsgNum) + 6) + ":1+" + MsgNum + "'";
+            var msgEnd = "HNHBS:" + Convert.ToString(SegmentNum + 2) + ":1+" + MsgNum + "'";
 
             Log.Write(msgEnd);
 
@@ -191,30 +194,6 @@ namespace libfintx
             PIN = null;
 
             return msgHead + encHead + payload + msgEnd;
-        }
-
-        public static string Create_ANONYMOUS(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN, string SystemID, string Segments, string TAN)
-        {
-            if (String.IsNullOrEmpty(MsgNum))
-                MsgNum = "1";
-
-            MsgNum += "";
-            DialogID += "";
-
-            var HEAD_LEN = 29;
-            var TRAIL_LEN = 11;
-
-            var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length * 2 + DialogID.Length;
-
-            var paddedLen = ("000000000000").Substring(0, 12 - Convert.ToString(msgLen).Length) + Convert.ToString(msgLen);
-
-            var msgHead = string.Empty;
-
-            msgHead = "HNHBK:1:3+" + paddedLen + "+" + ("300") + "+" + DialogID + "+" + MsgNum + "'";
-
-            var msgEnd = "HNHBS:" + Convert.ToString(Convert.ToInt16(MsgNum) + 4) + ":1+" + MsgNum + "'";
-
-            return msgHead + Segments + msgEnd;
         }
 
         public static string Send(string Url, string Message)

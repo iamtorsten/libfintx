@@ -51,6 +51,7 @@
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Message\FinTSMessage.cs" />
+    <Compile Include="Message\FinTSMessageAnonymous.cs" />
     <Compile Include="MT940\MT940.cs" />
     <Compile Include="Pain\pain00100203.cs" />
     <Compile Include="Pain\pain00800202.cs" />
