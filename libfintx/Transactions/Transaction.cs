@@ -191,6 +191,8 @@ namespace libfintx
 
                         if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion, FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, 4))))
                         {
+                            Segment.HKSYN = false;
+
                             return true;
                         }
                         else
