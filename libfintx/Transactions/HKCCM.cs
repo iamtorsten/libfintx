@@ -46,7 +46,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            SEG.NUM = 4;
+            SEG.NUM = SEGNUM.RETInt(4);
 
             var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
 

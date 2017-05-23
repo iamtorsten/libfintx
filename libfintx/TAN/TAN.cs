@@ -36,20 +36,22 @@ namespace libfintx
 
             // Version 2, Process 2
             if (Segment.HITANS.Substring(0, 1).Equals("2+2"))
-                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
+                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
             // Version 3, Process 2
             if (Segment.HITANS.Substring(0, 1).Equals("3+2"))
-                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
+                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
             // Version 4, Process 2
             if (Segment.HITANS.Substring(0, 1).Equals("4+2"))
-                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
+                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
             // Version 5, Process 2
             if (Segment.HITANS.Substring(0, 1).Equals("5+2"))
-                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
+                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
             else
-                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
+                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, 3));
+            SEG.NUM = SEGNUM.RETInt(3);
+
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, SEG.NUM));
         }
     }
 }

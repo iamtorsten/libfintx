@@ -36,15 +36,17 @@ namespace libfintx
 
             // Version 3, Process 4
             if (Segment.HITANS.Substring(0, 1).Equals("3+4"))
-                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
             // Version 4, Process 4
             if (Segment.HITANS.Substring(0, 1).Equals("4+4"))
-                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
             // Version 5, Process 4
             if (Segment.HITANS.Substring(0, 1).Equals("5+4"))
-                segments = "HKTAN:3:" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, 3));
+            SEG.NUM = SEGNUM.RETInt(3);
+
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, SEG.NUM));
         }
     }
 }

@@ -43,7 +43,7 @@ namespace libfintx
                 segments = "HKSAL:" + SEGNUM.RETVal(3) + ":" + Segment.HISALS + "+" + Konto + "::280:" + BLZ + "+N'";
             }
 
-            SEG.NUM = 3;
+            SEG.NUM = SEGNUM.RETInt(3);
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }

@@ -69,7 +69,7 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    SEG.NUM = 5;
+                    SEG.NUM = SEGNUM.RETInt(5);
 
                     if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion,
                         FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, MSG.RETVal(1), DLG.RETVal(0), BLZ, UserID,
@@ -105,7 +105,7 @@ namespace libfintx
                             throw new Exception("HBCI version not supported");
                         }
 
-                        SEG.NUM = 4;
+                        SEG.NUM = SEGNUM.RETInt(4);
 
                         if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion,
                             FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, MSG.RETVal(1), DLG.RETVal(0), BLZ, UserID, PIN, Segment.HISYN,
@@ -169,7 +169,7 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    SEG.NUM = 4;
+                    SEG.NUM = SEGNUM.RETInt(4);
 
                     if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion,
                         FinTSMessage.Send(URL, FinTSMessageAnonymous.Create(HBCIVersion, MSG.RETVal(1), DLG.RETVal(0), BLZ,
@@ -199,7 +199,7 @@ namespace libfintx
                             throw new Exception("HBCI version not supported");
                         }
 
-                        SEG.NUM = 5;
+                        SEG.NUM = SEGNUM.RETInt(5);
 
                         if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion,
                             FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, MSG.RETVal(1), DLG.RETVal(0), BLZ, UserID, PIN,

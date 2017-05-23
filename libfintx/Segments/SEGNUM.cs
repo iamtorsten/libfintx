@@ -31,5 +31,10 @@ namespace libfintx
         {
             return Convert.ToString(NUM);
         }
+
+        public static int RETInt(int NUM)
+        {
+            return NUM;
+        }
     }
 }

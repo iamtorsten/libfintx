@@ -71,7 +71,7 @@ namespace libfintx
                 }
             }
 
-            SEG.NUM = 3;
+            SEG.NUM = SEGNUM.RETInt(3);
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }
