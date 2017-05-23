@@ -318,7 +318,7 @@ namespace libfintx
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCCSt(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
+                var BankCode = Transaction.HKCCST(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
                     Convert.ToDecimal(Amount), Purpose, ExecutionDay, URL, HBCIVersion, UserID, PIN);
 
                 if (BankCode.Contains("+0030::"))

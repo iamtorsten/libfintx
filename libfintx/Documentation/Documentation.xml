@@ -4,7 +4,7 @@
         <name>libfintx</name>
     </assembly>
     <members>
-        <member name="M:libfintx.Main.Synchronization(System.Int32,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:libfintx.Main.Synchronization(System.Int32,System.String,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Synchronize bank connection
             </summary>
@@ -13,11 +13,12 @@
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
             <param name="PIN"></param>
+            <param name="Anonymous"></param>
             <returns>
             Success or failure
             </returns>
         </member>
-        <member name="M:libfintx.Main.Balance(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:libfintx.Main.Balance(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Account balance
             </summary>
@@ -29,11 +30,12 @@
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
             <param name="PIN"></param>
+            <param name="Anonymous"></param>
             <returns>
             Balance
             </returns>
         </member>
-        <member name="M:libfintx.Main.Transactions(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:libfintx.Main.Transactions(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Account transactions
             </summary>
@@ -45,11 +47,12 @@
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
             <param name="PIN"></param>
+            <param name="Anonymous"></param>
             <returns>
             Transactions
             </returns>
         </member>
-        <member name="M:libfintx.Main.Transfer(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Transfer(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Transfer money
             </summary>
@@ -68,11 +71,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Transfer_Terminated(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Transfer_Terminated(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Transfer money at a certain time
             </summary>
@@ -92,11 +96,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.CollectiveTransfer(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.CollectiveTransfer(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Collective transfer money
             </summary>
@@ -113,11 +118,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.CollectiveTransfer_Terminated(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.CollectiveTransfer_Terminated(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Collective transfer money terminated
             </summary>
@@ -135,11 +141,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Rebooking(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Rebooking(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Rebook money from one to another account
             </summary>
@@ -158,11 +165,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Collect(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Collect(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Collect money from another account
             </summary>
@@ -185,11 +193,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.CollectiveCollect(System.Int32,System.String,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00800202_cc_data},System.String,System.Decimal,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.CollectiveCollect(System.Int32,System.String,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00800202_cc_data},System.String,System.Decimal,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Collective collect money from other accounts
             </summary>
@@ -207,11 +216,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.Prepaid(System.Int32,System.String,System.String,System.Int32,System.String,System.Int32,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.Prepaid(System.Int32,System.String,System.String,System.Int32,System.String,System.Int32,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Load mobile phone prepaid card
             </summary>
@@ -227,11 +237,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.SubmitBankersOrder(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.Windows.Forms.PictureBox)">
+        <member name="M:libfintx.Main.SubmitBankersOrder(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.Windows.Forms.PictureBox,System.Boolean)">
             <summary>
             Submit bankers order
             </summary>
@@ -254,11 +265,12 @@
             <param name="PIN"></param>
             <param name="HIRMS"></param>
             <param name="pictureBox"></param>
+            <param name="Anonymous"></param>
             <returns>
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.GetBankersOrders(System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:libfintx.Main.GetBankersOrders(System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.Boolean)">
             <summary>
             Get banker's orders
             </summary>
@@ -269,11 +281,12 @@
             <param name="HBCIVersion"></param>
             <param name="UserID"></param>
             <param name="PIN"></param>
+            <param name="Anonymous"></param>
             <returns>
             Banker's orders
             </returns>
         </member>
-        <member name="M:libfintx.Main.TAN(System.String,System.String,System.Int32,System.Int32,System.Int32,System.String)">
+        <member name="M:libfintx.Main.TAN(System.String,System.String,System.Int32,System.Int32,System.String,System.String)">
             <summary>
             Confirm order with TAN
             </summary>
@@ -287,7 +300,7 @@
             Bank return codes
             </returns>
         </member>
-        <member name="M:libfintx.Main.TAN4(System.String,System.String,System.Int32,System.Int32,System.Int32,System.String,System.String)">
+        <member name="M:libfintx.Main.TAN4(System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.String)">
             <summary>
             Confirm order with TAN
             </summary>
@@ -340,6 +353,274 @@
             <returns>
             Bank return codes
             </returns>
+        </member>
+        <member name="P:libfintx.Segment.HIRMS">
+            <summary>
+            TAN
+            </summary>
+        </member>
+        <member name="P:libfintx.Segment.HITANS">
+            <summary>
+            TAN
+            </summary>
+        </member>
+        <member name="P:libfintx.Segment.HITAN">
+            <summary>
+            TAN
+            </summary>
+        </member>
+        <member name="P:libfintx.Segment.HNHBK">
+            <summary>
+            DialogID
+            </summary>
+        </member>
+        <member name="P:libfintx.Segment.HISYN">
+            <summary>
+            SystemID
+            </summary>
+        </member>
+        <member name="P:libfintx.Segment.HNHBS">
+            <summary>
+            Message
+            </summary>
+        </member>
+        <member name="P:libfintx.Segment.HISALS">
+            <summary>
+            Segment
+            </summary>
+        </member>
+        <member name="P:libfintx.Segment.HKKAZ">
+            <summary>
+            Transactions
+            </summary>
+        </member>
+        <member name="T:libfintx.FlickerCode.HHDVersion">
+            <summary>
+            Version
+            </summary>
+        </member>
+        <member name="T:libfintx.FlickerCode.Encoding">
+            <summary>
+            Encoding user data
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.Encoding.ASC">
+            <summary>
+            ASC-Encoding.
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.Encoding.BCD">
+            <summary>
+            BCD-Encoding.
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.LC_LENGTH_HHD14">
+            Number of bytes 
+        </member>
+        <member name="F:libfintx.FlickerCode.LC_LENGTH_HHD13">
+            <summary>
+            Number of bytes 
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.BIT_ENCODING">
+            <summary>
+            The position of the bit that contains the encoding
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.BIT_CONTROLBYTE">
+            <summary>
+            The position of the bit which determines whether a control byte follows
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.version">
+            <summary>
+            HHD-Version
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.lc">
+            <summary>
+            Length of the entire code
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.startCode">
+            <summary>
+            Startcode
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.de1">
+            <summary>
+            Data element 1
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.de2">
+            <summary>
+            Data element 2
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.de3">
+             <summary>
+            Data element 3
+             </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.rest">
+            <summary>
+            Unused code
+            </summary>
+        </member>
+        <member name="M:libfintx.FlickerCode.#ctor">
+            <summary>
+            Parameter free constructor for manually merging code
+            </summary>
+        </member>
+        <member name="M:libfintx.FlickerCode.#ctor(System.String)">
+            <summary>
+            Parsing HHDuc-Code from given code
+            </summary>
+        </member>
+        <member name="M:libfintx.FlickerCode.Parse(System.String,libfintx.FlickerCode.HHDVersion)">
+            <summary>
+            Parsing code with the specified HHD version.
+            </summary>
+        </member>
+        <member name="M:libfintx.FlickerCode.Clean(System.String)">
+            <summary>
+            Remove CHLGUC0026....CHLGTEXT from code if exists
+            </summary>
+        </member>
+        <member name="M:libfintx.FlickerCode.Render">
+            <summary>
+            Rendering code
+            </summary>
+        </member>
+        <member name="M:libfintx.FlickerCode.Reset">
+            <summary>
+            Resetting code
+            </summary>
+        </member>
+        <member name="T:libfintx.FlickerCode.DE">
+            <summary>
+            Bean
+            </summary>
+        </member>
+        <member name="T:libfintx.FlickerCode.Startcode">
+            <summary>
+            Bean
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerCode.Startcode.controlBytes">
+            <summary>
+            Control bytes.
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerRenderer.FREQUENCY_DEFAULT">
+            <summary>
+            Default clock frequency in Hz
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerRenderer.FREQUENCY_MIN">
+            <summary>
+            Minimal clock frequency
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerRenderer.FREQUENCY_MAX">
+            <summary>
+            Maximal clock frequency
+            </summary>
+        </member>
+        <member name="F:libfintx.FlickerRenderer.pictureBox">
+            <summary>
+            Flicker graphic
+            </summary>
+        </member>
+        <member name="P:libfintx.FlickerRenderer.Frequency">
+            <summary>
+            Sets the clock frequency in Hz
+            </summary>
+        </member>
+        <member name="M:libfintx.FlickerRenderer.Start">
+            <summary>
+            Starts the rendering of the flicker code
+            </summary>
+        </member>
+        <member name="M:libfintx.FlickerRenderer.Stop">
+            <summary>
+            Stop rendering
+            </summary>
+        </member>
+        <member name="M:libfintx.TAN.Send_TAN(System.String,System.String,System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            TAN
+            </summary>
+        </member>
+        <member name="M:libfintx.TAN4.Send_TAN4(System.String,System.String,System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            TAN process 4
+            </summary>
+        </member>
+        <member name="M:libfintx.HKCCM.Init_HKCCM(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Collective transfer
+            </summary>
+        </member>
+        <member name="M:libfintx.HKCCS.Init_HKCCS(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Transfer
+            </summary>
+        </member>
+        <member name="M:libfintx.HKCCST.Init_HKCCST(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Transfer terminated
+            </summary>
+        </member>
+        <member name="M:libfintx.HKCDE.Init_HKCDE(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Submit bankers order
+            </summary>
+        </member>
+        <member name="M:libfintx.HKCME.Init_HKCME(System.Int32,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00100203_ct_data},System.String,System.Decimal,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Collective transfer terminated
+            </summary>
+        </member>
+        <member name="M:libfintx.HKCSB.Init_HKCSB(System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Get bankers orders
+            </summary>
+        </member>
+        <member name="M:libfintx.HKCUM.Init_HKCUM(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Rebooking
+            </summary>
+        </member>
+        <member name="M:libfintx.HKDME.Init_HKDME(System.Int32,System.String,System.String,System.String,System.String,System.Collections.Generic.List{libfintx.pain00800202_cc_data},System.String,System.Decimal,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Collective collect
+            </summary>
+        </member>
+        <member name="M:libfintx.HKDSE.Init_HKDSE(System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Collect
+            </summary>
+        </member>
+        <member name="M:libfintx.HKKAZ.Init_HKKAZ(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.String)">
+            <summary>
+            Transactions
+            </summary>
+        </member>
+        <member name="M:libfintx.HKPPD.Init_HKPPD(System.Int32,System.String,System.String,System.Int32,System.String,System.Int32,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Load prepaid
+            </summary>
+        </member>
+        <member name="M:libfintx.HKSAL.Init_HKSAL(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Balance
+            </summary>
+        </member>
+        <member name="M:libfintx.INI.Init_INI(System.Int32,System.String,System.Int32,System.String,System.String,System.Boolean)">
+            <summary>
+            INI
+            </summary>
         </member>
     </members>
 </doc>
