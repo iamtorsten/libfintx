@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx", "libfintx\libfintx.csproj", "{7F69841C-B99E-4236-AE26-5B6AD0538AE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTS Test", "FinTS Test\FinTS Test.csproj", "{37AB9B64-2A70-41C9-9695-CC22709FE014}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7F69841C-B99E-4236-AE26-5B6AD0538AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F69841C-B99E-4236-AE26-5B6AD0538AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F69841C-B99E-4236-AE26-5B6AD0538AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37AB9B64-2A70-41C9-9695-CC22709FE014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37AB9B64-2A70-41C9-9695-CC22709FE014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37AB9B64-2A70-41C9-9695-CC22709FE014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37AB9B64-2A70-41C9-9695-CC22709FE014}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -137,8 +137,8 @@ namespace libfintx
                     {
                         var item_ = item;
 
-                        if (item.Contains("Benutzer."))
-                            item.Replace("Benutzer.", "Benutzer");
+                        if (item_.Contains("Benutzer."))
+                            item_ = item_.Replace("Benutzer.", "Benutzer");
 
                         if (item_.Contains("3920"))
                         {
@@ -197,14 +197,6 @@ namespace libfintx
                             var VER = Parse_String(item, "HKKAZ;", ";");
 
                             Segment.HKKAZ = VER;
-                        }
-                    }
-                    
-                    if (item.Contains("HIBPA"))
-                    {
-                        if (item.Contains("1822direkt") && String.IsNullOrEmpty(Segment.HIRMS))
-                        {
-                            Segment.HIRMS = "900";
                         }
                     }
                 }

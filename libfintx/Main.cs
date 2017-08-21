@@ -1504,5 +1504,13 @@ namespace libfintx
 		{
 			return TransactionConsole.Output;
 		}
+
+        /// <summary>
+        /// Enable / Disable Tracing
+        /// </summary>
+        public static void Tracing(bool Enabled)
+        {
+            Trace.Enabled = Enabled;
+        }
     }
 }
