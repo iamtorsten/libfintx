@@ -413,6 +413,11 @@ libfintx.Main.Balance ( ... );
             Bank return codes
             </returns>
         </member>
+        <member name="M:libfintx.Main.Tracing(System.Boolean)">
+            <summary>
+            Enable / Disable Tracing
+            </summary>
+        </member>
     </members>
 </doc>
 ```
