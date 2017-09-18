@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace libfintx
 {
@@ -137,15 +138,35 @@ namespace libfintx
                     {
                         var item_ = item;
 
-                        if (item_.Contains("Benutzer."))
-                            item_ = item_.Replace("Benutzer.", "Benutzer");
-
                         if (item_.Contains("3920"))
                         {
-                            var TAN = Parse_String(item_.ToString(), "Benutzer:", "::").Substring(0, 3);
-                            Segment.HIRMS = TAN;
+                            string TAN = string.Empty;
+                            string TANf = string.Empty;
 
-                            var TANf = Parse_String(item_.ToString(), "Benutzer:", "+");
+                            string[] procedures = Regex.Split(item_, @"\D+");
+
+                            foreach (string value in procedures)
+                            {
+                                if (!string.IsNullOrEmpty(value))
+                                {
+                                    int i = int.Parse(value);
+
+                                    if (Convert.ToString(i).StartsWith("9"))
+                                    {
+                                        if (String.IsNullOrEmpty(TAN))
+                                            TAN = Convert.ToString(i);
+                                        else
+                                        {
+                                            if (String.IsNullOrEmpty(TANf))
+                                                TANf = Convert.ToString(i);
+                                            else
+                                                TANf = TANf + ";" + Convert.ToString(i);
+                                        }
+                                    }
+                                }
+                            }
+
+                            Segment.HIRMS = TAN;
                             Segment.HIRMSf = TANf;
                         }
                     }
