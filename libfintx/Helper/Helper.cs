@@ -330,5 +330,60 @@ namespace libfintx
             }
             catch { return false; }
         }
+
+        public static bool Parse_TANProcesses()
+        {
+            try
+            {
+                List<TANprocess> list = new List<TANprocess>();
+
+                switch (Segment.HIRMS)
+                {
+                    case "900": // iTAN
+                        list.Add(new TANprocess { ProcessNumber = "900", ProcessName = "iTAN" });
+                        break;
+                    case "942": // mobile-TAN
+                        list.Add(new TANprocess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
+                        break;
+                    case "962": // Sm@rt-TAN plus manuell
+                        list.Add(new TANprocess { ProcessNumber = "962", ProcessName = "Sm@rt-TAN plus manuell" });
+                        break;
+                    case "972": // Smart-TAN plus optisch
+                        list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
+                        break;
+                }
+
+                var processes = Segment.HIRMSf;
+
+                if (!String.IsNullOrEmpty(processes))
+                {
+                    var process = processes.Split(';');
+
+                    foreach (var item in process)
+                    {
+                        switch (item)
+                        {
+                            case "900": // iTAN
+                                list.Add(new TANprocess { ProcessNumber = "900", ProcessName = "iTAN" });
+                                break;
+                            case "942": // mobile-TAN
+                                list.Add(new TANprocess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
+                                break;
+                            case "962": // Sm@rt-TAN plus manuell
+                                list.Add(new TANprocess { ProcessNumber = "962", ProcessName = "Sm@rt-TAN plus manuell" });
+                                break;
+                            case "972": // Smart-TAN plus optisch
+                                list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
+                                break;
+                        }
+                    }
+                }
+
+                TANProcesses.items = list;
+
+                return true;
+            }
+            catch { return false; }
+        }
     }
 }

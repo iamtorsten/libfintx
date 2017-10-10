@@ -47,6 +47,8 @@
     <Compile Include="Data\AccountInformations.cs" />
     <Compile Include="Data\pain00100203_ct_data.cs" />
     <Compile Include="Data\pain00800202_cc_data.cs" />
+    <Compile Include="Data\TANProcess.cs" />
+    <Compile Include="Data\TANProcesses.cs" />
     <Compile Include="Dialog\DLG.cs" />
     <Compile Include="Helper\Helper.cs" />
     <Compile Include="Helper\Program.cs" />
