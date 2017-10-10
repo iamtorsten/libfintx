@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Console\TransactionConsole.cs" />
+    <Compile Include="Data\AccountInformations.cs" />
     <Compile Include="Data\pain00100203_ct_data.cs" />
     <Compile Include="Data\pain00800202_cc_data.cs" />
     <Compile Include="Dialog\DLG.cs" />

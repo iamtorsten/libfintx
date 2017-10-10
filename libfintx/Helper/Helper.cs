@@ -308,5 +308,27 @@ namespace libfintx
 
             return Balance;
         }
+
+        public static bool Parse_Accounts(string Message, List<AccountInformations> Items)
+        {
+            try
+            {
+                string pattern = "HIUPD.*?HKSAK";
+                MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Singleline);
+
+                for (int ctr = 0; ctr <= result.Count - 1; ctr++)
+                {
+                    string Accountnumber = "DE" + Parse_String(result[ctr].Value, "+DE", "+");
+                    string Accountowner = Parse_String(result[ctr].Value, "EUR+", "+");
+                    string Accounttype = Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
+
+                    if (Accountnumber.Length > 2 && Accounttype.ToUpper().Contains("KONTO"))
+                        Items.Add(new AccountInformations() { Accountnumber = Accountnumber, Accountowner = Accountowner, Accounttype = Accounttype });
+                }
+
+                return true;
+            }
+            catch { return false; }
+        }
     }
 }
