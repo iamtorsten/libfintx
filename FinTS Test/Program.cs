@@ -4,7 +4,7 @@ namespace FinTS_Test
 {
     class Program
     {
-        static int BLZ = 7606172;
+        static int BLZ = 76061482;
         static string URL = "https://hbci11.fiducia.de/cgi-bin/hbciservlet";
         static int HBCIVersion = 300;
         static string UserID = "xxxxxxxxx";

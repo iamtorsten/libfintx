@@ -88,7 +88,9 @@
     <Compile Include="Transactions\INI.cs" />
     <Compile Include="Transactions\Transaction.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BankCodes\" />
+  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="Documentation\Documentation.xml" />
