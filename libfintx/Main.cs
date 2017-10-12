@@ -23,12 +23,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace libfintx
 {
     public class Main
     {
+        static FlickerRenderer flickerCodeRenderer = null;
+
         /// <summary>
         /// Synchronize bank connection
         /// </summary>
@@ -249,13 +252,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -283,6 +289,8 @@ namespace libfintx
             else
                 return "Error";
         }
+
+        
 
         /// <summary>
         /// Transfer money at a certain time
@@ -376,13 +384,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -500,13 +511,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -625,13 +639,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -751,13 +768,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -879,13 +899,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -1002,13 +1025,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -1123,13 +1149,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -1254,13 +1283,16 @@ namespace libfintx
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
 
-                        FlickerRenderer flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
 
-                        flickerCodeRenderer.Start();
+                        RUN_flickerCodeRenderer();
 
-                        System.Threading.Thread.Sleep(30000);
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        flickerCodeRenderer.Stop();
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
                     }
 
                     return "OK";
@@ -1511,6 +1543,28 @@ namespace libfintx
         public static void Tracing(bool Enabled)
         {
             Trace.Enabled = Enabled;
+        }
+
+        /// <summary>
+        /// RUN Flicker Code Rendering
+        /// </summary>
+        private static void RUN_flickerCodeRenderer()
+        {
+            flickerCodeRenderer.Start();
+        }
+
+        /// <summary>
+        /// STOP Flicker Code Rendering
+        /// </summary>
+        public static void RunAfterTimespan(Action action, TimeSpan span)
+        {
+            Thread.Sleep(span);
+            action();
+        }
+
+        private static void STOP_flickerCodeRenderer()
+        {
+            flickerCodeRenderer.Stop();
         }
     }
 }

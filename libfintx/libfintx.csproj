@@ -50,6 +50,7 @@
     <Compile Include="Data\TANProcess.cs" />
     <Compile Include="Data\TANProcesses.cs" />
     <Compile Include="Dialog\DLG.cs" />
+    <Compile Include="Helper\EncodingHelper.cs" />
     <Compile Include="Helper\Helper.cs" />
     <Compile Include="Helper\Program.cs" />
     <Compile Include="Logging\Log.cs" />

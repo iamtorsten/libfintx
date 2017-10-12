@@ -175,7 +175,7 @@ namespace libfintx
                         graphic.FillRectangle(brush, i * barwidth + margin, margin, barwidth - 2 * margin, pictureBox.Height - 2 * margin);
 
                         // Refresh flicker code
-                        pictureBox.Refresh();
+                        pictureBox.Invoke(new MethodInvoker (delegate() { pictureBox.Refresh(); }));
                     }
 
                     this.clock--;
