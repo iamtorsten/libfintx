@@ -21,20 +21,11 @@
  * 	
  */
 
-using System;
-
 namespace libfintx
 {
-    class DLG
+    class RDH_Profile
     {
-        public static string RETVal(int NUM)
-        {
-            return Convert.ToString(NUM);
-        }
-
-        public static string SETVal(int NUM)
-        {
-            return Convert.ToString(NUM);
-        }
+        public static string RDHPROFILE = "RDH:10";
+        public static string Version = "10";
     }
 }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTS Test", "FinTS Test\Fi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_Flicker", "test_Flicker\test_Flicker.csproj", "{592614ED-C8E8-4CFE-A0E3-1B2CAF041C15}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_RDH", "test_RDH\test_RDH.csproj", "{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{592614ED-C8E8-4CFE-A0E3-1B2CAF041C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{592614ED-C8E8-4CFE-A0E3-1B2CAF041C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{592614ED-C8E8-4CFE-A0E3-1B2CAF041C15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

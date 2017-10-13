@@ -25,16 +25,32 @@ using System;
 
 namespace libfintx
 {
-    class DLG
+    public static class Converter
     {
-        public static string RETVal(int NUM)
+        public static string FromHexString(string hexString)
         {
-            return Convert.ToString(NUM);
+            string hexValues = hexString;
+
+            string[] hexValuesSplit = hexValues.Split(' ');
+
+            string charValue = string.Empty;
+
+            foreach (String hex in hexValuesSplit)
+            {
+                // Convert the number expressed in base-16 to an integer.
+                int value = Convert.ToInt32(hex, 16);
+                // Get the character corresponding to the integral value.
+                string stringValue = Char.ConvertFromUtf32(value);
+                charValue = charValue + (char)value;
+            }
+
+            return charValue;
         }
 
-        public static string SETVal(int NUM)
+        public static string ByteArrayToString(byte[] ba)
         {
-            return Convert.ToString(NUM);
+            string hex = BitConverter.ToString(ba);
+            return hex.Replace("-", " ");
         }
     }
 }

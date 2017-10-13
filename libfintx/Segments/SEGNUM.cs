@@ -36,5 +36,15 @@ namespace libfintx
         {
             return NUM;
         }
+
+        public static string SETVal(int NUM)
+        {
+            return Convert.ToString(NUM);
+        }
+
+        public static int SETInt(int NUM)
+        {
+            return NUM;
+        }
     }
 }

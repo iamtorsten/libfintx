@@ -21,20 +21,33 @@
  * 	
  */
 
-using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace libfintx
 {
-    class DLG
+    public class KeyManager
     {
-        public static string RETVal(int NUM)
+        public static byte[] Import_Public_Bank_Key()
         {
-            return Convert.ToString(NUM);
-        }
+            byte[] Exponent = { 1, 0, 1 };
 
-        public static string SETVal(int NUM)
-        {
-            return Convert.ToString(NUM);
+            byte[] PublicKey = Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK);
+
+            //Create a new instance of the RSACryptoServiceProvider class.
+            RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
+
+            //Create a new instance of the RSAParameters structure. 
+            RSAParameters RSAKeyInfo = new RSAParameters();
+
+            //Set RSAKeyInfo to the public key values. 
+            RSAKeyInfo.Modulus = PublicKey;
+            RSAKeyInfo.Exponent = Exponent;
+
+            //Import key parameters into RSA. 
+            RSA.ImportParameters(RSAKeyInfo);
+
+            return RSA.ExportCspBlob(false);
         }
     }
 }

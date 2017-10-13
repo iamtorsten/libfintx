@@ -385,5 +385,82 @@ namespace libfintx
             }
             catch { return false; }
         }
+
+        /* Parse message and extract public bank keys -> Encryption, Signing */
+        public static bool Parse_Segment_RDH_Key(string Message)
+        {
+            Message = Message.Replace("'?", "||?");
+
+            String[] values = Message.Split('\'');
+
+            List<string> msg = new List<string>();
+
+            foreach (var item in values)
+            {
+                msg.Add(item + Environment.NewLine.Replace(",", ""));
+            }
+
+            string msg_ = string.Join("", msg.ToArray());
+
+            foreach (var item in values)
+            {
+                if (item.Contains("HNHBK"))
+                {
+                    var ID = Parse_String(item.ToString(), "+1+", ":1");
+                    Segment.HNHBK = ID;
+                }
+
+                if (item.Contains("HISYN"))
+                {
+                    var ID = item.Substring(13, item.Length - 13);
+                    Segment.HISYN = ID;
+                }
+
+                if (item.Contains("HIISA"))
+                {
+                    if (item.Contains(":V:10"))
+                    {
+                        var item_ = item.ToString().Replace("||?", "'?");
+
+                        RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK = Parse_String(item_, "@248@", ":12:");
+                    }
+                }
+
+                if (item.Contains("HIISA"))
+                {
+                    if (item.Contains(":S:10"))
+                    {
+                        var item_ = item.ToString().Replace("||?", "'?");
+
+                        RDH_KEYSTORE.KEY_SIGNING_PUBLIC_BANK = Parse_String(item_, "@248@", ":12:");
+                    }
+                }
+            }
+
+            if (!String.IsNullOrEmpty(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK) &&
+                !String.IsNullOrEmpty(RDH_KEYSTORE.KEY_SIGNING_PUBLIC_BANK))
+            {
+                return true;
+            }
+            else
+            {
+                // Error
+                var BankCode = "HIRMG" + Helper.Parse_String(msg_, "HIRMG", "HNHBS");
+
+                String[] values_ = BankCode.Split('+');
+
+                foreach (var item in values_)
+                {
+                    if (!item.StartsWith("HIRMG"))
+                    {
+                        Console.WriteLine(item.Replace("::", ": "));
+
+                        Log.Write(item.Replace("::", ": "));
+                    }
+                }
+
+                return false;
+            }
+        }
     }
 }

@@ -21,20 +21,10 @@
  * 	
  */
 
-using System;
-
 namespace libfintx
 {
-    class DLG
+    public class SEG_Country
     {
-        public static string RETVal(int NUM)
-        {
-            return Convert.ToString(NUM);
-        }
-
-        public static string SETVal(int NUM)
-        {
-            return Convert.ToString(NUM);
-        }
+        public static string Germany = "280";
     }
 }
