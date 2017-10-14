@@ -147,7 +147,7 @@ namespace libfintx
         // RDH
         public static bool INI_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
         {
-            return INIRDH(BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password);
+            return Init_INI_RDH(BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password);
         }
     }
 }

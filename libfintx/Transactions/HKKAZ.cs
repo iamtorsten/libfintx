@@ -41,16 +41,16 @@ namespace libfintx
                 if (String.IsNullOrEmpty(Startpoint))
                 {
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
-                        segments = "HKKAZ:" + SEGNUM.RETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N'";
                     else
-                        segments = "HKKAZ:" + SEGNUM.RETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N'";
                 }
                 else
                 {
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
-                        segments = "HKKAZ:" + SEGNUM.RETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N++++" + Startpoint + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N++++" + Startpoint + "'";
                     else
-                        segments = "HKKAZ:" + SEGNUM.RETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N++++" + Startpoint + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N++++" + Startpoint + "'";
                 }
             }
             else
@@ -58,20 +58,20 @@ namespace libfintx
                 if (String.IsNullOrEmpty(Startpoint))
                 {
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
-                        segments = "HKKAZ:" + SEGNUM.RETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N+" + FromDate + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N+" + FromDate + "'";
                     else
-                        segments = "HKKAZ:" + SEGNUM.RETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N+" + FromDate + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N+" + FromDate + "'";
                 }
                 else
                 {
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
-                        segments = "HKKAZ:" + SEGNUM.RETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+++" + Startpoint + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+++" + Startpoint + "'";
                     else
-                        segments = "HKKAZ:" + SEGNUM.RETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+++" + Startpoint + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+++" + Startpoint + "'";
                 }
             }
 
-            SEG.NUM = SEGNUM.RETInt(3);
+            SEG.NUM = SEGNUM.SETInt(3);
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }

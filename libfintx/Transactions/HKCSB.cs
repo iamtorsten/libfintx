@@ -32,9 +32,9 @@ namespace libfintx
         {
             Log.Write("Starting job HKCSB: Get bankers order");
 
-            string segments = "HKCSB:" + SEGNUM.RETVal(3) + ":1+" + IBAN + ":" + BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
+            string segments = "HKCSB:" + SEGNUM.SETVal(3) + ":1+" + IBAN + ":" + BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
-            SEG.NUM = SEGNUM.RETInt(3);
+            SEG.NUM = SEGNUM.SETInt(3);
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }

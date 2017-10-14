@@ -77,16 +77,14 @@ namespace libfintx
 
             using (RSACryptoServiceProvider rsaKey = new RSACryptoServiceProvider())
             {
-                // Get Bob's public key
                 rsaKey.ImportCspBlob(KeyManager.Import_Public_Bank_Key());
 
                 byte[] iv = null;
                 Crypt.Encrypt(rsaKey, Segments, out iv, out encryptedSessionKey, out encryptedMessage);
-
             }
 
-            encHead = "HNVSK:998:3+" + RDH_Profile.RDHPROFILE + "+4+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@" +
-               encryptedSessionKey.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedSessionKey)) + ":6:1+" + SEG_Country.Germany + ":" + BLZ + ":0:" +
+            encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+" + RDH_Profile.RDHPROFILE + "+4+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@" +
+               encryptedSessionKey.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedSessionKey)) + ":" + Enc.ENC_KEYTYPE_RSA + ":1+" + SEG_Country.Germany + ":" + BLZ + ":0:" +
                Keytype.Enc + ":" + RDH_Profile.Version + ":1+0'";
 
             var payload = "HNVSD:999:1+@" + encryptedMessage.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedMessage)) + "'";

@@ -33,11 +33,11 @@ namespace libfintx
         {
             Log.Write("Starting job HKPPD: Load prepaid");
 
-            string segments = "HKPPD:" + SEGNUM.RETVal(3) + ":2+" + IBAN + ":" + BIC + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
+            string segments = "HKPPD:" + SEGNUM.SETVal(3) + ":2+" + IBAN + ":" + BIC + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 
-            segments = segments + "HKTAN:" + SEGNUM.RETVal(4) + ":" + Segment.HITANS + "'";
+            segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "'";
 
-            SEG.NUM = SEGNUM.RETInt(4);
+            SEG.NUM = SEGNUM.SETInt(4);
 
             var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
 

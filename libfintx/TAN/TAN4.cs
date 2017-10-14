@@ -36,15 +36,15 @@ namespace libfintx
 
             // Version 3, Process 4
             if (Segment.HITANS.Substring(0, 1).Equals("3+4"))
-                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
             // Version 4, Process 4
             if (Segment.HITANS.Substring(0, 1).Equals("4+4"))
-                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
             // Version 5, Process 4
             if (Segment.HITANS.Substring(0, 1).Equals("5+4"))
-                segments = "HKTAN:" + SEGNUM.RETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
 
-            SEG.NUM = SEGNUM.RETInt(3);
+            SEG.NUM = SEGNUM.SETInt(3);
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, SEG.NUM));
         }

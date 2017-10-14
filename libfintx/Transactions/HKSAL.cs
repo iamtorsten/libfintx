@@ -37,13 +37,13 @@ namespace libfintx
             string segments = string.Empty;
 
             if (Convert.ToInt16(Segment.HISALS) >= 7)
-                segments = "HKSAL:" + SEGNUM.RETVal(3) + ":" + Segment.HISALS + "+" + IBAN + ":" + BIC + "+N'";
+                segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + IBAN + ":" + BIC + "+N'";
             else
             {
-                segments = "HKSAL:" + SEGNUM.RETVal(3) + ":" + Segment.HISALS + "+" + Konto + "::280:" + BLZ + "+N'";
+                segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + Konto + "::280:" + BLZ + "+N'";
             }
 
-            SEG.NUM = SEGNUM.RETInt(3);
+            SEG.NUM = SEGNUM.SETInt(3);
 
             return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }

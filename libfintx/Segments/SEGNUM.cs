@@ -27,16 +27,6 @@ namespace libfintx
 {
     class SEGNUM
     {
-        public static string RETVal(int NUM)
-        {
-            return Convert.ToString(NUM);
-        }
-
-        public static int RETInt(int NUM)
-        {
-            return NUM;
-        }
-
         public static string SETVal(int NUM)
         {
             return Convert.ToString(NUM);

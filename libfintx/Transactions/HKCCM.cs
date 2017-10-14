@@ -38,7 +38,7 @@ namespace libfintx
 
             var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
-            string segments = "HKCCM:" + SEGNUM.RETVal(3) + ":1+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+            string segments = "HKCCM:" + SEGNUM.SETVal(3) + ":1+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
             var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, PainData, NumberofTransactions, TotalAmount, "1999-01-01");
 
@@ -46,7 +46,7 @@ namespace libfintx
 
             segments = segments + "HKTAN:4:" + Segment.HITANS + "'";
 
-            SEG.NUM = SEGNUM.RETInt(4);
+            SEG.NUM = SEGNUM.SETInt(4);
 
             var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
 

@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8F7603E5-6D9C-4185-8E1C-8F2EE2FDA64A}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>libfintx.Android</RootNamespace>
+    <AssemblyName>libfintx.Android</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\libfintx\Console\TransactionConsole.cs">
+      <Link>Console\TransactionConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Data\AccountInformations.cs">
+      <Link>Data\AccountInformations.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Data\pain00100203_ct_data.cs">
+      <Link>Data\pain00100203_ct_data.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Data\pain00800202_cc_data.cs">
+      <Link>Data\pain00800202_cc_data.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Data\TANProcess.cs">
+      <Link>Data\TANProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Data\TANProcesses.cs">
+      <Link>Data\TANProcesses.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Dialog\DLG.cs">
+      <Link>Dialog\DLG.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Helper\Converter.cs">
+      <Link>Helper\Converter.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Helper\EncodingHelper.cs">
+      <Link>Helper\EncodingHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Helper\Helper.cs">
+      <Link>Helper\Helper.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Helper\Program.cs">
+      <Link>Helper\Program.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Logging\Log.cs">
+      <Link>Logging\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Message\FinTSMessage.cs">
+      <Link>Message\FinTSMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Message\FinTSMessageAnonymous.cs">
+      <Link>Message\FinTSMessageAnonymous.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Message\MSG.cs">
+      <Link>Message\MSG.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Message\RDHMessage.cs">
+      <Link>Message\RDHMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Message\RDHMessageAnonymous.cs">
+      <Link>Message\RDHMessageAnonymous.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\MT940\MT940.cs">
+      <Link>MT940\MT940.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Pain\pain00100203.cs">
+      <Link>Pain\pain00100203.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Pain\pain00800202.cs">
+      <Link>Pain\pain00800202.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\Crypt.cs">
+      <Link>Security\Crypt.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\Enc.cs">
+      <Link>Security\Enc.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\KeyManager.cs">
+      <Link>Security\KeyManager.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\Keytype.cs">
+      <Link>Security\Keytype.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\RDHKEY.cs">
+      <Link>Security\RDHKEY.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\RDH_KEYSTORE.cs">
+      <Link>Security\RDH_KEYSTORE.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\RDH_Profile.cs">
+      <Link>Security\RDH_Profile.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\SEG.cs">
+      <Link>Segments\SEG.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\Segment.cs">
+      <Link>Segments\Segment.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\SEGNUM.cs">
+      <Link>Segments\SEGNUM.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\SEG_Country.cs">
+      <Link>Segments\SEG_Country.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\SWIFT\SWIFTLine.cs">
+      <Link>SWIFT\SWIFTLine.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\SWIFT\SWIFTStatement.cs">
+      <Link>SWIFT\SWIFTStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\SWIFT\SWIFTTransaction.cs">
+      <Link>SWIFT\SWIFTTransaction.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\System\SYS.cs">
+      <Link>System\SYS.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\TAN\FlickerCode.cs">
+      <Link>TAN\FlickerCode.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\TAN\TAN.cs">
+      <Link>TAN\TAN.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\TAN\TAN4.cs">
+      <Link>TAN\TAN4.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Traceing\Trace.cs">
+      <Link>Traceing\Trace.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKCCM.cs">
+      <Link>Transactins\HKCCM.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKCCS.cs">
+      <Link>Transactins\HKCCS.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKCCST.cs">
+      <Link>Transactins\HKCCST.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKCDE.cs">
+      <Link>Transactins\HKCDE.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKCME.cs">
+      <Link>Transactins\HKCME.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKCSB.cs">
+      <Link>Transactins\HKCSB.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKCUM.cs">
+      <Link>Transactins\HKCUM.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKDME.cs">
+      <Link>Transactins\HKDME.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKDSE.cs">
+      <Link>Transactins\HKDSE.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKKAZ.cs">
+      <Link>Transactins\HKKAZ.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKPPD.cs">
+      <Link>Transactins\HKPPD.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\HKSAL.cs">
+      <Link>Transactins\HKSAL.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\INI.cs">
+      <Link>Transactins\INI.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\INI_RDH.cs">
+      <Link>Transactins\INI_RDH.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\Transaction.cs">
+      <Link>Transactins\Transaction.cs</Link>
+    </Compile>
+    <Compile Include="Main.cs" />
+    <Compile Include="Resources\Resource.Designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

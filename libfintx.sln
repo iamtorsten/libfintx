@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_Flicker", "test_Flicke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_RDH", "test_RDH\test_RDH.csproj", "{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx.Android", "libfintx.Android\libfintx.Android.csproj", "{8F7603E5-6D9C-4185-8E1C-8F2EE2FDA64A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFF2BC59-5623-4379-8F97-7B86EFFCFD29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F7603E5-6D9C-4185-8E1C-8F2EE2FDA64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F7603E5-6D9C-4185-8E1C-8F2EE2FDA64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F7603E5-6D9C-4185-8E1C-8F2EE2FDA64A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F7603E5-6D9C-4185-8E1C-8F2EE2FDA64A}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

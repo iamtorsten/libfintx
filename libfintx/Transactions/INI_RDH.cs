@@ -30,7 +30,7 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static bool INIRDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
+        public static bool Init_INI_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
         {
             Log.Write("Starting Synchronisation");
 

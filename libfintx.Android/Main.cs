@@ -23,15 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Windows.Forms;
+
 
 namespace libfintx
 {
     public class Main
     {
-        static FlickerRenderer flickerCodeRenderer = null;
-
         /// <summary>
         /// Synchronize bank connection
         /// </summary>
@@ -178,14 +175,13 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Transfer(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
             string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox, bool Anonymous)
+            string HIRMS, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -215,11 +211,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -230,38 +221,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -308,14 +267,13 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Transfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
 			string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID,
-            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
+            string PIN, string HIRMS, bool Anonymous)
 		{
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -345,11 +303,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -360,38 +313,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -435,14 +356,13 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string CollectiveTransfer(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, List<pain00100203_ct_data> PainData,
             string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID,
-            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
+            string PIN, string HIRMS, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -472,11 +392,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -487,38 +402,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -563,14 +446,13 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string CollectiveTransfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, List<pain00100203_ct_data> PainData,
             string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion,
-            string UserID, string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
+            string UserID, string PIN, string HIRMS, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -600,11 +482,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -615,38 +492,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -692,14 +537,13 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Rebooking(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
             string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox, bool Anonymous)
+            string HIRMS, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -729,11 +573,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -744,38 +583,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -825,14 +632,13 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Collect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Payer, string PayerIBAN, string PayerBIC,
             decimal Amount, string Purpose, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, string UserID,
-            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
+            string PIN, string HIRMS, bool Anonymous)
         {			
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -860,11 +666,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -875,38 +676,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -951,14 +720,13 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string CollectiveCollect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string SettlementDate, List<pain00800202_cc_data> PainData,
             string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox, bool Anonymous)
+            string HIRMS, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -986,11 +754,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -1001,38 +764,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -1075,13 +806,12 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
         public static string Prepaid(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox, bool Anonymous)
+            string HIRMS, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -1110,11 +840,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -1125,38 +850,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -1206,7 +899,6 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Bank return codes
@@ -1214,7 +906,7 @@ namespace libfintx
         public static string SubmitBankersOrder(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC,
             string Receiver, string ReceiverIBAN, string ReceiverBIC, string Amount, string Purpose, string FirstTimeExecutionDay,
             string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS,
-            PictureBox pictureBox, bool Anonymous)
+            bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
@@ -1244,11 +936,6 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
                     String[] values_ = HITAN.Split('+');
 
                     int i = 1;
@@ -1259,38 +946,6 @@ namespace libfintx
 
                         if (i == 6)
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
                     }
 
                     return "OK";
@@ -1541,28 +1196,6 @@ namespace libfintx
         public static void Tracing(bool Enabled)
         {
             Trace.Enabled = Enabled;
-        }
-
-        /// <summary>
-        /// RUN Flicker Code Rendering
-        /// </summary>
-        private static void RUN_flickerCodeRenderer()
-        {
-            flickerCodeRenderer.Start();
-        }
-
-        /// <summary>
-        /// STOP Flicker Code Rendering
-        /// </summary>
-        public static void RunAfterTimespan(Action action, TimeSpan span)
-        {
-            Thread.Sleep(span);
-            action();
-        }
-
-        private static void STOP_flickerCodeRenderer()
-        {
-            flickerCodeRenderer.Stop();
         }
 
         /// <summary>

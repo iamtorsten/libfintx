@@ -27,11 +27,6 @@ namespace libfintx
 {
     class MSG
     {
-        public static string RETVal(int NUM)
-        {
-            return Convert.ToString(NUM);
-        }
-
         public static string SETVal(int NUM)
         {
             return Convert.ToString(NUM);

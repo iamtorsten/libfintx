@@ -67,7 +67,7 @@ namespace libfintx
 
             if (Version == 220)
             {
-                encHead = "HNVSK:998:2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+280:" + BLZ + ":" + UserID + ":V:0:0+0'";
+                encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+280:" + BLZ + ":" + UserID + ":V:0:0+0'";
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
