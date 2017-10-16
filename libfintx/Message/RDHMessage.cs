@@ -80,6 +80,7 @@ namespace libfintx
                 rsaKey.ImportCspBlob(KeyManager.Import_Public_Bank_Key());
 
                 byte[] iv = null;
+
                 Crypt.Encrypt(rsaKey, Segments, out iv, out encryptedSessionKey, out encryptedMessage);
             }
 

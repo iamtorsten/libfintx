@@ -7,7 +7,7 @@ namespace test_RDH
 {
     class Program
     {
-        static string FilePath = @"D:\rdh.key";
+        static string FilePath = @"D:\rdh.rdh";
         static string Pwd = "rdh";
 
         static int BLZ = 0;
@@ -23,7 +23,7 @@ namespace test_RDH
             Url = "hbci01.fiducia.de";
             Port = 3000;
             HBCIVersion = 300;
-            UserID = "6729300348090095900";
+            UserID = "6726706155000628100";
 
             HBCI.Assembly("libfintx", "1.0");
 
@@ -34,8 +34,6 @@ namespace test_RDH
             if (HBCI.Synchronization_RDH(BLZ, Url, Port, HBCIVersion, UserID, FilePath, Pwd))
             {
                 Console.WriteLine("Synchronisation ok");
-
-                Console.WriteLine(HBCI.Transaction_Output());
             }
             else
                 Console.WriteLine(HBCI.Transaction_Output());
