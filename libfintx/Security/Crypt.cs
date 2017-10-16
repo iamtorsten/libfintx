@@ -128,19 +128,17 @@ namespace libfintx
             return randomBytes;
         }
 
-        /* KEYS */
-
         /* MESSAGE */
         public static void Encrypt(RSA key, string secretMessage, out byte[] iv, out byte[] encryptedSessionKey, out byte[] encryptedMessage)
         {
-            using (TripleDES aes = new TripleDESCryptoServiceProvider())
+            using (TripleDES des = new TripleDESCryptoServiceProvider())
             {
-                iv = aes.IV;
+                iv = des.IV;
 
-                aes.Padding = PaddingMode.ANSIX923;
-                aes.Mode = CipherMode.CBC;
+                des.Padding = PaddingMode.ANSIX923;
+                des.Mode = CipherMode.CBC;
 
-                aes.KeySize = 128;
+                des.KeySize = 128;
 
                 // Encrypt the session key
                 RSAPKCS1KeyExchangeFormatter keyFormatter = new RSAPKCS1KeyExchangeFormatter(key);
@@ -155,11 +153,11 @@ namespace libfintx
                     keyFormatter.Rng.GetBytes(data);
                 }
 
-                encryptedSessionKey = keyFormatter.CreateKeyExchange(aes.Key, typeof(TripleDES));
+                encryptedSessionKey = keyFormatter.CreateKeyExchange(des.Key, typeof(TripleDES));
 
                 // Encrypt the message
                 using (MemoryStream ciphertext = new MemoryStream())
-                using (CryptoStream cs = new CryptoStream(ciphertext, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                using (CryptoStream cs = new CryptoStream(ciphertext, des.CreateEncryptor(), CryptoStreamMode.Write))
                 {
                     byte[] plaintextMessage = Encoding.Default.GetBytes(secretMessage);
                     cs.Write(plaintextMessage, 0, plaintextMessage.Length);
