@@ -121,6 +121,9 @@
     <Compile Include="..\libfintx\Security\RDH_Profile.cs">
       <Link>Security\RDH_Profile.cs</Link>
     </Compile>
+    <Compile Include="..\libfintx\Security\Sig.cs">
+      <Link>Security\Sig.cs</Link>
+    </Compile>
     <Compile Include="..\libfintx\Segments\SEG.cs">
       <Link>Segments\SEG.cs</Link>
     </Compile>

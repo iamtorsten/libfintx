@@ -72,6 +72,7 @@
     <Compile Include="Security\RDHKEY.cs" />
     <Compile Include="Security\RDH_KEYSTORE.cs" />
     <Compile Include="Security\RDH_Profile.cs" />
+    <Compile Include="Security\Sig.cs" />
     <Compile Include="Segments\SEG.cs" />
     <Compile Include="Segments\Segment.cs" />
     <Compile Include="Segments\SEGNUM.cs" />

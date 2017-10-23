@@ -68,8 +68,18 @@ namespace libfintx
             sigHead = "HNSHK:" + SEGNUM.SETVal(2) + ":4+" + RDH_Profile.RDHPROFILE + "+2+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time +
                 "+1:6:1+6:10:19+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":" + Keytype.Sig + ":" + RDH_Profile.Version + ":1'";
 
+            // Private key
+            String SIGDATA = String.Empty;
+
+            using (RSACryptoServiceProvider rsaKey = new RSACryptoServiceProvider())
+            {
+                rsaKey.ImportCspBlob(KeyManager.Import_Private_SIG_Key());
+
+                SIGDATA = Helper.DecodeFrom64(Sig.SignData(Segments, rsaKey));
+            }
+
             sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "+" + "@" +
-               RDH_KEYSTORE.KEY_SIGNING_PRIVATE.Length + "@" + RDH_KEYSTORE.KEY_SIGNING_PRIVATE + "'";
+               SIGDATA.Length + "@" + SIGDATA + "'";
 
             Segments = sigHead + Segments + sigTrail;
 
