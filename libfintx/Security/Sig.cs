@@ -21,9 +21,6 @@
  * 	
  */
 
-/* https://stackoverflow.com/questions/8437288/signing-and-verifying-signatures-with-rsa-c-sharp */
-
-using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -31,38 +28,49 @@ namespace libfintx
 {
     public class Sig
     {
-        public static string SignData(string message, RSA privateKey)
+        public static byte[] SignData(string message)
         {
-            // The array to store the signed message in bytes
-            byte[] signedBytes;
+            // PRIVATE KEY
 
-            using (var rsa = new RSACryptoServiceProvider())
-            {
-                // Write the message to a byte array using UTF8 as the encoding.
-                var encoder = new ASCIIEncoding();
 
-                byte[] originalData = encoder.GetBytes(message);
+            byte[] str = Encoding.Default.GetBytes(message);
 
-                try
-                {
-                    // Sign the data, using SHA1 as the hashing algorithm 
-                    signedBytes = rsa.SignData(originalData, CryptoConfig.MapNameToOID("SHA1"));
-                }
-                catch (CryptographicException e)
-                {
-                    Log.Write(e.Message);
+            // Compute the hash
+            SHA1Managed sha1hash = new SHA1Managed();
+            byte[] hashdata = sha1hash.ComputeHash(str);
 
-                    return null;
-                }
-                finally
-                {
-                    // Set the keycontainer to be cleared when rsa is garbage collected.
-                    rsa.PersistKeyInCsp = false;
-                }
-            }
+            // Sign the hash data with private key
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.ImportCspBlob(KeyManager.Import_Private_SIG_Key());
             
-            // Convert the a base64 string before returning
-            return Convert.ToBase64String(signedBytes);
+            // Signature hold the sign data of plaintext , signed by private key
+            byte[] signature = rsa.SignData(str, "SHA1");
+
+            return signature;
+        }
+
+        public static bool VerifyData(byte[] signature, string plaintext)
+        {
+            // PUBLIC KEY
+
+
+            byte[] str = Encoding.Default.GetBytes(plaintext);
+
+            // Compute the hash again
+            SHA1Managed sha1hash = new SHA1Managed();
+            byte[] hashdata = sha1hash.ComputeHash(str);
+
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.ImportCspBlob(KeyManager.Import_Private_SIG_Key());
+
+            if (rsa.VerifyHash(hashdata, "SHA1", signature))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

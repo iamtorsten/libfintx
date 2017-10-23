@@ -128,30 +128,24 @@ namespace libfintx
             return randomBytes;
         }
 
+        // TODO: Encryption isnt working
+
         /* MESSAGE */
         public static void Encrypt(RSA key, string secretMessage, out byte[] iv, out byte[] encryptedSessionKey, out byte[] encryptedMessage)
         {
             using (TripleDES des = new TripleDESCryptoServiceProvider())
             {
-                iv = des.IV;
+                des.GenerateKey();
+                des.GenerateIV();
 
+                des.KeySize = 128;
                 des.Padding = PaddingMode.ANSIX923;
                 des.Mode = CipherMode.CBC;
 
-                des.KeySize = 128;
+                iv = des.IV;
 
                 // Encrypt the session key
                 RSAPKCS1KeyExchangeFormatter keyFormatter = new RSAPKCS1KeyExchangeFormatter(key);
-
-                byte[] data = new byte[16];
-
-                keyFormatter.Rng = new RNGCryptoServiceProvider(data);
-
-                for (int i = 0; i < 32; i++)
-                {
-                    // Fill buffer.
-                    keyFormatter.Rng.GetBytes(data);
-                }
 
                 encryptedSessionKey = keyFormatter.CreateKeyExchange(des.Key, typeof(TripleDES));
 

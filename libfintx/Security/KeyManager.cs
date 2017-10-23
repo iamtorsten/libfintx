@@ -50,33 +50,13 @@ namespace libfintx
             return RSA.ExportCspBlob(false);
         }
 
+        // TODO: Fixing import signature key for signing and verifying
+
         public static byte[] Import_Private_SIG_Key()
         {
             byte[] Exponent = { 1, 0, 1 };
 
             byte[] PublicKey = Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_SIGNING_PRIVATE);
-
-            //Create a new instance of the RSACryptoServiceProvider class.
-            RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-
-            //Create a new instance of the RSAParameters structure. 
-            RSAParameters RSAKeyInfo = new RSAParameters();
-
-            //Set RSAKeyInfo to the public key values. 
-            RSAKeyInfo.Modulus = PublicKey;
-            RSAKeyInfo.Exponent = Exponent;
-
-            //Import key parameters into RSA. 
-            RSA.ImportParameters(RSAKeyInfo);
-
-            return RSA.ExportCspBlob(false);
-        }
-
-        public static byte[] Import_Private_SIG_Key_Private()
-        {
-            byte[] Exponent = { 1, 0, 1 };
-
-            byte[] PublicKey = Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_SIGNING_PRIVATE_PRIVATE);
 
             //Create a new instance of the RSACryptoServiceProvider class.
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
