@@ -30,8 +30,7 @@ namespace libfintx
     {
         public static byte[] SignData(string message)
         {
-            // PRIVATE KEY
-
+            /* PRIVATE KEY */
 
             byte[] str = Encoding.Default.GetBytes(message);
 
@@ -51,8 +50,7 @@ namespace libfintx
 
         public static bool VerifyData(byte[] signature, string plaintext)
         {
-            // PUBLIC KEY
-
+            /* PUBLIC KEY */
 
             byte[] str = Encoding.Default.GetBytes(plaintext);
 

@@ -135,10 +135,11 @@ namespace libfintx
         {
             using (TripleDES des = new TripleDESCryptoServiceProvider())
             {
+                des.KeySize = 128;
+
                 des.GenerateKey();
                 des.GenerateIV();
 
-                des.KeySize = 128;
                 des.Padding = PaddingMode.ANSIX923;
                 des.Mode = CipherMode.CBC;
 
