@@ -188,6 +188,10 @@ namespace libfintx
                 using (CryptoStream cs = new CryptoStream(ciphertext, des.CreateEncryptor(), CryptoStreamMode.Write))
                 {
                     byte[] plaintextMessage = Encoding.Default.GetBytes(secretMessage);
+
+                    if (DEBUG.Enabled)
+                        DEBUG.Write("Plaintext message length: " + plaintextMessage.Length);
+
                     cs.Write(plaintextMessage, 0, plaintextMessage.Length);
                     cs.Close();
 
