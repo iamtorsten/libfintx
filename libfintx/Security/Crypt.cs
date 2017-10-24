@@ -131,6 +131,8 @@ namespace libfintx
         // TODO: Encryption isnt working
 
         /* MESSAGE */
+
+        /* Documentation/RDH-10*.jpg */
         public static void Encrypt(RSA key, string secretMessage, out byte[] iv, out byte[] encryptedSessionKey, out byte[] encryptedMessage)
         {
             if (DEBUG.Enabled)
