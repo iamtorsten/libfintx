@@ -80,6 +80,9 @@ namespace libfintx
             sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "+" + "@" +
                RDH_KEYSTORE.KEY_SIGNING_PRIVATE.Length + "@" + RDH_KEYSTORE.KEY_SIGNING_PRIVATE + "'";
 
+            if (DEBUG.Enabled)
+                DEBUG.Write("sigTrail: " + sigTrail);
+
             Segments = sigHead + Segments + sigTrail;
 
             byte[] encryptedMessage = null;
@@ -97,6 +100,9 @@ namespace libfintx
                encryptedSessionKey.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedSessionKey)) + ":" + Enc.ENC_KEYTYPE_RSA + ":1+" + SEG_Country.Germany + ":" + BLZ + ":0:" +
                Keytype.Enc + ":" + RDH_Profile.Version + ":1+0'";
 
+            if (DEBUG.Enabled)
+                DEBUG.Write("encHead: " + encHead);
+
             var payload = "HNVSD:999:1+@" + encryptedMessage.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedMessage)) + "'";
 
             var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length + DialogID.Length + payload.Length + encHead.Length;
@@ -105,7 +111,13 @@ namespace libfintx
 
             var msgHead = "HNHBK:" + SEGNUM.SETVal(1) + ":3+" + paddedLen + "+" + ("300") + "+" + DialogID + "+" + MsgNum + "'";
 
+            if (DEBUG.Enabled)
+                DEBUG.Write("msgHead: " + msgHead);
+
             var msgEnd = "HNHBS:" + Convert.ToString(SegmentNum + 2) + ":1+" + MsgNum + "'";
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("msgEnd: " + msgEnd);
 
             return msgHead + encHead + payload + msgEnd;
         }
@@ -118,6 +130,9 @@ namespace libfintx
 
             if (Trace.Enabled)
                 Trace.Write(Message);
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("Message send: " + Message);
 
             try
             {
@@ -159,11 +174,17 @@ namespace libfintx
                 if (Trace.Enabled)
                     Trace.Write(RDHMessage);
 
+                if (DEBUG.Enabled)
+                    DEBUG.Write("Message received: " + RDHMessage);
+
                 return RDHMessage;
             }
             catch (Exception ex)
             {
                 Log.Write(ex.ToString());
+
+                if (DEBUG.Enabled)
+                    DEBUG.Write(ex.ToString());
 
                 return string.Empty;
             }

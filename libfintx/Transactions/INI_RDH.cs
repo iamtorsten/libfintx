@@ -46,6 +46,9 @@ namespace libfintx
 
                     segments = segments_;
 
+                    if (DEBUG.Enabled)
+                        DEBUG.Write("INI message: " + segments);
+
                     if (Helper.Parse_Segment_RDH_Key(RDHMessage.Send(URL, Port, RDHMessageAnonymous.Create(HBCIVersion,
                         MSG.SETVal(1), DLG.SETVal(0), BLZ, segments))))
                     {
@@ -63,6 +66,9 @@ namespace libfintx
                             RDH_KEYSTORE.KEY_SIGNING_PRIVATE + ":12:@3@" + Converter.FromHexString("01 00 01") + ":13'";
 
                             segments = segments_;
+
+                            if (DEBUG.Enabled)
+                                DEBUG.Write("Key exchange message: " + segments);
 
                             RDHMessage.Send(URL, Port, RDHMessage.Create(HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), BLZ, UserID, SYS.SETVal(0),
                                 segments, SEGNUM.SETInt(5)));

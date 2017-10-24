@@ -1585,5 +1585,13 @@ namespace libfintx
             else
                 return false;
         }
+
+        /// <summary>
+        /// Enable / Disable Debugging
+        /// </summary>
+        public static void Debugging(bool Enabled)
+        {
+            DEBUG.Enabled = Enabled;
+        }
     }
 }

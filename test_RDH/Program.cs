@@ -29,6 +29,8 @@ namespace test_RDH
 
             HBCI.Tracing(true);
 
+            HBCI.Debugging(true);
+
             hbci.RDHKEY.Create(FilePath, Pwd);
 
             if (HBCI.Synchronization_RDH(BLZ, Url, Port, HBCIVersion, UserID, FilePath, Pwd))

@@ -133,6 +133,9 @@ namespace libfintx
         /* MESSAGE */
         public static void Encrypt(RSA key, string secretMessage, out byte[] iv, out byte[] encryptedSessionKey, out byte[] encryptedMessage)
         {
+            if (DEBUG.Enabled)
+                DEBUG.Write("Plain message before encryption: " + secretMessage);
+
             using (TripleDES des = new TripleDESCryptoServiceProvider())
             {
                 des.KeySize = 128;
@@ -145,10 +148,16 @@ namespace libfintx
 
                 iv = des.IV;
 
+                if (DEBUG.Enabled)
+                    DEBUG.Write("3DES random key: " + libfintx.Converter.ByteArrayToString(des.Key));
+
                 // Encrypt the session key
                 RSAPKCS1KeyExchangeFormatter keyFormatter = new RSAPKCS1KeyExchangeFormatter(key);
 
                 encryptedSessionKey = keyFormatter.CreateKeyExchange(des.Key, typeof(TripleDES));
+
+                if (DEBUG.Enabled)
+                    DEBUG.Write("Encrypted session key: " + libfintx.Converter.ByteArrayToString(encryptedSessionKey));
 
                 // Encrypt the message
                 using (MemoryStream ciphertext = new MemoryStream())
@@ -159,6 +168,9 @@ namespace libfintx
                     cs.Close();
 
                     encryptedMessage = ciphertext.ToArray();
+
+                    if (DEBUG.Enabled)
+                        DEBUG.Write("Encrypted message: " + libfintx.Converter.ByteArrayToString(encryptedMessage));
                 }
             }
         }
