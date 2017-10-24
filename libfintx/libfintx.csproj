@@ -49,7 +49,7 @@
     <Compile Include="Data\pain00800202_cc_data.cs" />
     <Compile Include="Data\TANProcess.cs" />
     <Compile Include="Data\TANProcesses.cs" />
-    <Compile Include="DEBUG\Debug.cs" />
+    <Compile Include="Debug_Output\Debug.cs" />
     <Compile Include="Dialog\DLG.cs" />
     <Compile Include="Helper\Converter.cs" />
     <Compile Include="Helper\EncodingHelper.cs" />
