@@ -149,6 +149,8 @@ namespace libfintx
          * Documentation/RDH-10*.jpg 
          */
 
+        /* https://de.wikipedia.org/wiki/RSA-DES-Hybridverfahren */
+
         public static void Encrypt(RSA key, string secretMessage, out byte[] iv, out byte[] encryptedSessionKey, out byte[] encryptedMessage)
         {
             if (DEBUG.Enabled)

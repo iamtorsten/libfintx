@@ -234,7 +234,8 @@ namespace libfintx
 
                     Log.Write(ex.ToString());
 
-                    throw new Exception("Software error");
+                    if (DEBUG.Enabled)
+
                 }
             }
         }
