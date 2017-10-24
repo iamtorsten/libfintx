@@ -145,11 +145,11 @@ namespace libfintx
                     switch (i)
                     {
                         case 1:
-                            RDH_KEYSTORE.KEY_ENCRYPTION_PRIVATE = Helper.DecodeFrom64(
+                            RDH_KEYSTORE.KEY_ENCRYPTION_PRIVATE = Helper.DecodeFrom64EncodingDefault(
                                 Helper.Parse_String(Crypt.Decrypt(line, Password), "<Modulus>", "</Modulus>"));
                             break;
                         case 3:
-                            RDH_KEYSTORE.KEY_SIGNING_PRIVATE = Helper.DecodeFrom64(
+                            RDH_KEYSTORE.KEY_SIGNING_PRIVATE = Helper.DecodeFrom64EncodingDefault(
                                 Helper.Parse_String(Crypt.Decrypt(line, Password), "<Modulus>", "</Modulus>"));
                             break;
                     }
@@ -172,6 +172,7 @@ namespace libfintx
         private static string toString(RSAParameters key)
         {
             var writer = new StringWriter();
+
             var serializer = new XmlSerializer(typeof(RSAParameters));
 
             serializer.Serialize(writer, key);

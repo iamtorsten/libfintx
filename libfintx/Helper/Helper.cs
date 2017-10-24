@@ -47,6 +47,14 @@ namespace libfintx
             return returnValue;
         }
 
+        static public string DecodeFrom64EncodingDefault(string encodedData)
+        {
+            byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
+            string returnValue = Encoding.Default.GetString(encodedDataAsBytes);
+
+            return returnValue;
+        }
+
         static public string Encrypt(string Segments)
         {
             return "HNVSD:999:1+@" + Segments.Length + "@" + Segments + "'";
