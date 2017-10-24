@@ -58,8 +58,8 @@
     <Compile Include="..\libfintx\Data\TANProcesses.cs">
       <Link>Data\TANProcesses.cs</Link>
     </Compile>
-    <Compile Include="..\libfintx\Debug_Output\Debug.cs">
-      <Link>Debug_Output\Debug.cs</Link>
+    <Compile Include="..\libfintx\Debugging\Debug.cs">
+      <Link>Debugging\Debug.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Dialog\DLG.cs">
       <Link>Dialog\DLG.cs</Link>
