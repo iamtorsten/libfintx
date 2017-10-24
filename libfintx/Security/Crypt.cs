@@ -186,7 +186,7 @@ namespace libfintx
         // Pad zeros
         private static byte[] PadZero()
         {
-            var buffer = new byte[32];
+            var buffer = new byte[16];
 
             for (int i = 0; i < buffer.Length; i++)
             {
