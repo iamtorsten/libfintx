@@ -28,46 +28,55 @@ namespace libfintx
 {
     public class Sig
     {
-        public static byte[] SignData(string message)
+        /* https://stackoverflow.com/questions/39766324/c-how-to-hash-a-string-into-ripemd160 */
+
+        public static string SignDataRIPEMD160(string Message)
         {
-            /* PRIVATE KEY */
-
-            byte[] str = Encoding.Default.GetBytes(message);
-
-            // Compute the hash
-            SHA1Managed sha1hash = new SHA1Managed();
-            byte[] hashdata = sha1hash.ComputeHash(str);
-
-            // Sign the hash data with private key
-            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-            rsa.ImportCspBlob(KeyManager.Import_Private_SIG_Key());
+            // Create a ripemd160 object
+            RIPEMD160 r160 = RIPEMD160Managed.Create();
             
-            // Signature hold the sign data of plaintext , signed by private key
-            byte[] signature = rsa.SignData(str, "SHA1");
+            // Convert the string to byte
+            byte[] myByte = System.Text.Encoding.Default.GetBytes(Message);
+            
+            // Compute the byte to RIPEMD160 hash
+            byte[] encrypted = r160.ComputeHash(myByte);
+            
+            // Create a new StringBuilder process the hash byte
+            StringBuilder sb = new StringBuilder();
 
-            return signature;
+            for (int i = 0; i < encrypted.Length; i++)
+            {
+                sb.Append(encrypted[i].ToString("X2"));
+            }
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("RIPEMD160 hashed message: " + sb.ToString());
+
+            // Convert the StringBuilder to String
+            return sb.ToString();
         }
 
-        public static bool VerifyData(byte[] signature, string plaintext)
+        public static byte[] SignMessage(string hash)
         {
-            /* PUBLIC KEY */
-
-            byte[] str = Encoding.Default.GetBytes(plaintext);
-
-            // Compute the hash again
-            SHA1Managed sha1hash = new SHA1Managed();
-            byte[] hashdata = sha1hash.ComputeHash(str);
-
-            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-            rsa.ImportCspBlob(KeyManager.Import_Private_SIG_Key());
-
-            if (rsa.VerifyHash(hashdata, "SHA1", signature))
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
-                return true;
-            }
-            else
-            {
-                return false;
+                byte[] publicKey = Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_SIGNING_PRIVATE);
+                byte[] Exponent = { 1, 0, 1 };
+
+                RSAParameters RSAKeyInfo = new RSAParameters();
+
+                //Set RSAKeyInfo to the public key values. 
+                RSAKeyInfo.Modulus = publicKey;
+                RSAKeyInfo.Exponent = Exponent;
+
+                rsa.ImportParameters(RSAKeyInfo);
+
+                var encryptedMessage = rsa.Encrypt(Encoding.Default.GetBytes(hash), false);
+
+                if (DEBUG.Enabled)
+                    DEBUG.Write("Encrypted message: " + libfintx.Converter.ByteArrayToString(encryptedMessage));
+
+                return encryptedMessage;
             }
         }
     }

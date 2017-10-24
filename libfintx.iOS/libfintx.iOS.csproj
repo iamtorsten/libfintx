@@ -109,11 +109,11 @@
     <Compile Include="..\libfintx\Security\Enc.cs">
       <Link>Security\Enc.cs</Link>
     </Compile>
-    <Compile Include="..\libfintx\Security\KeyManager.cs">
-      <Link>Security\KeyManager.cs</Link>
-    </Compile>
     <Compile Include="..\libfintx\Security\Keytype.cs">
       <Link>Security\Keytype.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\PKCSKeyGenerator.cs">
+      <Link>Security\PKCSKeyGenerator.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Security\RDHKEY.cs">
       <Link>Security\RDHKEY.cs</Link>

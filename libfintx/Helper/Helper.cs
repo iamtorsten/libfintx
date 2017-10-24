@@ -31,6 +31,30 @@ namespace libfintx
 {
     public static class Helper
     {
+        // Pad zeros
+        private static byte[] PadZero()
+        {
+            var buffer = new byte[16];
+
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                buffer[i] = 0;
+            }
+
+            return buffer;
+        }
+
+        // Combine byte arrays
+        public static byte[] CombineByteArrays(byte[] first, byte[] second)
+        {
+            byte[] ret = new byte[first.Length + second.Length];
+
+            Buffer.BlockCopy(first, 0, ret, 0, first.Length);
+            Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
+
+            return ret;
+        }
+
         static public string EncodeTo64(string toEncode)
         {
             byte[] toEncodeAsBytes = Encoding.ASCII.GetBytes(toEncode);

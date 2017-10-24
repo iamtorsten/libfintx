@@ -89,10 +89,10 @@ namespace libfintx
                 }
             }
 
-            var encpublic = Crypt.Encrypt(ENC_PUBLIC, Password);
-            var encprivate = Crypt.Encrypt(ENC_PRIVATE, Password);
-            var sigpublic = Crypt.Encrypt(SIG_PUBLIC, Password);
-            var sigprivate = Crypt.Encrypt(SIG_PRIVATE, Password);
+            var encpublic = Crypt.Encrypt_PBEWithMD5AndDES(ENC_PUBLIC, Password);
+            var encprivate = Crypt.Encrypt_PBEWithMD5AndDES(ENC_PRIVATE, Password);
+            var sigpublic = Crypt.Encrypt_PBEWithMD5AndDES(SIG_PUBLIC, Password);
+            var sigprivate = Crypt.Encrypt_PBEWithMD5AndDES(SIG_PRIVATE, Password);
 
             try
             {
@@ -146,11 +146,11 @@ namespace libfintx
                     {
                         case 1:
                             RDH_KEYSTORE.KEY_ENCRYPTION_PRIVATE = Helper.DecodeFrom64EncodingDefault(
-                                Helper.Parse_String(Crypt.Decrypt(line, Password), "<Modulus>", "</Modulus>"));
+                                Helper.Parse_String(Crypt.Decrypt_PBEWithMD5AndDES(line, Password), "<Modulus>", "</Modulus>"));
                             break;
                         case 3:
                             RDH_KEYSTORE.KEY_SIGNING_PRIVATE = Helper.DecodeFrom64EncodingDefault(
-                                Helper.Parse_String(Crypt.Decrypt(line, Password), "<Modulus>", "</Modulus>"));
+                                Helper.Parse_String(Crypt.Decrypt_PBEWithMD5AndDES(line, Password), "<Modulus>", "</Modulus>"));
                             break;
                     }
 

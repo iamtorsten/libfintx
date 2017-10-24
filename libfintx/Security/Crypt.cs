@@ -33,113 +33,46 @@ namespace libfintx
 {
     static class Crypt
     {
-        /* KEYS */
+        // KEYS
 
-        // This constant is used to determine the keysize of the encryption algorithm in bits.
-        // We divide this by 8 within the code below to get the equivalent number of bytes.
-        private const int Keysize = 256;
-
-        // This constant determines the number of iterations for the password bytes generation function.
-        private const int DerivationIterations = 1000;
-
-        public static string Encrypt(string plainText, string passPhrase)
+        /* https://thomashundley.com/2011/04/21/emulating-javas-pbewithmd5anddes-encryption-with-net/ */
+        public static string Encrypt_PBEWithMD5AndDES(string clearText, string passPhrase)
         {
-            // Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
-            // so that the same Salt and IV values can be used when decrypting.  
-            var saltStringBytes = Generate256BitsOfRandomEntropy();
-            var ivStringBytes = Generate256BitsOfRandomEntropy();
-            var plainTextBytes = Encoding.Default.GetBytes(plainText);
-
-            using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
+            // TODO: Parameterize the Password, Salt, and Iterations.  They should be encrypted with the machine key and stored in the registry
+            if (string.IsNullOrEmpty(clearText))
             {
-                var keyBytes = password.GetBytes(Keysize / 8);
-
-                using (var symmetricKey = new RijndaelManaged())
-                {
-                    symmetricKey.BlockSize = 256;
-                    symmetricKey.Mode = CipherMode.CBC;
-                    symmetricKey.Padding = PaddingMode.PKCS7;
-
-                    using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, ivStringBytes))
-                    {
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
-                            {
-                                cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
-                                cryptoStream.FlushFinalBlock();
-                                
-                                // Create the final bytes as a concatenation of the random salt bytes, the random iv bytes and the cipher bytes.
-                                var cipherTextBytes = saltStringBytes;
-
-                                cipherTextBytes = cipherTextBytes.Concat(ivStringBytes).ToArray();
-                                cipherTextBytes = cipherTextBytes.Concat(memoryStream.ToArray()).ToArray();
-
-                                memoryStream.Close();
-                                cryptoStream.Close();
-
-                                return Convert.ToBase64String(cipherTextBytes);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public static string Decrypt(string cipherText, string passPhrase)
-        {
-            // Get the complete stream of bytes that represent:
-            // [32 bytes of Salt] + [32 bytes of IV] + [n bytes of CipherText]
-            var cipherTextBytesWithSaltAndIv = Convert.FromBase64String(cipherText);
-            // Get the saltbytes by extracting the first 32 bytes from the supplied cipherText bytes.
-            var saltStringBytes = cipherTextBytesWithSaltAndIv.Take(Keysize / 8).ToArray();
-            // Get the IV bytes by extracting the next 32 bytes from the supplied cipherText bytes.
-            var ivStringBytes = cipherTextBytesWithSaltAndIv.Skip(Keysize / 8).Take(Keysize / 8).ToArray();
-            // Get the actual cipher text bytes by removing the first 64 bytes from the cipherText string.
-            var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip((Keysize / 8) * 2).Take(cipherTextBytesWithSaltAndIv.Length - ((Keysize / 8) * 2)).ToArray();
-
-            using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
-            {
-                var keyBytes = password.GetBytes(Keysize / 8);
-
-                using (var symmetricKey = new RijndaelManaged())
-                {
-                    symmetricKey.BlockSize = 256;
-                    symmetricKey.Mode = CipherMode.CBC;
-                    symmetricKey.Padding = PaddingMode.PKCS7;
-
-                    using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivStringBytes))
-                    {
-                        using (var memoryStream = new MemoryStream(cipherTextBytes))
-                        {
-                            using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
-                            {
-                                var plainTextBytes = new byte[cipherTextBytes.Length];
-                                var decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
-
-                                memoryStream.Close();
-                                cryptoStream.Close();
-
-                                return Encoding.Default.GetString(plainTextBytes, 0, decryptedByteCount);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private static byte[] Generate256BitsOfRandomEntropy()
-        {
-            var randomBytes = new byte[32]; // 32 Bytes will give us 256 bits.
-
-            using (var rngCsp = new RNGCryptoServiceProvider())
-            {
-                // Fill the array with cryptographically secure random bytes.
-                rngCsp.GetBytes(randomBytes);
+                return clearText;
             }
 
-            return randomBytes;
+            byte[] salt = { 0xc7, 0x73, 0x21, 0x8c, 0x7e, 0xc8, 0xee, 0x99 };
+
+            // NOTE: The keystring, salt, and iterations must be the same as what is used in the Demo java system.
+            PKCSKeyGenerator crypto = new PKCSKeyGenerator(passPhrase, salt, 20, 1);
+
+            ICryptoTransform cryptoTransform = crypto.Encryptor;
+            var cipherBytes = cryptoTransform.TransformFinalBlock(Encoding.UTF8.GetBytes(clearText), 0, clearText.Length);
+            return Convert.ToBase64String(cipherBytes);
         }
+
+        public static string Decrypt_PBEWithMD5AndDES(string cipherText, string passPhrase)
+        {
+            if (string.IsNullOrEmpty(cipherText))
+            {
+                return cipherText;
+            }
+
+            byte[] salt = { 0xc7, 0x73, 0x21, 0x8c, 0x7e, 0xc8, 0xee, 0x99 };
+
+            // NOTE: The keystring, salt, and iterations must be the same as what is used in the Demo java system.
+            PKCSKeyGenerator crypto = new PKCSKeyGenerator(passPhrase, salt, 20, 1);
+
+            ICryptoTransform cryptoTransform = crypto.Decryptor;
+            var cipherBytes = Convert.FromBase64String(cipherText);
+            var clearBytes = cryptoTransform.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
+            return Encoding.UTF8.GetString(clearBytes);
+        }
+
+        /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // TODO: Encryption isnt working
 
@@ -151,41 +84,50 @@ namespace libfintx
 
         /* https://de.wikipedia.org/wiki/RSA-DES-Hybridverfahren */
 
-        public static void Encrypt(RSA key, string secretMessage, out byte[] iv, out byte[] encryptedSessionKey, out byte[] encryptedMessage)
+        static byte[] SessionKey;
+
+        public static void Encrypt(string secretMessage, out byte[] encryptedSessionKey, out byte[] encryptedMessage)
         {
             if (DEBUG.Enabled)
                 DEBUG.Write("Plain message before encryption: " + secretMessage);
 
-            using (TripleDES des = new TripleDESCryptoServiceProvider())
+            using (TripleDES des = TripleDES.Create())
             {
                 des.KeySize = 128;
-
-                des.GenerateKey();
-                des.GenerateIV();
-
-                des.Padding = PaddingMode.ANSIX923;
-                des.Mode = CipherMode.CBC;
-
-                iv = des.IV;
+                SessionKey = des.Key;
 
                 if (DEBUG.Enabled)
                     DEBUG.Write("3DES random key: " + libfintx.Converter.ByteArrayToString(des.Key));
+            }
 
-                // Encrypt the session key
-                RSAPKCS1KeyExchangeFormatter keyFormatter = new RSAPKCS1KeyExchangeFormatter(key);
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                byte[] publicKey = Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK);
+                byte[] Exponent = { 1, 0, 1 };
 
-                // Padding session key with zeros
-                byte[] sessionKey = Combine(PadZero(), des.Key);
+                RSAParameters RSAKeyInfo = new RSAParameters();
 
-                if (DEBUG.Enabled)
-                    DEBUG.Write("Padded session key: " + libfintx.Converter.ByteArrayToString(sessionKey));
+                //Set RSAKeyInfo to the public key values. 
+                RSAKeyInfo.Modulus = publicKey;
+                RSAKeyInfo.Exponent = Exponent;
 
-                encryptedSessionKey = keyFormatter.CreateKeyExchange(sessionKey, typeof(TripleDES));
+                rsa.ImportParameters(RSAKeyInfo);
+
+                encryptedSessionKey = rsa.Encrypt(SessionKey, false);
 
                 if (DEBUG.Enabled)
                     DEBUG.Write("Encrypted session key: " + libfintx.Converter.ByteArrayToString(encryptedSessionKey));
+            }
 
-                // Encrypt the message
+            using (TripleDES des = TripleDES.Create())
+            {
+                des.Padding = PaddingMode.ANSIX923;
+                des.Mode = CipherMode.CBC;
+
+                des.Key = SessionKey;
+                des.GenerateIV();
+
+                //Encrypt the message
                 using (MemoryStream ciphertext = new MemoryStream())
                 using (CryptoStream cs = new CryptoStream(ciphertext, des.CreateEncryptor(), CryptoStreamMode.Write))
                 {
@@ -195,38 +137,22 @@ namespace libfintx
                         DEBUG.Write("Plaintext message length: " + plaintextMessage.Length);
 
                     cs.Write(plaintextMessage, 0, plaintextMessage.Length);
+                    cs.Flush();
+                    cs.FlushFinalBlock();
+
                     cs.Close();
 
                     encryptedMessage = ciphertext.ToArray();
 
                     if (DEBUG.Enabled)
                         DEBUG.Write("Encrypted message: " + libfintx.Converter.ByteArrayToString(encryptedMessage));
+
+                    if (DEBUG.Enabled)
+                        DEBUG.Write("Encrypted message length: " + encryptedMessage.Length);
                 }
             }
         }
 
-        // Pad zeros
-        private static byte[] PadZero()
-        {
-            var buffer = new byte[16];
-
-            for (int i = 0; i < buffer.Length; i++)
-            {
-                buffer[i] = 0;
-            }
-
-            return buffer;
-        }
-
-        // Combine pad and key
-        public static byte[] Combine(byte[] first, byte[] second)
-        {
-            byte[] ret = new byte[first.Length + second.Length];
-
-            Buffer.BlockCopy(first, 0, ret, 0, first.Length);
-            Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
-
-            return ret;
-        }
+        
     }
 }

@@ -63,38 +63,26 @@ namespace libfintx
                 throw new Exception("HBCI Version not supported");
             }
 
-            byte[] encryptedSessionKey = null;
-
             sigHead = "HNSHK:" + SEGNUM.SETVal(2) + ":4+" + RDH_Profile.RDHPROFILE + "+2+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time +
                 "+1:6:1+6:10:19+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":" + Keytype.Sig + ":" + RDH_Profile.Version + ":1'";
 
-            // TODO: Signing segments for sigtrail
+            var sig = Sig.SignDataRIPEMD160(Segments);
+            var signedsig = Sig.SignMessage(sig);
 
-            //var sig = Sig.SignData(Segments);
-
-            //var SIGDATA = sig;
-
-            //sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "+" + "@" +
-            //   SIGDATA.Length + "@" + SIGDATA + "'";
+            var signedsigstr = Converter.FromHexString(Converter.ByteArrayToString(signedsig));
 
             sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "+" + "@" +
-               RDH_KEYSTORE.KEY_SIGNING_PRIVATE.Length + "@" + RDH_KEYSTORE.KEY_SIGNING_PRIVATE + "'";
+               signedsigstr.Length + "@" + signedsigstr + "'";
 
             if (DEBUG.Enabled)
                 DEBUG.Write("sigTrail: " + sigTrail);
 
             Segments = sigHead + Segments + sigTrail;
 
+            byte[] encryptedSessionKey = null;
             byte[] encryptedMessage = null;
 
-            using (RSACryptoServiceProvider rsaKey = new RSACryptoServiceProvider())
-            {
-                rsaKey.ImportCspBlob(KeyManager.Import_Public_Bank_Key());
-
-                byte[] iv = null;
-
-                Crypt.Encrypt(rsaKey, Segments, out iv, out encryptedSessionKey, out encryptedMessage);
-            }
+            Crypt.Encrypt(Segments, out encryptedSessionKey, out encryptedMessage);
 
             encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+" + RDH_Profile.RDHPROFILE + "+4+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@" +
                encryptedSessionKey.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedSessionKey)) + ":" + Enc.ENC_KEYTYPE_RSA + ":1+" + SEG_Country.Germany + ":" + BLZ + ":0:" +

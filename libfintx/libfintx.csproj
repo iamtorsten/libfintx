@@ -70,6 +70,7 @@
     <Compile Include="Security\Enc.cs" />
     <Compile Include="Security\KeyManager.cs" />
     <Compile Include="Security\Keytype.cs" />
+    <Compile Include="Security\PKCSKeyGenerator.cs" />
     <Compile Include="Security\RDHKEY.cs" />
     <Compile Include="Security\RDH_KEYSTORE.cs" />
     <Compile Include="Security\RDH_Profile.cs" />
