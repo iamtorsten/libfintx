@@ -156,6 +156,8 @@ namespace libfintx
                 // Encrypt the session key
                 RSAPKCS1KeyExchangeFormatter keyFormatter = new RSAPKCS1KeyExchangeFormatter(key);
 
+                //keyFormatter.Rng = new RNGCryptoServiceProvider(PadZero());
+
                 // Padding session key with zeros
                 byte[] sessionKey = Combine(PadZero(), des.Key);
 
@@ -186,7 +188,7 @@ namespace libfintx
         // Pad zeros
         private static byte[] PadZero()
         {
-            var buffer = new byte[16];
+            var buffer = new byte[32];
 
             for (int i = 0; i < buffer.Length; i++)
             {
