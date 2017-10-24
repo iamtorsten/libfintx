@@ -156,15 +156,13 @@ namespace libfintx
                 // Encrypt the session key
                 RSAPKCS1KeyExchangeFormatter keyFormatter = new RSAPKCS1KeyExchangeFormatter(key);
 
-                //keyFormatter.Rng = new RNGCryptoServiceProvider(PadZero());
-
                 // Padding session key with zeros
                 byte[] sessionKey = Combine(PadZero(), des.Key);
 
                 if (DEBUG.Enabled)
                     DEBUG.Write("Padded session key: " + libfintx.Converter.ByteArrayToString(sessionKey));
 
-                encryptedSessionKey = keyFormatter.CreateKeyExchange(sessionKey);
+                encryptedSessionKey = keyFormatter.CreateKeyExchange(sessionKey, typeof(TripleDES));
 
                 if (DEBUG.Enabled)
                     DEBUG.Write("Encrypted session key: " + libfintx.Converter.ByteArrayToString(encryptedSessionKey));
