@@ -28,6 +28,32 @@ namespace libfintx
 {
     public class Sig
     {
+        public static string SECFUNC_HBCI_SIG_RDH = "1";
+        public static string SECFUNC_HBCI_SIG_DDV = "2";
+
+        public static string SECFUNC_FINTS_SIG_DIG = "1";
+        public static string SECFUNC_FINTS_SIG_SIG = "2";
+
+        public static string SECFUNC_SIG_PT_1STEP = "999";
+        public static string SECFUNC_SIG_PT_2STEP_MIN = "900";
+        public static string SECFUNC_SIG_PT_2STEP_MAX = "997";
+
+        public static string HASHALG_SHA1 = "1";
+        public static string HASHALG_SHA256 = "3";
+        public static string HASHALG_SHA384 = "4";
+        public static string HASHALG_SHA512 = "5";
+        public static string HASHALG_SHA256_SHA256 = "6";
+        public static string HASHALG_RIPEMD160 = "999";
+
+        public static string SIGALG_DES = "1";
+        public static string SIGALG_RSA = "10";
+
+        public static string SIGMODE_ISO9796_1 = "16";
+        public static string SIGMODE_ISO9796_2 = "17";
+        public static string SIGMODE_PKCS1 = "18";
+        public static string SIGMODE_PSS = "19";
+        public static string SIGMODE_RETAIL_MAC = "999";
+
         /* https://stackoverflow.com/questions/39766324/c-how-to-hash-a-string-into-ripemd160 */
 
         public static string SignDataRIPEMD160(string Message)
