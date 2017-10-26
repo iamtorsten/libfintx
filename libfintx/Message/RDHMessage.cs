@@ -64,7 +64,7 @@ namespace libfintx
             }
 
             sigHead = "HNSHK:" + SEGNUM.SETVal(2) + ":4+" + RDH_Profile.RDHPROFILE + "+2+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time +
-                "+1:" + Sig.HASHALG_RIPEMD160 + ":1+6:" + Sig.SIGALG_RSA + ":+" + Sig.SIGMODE_PKCS1 + "+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":" + Keytype.Sig + ":" + RDH_Profile.Version + ":1'";
+                "+1:" + Sig.HASHALG_SHA256 + ":1+6:" + Sig.SIGALG_RSA + ":+" + Sig.SIGMODE_PKCS1 + "+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":" + Keytype.Sig + ":" + RDH_Profile.Version + ":1'";
 
             var sig = Sig.SignDataRIPEMD160(Segments);
             var signedsig = Sig.SignMessage(sig);
@@ -84,7 +84,7 @@ namespace libfintx
 
             Crypt.Encrypt(Segments, out encryptedSessionKey, out encryptedMessage);
 
-            encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+" + RDH_Profile.RDHPROFILE + "+4+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:" + Enc.ENCALG_2K3DES + ":@" +
+            encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+" + RDH_Profile.RDHPROFILE + "+4+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:" + Enc.ENCMODE_PKCS1 + ":" + Enc.ENCALG_2K3DES + ":@" +
                encryptedSessionKey.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedSessionKey)) + ":" + Enc.ENC_KEYTYPE_RSA + ":1+" + SEG_Country.Germany + ":" + BLZ + ":0:" +
                Keytype.Enc + ":" + RDH_Profile.Version + ":1+0'";
 
