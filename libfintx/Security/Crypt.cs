@@ -132,16 +132,19 @@ namespace libfintx
                 {
                     byte[] plaintextMessage = Encoding.Default.GetBytes(secretMessage);
 
+                    int padLength = plaintextMessage[plaintextMessage.Length - 1];
+
+                    var pad = new byte[8];
+
                     if (DEBUG.Enabled)
                         DEBUG.Write("Plaintext message length: " + plaintextMessage.Length);
 
-                    cs.Write(plaintextMessage, 0, plaintextMessage.Length);
-                    cs.Flush();
+                    cs.Write(plaintextMessage, 0, plaintextMessage.Length - padLength);
                     cs.FlushFinalBlock();
 
                     cs.Close();
 
-                    encryptedMessage = ciphertext.ToArray();
+                    encryptedMessage = Helper.CombineByteArrays(pad, Encoding.Convert(Encoding.Default, Encoding.GetEncoding("ISO-8859-1"), ciphertext.ToArray()));
 
                     if (DEBUG.Enabled)
                         DEBUG.Write("Encrypted message: " + libfintx.Converter.ByteArrayToString(encryptedMessage));
