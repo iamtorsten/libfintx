@@ -24,6 +24,10 @@ There are many reasons why you need to use a banking library which can exchange 
 * Xamarin.iOS
 * ASP.NET (Web)
 
+# Contact
+
+You can contact us in our support channel on [Gitter](https://gitter.im/libfintx/libfintx).
+
 # Sample
 
 e.g. read balance
