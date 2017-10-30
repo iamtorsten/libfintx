@@ -152,6 +152,9 @@ namespace libfintx
                             RDH_KEYSTORE.KEY_SIGNING_PRIVATE = Helper.DecodeFrom64EncodingDefault(
                                 Helper.Parse_String(Crypt.Decrypt_PBEWithMD5AndDES(line, Password), "<Modulus>", "</Modulus>"));
                             break;
+                        case 4:
+                            RDH_KEYSTORE.KEY_SIGNING_PRIVATE_XML = Crypt.Decrypt_PBEWithMD5AndDES(line, Password);
+                            break;
                     }
 
                     i++;

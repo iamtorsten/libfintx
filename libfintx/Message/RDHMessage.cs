@@ -65,8 +65,11 @@ namespace libfintx
             sigHead = "HNSHK:" + SEGNUM.SETVal(2) + ":4+" + RDH_Profile.RDHPROFILE + "+2+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time +
                 "+1:" + Sig.HASHALG_SHA256_SHA256 + ":1+6:" + Sig.SIGALG_RSA + ":+" + Sig.SIGMODE_PSS + "+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":" + Keytype.Sig + ":" + RDH_Profile.Version + ":1'";
 
-            var sig = Sig.SignDataRIPEMD160(Segments);
+            // Sig
+            var sig = Sig.SignDataSHA256(Segments);
             var signedsig = Sig.SignMessage(sig);
+
+            Sig.Verify(sig, signedsig);
 
             var signedsigstr = Converter.FromHexString(Converter.ByteArrayToString(signedsig));
 

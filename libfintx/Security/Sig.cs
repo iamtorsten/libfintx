@@ -55,70 +55,46 @@ namespace libfintx
         public static string SIGMODE_PSS = "19";
         public static string SIGMODE_RETAIL_MAC = "999";
 
-        /* https://stackoverflow.com/questions/39766324/c-how-to-hash-a-string-into-ripemd160 */
 
-        public static string SignDataRIPEMD160(string Message)
+        public static byte[] SignDataSHA256 (string Message)
         {
-            // Create a ripemd160 object
-            RIPEMD160 r160 = RIPEMD160Managed.Create();
-            
-            // Convert the string to byte
-            byte[] myByte = System.Text.Encoding.Default.GetBytes(Message);
-            
-            // Compute the byte to RIPEMD160 hash
-            byte[] encrypted = r160.ComputeHash(myByte);
-            
-            // Create a new StringBuilder process the hash byte
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < encrypted.Length; i++)
-            {
-                sb.Append(encrypted[i].ToString("X2"));
-            }
-
-            if (DEBUG.Enabled)
-                DEBUG.Write("RIPEMD160 hashed message: " + sb.ToString());
-
-            // Convert the StringBuilder to String
-            return sb.ToString();
-        }
-
-        public static string SignDataSHA256 (string Message)
-        {
-            var message = Encoding.ASCII.GetBytes(Message);
+            var message = Encoding.Default.GetBytes(Message);
 
             SHA256Managed hashString = new SHA256Managed();
-            string hex = "";
-
+            
             var hashValue = hashString.ComputeHash(message);
-            foreach (byte x in hashValue)
-            {
-                hex += String.Format("{0:x2}", x);
-            }
-            return hex;
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("Hashed message: " + libfintx.Converter.ByteArrayToString(hashValue));
+
+            return hashValue;
         }
 
-        public static byte[] SignMessage(string hash)
+        public static byte[] SignMessage(byte[] hash)
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
-                byte[] publicKey = Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_SIGNING_PRIVATE);
-                byte[] Exponent = { 1, 0, 1 };
+                rsa.FromXmlString(RDH_KEYSTORE.KEY_SIGNING_PRIVATE_XML);
 
-                RSAParameters RSAKeyInfo = new RSAParameters();
-
-                //Set RSAKeyInfo to the public key values. 
-                RSAKeyInfo.Modulus = publicKey;
-                RSAKeyInfo.Exponent = Exponent;
-
-                rsa.ImportParameters(RSAKeyInfo);
-
-                var encryptedMessage = rsa.Encrypt(Encoding.Default.GetBytes(hash), false);
+                var signedMessage = rsa.SignHash(hash, CryptoConfig.MapNameToOID("SHA256"));
 
                 if (DEBUG.Enabled)
-                    DEBUG.Write("Encrypted message: " + libfintx.Converter.ByteArrayToString(encryptedMessage));
+                    DEBUG.Write("Signed message: " + libfintx.Converter.ByteArrayToString(signedMessage));
 
-                return encryptedMessage;
+                return signedMessage;
+            }
+        }
+
+        public static bool Verify(byte[] hash, byte[] signature)
+        {
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.FromXmlString(RDH_KEYSTORE.KEY_SIGNING_PRIVATE_XML);
+
+                if (!rsa.VerifyHash(hash, CryptoConfig.MapNameToOID("SHA256"), signature))
+                    throw new CryptographicException();
+                else
+                    return true;
             }
         }
     }

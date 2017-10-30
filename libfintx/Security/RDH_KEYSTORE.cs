@@ -30,5 +30,7 @@ namespace libfintx
 
         public static string KEY_ENCRYPTION_PRIVATE { get; set; }
         public static string KEY_SIGNING_PRIVATE { get; set; }
+
+        public static string KEY_SIGNING_PRIVATE_XML { get; set; }
     }
 }
