@@ -24,7 +24,6 @@
 /* https://stackoverflow.com/questions/10168240/encrypting-decrypting-a-string-in-c-sharp */
 
 using System;
-using System.IO;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
@@ -38,7 +37,6 @@ namespace libfintx
         /* https://thomashundley.com/2011/04/21/emulating-javas-pbewithmd5anddes-encryption-with-net/ */
         public static string Encrypt_PBEWithMD5AndDES(string clearText, string passPhrase)
         {
-            // TODO: Parameterize the Password, Salt, and Iterations.  They should be encrypted with the machine key and stored in the registry
             if (string.IsNullOrEmpty(clearText))
             {
                 return clearText;
@@ -92,6 +90,9 @@ namespace libfintx
                 DEBUG.Write("Plain message before encryption: " + Message);
 
             if (DEBUG.Enabled)
+                DEBUG.Write("Plain message length: " + Message.Length);
+
+            if (DEBUG.Enabled)
                 DEBUG.Write("Public bank encryption key: " + Converter.ByteArrayToString(Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK)));
 
             encSessionKey = encryptKey(Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK));
@@ -103,6 +104,9 @@ namespace libfintx
         {
             using (TripleDES des = TripleDES.Create())
             {
+                des.KeySize = 128;
+                des.GenerateKey();
+
                 sessionKey = des.Key;
 
                 if (DEBUG.Enabled)
@@ -122,6 +126,18 @@ namespace libfintx
             }
 
             Array.Copy(sessionKey, 0, plainText, plainText.Length - 16, 16);
+
+            // Prevent going negative
+            if ((plainText[plainText.Length - 1] & 0x80) > 0)
+            {
+                var temp = new byte[plainText.Length];
+
+                Array.Copy(plainText, temp, plainText.Length);
+
+                plainText = new byte[temp.Length + 1];
+
+                Array.Copy(temp, plainText, temp.Length);
+            }
 
             BigInteger m = new BigInteger(plainText);
 

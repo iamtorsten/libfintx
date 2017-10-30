@@ -114,9 +114,6 @@
     <Compile Include="..\libfintx\Security\Enc.cs">
       <Link>Security\Enc.cs</Link>
     </Compile>
-    <Compile Include="..\libfintx\Security\KeyManager.cs">
-      <Link>Security\KeyManager.cs</Link>
-    </Compile>
     <Compile Include="..\libfintx\Security\Keytype.cs">
       <Link>Security\Keytype.cs</Link>
     </Compile>
