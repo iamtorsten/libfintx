@@ -156,7 +156,7 @@ namespace libfintx
                 DEBUG.Write("Encrypted session key: " + libfintx.Converter.ByteArrayToString(result));
 
             if (DEBUG.Enabled)
-                DEBUG.Write("Encrypted session key length: " + libfintx.Converter.ByteArrayToString(result).Length);
+                DEBUG.Write("Encrypted session key length: " + result.Length);
 
             return result;
         }
