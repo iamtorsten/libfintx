@@ -25,6 +25,7 @@
 
 using System;
 using System.IO;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -83,76 +84,86 @@ namespace libfintx
 
         /* https://de.wikipedia.org/wiki/RSA-DES-Hybridverfahren */
 
-        static byte[] SessionKey;
+        static byte[] sessionKey;
 
-        public static void Encrypt(string secretMessage, out byte[] encryptedSessionKey, out byte[] encryptedMessage)
+        public static void Encrypt(string Message, out byte[] encSessionKey, out byte[] encMsg)
         {
             if (DEBUG.Enabled)
-                DEBUG.Write("Plain message before encryption: " + secretMessage);
+                DEBUG.Write("Plain message before encryption: " + Message);
 
+            encSessionKey = encryptKey(Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK));
+
+            encMsg = encryptMessage(Message);
+        }
+
+        static byte[] encryptKey(byte[] Key)
+        {
             using (TripleDES des = TripleDES.Create())
             {
-                des.KeySize = 128;
-                SessionKey = des.Key;
+                sessionKey = des.Key;
 
                 if (DEBUG.Enabled)
                     DEBUG.Write("3DES random key: " + libfintx.Converter.ByteArrayToString(des.Key));
             }
 
-            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            if (DEBUG.Enabled)
+                DEBUG.Write("Public key length: " + Key.Length);
+
+            int cryptDataSize = Key.Length;
+            byte[] plainText = new byte[cryptDataSize];
+
+            for (int i = 0; i < plainText.Length; i++)
             {
-                byte[] publicKey = Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK);
-                byte[] Exponent = { 1, 0, 1 };
-
-                RSAParameters RSAKeyInfo = new RSAParameters();
-
-                //Set RSAKeyInfo to the public key values. 
-                RSAKeyInfo.Modulus = publicKey;
-                RSAKeyInfo.Exponent = Exponent;
-
-                rsa.ImportParameters(RSAKeyInfo);
-
-                encryptedSessionKey = rsa.Encrypt(SessionKey, false);
-
-                if (DEBUG.Enabled)
-                    DEBUG.Write("Encrypted session key: " + libfintx.Converter.ByteArrayToString(encryptedSessionKey));
+                plainText[i] = (byte)0x00;
             }
+
+            Array.Copy(sessionKey, 0, plainText, plainText.Length - 16, 16);
+
+            BigInteger m = new BigInteger(plainText);
+
+            RSAParameters parameters = new RSAParameters();
+            parameters.Modulus = Key;
+            parameters.Exponent = new byte[] { 1, 0, 1 };
+
+            BigInteger ex = new BigInteger(parameters.Exponent);
+            BigInteger mo = new BigInteger(parameters.Modulus);
+
+            BigInteger c = BigInteger.ModPow(m, ex, mo);
+
+            byte[] result = c.ToByteArray();
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("Encrypted session key: " + libfintx.Converter.ByteArrayToString(result));
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("Encrypted session key length: " + libfintx.Converter.ByteArrayToString(result).Length);
+
+            return result;
+        }
+
+        static byte[] encryptMessage(string msg)
+        {
+            byte[] result = null;
+
+            byte[] iv = new byte[] { (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00 };
+
+            byte[] plainmsg = Encoding.Default.GetBytes(msg);
 
             using (TripleDES des = TripleDES.Create())
             {
-                des.Padding = PaddingMode.ANSIX923;
                 des.Mode = CipherMode.CBC;
+                des.Padding = PaddingMode.ANSIX923;
 
-                des.Key = SessionKey;
-                des.GenerateIV();
-
-                //Encrypt the message
-                using (MemoryStream ciphertext = new MemoryStream())
-                using (CryptoStream cs = new CryptoStream(ciphertext, des.CreateEncryptor(), CryptoStreamMode.Write))
-                {
-                    byte[] plaintextMessage = Encoding.Default.GetBytes(secretMessage);
-
-                    int padLength = plaintextMessage[plaintextMessage.Length - 1];
-
-                    var pad = new byte[8];
-
-                    if (DEBUG.Enabled)
-                        DEBUG.Write("Plaintext message length: " + plaintextMessage.Length);
-
-                    cs.Write(plaintextMessage, 0, plaintextMessage.Length - padLength);
-                    cs.FlushFinalBlock();
-
-                    cs.Close();
-
-                    encryptedMessage = Helper.CombineByteArrays(pad, Encoding.Convert(Encoding.Default, Encoding.GetEncoding("ISO-8859-1"), ciphertext.ToArray()));
-
-                    if (DEBUG.Enabled)
-                        DEBUG.Write("Encrypted message: " + libfintx.Converter.ByteArrayToString(encryptedMessage));
-
-                    if (DEBUG.Enabled)
-                        DEBUG.Write("Encrypted message length: " + encryptedMessage.Length);
-                }
+                result = des.CreateEncryptor(sessionKey, iv).TransformFinalBlock(plainmsg, 0, plainmsg.Length);
             }
-        }    
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("Encrypted message: " + libfintx.Converter.ByteArrayToString(result));
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("Encrypted message length: " + result.Length);
+
+            return result;
+        }
     }
 }
