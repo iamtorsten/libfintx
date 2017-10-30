@@ -91,6 +91,9 @@ namespace libfintx
             if (DEBUG.Enabled)
                 DEBUG.Write("Plain message before encryption: " + Message);
 
+            if (DEBUG.Enabled)
+                DEBUG.Write("Public bank encryption key: " + Converter.ByteArrayToString(Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK)));
+
             encSessionKey = encryptKey(Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK));
 
             encMsg = encryptMessage(Message);
@@ -110,6 +113,7 @@ namespace libfintx
                 DEBUG.Write("Public key length: " + Key.Length);
 
             int cryptDataSize = Key.Length;
+
             byte[] plainText = new byte[cryptDataSize];
 
             for (int i = 0; i < plainText.Length; i++)
