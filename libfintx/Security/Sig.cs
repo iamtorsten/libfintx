@@ -65,7 +65,7 @@ namespace libfintx
             var hashValue = hashString.ComputeHash(message);
 
             if (DEBUG.Enabled)
-                DEBUG.Write("Hashed message: " + libfintx.Converter.ByteArrayToString(hashValue));
+                DEBUG.Write("Hashed message: " + Converter.ByteArrayToString(hashValue));
 
             return hashValue;
         }
@@ -79,7 +79,7 @@ namespace libfintx
                 var signedMessage = rsa.SignHash(hash, CryptoConfig.MapNameToOID("SHA256"));
 
                 if (DEBUG.Enabled)
-                    DEBUG.Write("Signed message: " + libfintx.Converter.ByteArrayToString(signedMessage));
+                    DEBUG.Write("Signed message: " + Converter.ByteArrayToString(signedMessage));
 
                 return signedMessage;
             }

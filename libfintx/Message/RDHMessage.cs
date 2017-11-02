@@ -67,14 +67,14 @@ namespace libfintx
 
             // Sig
             var sig = Sig.SignDataSHA256(Segments);
-            var signedsig = Sig.SignMessage(sig);
+            var signature = Sig.SignMessage(sig);
 
-            Sig.Verify(sig, signedsig);
+            Sig.Verify(sig, signature);
 
-            var signedsigstr = Converter.FromHexString(Converter.ByteArrayToString(signedsig));
+            var signedsig = Converter.FromHexString(Converter.ByteArrayToString(signature));
 
             sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "+" + "@" +
-               signedsigstr.Length + "@" + signedsigstr + "'";
+               signedsig.Length + "@" + signedsig + "'";
 
             if (DEBUG.Enabled)
                 DEBUG.Write("sigTrail: " + sigTrail);

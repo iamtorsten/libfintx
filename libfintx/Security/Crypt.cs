@@ -102,7 +102,7 @@ namespace libfintx
 
         static byte[] encryptKey(byte[] Key)
         {
-            using (TripleDES des = TripleDES.Create())
+            using (TripleDES des = TripleDES.Create("TripleDES"))
             {
                 des.KeySize = 128;
                 des.GenerateKey();
@@ -110,7 +110,7 @@ namespace libfintx
                 sessionKey = des.Key;
 
                 if (DEBUG.Enabled)
-                    DEBUG.Write("3DES random key: " + libfintx.Converter.ByteArrayToString(des.Key));
+                    DEBUG.Write("3DES random key: " + Converter.ByteArrayToString(des.Key));
             }
 
             if (DEBUG.Enabled)
@@ -153,7 +153,7 @@ namespace libfintx
             byte[] result = c.ToByteArray();
 
             if (DEBUG.Enabled)
-                DEBUG.Write("Encrypted session key: " + libfintx.Converter.ByteArrayToString(result));
+                DEBUG.Write("Encrypted session key: " + Converter.ByteArrayToString(result));
 
             if (DEBUG.Enabled)
                 DEBUG.Write("Encrypted session key length: " + result.Length);
@@ -169,7 +169,7 @@ namespace libfintx
 
             byte[] plainmsg = Encoding.Default.GetBytes(msg);
 
-            using (TripleDES des = TripleDES.Create())
+            using (TripleDES des = TripleDES.Create("TripleDES"))
             {
                 des.Mode = CipherMode.CBC;
                 des.Padding = PaddingMode.ANSIX923;
@@ -178,7 +178,7 @@ namespace libfintx
             }
 
             if (DEBUG.Enabled)
-                DEBUG.Write("Encrypted message: " + libfintx.Converter.ByteArrayToString(result));
+                DEBUG.Write("Encrypted message: " + Converter.ByteArrayToString(result));
 
             if (DEBUG.Enabled)
                 DEBUG.Write("Encrypted message length: " + result.Length);
