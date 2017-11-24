@@ -21,67 +21,22 @@
  * 	
  */
 
-/* https://stackoverflow.com/questions/10168240/encrypting-decrypting-a-string-in-c-sharp */
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Crypto.Paddings;
 
-using System;
-using System.Numerics;
-using System.Security.Cryptography;
 using System.Text;
+using System;
 
 namespace libfintx
 {
-    static class Crypt
+    public static class Crypt
     {
-        // KEYS
-
-        /* https://thomashundley.com/2011/04/21/emulating-javas-pbewithmd5anddes-encryption-with-net/ */
-        public static string Encrypt_PBEWithMD5AndDES(string clearText, string passPhrase)
-        {
-            if (string.IsNullOrEmpty(clearText))
-            {
-                return clearText;
-            }
-
-            byte[] salt = { 0xc7, 0x73, 0x21, 0x8c, 0x7e, 0xc8, 0xee, 0x99 };
-
-            // NOTE: The keystring, salt, and iterations must be the same as what is used in the Demo java system.
-            PKCSKeyGenerator crypto = new PKCSKeyGenerator(passPhrase, salt, 20, 1);
-
-            ICryptoTransform cryptoTransform = crypto.Encryptor;
-            var cipherBytes = cryptoTransform.TransformFinalBlock(Encoding.UTF8.GetBytes(clearText), 0, clearText.Length);
-            return Convert.ToBase64String(cipherBytes);
-        }
-
-        public static string Decrypt_PBEWithMD5AndDES(string cipherText, string passPhrase)
-        {
-            if (string.IsNullOrEmpty(cipherText))
-            {
-                return cipherText;
-            }
-
-            byte[] salt = { 0xc7, 0x73, 0x21, 0x8c, 0x7e, 0xc8, 0xee, 0x99 };
-
-            // NOTE: The keystring, salt, and iterations must be the same as what is used in the Demo java system.
-            PKCSKeyGenerator crypto = new PKCSKeyGenerator(passPhrase, salt, 20, 1);
-
-            ICryptoTransform cryptoTransform = crypto.Decryptor;
-            var cipherBytes = Convert.FromBase64String(cipherText);
-            var clearBytes = cryptoTransform.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
-            return Encoding.UTF8.GetString(clearBytes);
-        }
-
-        /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        // TODO: Encryption isnt working
-
-        /* MESSAGE */
-
-        /* 
-         * Documentation/RDH-10*.jpg 
-         */
-
-        /* https://de.wikipedia.org/wiki/RSA-DES-Hybridverfahren */
-
         static byte[] sessionKey;
 
         public static void Encrypt(string Message, out byte[] encSessionKey, out byte[] encMsg)
@@ -93,64 +48,51 @@ namespace libfintx
                 DEBUG.Write("Plain message length: " + Message.Length);
 
             if (DEBUG.Enabled)
-                DEBUG.Write("Public bank encryption key: " + Converter.ByteArrayToString(Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK)));
+                DEBUG.Write("Public bank encryption key: " + Converter.ByteArrayToString(Encoding.GetEncoding("iso8859-1").GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK)));
 
-            encSessionKey = encryptKey(Encoding.Default.GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK));
+            encSessionKey = encryptKey(Encoding.GetEncoding("iso8859-1").GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK));
 
             encMsg = encryptMessage(Message);
         }
 
+        public static byte[] InitDES3Key()
+        {
+
+            DesEdeKeyGenerator gen = new DesEdeKeyGenerator();
+            gen.Init(new KeyGenerationParameters(new SecureRandom(), 127));
+
+            var k = gen.GenerateKey();
+            return k;
+        }
+
         static byte[] encryptKey(byte[] Key)
         {
-            using (TripleDES des = TripleDES.Create("TripleDES"))
-            {
-                des.KeySize = 128;
-                des.GenerateKey();
-
-                sessionKey = des.Key;
-
-                if (DEBUG.Enabled)
-                    DEBUG.Write("3DES random key: " + Converter.ByteArrayToString(des.Key));
-            }
+            sessionKey = InitDES3Key();
 
             if (DEBUG.Enabled)
                 DEBUG.Write("Public key length: " + Key.Length);
 
-            int cryptDataSize = Key.Length;
+            var Exponent = new byte[] { 1, 0, 1 };
+
+            var key = Encoding.GetEncoding("iso8859-1").GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK);
+
+            BigInteger n = new BigInteger(key);
+
+            int cryptDataSize = n.BitLength;
 
             byte[] plainText = new byte[cryptDataSize];
 
-            for (int i = 0; i < plainText.Length; i++)
-            {
-                plainText[i] = (byte)0x00;
-            }
-
             Array.Copy(sessionKey, 0, plainText, plainText.Length - 16, 16);
-
-            // Prevent going negative
-            if ((plainText[plainText.Length - 1] & 0x80) > 0)
-            {
-                var temp = new byte[plainText.Length];
-
-                Array.Copy(plainText, temp, plainText.Length);
-
-                plainText = new byte[temp.Length + 1];
-
-                Array.Copy(temp, plainText, temp.Length);
-            }
 
             BigInteger m = new BigInteger(plainText);
 
-            RSAParameters parameters = new RSAParameters();
-            parameters.Modulus = Key;
-            parameters.Exponent = new byte[] { 1, 0, 1 };
+            BigInteger ex = new BigInteger(Exponent);
 
-            BigInteger ex = new BigInteger(parameters.Exponent);
-            BigInteger mo = new BigInteger(parameters.Modulus);
+            BigInteger mo = new BigInteger(+1, key);
 
-            BigInteger c = BigInteger.ModPow(m, ex, mo);
+            var v = m.ModPow(ex, mo);
 
-            byte[] result = c.ToByteArray();
+            byte[] result = v.ToByteArray();
 
             if (DEBUG.Enabled)
                 DEBUG.Write("Encrypted session key: " + Converter.ByteArrayToString(result));
@@ -158,32 +100,41 @@ namespace libfintx
             if (DEBUG.Enabled)
                 DEBUG.Write("Encrypted session key length: " + result.Length);
 
+            // Check for encrypted session key size
+            var cryptLength = HBCI_Util.checkForCryptSize(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK.Length, result.Length);
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("Crypted session key length is valid: " + cryptLength.ToString());
+
+            if (Trace.Enabled)
+                Trace.Write("Session key length: " + result.Length);
+
+            // Throw exception when size is not valid
+            if (!cryptLength)
+                throw new Exception(HBCI_Exception.CRYPTEDLENGTH());
+
             return result;
         }
 
         static byte[] encryptMessage(string msg)
         {
-            byte[] result = null;
+            byte[] plainmsg = Encoding.GetEncoding("iso8859-1").GetBytes(msg);
 
-            byte[] iv = new byte[] { (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00 };
+            byte[] iv = new byte[8];
 
-            byte[] plainmsg = Encoding.Default.GetBytes(msg);
+            DesEdeEngine desedeEngine = new DesEdeEngine();
+            BufferedBlockCipher bufferedCipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(desedeEngine));
 
-            using (TripleDES des = TripleDES.Create("TripleDES"))
-            {
-                des.Mode = CipherMode.CBC;
-                des.Padding = PaddingMode.ANSIX923;
+            KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DESEDE", sessionKey);
+            ParametersWithIV spec = new ParametersWithIV(keyparam, iv);
 
-                result = des.CreateEncryptor(sessionKey, iv).TransformFinalBlock(plainmsg, 0, plainmsg.Length);
-            }
+            byte[] output = new byte[bufferedCipher.GetOutputSize(plainmsg.Length)];
 
-            if (DEBUG.Enabled)
-                DEBUG.Write("Encrypted message: " + Converter.ByteArrayToString(result));
+            bufferedCipher.Init(true, keyparam);
 
-            if (DEBUG.Enabled)
-                DEBUG.Write("Encrypted message length: " + result.Length);
+            output = bufferedCipher.DoFinal(plainmsg);
 
-            return result;
+            return output;
         }
     }
 }

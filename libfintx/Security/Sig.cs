@@ -21,7 +21,6 @@
  * 	
  */
 
-using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -58,7 +57,7 @@ namespace libfintx
 
         public static byte[] SignDataSHA256 (string Message)
         {
-            var message = Encoding.Default.GetBytes(Message);
+            var message = Encoding.GetEncoding("iso8859-1").GetBytes(Message);
 
             SHA256Managed hashString = new SHA256Managed();
             

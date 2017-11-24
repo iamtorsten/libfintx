@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2017 Torsten Klinger
+ *  Copyright (c) 2016 - 2017 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -23,23 +23,15 @@
 
 namespace libfintx
 {
-    public static class RDH_KEYSTORE
+    class HBCI_Util
     {
-        public static string KEY_ENCRYPTION_PUBLIC_BANK { get; set; }
-        public static string KEY_SIGNING_PUBLIC_BANK { get; set; }
-
-        public static string KEY_ENCRYPTION_PRIVATE { get; set; }
-        public static string KEY_SIGNING_PRIVATE { get; set; }
-
-        public static string KEY_ENCRYPTION_PRIVATE_XML { get; set; }
-        public static string KEY_SIGNING_PRIVATE_XML { get; set; }
-
-        public static string BLZ { get; set; }
-
-        public static string UserID { get; set; }
-
-        public static string Country { get; set; }
-
-        public static string ProfileVersion { get; set; }
+        // Key size
+        public static bool checkForCryptSize(int EncKeyLength, int EncSessionKeyLength)
+        {
+            if (EncKeyLength == EncSessionKeyLength)
+                return true;
+            else
+                return false;
+        }
     }
 }

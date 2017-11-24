@@ -32,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
@@ -71,9 +70,6 @@
     <Compile Include="..\libfintx\Helper\EncodingHelper.cs">
       <Link>Helper\EncodingHelper.cs</Link>
     </Compile>
-    <Compile Include="..\libfintx\Helper\Helper.cs">
-      <Link>Helper\Helper.cs</Link>
-    </Compile>
     <Compile Include="..\libfintx\Helper\Program.cs">
       <Link>Helper\Program.cs</Link>
     </Compile>
@@ -89,12 +85,6 @@
     <Compile Include="..\libfintx\Message\MSG.cs">
       <Link>Message\MSG.cs</Link>
     </Compile>
-    <Compile Include="..\libfintx\Message\RDHMessage.cs">
-      <Link>Message\RDHMessage.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Message\RDHMessageAnonymous.cs">
-      <Link>Message\RDHMessageAnonymous.cs</Link>
-    </Compile>
     <Compile Include="..\libfintx\MT940\MT940.cs">
       <Link>MT940\MT940.cs</Link>
     </Compile>
@@ -103,30 +93,6 @@
     </Compile>
     <Compile Include="..\libfintx\Pain\pain00800202.cs">
       <Link>Pain\pain00800202.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\Crypt.cs">
-      <Link>Security\Crypt.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\Enc.cs">
-      <Link>Security\Enc.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\Keytype.cs">
-      <Link>Security\Keytype.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\PKCSKeyGenerator.cs">
-      <Link>Security\PKCSKeyGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\RDHKEY.cs">
-      <Link>Security\RDHKEY.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\RDH_KEYSTORE.cs">
-      <Link>Security\RDH_KEYSTORE.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\RDH_Profile.cs">
-      <Link>Security\RDH_Profile.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\Sig.cs">
-      <Link>Security\Sig.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Segments\SEG.cs">
       <Link>Segments\SEG.cs</Link>
@@ -203,14 +169,10 @@
     <Compile Include="..\libfintx\Transactions\INI.cs">
       <Link>Transactions\INI.cs</Link>
     </Compile>
-    <Compile Include="..\libfintx\Transactions\INI_RDH.cs">
-      <Link>Transactions\INI_RDH.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\Transaction.cs">
-      <Link>Transactions\Transaction.cs</Link>
-    </Compile>
+    <Compile Include="Helper\Helper.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transactions\Transaction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

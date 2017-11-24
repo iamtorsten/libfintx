@@ -63,7 +63,7 @@ namespace libfintx
             }
 
             sigHead = "HNSHK:" + SEGNUM.SETVal(2) + ":4+" + RDH_Profile.RDHPROFILE + "+2+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time +
-                "+1:" + Sig.HASHALG_SHA256_SHA256 + ":1+6:" + Sig.SIGALG_RSA + ":+" + Sig.SIGMODE_PSS + "+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":" + Keytype.Sig + ":" + RDH_Profile.Version + ":1'";
+                "+1:" + Sig.HASHALG_SHA256_SHA256 + ":1+6:" + Sig.SIGALG_RSA + ":" + Sig.SIGMODE_PSS + "+" + SEG_Country.Germany + ":" + RDH_KEYSTORE.BLZ + ":" + RDH_KEYSTORE.UserID + ":" + Keytype.Sig + ":" + RDH_Profile.Version + ":1'";
 
             // Sig
             var sig = Sig.SignDataSHA256(Segments);
@@ -71,7 +71,7 @@ namespace libfintx
 
             Sig.Verify(sig, signature);
 
-            var signedsig = Converter.FromHexString(Converter.ByteArrayToString(signature));
+            var signedsig = Encoding.GetEncoding("iso8859-1").GetString(signature);
 
             sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "+" + "@" +
                signedsig.Length + "@" + signedsig + "'";
@@ -87,15 +87,15 @@ namespace libfintx
             Crypt.Encrypt(Segments, out encryptedSessionKey, out encryptedMessage);
 
             encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+" + RDH_Profile.RDHPROFILE + "+4+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:" + Enc.ENCALG_2K3DES + ":@" +
-               encryptedSessionKey.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedSessionKey)) + ":" + Enc.ENC_KEYTYPE_RSA + ":1+" + SEG_Country.Germany + ":" + BLZ + ":0:" +
+               encryptedSessionKey.Length + "@" + Encoding.GetEncoding("iso8859-1").GetString(encryptedSessionKey) + ":" + Enc.ENC_KEYTYPE_RSA + ":1+" + SEG_Country.Germany + ":" + RDH_KEYSTORE.BLZ + ":0:" +
                Keytype.Enc + ":" + RDH_Profile.Version + ":1+0'";
 
             if (DEBUG.Enabled)
                 DEBUG.Write("encHead: " + encHead);
 
-            var payload = "HNVSD:999:1+@" + encryptedMessage.Length + "@" + Converter.FromHexString(Converter.ByteArrayToString(encryptedMessage)) + "'";
+            var payload = "HNVSD:999:1+@" + encryptedMessage.Length + "@" + Encoding.GetEncoding("iso8859-1").GetString(encryptedMessage) + "'";
 
-            var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length + DialogID.Length + payload.Length + encHead.Length;
+            var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length + DialogID.Length + (payload.Length + 1) + encHead.Length; // (payload.Length + 1) = Add one digit for "abschließendes Trennzeichen"
 
             var paddedLen = ("000000000000").Substring(0, 12 - Convert.ToString(msgLen).Length) + Convert.ToString(msgLen);
 
@@ -144,7 +144,7 @@ namespace libfintx
                 // Stream string to server
                 // input += "\n";
                 Stream stream = client.GetStream();
-                byte[] @byte = Encoding.Default.GetBytes(Message);
+                byte[] @byte = Encoding.GetEncoding("iso8859-1").GetBytes(Message);
                 stream.Write(@byte, 0, @byte.Length);
 
                 // Read response from server.
@@ -155,7 +155,7 @@ namespace libfintx
 
                 int bytesRead = stream.Read(buffer, 0, buffer.Length);
 
-                var response = Encoding.Default.GetString(buffer, 0, bytesRead);
+                var response = Encoding.GetEncoding("iso8859-1").GetString(buffer, 0, bytesRead);
 
                 client.Close();
 

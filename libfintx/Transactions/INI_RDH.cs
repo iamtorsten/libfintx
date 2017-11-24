@@ -50,7 +50,7 @@ namespace libfintx
                         DEBUG.Write("INI message: " + segments);
 
                     if (Helper.Parse_Segment_RDH_Key(RDHMessage.Send(URL, Port, RDHMessageAnonymous.Create(HBCIVersion,
-                        MSG.SETVal(1), DLG.SETVal(0), BLZ, segments))))
+                        MSG.SETVal(1), DLG.SETVal(0), BLZ, segments)), BLZ, UserID))
                     {
                         // Sync OK
                         Log.Write("Synchronisation ok");
@@ -91,14 +91,14 @@ namespace libfintx
 
                         Log.Write("Initialisation failed");
 
-                        throw new Exception("Initialisation failed");
+                        throw new Exception(HBCI_Exception.INI());
                     }
                 }
                 else
                 {
                     Log.Write("HBCI version not supported");
 
-                    throw new Exception("HBCI version not supported");
+                    throw new Exception(HBCI_Exception.HBCIVERSIONNOTSUPPORTED());
                 }
             }
             catch (Exception ex)
@@ -110,7 +110,7 @@ namespace libfintx
                 if (DEBUG.Enabled)
                     DEBUG.Write("Software error: " + ex.ToString());
 
-                throw new Exception("Software error: " + ex.ToString());
+                throw new Exception(HBCI_Exception.SOFTWARE() + ex.ToString());
             }
         }
     }

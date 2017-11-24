@@ -16,6 +16,9 @@ namespace test_RDH
         static int HBCIVersion = 0;
         static string UserID = string.Empty;
 
+        static int Country = 0;
+        static int ProfileVersion = 0;
+
         static void Main(string[] args)
         {
             
@@ -31,7 +34,7 @@ namespace test_RDH
 
             HBCI.Debugging(true);
 
-            hbci.RDHKEY.Create(FilePath, Pwd);
+            hbci.RDHKEY.Create(FilePath, Pwd, BLZ, UserID, Country, ProfileVersion);
 
             if (HBCI.Synchronization_RDH(BLZ, Url, Port, HBCIVersion, UserID, FilePath, Pwd))
             {
