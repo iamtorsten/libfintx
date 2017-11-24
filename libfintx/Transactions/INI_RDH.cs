@@ -110,7 +110,11 @@ namespace libfintx
                 if (DEBUG.Enabled)
                     DEBUG.Write("Software error: " + ex.ToString());
 
-                throw new Exception(HBCI_Exception.SOFTWARE() + ex.ToString());
+                // Exception
+                if (!DEBUG.Enabled)
+                    throw new Exception(HBCI_Exception.SOFTWARE() + ex.ToString());
+                else
+                    return false;
             }
         }
     }

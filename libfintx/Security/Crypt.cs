@@ -37,6 +37,9 @@ namespace libfintx
 {
     public static class Crypt
     {
+
+#region RDH-10
+
         static byte[] sessionKey;
 
         public static void Encrypt(string Message, out byte[] encSessionKey, out byte[] encMsg)
@@ -123,18 +126,55 @@ namespace libfintx
             byte[] iv = new byte[8];
 
             DesEdeEngine desedeEngine = new DesEdeEngine();
-            BufferedBlockCipher bufferedCipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(desedeEngine));
+            BufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(desedeEngine));
 
             KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DESEDE", sessionKey);
             ParametersWithIV spec = new ParametersWithIV(keyparam, iv);
 
-            byte[] output = new byte[bufferedCipher.GetOutputSize(plainmsg.Length)];
+            byte[] output = new byte[cipher.GetOutputSize(plainmsg.Length)];
 
-            bufferedCipher.Init(true, keyparam);
+            cipher.Init(true, keyparam);
 
-            output = bufferedCipher.DoFinal(plainmsg);
+            output = cipher.DoFinal(plainmsg);
 
             return output;
         }
+
+        public static string DecryptMessageandKey(byte[] cryptKey, byte[] cryptMessage)
+        {
+            // Decrypt session key
+            var k = Encoding.GetEncoding("iso8859-1").GetBytes(RDH_KEYSTORE.KEY_ENCRYPTION_PRIVATE);
+
+            var Exponent = new byte[] { 1, 0, 1 };
+
+            byte[] pKey;
+
+            BigInteger exponent = new BigInteger(+1, Exponent);
+            BigInteger modulus = new BigInteger(+1, k);
+
+            BigInteger c = new BigInteger(+1, cryptKey);
+
+            pKey = c.ModPow(exponent, modulus).ToByteArray();
+
+            byte[] realPlainKey = new byte[24];
+            Array.Copy(pKey, pKey.Length - 16, realPlainKey, 0, 16);
+            Array.Copy(pKey, pKey.Length - 16, realPlainKey, 16, 8);
+
+            byte[] iv = new byte[8];
+
+            // Decrypt bank message
+            DesEdeEngine desedeEngine = new DesEdeEngine();
+            BufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(desedeEngine));
+
+            KeyParameter keyparam = ParameterUtilities.CreateKeyParameter("DESEDE", realPlainKey);
+            ParametersWithIV spec = new ParametersWithIV(keyparam, iv);
+
+            cipher.Init(false, keyparam);
+
+            return Encoding.GetEncoding("iso8859-1").GetString(cipher.DoFinal(cryptMessage));
+        }
+
+#endregion
+
     }
 }
