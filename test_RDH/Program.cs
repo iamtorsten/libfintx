@@ -16,7 +16,7 @@ namespace test_RDH
         static int HBCIVersion = 0;
         static string UserID = string.Empty;
 
-        static int Country = 0;
+        static int Country = 280;
         static int ProfileVersion = 0;
 
         static void Main(string[] args)
@@ -26,7 +26,7 @@ namespace test_RDH
             Url = "hbci01.fiducia.de";
             Port = 3000;
             HBCIVersion = 300;
-            UserID = "6726706155000628100";
+            UserID = "xxx";
 
             HBCI.Assembly("libfintx", "1.0");
 
