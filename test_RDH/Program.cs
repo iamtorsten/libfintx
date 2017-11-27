@@ -26,7 +26,7 @@ namespace test_RDH
             Url = "hbci01.fiducia.de";
             Port = 3000;
             HBCIVersion = 300;
-            UserID = "xxx";
+            UserID = "6726706167001326519";
 
             HBCI.Assembly("libfintx", "1.0");
 
@@ -34,14 +34,17 @@ namespace test_RDH
 
             HBCI.Debugging(true);
 
+            // create rdh-10 key file
             hbci.RDHKEY.Create(FilePath, Pwd, BLZ, UserID, Country, ProfileVersion);
 
-            if (HBCI.Synchronization_RDH(BLZ, Url, Port, HBCIVersion, UserID, FilePath, Pwd))
+            // hbci key
+            hbci.RDHKEY.RDHKEYFILE = FilePath;
+            hbci.RDHKEY.RDHKEYFILEPWD = Pwd;
+
+            if (!HBCI.Synchronization_RDH(BLZ, Url, Port, HBCIVersion, UserID, FilePath, Pwd))
             {
-                Console.WriteLine("Synchronisation ok");
-            }
-            else
                 Console.WriteLine(HBCI.Transaction_Output());
+            }   
 
             Console.ReadLine();
         }

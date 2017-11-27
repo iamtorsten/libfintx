@@ -21,6 +21,9 @@
  * 	
  */
 
+using System;
+using System.Text;
+
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
@@ -29,9 +32,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Crypto.Paddings;
-
-using System.Text;
-using System;
 
 namespace libfintx
 {

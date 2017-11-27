@@ -35,6 +35,8 @@ namespace libfintx
 
         /* https://thomashundley.com/2011/04/21/emulating-javas-pbewithmd5anddes-encryption-with-net/ */
 
+#region TripleDES
+
         public static string Encrypt_PBEWithMD5AndDES(string clearText, string passPhrase)
         {
             if (string.IsNullOrEmpty(clearText))
@@ -48,7 +50,9 @@ namespace libfintx
             PKCSKeyGenerator crypto = new PKCSKeyGenerator(passPhrase, salt, 20, 1);
 
             ICryptoTransform cryptoTransform = crypto.Encryptor;
-            var cipherBytes = cryptoTransform.TransformFinalBlock(Encoding.UTF8.GetBytes(clearText), 0, clearText.Length);
+
+            var cipherBytes = cryptoTransform.TransformFinalBlock(Encoding.GetEncoding("iso8859-1").GetBytes(clearText), 0, clearText.Length);
+
             return Convert.ToBase64String(cipherBytes);
         }
 
@@ -65,9 +69,52 @@ namespace libfintx
             PKCSKeyGenerator crypto = new PKCSKeyGenerator(passPhrase, salt, 20, 1);
 
             ICryptoTransform cryptoTransform = crypto.Decryptor;
+
+            var cipherBytes = Convert.FromBase64String(cipherText);
+            var clearBytes = cryptoTransform.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
+
+            return Encoding.GetEncoding("iso8859-1").GetString(clearBytes);
+        }
+
+        #endregion
+
+        #region RSA
+
+        public static string Encrypt_RSA_PBEWithMD5AndDES(string clearText, string passPhrase)
+        {
+            if (string.IsNullOrEmpty(clearText))
+            {
+                return clearText;
+            }
+
+            byte[] salt = { 0xc7, 0x73, 0x21, 0x8c, 0x7e, 0xc8, 0xee, 0x99 };
+
+            // NOTE: The keystring, salt, and iterations must be the same as what is used in the Demo java system.
+            PKCSKeyGenerator crypto = new PKCSKeyGenerator(passPhrase, salt, 20, 1);
+
+            ICryptoTransform cryptoTransform = crypto.Encryptor;
+            var cipherBytes = cryptoTransform.TransformFinalBlock(Encoding.UTF8.GetBytes(clearText), 0, clearText.Length);
+            return Convert.ToBase64String(cipherBytes);
+        }
+
+        public static string Decrypt_RSA_PBEWithMD5AndDES(string cipherText, string passPhrase)
+        {
+            if (string.IsNullOrEmpty(cipherText))
+            {
+                return cipherText;
+            }
+
+            byte[] salt = { 0xc7, 0x73, 0x21, 0x8c, 0x7e, 0xc8, 0xee, 0x99 };
+
+            // NOTE: The keystring, salt, and iterations must be the same as what is used in the Demo java system.
+            PKCSKeyGenerator crypto = new PKCSKeyGenerator(passPhrase, salt, 20, 1);
+
+            ICryptoTransform cryptoTransform = crypto.Decryptor;
             var cipherBytes = Convert.FromBase64String(cipherText);
             var clearBytes = cryptoTransform.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
             return Encoding.UTF8.GetString(clearBytes);
         }
+
+        #endregion
     }
 }

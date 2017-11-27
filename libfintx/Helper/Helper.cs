@@ -515,6 +515,13 @@ namespace libfintx
             if (!String.IsNullOrEmpty(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK) &&
                 !String.IsNullOrEmpty(RDH_KEYSTORE.KEY_SIGNING_PUBLIC_BANK))
             {
+                // Update hbci key
+                RDHKEY.Update(RDHKEY.RDHKEYFILE, RDHKEY.RDHKEYFILEPWD);
+
+                // Release rdhkey credentials
+                RDHKEY.RDHKEYFILE = string.Empty;
+                RDHKEY.RDHKEYFILEPWD = string.Empty;
+
                 return true;
             }
             else
