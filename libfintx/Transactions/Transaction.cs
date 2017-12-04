@@ -39,8 +39,6 @@ using static libfintx.HKCSB;
 using static libfintx.TAN;
 using static libfintx.TAN4;
 
-using static libfintx.INI_RDH;
-
 namespace libfintx
 {
     public static class Transaction
@@ -142,12 +140,6 @@ namespace libfintx
         public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN, string MediumName)
         {
             return Send_TAN4(TAN, URL, HBCIVersion, BLZ, UserID, PIN, MediumName);
-        }
-
-        // RDH
-        public static bool INI_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
-        {
-            return Init_INI_RDH(BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password);
         }
     }
 }

@@ -27,14 +27,6 @@ namespace libfintx
 {
     public static class Enc
     {
-        public static String SECFUNC_ENC_3DES = "4";
         public static String SECFUNC_ENC_PLAIN = "998";
-
-        public static String ENCALG_2K3DES = "13";
-
-        public static String ENCMODE_CBC = "2";
-        public static String ENCMODE_PKCS1 = "18";
-
-        public static String ENC_KEYTYPE_RSA = "6";
     }
 }

@@ -67,7 +67,7 @@ namespace libfintx
 
             if (Version == 220)
             {
-                encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+280:" + BLZ + ":" + UserID + ":V:0:0+0'";
+                encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
@@ -75,14 +75,14 @@ namespace libfintx
 
                 if (TAN == null)
                 {
-                    sigHead = "HNSHK:2:3+" + "900" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:3+" + "900" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
 
                 else
                 {
-                    sigHead = "HNSHK:2:3+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:3+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX").Replace(TAN, "XXXXXX"));
                 }
@@ -103,19 +103,19 @@ namespace libfintx
             }
             else if (Version == 300)
             {
-                encHead = "HNVSK:998:3+PIN:1+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+280:" + BLZ + ":" + UserID + ":V:0:0+0'";
+                encHead = "HNVSK:998:3+PIN:1+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
                 if (TAN == null)
                 {
-                    sigHead = "HNSHK:2:4+PIN:1+" + "999" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:4+PIN:1+" + "999" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
                 else
                 {
-                    sigHead = "HNSHK:2:4+PIN:2+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+280:" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:4+PIN:2+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX").Replace(TAN, "XXXXXX"));
                 }
