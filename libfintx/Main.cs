@@ -69,7 +69,7 @@ namespace libfintx
         /// <returns>
         /// Balance
         /// </returns>
-        public static string Balance(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+        public static string Balance(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
             string UserID, string PIN, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
@@ -121,7 +121,7 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static string Transactions(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+        public static string Transactions(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
             string UserID, string PIN, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
