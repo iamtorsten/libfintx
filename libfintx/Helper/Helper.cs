@@ -211,7 +211,7 @@ namespace libfintx
 
                     if (item.Contains("HISYN"))
                     {
-                        var ID = item.Substring(13, item.Length - 13);
+                        var ID = item.Substring(item.IndexOf("+")+1);
                         Segment.HISYN = ID;
                     }
 

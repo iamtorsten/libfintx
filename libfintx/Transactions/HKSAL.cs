@@ -30,7 +30,7 @@ namespace libfintx
         /// <summary>
         /// Balance
         /// </summary>
-        public static string Init_HKSAL(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
+        public static string Init_HKSAL(string Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKSAL: Request balance");
 

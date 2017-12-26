@@ -30,7 +30,7 @@ namespace libfintx
         /// <summary>
         /// Transactions
         /// </summary>
-        public static string Init_HKKAZ(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN, string FromDate, string Startpoint)
+        public static string Init_HKKAZ(string Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN, string FromDate, string Startpoint)
         {
             Log.Write("Starting job HKKAZ: Request transactions");
 

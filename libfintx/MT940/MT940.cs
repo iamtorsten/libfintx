@@ -395,7 +395,7 @@ namespace libfintx
             return line;
         }
 
-        public static bool Serialize(string STA, int Account)
+        public static bool Serialize(string STA, string Account)
         {
             Int32 LineCounter = 0;
 
