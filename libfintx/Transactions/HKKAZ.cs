@@ -30,7 +30,7 @@ namespace libfintx
         /// <summary>
         /// Transactions
         /// </summary>
-        public static string Init_HKKAZ(string Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN, string FromDate, string Startpoint)
+        public static string Init_HKKAZ(string Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN, string FromDate, string ToDate, string Startpoint)
         {
             Log.Write("Starting job HKKAZ: Request transactions");
 
@@ -58,16 +58,16 @@ namespace libfintx
                 if (String.IsNullOrEmpty(Startpoint))
                 {
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
-                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N+" + FromDate + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+" + ToDate + "'";
                     else
-                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N+" + FromDate + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+" + ToDate + "'";
                 }
                 else
                 {
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
-                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+++" + Startpoint + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                     else
-                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+++" + Startpoint + "'";
+                        segments = "HKKAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKKAZ + "+" + IBAN + ":" + BIC + ":" + Konto + "::280:" + BLZ + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                 }
             }
 

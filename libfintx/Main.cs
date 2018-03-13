@@ -122,12 +122,16 @@ namespace libfintx
         /// Transactions
         /// </returns>
         public static string Transactions(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
-            string UserID, string PIN, bool Anonymous)
+            string UserID, string PIN, bool Anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
+
+                var startDateStr = startDate?.ToString("yyyyMMdd");
+                var endDateStr = endDate?.ToString("yyyyMMdd");
+
                 // Success
-                var BankCode = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, null, null);
+                var BankCode = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, startDateStr, endDateStr, null);
 
                 var Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNSHA");
 
@@ -141,7 +145,7 @@ namespace libfintx
 
                     var Startpoint = Helper.Parse_String(BankCode, "vor:", "'");
 
-                    var BankCode_ = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, null, Startpoint);
+                    var BankCode_ = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, startDateStr, endDateStr, Startpoint);
 
                     var Transactions_ = ":20:STARTUMS" + Helper.Parse_String(BankCode_, ":20:STARTUMS", "'HNSHA");
 
