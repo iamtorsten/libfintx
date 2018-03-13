@@ -245,11 +245,23 @@ namespace libfintx
 
                     if (item.Contains("HKKAZ"))
                     {
-                        if (String.IsNullOrEmpty(Segment.HKKAZ))
-                        {
-                            var VER = Parse_String(item, "HKKAZ;", ";");
+                        string pattern = @"HKKAZ;.*?;";
+                        Regex rgx = new Regex(pattern);
+                        string sentence = item;
 
-                            Segment.HKKAZ = VER;
+                        foreach (Match match in rgx.Matches(sentence))
+                        {
+                            var VER = Parse_String(match.Value, "HKKAZ;", ";");
+
+                            if (String.IsNullOrEmpty(Segment.HKKAZ))
+                                Segment.HKKAZ = VER;
+                            else
+                            {
+                                if (int.Parse(VER) > int.Parse(Segment.HKKAZ))
+                                {
+                                    Segment.HKKAZ = VER;
+                                }
+                            }
                         }
                     }
                 }
