@@ -118,6 +118,8 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="Anonymous"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
         /// <returns>
         /// Transactions
         /// </returns>
@@ -219,7 +221,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -236,7 +238,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -349,7 +351,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -366,7 +368,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -476,7 +478,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -493,7 +495,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -604,7 +606,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -621,7 +623,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -733,7 +735,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -750,7 +752,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -864,7 +866,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -881,7 +883,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -990,7 +992,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -1007,7 +1009,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -1114,7 +1116,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -1131,7 +1133,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -1248,7 +1250,7 @@ namespace libfintx
 
                     string HITANFlicker = string.Empty;
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
                     }
@@ -1265,7 +1267,7 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("972"))
+                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
