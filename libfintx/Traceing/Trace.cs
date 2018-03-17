@@ -32,30 +32,33 @@ namespace libfintx
 
         public static void Write(string Message)
         {
-            // Directory
-            var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var dir = Path.Combine(documents, Program.Buildname);
-
-            if (!Directory.Exists(dir))
+            if (Enabled)
             {
-                Directory.CreateDirectory(dir);
+                // Directory
+                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var dir = Path.Combine(documents, Program.Buildname);
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                // Tracefile
+                dir = Path.Combine(dir, "TRACE");
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                if (!File.Exists(Path.Combine(dir, "Trace.txt")))
+                {
+                    using (File.Create(Path.Combine(dir, "Trace.txt")))
+                    { };
+                }
+
+                File.AppendAllText(Path.Combine(dir, "Trace.txt"), "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
             }
-
-            // Tracefile
-            dir = Path.Combine(dir, "TRACE");
-
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-
-            if (!File.Exists(Path.Combine(dir, "Trace.txt")))
-            {
-                using (File.Create(Path.Combine(dir, "Trace.txt")))
-                { };
-            }
-
-            File.AppendAllText(Path.Combine(dir, "Trace.txt"), "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
         }
     }
 }

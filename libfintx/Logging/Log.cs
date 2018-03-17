@@ -28,32 +28,37 @@ namespace libfintx
 {
     public static class Log
     {
+        public static bool Enabled { get; set; }
+
         public static void Write(string Message)
         {
-            // Directory
-            var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var dir = Path.Combine(documents, Program.Buildname);
-
-            if (!Directory.Exists(dir))
+            if (Enabled)
             {
-                Directory.CreateDirectory(dir);
+                // Directory
+                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var dir = Path.Combine(documents, Program.Buildname);
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                // Logfile
+                dir = Path.Combine(dir, "LOG");
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                if (!File.Exists(Path.Combine(dir, "Log.txt")))
+                {
+                    using (File.Create(Path.Combine(dir, "Log.txt")))
+                    { };
+                }
+
+                File.AppendAllText(Path.Combine(dir, "Log.txt"), "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
             }
-
-            // Logfile
-            dir = Path.Combine(dir, "LOG");
-
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-
-            if (!File.Exists(Path.Combine(dir, "Log.txt")))
-            {
-                using (File.Create(Path.Combine(dir, "Log.txt")))
-                { };
-            }
-
-            File.AppendAllText(Path.Combine(dir, "Log.txt"), "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
         }
     }
 }
