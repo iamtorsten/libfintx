@@ -106,15 +106,7 @@ namespace libfintx
             try
             {
                 String[] values = Message.Split('\'');
-
-                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var dir = Path.Combine(documents, Program.Buildname);
-
-				if (!Directory.Exists(dir))
-				{
-					Directory.CreateDirectory(dir);
-				}
-
+                                
                 List<string> msg = new List<string>();
 
                 foreach (var item in values)
@@ -127,42 +119,53 @@ namespace libfintx
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
                 string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNSHA");
 
-				// BPD
-				dir = Path.Combine(dir, "BPD");
+                if (Trace.Enabled) {
 
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
+                    var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    var dir = Path.Combine(documents, Program.Buildname);
+
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+
+                    // BPD
+                    dir = Path.Combine(dir, "BPD");
+
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+
+                    if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
+                    {
+                        using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
+                        { };
+
+                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
+                    }
+                    else
+                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
+               
+                    // UPD
+                    dir = Path.Combine(documents, Program.Buildname);
+                    dir = Path.Combine(dir, "UPD");
+
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+
+                    if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
+                    {
+                        using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
+                        { };
+
+                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
+                    }
+                    else
+                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
                 }
-
-                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                {
-                    using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                    { };
-
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-                }
-                else
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-
-				// UPD
-				dir = Path.Combine(documents, Program.Buildname);
-				dir = Path.Combine(dir, "UPD");
-
-				if (!Directory.Exists(dir))
-				{
-					Directory.CreateDirectory(dir);
-				}
-
-                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                {
-                    using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                    { };
-
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
-                }
-                else
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
 
                 foreach (var item in values)
                 {

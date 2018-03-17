@@ -408,26 +408,29 @@ namespace libfintx
             if (STA == null || STA.Length == 0)
                 return false;
 
-			var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			var dir = Path.Combine(documents, Program.Buildname);
+            string documents = "", dir = "";
+            if (Trace.Enabled){
+                documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                dir = Path.Combine(documents, Program.Buildname);
 
-			dir = Path.Combine(dir, "STA");
+                dir = Path.Combine(dir, "STA");
 
-			if (!Directory.Exists(dir))
-			{
-				Directory.CreateDirectory(dir);
-			}
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
 
-			// STA
-			if (!File.Exists(Path.Combine(dir, Account + ".STA")))
-			{
-				using (File.Create(Path.Combine(dir, Account + ".STA")))
-				{ };
+                // STA
+                if (!File.Exists(Path.Combine(dir, Account + ".STA")))
+                {
+                    using (File.Create(Path.Combine(dir, Account + ".STA")))
+                    { };
 
-				File.AppendAllText(Path.Combine(dir, Account + ".STA"), STA);
-			}
-			else
-				File.AppendAllText(Path.Combine(dir, Account + ".STA"), STA);
+                    File.AppendAllText(Path.Combine(dir, Account + ".STA"), STA);
+                }
+                else
+                    File.AppendAllText(Path.Combine(dir, Account + ".STA"), STA);
+            }
 
             while (STA.Length > 0)
             {
@@ -464,58 +467,62 @@ namespace libfintx
                 Data(swiftTag, swiftData);
             }
 
-            foreach (SWIFTStatement statement in SWIFTStatements)
+
+            if (Trace.Enabled)
             {
-                var ID = statement.id;
-                var Date = statement.date.ToShortDateString();
-                var AccountCode = statement.accountCode;
-                var BanksortCode = statement.bankCode;
-                var Currency = statement.currency;
-                var StartBalance = statement.startBalance.ToString();
-                var EndBalance = statement.endBalance.ToString();
-
-                foreach (SWIFTTransaction transaction in statement.SWIFTTransactions)
+                foreach (SWIFTStatement statement in SWIFTStatements)
                 {
-                    var PartnerName = transaction.partnerName;
-                    var AccountCode_ = transaction.accountCode;
-                    var BankCode = transaction.bankCode;
-                    var Description = transaction.description;
-                    var Text = transaction.text;
-                    var TypeCode = transaction.typecode;
-                    var Amount = transaction.amount.ToString();
+                    var ID = statement.id;
+                    var Date = statement.date.ToShortDateString();
+                    var AccountCode = statement.accountCode;
+                    var BanksortCode = statement.bankCode;
+                    var Currency = statement.currency;
+                    var StartBalance = statement.startBalance.ToString();
+                    var EndBalance = statement.endBalance.ToString();
 
-                    var UMS = "++STARTUMS++" + "ID: " + ID + " ' " +
-                        "Date: " + Date + " ' " +
-                        "AccountCode: " + AccountCode + " ' " +
-                        "BanksortCode: " + BanksortCode + " ' " +
-                        "Currency: " + Currency + " ' " +
-                        "StartBalance: " + StartBalance + " ' " +
-                        "EndBalance: " + EndBalance + " ' " +
-                        "PartnerName: " + PartnerName + " ' " +
-                        "BankCode: " + BankCode + " ' " +
-                        "Description: " + Description + " ' " +
-                        "Text: " + Text + " ' " +
-                        "TypeCode: " + TypeCode + " ' " +
-                        "Amount: " + Amount + " ' " + "++ENDUMS++";
+                    foreach (SWIFTTransaction transaction in statement.SWIFTTransactions)
+                    {
+                        var PartnerName = transaction.partnerName;
+                        var AccountCode_ = transaction.accountCode;
+                        var BankCode = transaction.bankCode;
+                        var Description = transaction.description;
+                        var Text = transaction.text;
+                        var TypeCode = transaction.typecode;
+                        var Amount = transaction.amount.ToString();
 
-					dir = Path.Combine(documents, Program.Buildname);
-					dir = Path.Combine(dir, "MT940");
+                        var UMS = "++STARTUMS++" + "ID: " + ID + " ' " +
+                            "Date: " + Date + " ' " +
+                            "AccountCode: " + AccountCode + " ' " +
+                            "BanksortCode: " + BanksortCode + " ' " +
+                            "Currency: " + Currency + " ' " +
+                            "StartBalance: " + StartBalance + " ' " +
+                            "EndBalance: " + EndBalance + " ' " +
+                            "PartnerName: " + PartnerName + " ' " +
+                            "BankCode: " + BankCode + " ' " +
+                            "Description: " + Description + " ' " +
+                            "Text: " + Text + " ' " +
+                            "TypeCode: " + TypeCode + " ' " +
+                            "Amount: " + Amount + " ' " + "++ENDUMS++";
 
-					if (!Directory.Exists(dir))
-					{
-						Directory.CreateDirectory(dir);
-					}
+                        dir = Path.Combine(documents, Program.Buildname);
+                        dir = Path.Combine(dir, "MT940");
 
-					// MT940
-					if (!File.Exists(Path.Combine(dir, Account + ".MT940")))
-					{
-						using (File.Create(Path.Combine(dir, Account + ".MT940")))
-						{ };
+                        if (!Directory.Exists(dir))
+                        {
+                            Directory.CreateDirectory(dir);
+                        }
 
-						File.AppendAllText(Path.Combine(dir, Account + ".MT940"), UMS);
-					}
-					else
-						File.AppendAllText(Path.Combine(dir, Account + ".MT940"), UMS);
+                        // MT940
+                        if (!File.Exists(Path.Combine(dir, Account + ".MT940")))
+                        {
+                            using (File.Create(Path.Combine(dir, Account + ".MT940")))
+                            { };
+
+                            File.AppendAllText(Path.Combine(dir, Account + ".MT940"), UMS);
+                        }
+                        else
+                            File.AppendAllText(Path.Combine(dir, Account + ".MT940"), UMS);
+                    }
                 }
             }
 
