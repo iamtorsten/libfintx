@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -139,26 +140,19 @@ namespace libfintx
 
                 MT940.Serialize(Transactions, Account);
 
-                Further:
 
-                if (BankCode.Contains("+3040::"))
+                string BankCode_ = BankCode;
+                while (BankCode_.Contains("+3040::"))
                 {
-                    Helper.Parse_Message(BankCode);
+                    Helper.Parse_Message(BankCode_);
 
-                    var Startpoint = Helper.Parse_String(BankCode, "vor:", "'");
+                    var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
-                    var BankCode_ = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, startDateStr, endDateStr, Startpoint);
+                    BankCode_ = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, startDateStr, endDateStr, Startpoint);
 
                     var Transactions_ = ":20:STARTUMS" + Helper.Parse_String(BankCode_, ":20:STARTUMS", "'HNSHA");
 
                     MT940.Serialize(Transactions_, Account);
-
-                    if (BankCode_.Contains("+3040::"))
-                    {
-                        BankCode = BankCode_;
-
-                        goto Further;
-                    }
                 }
 
                 return "OK";
@@ -320,9 +314,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string Transfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-			string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID,
+            string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID,
             string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
-		{
+        {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -839,14 +833,14 @@ namespace libfintx
         public static string Collect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Payer, string PayerIBAN, string PayerBIC,
             decimal Amount, string Purpose, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, string UserID,
             string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
-        {			
+        {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
-				TransactionConsole.Output = string.Empty;
+                TransactionConsole.Output = string.Empty;
 
-				if (!String.IsNullOrEmpty(HIRMS))
-					Segment.HIRMS = HIRMS;
-				
+                if (!String.IsNullOrEmpty(HIRMS))
+                    Segment.HIRMS = HIRMS;
+
                 var BankCode = Transaction.HKDSE(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Payer, PayerIBAN, PayerBIC,
                     Convert.ToDecimal(Amount), Purpose, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber, URL, HBCIVersion, UserID, PIN);
 
@@ -859,10 +853,10 @@ namespace libfintx
                     foreach (var item in values)
                     {
                         if (!item.StartsWith("HIRMS"))
-							TransactionConsole.Output = item.Replace("::", ": ");
+                            TransactionConsole.Output = item.Replace("::", ": ");
                     }
-                    
-					var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
+
+                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
 
@@ -1389,7 +1383,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN)
-        {			
+        {
             var BankCode = Transaction.TAN(TAN, URL, HBCIVersion, BLZ, UserID, PIN);
 
             if (BankCode.Contains("+0020::"))
@@ -1490,34 +1484,34 @@ namespace libfintx
         /// TAN mechanism
         /// </returns>
         public static string TAN_Scheme()
-		{
-			return Segment.HIRMSf;
-		}
+        {
+            return Segment.HIRMSf;
+        }
 
-		/// <summary>
+        /// <summary>
         /// Set assembly informations
         /// </summary>
         /// <param name="Buildname"></param>
         /// <param name="Version"></param>
         public static void Assembly(string Buildname, string Version)
-		{
-			Program.Buildname = Buildname;
-			Program.Version = Version;
+        {
+            Program.Buildname = Buildname;
+            Program.Version = Version;
 
             Log.Write(Buildname);
             Log.Write(Version);
         }
 
-		/// <summary>
+        /// <summary>
         /// Get assembly buildname
         /// </summary>
         /// <returns>
         /// Buildname
         /// </returns>
         public static string Buildname()
-		{
-			return Program.Buildname;
-		}
+        {
+            return Program.Buildname;
+        }
 
         /// <summary>
         /// Get assembly version
@@ -1526,9 +1520,9 @@ namespace libfintx
         /// Version
         /// </returns>
         public static string Version()
-		{
-			return Program.Version;
-		}
+        {
+            return Program.Version;
+        }
 
         /// <summary>
         /// Transactions output console
@@ -1537,9 +1531,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string Transaction_Output()
-		{
-			return TransactionConsole.Output;
-		}
+        {
+            return TransactionConsole.Output;
+        }
 
         /// <summary>
         /// Enable / Disable Tracing
