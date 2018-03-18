@@ -1578,5 +1578,13 @@ namespace libfintx
         {
             DEBUG.Enabled = Enabled;
         }
+
+        /// <summary>
+        /// Enable / Disable Logging
+        /// </summary>
+        public static void Logging(bool Enabled)
+        {
+            Log.Enabled = Enabled;
+        }
     }
 }

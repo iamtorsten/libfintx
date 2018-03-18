@@ -190,8 +190,7 @@ namespace libfintx
             Log.Write("Connect to FinTS Server");
             Log.Write("Url: " + Url);
 
-            if (Trace.Enabled)
-                Trace.Write(Message);
+            Trace.Write(Message);
 
             try
             {
@@ -224,8 +223,7 @@ namespace libfintx
                     }
                 }
 
-                if (Trace.Enabled)
-                    Trace.Write(FinTSMessage);
+                Trace.Write(FinTSMessage);
 
                 return FinTSMessage;
             }

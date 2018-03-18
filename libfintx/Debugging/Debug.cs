@@ -31,7 +31,10 @@ namespace libfintx
 
         public static void Write(string Message)
         {
-            Console.WriteLine("[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
+            if (Enabled)
+            {
+                Console.WriteLine("[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
+            }
         }
     }
 }
