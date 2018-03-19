@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -214,10 +215,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -262,6 +271,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
@@ -344,10 +380,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -392,6 +436,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
@@ -471,10 +542,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -519,6 +598,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
@@ -599,10 +705,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -647,6 +761,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
@@ -728,10 +869,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -776,6 +925,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
@@ -859,10 +1035,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -907,6 +1091,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
@@ -985,10 +1196,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -1033,6 +1252,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
@@ -1109,10 +1355,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -1157,6 +1411,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
@@ -1243,10 +1524,18 @@ namespace libfintx
                     var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
+                    string HITANPhoto = string.Empty;
 
+                    // chip-TAN / Sm@rt-TAN
                     if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN;
+                    }
+
+                    // photo-TAN
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN;
                     }
 
                     String[] values_ = HITAN.Split('+');
@@ -1291,6 +1580,33 @@ namespace libfintx
                         ThreadStart start = delegate { RunAfterTimespan(action, span); };
                         Thread thread = new Thread(start);
                         thread.Start();
+                    }
+
+                    if (Segment.HIRMS.Equals("982"))
+                    {
+                        HITANPhoto = HITAN.Replace("m?@", "??");
+
+                        string PhotoCode = string.Empty;
+
+                        String[] values__ = HITANPhoto.Split('@');
+
+                        int ii = 1;
+
+                        foreach (var item in values__)
+                        {
+                            ii = ii + 1;
+
+                            if (ii >= 4)
+                            {
+                                if (ii > 4)
+                                    PhotoCode += "@" + item;
+                                else
+                                    PhotoCode += item;
+                            }
+
+                        }
+
+                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
                     }
 
                     return "OK";
