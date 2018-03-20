@@ -218,7 +218,7 @@ namespace libfintx
                     {
                         using (StreamReader streamReader = new StreamReader(resStream, Encoding.UTF8))
                         {
-                            FinTSMessage = Helper.DecodeFrom64(streamReader.ReadToEnd());
+                            FinTSMessage = Helper.DecodeFrom64EncodingDefault(streamReader.ReadToEnd());                            
                         }
                     }
                 }

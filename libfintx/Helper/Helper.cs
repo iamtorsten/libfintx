@@ -74,7 +74,7 @@ namespace libfintx
         static public string DecodeFrom64EncodingDefault(string encodedData)
         {
             byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
-            string returnValue = Encoding.GetEncoding("iso8859-1").GetString(encodedDataAsBytes);
+            string returnValue = Encoding.GetEncoding("ISO-8859-1").GetString(encodedDataAsBytes);
 
             return returnValue;
         }
