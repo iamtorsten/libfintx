@@ -1489,7 +1489,7 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Set assembly informations
+        /// Set assembly information
         /// </summary>
         /// <param name="Buildname"></param>
         /// <param name="Version"></param>
@@ -1501,6 +1501,21 @@ namespace libfintx
             Log.Write(Buildname);
             Log.Write(Version);
         }
+
+
+        /// <summary>
+        /// Set assembly information automatically
+        /// </summary>
+        public static void Assembly()
+        {
+            var assemInfo = System.Reflection.Assembly.GetExecutingAssembly().GetName();
+            Program.Buildname = assemInfo.Name;
+            Program.Version = $"{assemInfo.Version.Major}.{assemInfo.Version.Minor}";
+
+            Log.Write(Program.Buildname);
+            Log.Write(Program.Version);
+        }
+
 
         /// <summary>
         /// Get assembly buildname

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Torsten Klinger")]
 [assembly: AssemblyProduct("libfintx")]
-[assembly: AssemblyCopyright("Copyright © 2016 - 2017 Torsten Klinger")]
+[assembly: AssemblyCopyright("Copyright © 2016 - 2018 Torsten Klinger")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
