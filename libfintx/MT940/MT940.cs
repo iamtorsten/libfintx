@@ -395,9 +395,9 @@ namespace libfintx
             return line;
         }
 
-        public static bool Serialize(string STA, string Account)
+        public static List<SWIFTStatement> Serialize(string STA, string Account)
         {
-            Int32 LineCounter = 0;
+            int LineCounter = 0;
 
             string swiftTag = "";
             string swiftData = "";
@@ -406,7 +406,7 @@ namespace libfintx
             SWIFTStatement = null;
 
             if (STA == null || STA.Length == 0)
-                return false;
+                return SWIFTStatements;
 
             string documents = "", dir = "";
             if (Trace.Enabled){
@@ -526,7 +526,7 @@ namespace libfintx
                 }
             }
 
-            return true;
+            return SWIFTStatements;
         }
     }
 }

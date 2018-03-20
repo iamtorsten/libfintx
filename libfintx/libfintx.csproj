@@ -78,6 +78,7 @@
     <Compile Include="TAN\TAN.cs" />
     <Compile Include="TAN\TAN4.cs" />
     <Compile Include="Traceing\Trace.cs" />
+    <Compile Include="Data\AccountTransaction.cs" />
     <Compile Include="Transactions\HKCCM.cs" />
     <Compile Include="Transactions\HKCCS.cs" />
     <Compile Include="Transactions\HKCCST.cs" />
