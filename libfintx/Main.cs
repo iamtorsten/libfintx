@@ -323,7 +323,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -488,7 +488,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -650,7 +650,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -813,7 +813,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -977,7 +977,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -1143,7 +1143,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -1304,7 +1304,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -1463,7 +1463,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -1632,7 +1632,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";

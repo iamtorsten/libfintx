@@ -22,44 +22,54 @@
  */
 
 using System;
+using System.Drawing;
+using System.IO;
 using System.Text;
-using System.Windows.Forms;
 
 namespace libfintx
 {
-    public static class MatrixCode
+    public class MatrixCode
     {
-        public static void setCode(byte[] data, PictureBox pictureBox)
+        public Image CodeImage { get; set; }
+        public string ImageMimeType { get; set; }
+
+        public MatrixCode(string photoTanString)
         {
-            int offset = 0;
-
-            // mimetype
+            try
             {
-                byte[] b = new byte[2];
-                System.Array.Copy(data, offset, b, 0, 2);
+                var data = Encoding.GetEncoding("ISO-8859-1").GetBytes(photoTanString);
+                int offset = 0;
 
-                int len = Int32.Parse(Decode(b));
-                b = new byte[len];
+                //Read mimetype            
+                byte[] b = new byte[2];
+                Array.Copy(data, offset, b, 0, 2);
+
+                int mimeTypeLen = Int32.Parse(Decode(b));
+                b = new byte[mimeTypeLen];
                 offset += 2;
 
-                System.Array.Copy(data, offset, b, 0, len);
-                mimetype = Encoding.Default.GetString(b);
-                offset += len;
-            }
-
-            // image data
-            {
+                Array.Copy(data, offset, b, 0, mimeTypeLen);
+                ImageMimeType = Encoding.Default.GetString(b);
+                offset += mimeTypeLen;
+            
+                //Read image data            
                 offset += 2;
                 int len = data.Length - offset;
-                byte[] b = new byte[len];
-
-                System.Array.Copy(data, offset, b, 0, len);
-
-                // TODO: create bitmap and load it into pitureBox image
+                b = new byte[len];
+                Array.Copy(data, offset, b, 0, len);
+                MemoryStream ms = new MemoryStream(b);
+                CodeImage = Image.FromStream(ms);                
             }
+            catch (Exception ex)
+            {
+                var errMsg = $"Invalid photoTan image returned. Error: {ex.Message}";
+                Log.Write(errMsg);
+                throw new Exception(errMsg);
+            }
+            
         }
 
-        private static String Decode(byte[] bytes)
+        private string Decode(byte[] bytes)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < bytes.Length; ++i)
@@ -68,12 +78,5 @@ namespace libfintx
             }
             return sb.ToString();
         }
-
-        public static String getMimetype()
-        {
-            return mimetype;
-        }
-
-        private static String mimetype = null;
     }
 }
