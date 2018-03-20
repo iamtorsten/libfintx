@@ -86,7 +86,7 @@ namespace libfintx
                 }
                 else
                 {
-                    // Error
+                    // Error 
                     var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
 
                     String[] values = BankCode_.Split('+');
@@ -109,7 +109,7 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Account transactions
+        /// Account transactions in SWIFT-format
         /// </summary>
         /// <param name="Account"></param>
         /// <param name="BLZ"></param>
@@ -125,9 +125,11 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static string Transactions(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+        public static List<SWIFTStatement> Transactions(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
             string UserID, string PIN, bool Anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
+            var swiftStatements = new List<SWIFTStatement>();
+
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
 
@@ -139,7 +141,7 @@ namespace libfintx
 
                 var Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNSHA");
 
-                MT940.Serialize(Transactions, Account);
+                swiftStatements.AddRange(MT940.Serialize(Transactions, Account));
 
 
                 string BankCode_ = BankCode;
@@ -153,14 +155,60 @@ namespace libfintx
 
                     var Transactions_ = ":20:STARTUMS" + Helper.Parse_String(BankCode_, ":20:STARTUMS", "'HNSHA");
 
-                    MT940.Serialize(Transactions_, Account);
+                    swiftStatements.AddRange(MT940.Serialize(Transactions_, Account));
                 }
-
-                return "OK";
+                return swiftStatements;
             }
             else
-                return "Error";
+            {
+                Log.Write("Initialization/sync failed");
+                throw new Exception("Initialization/sync failed");
+            }                
         }
+
+        
+        /// <summary>
+        /// Account transactions in simplified libfintx-format
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="BLZ"></param>
+        /// <param name="IBAN"></param>
+        /// <param name="BIC"></param>
+        /// <param name="URL"></param>
+        /// <param name="HBCIVersion"></param>
+        /// <param name="UserID"></param>
+        /// <param name="PIN"></param>
+        /// <param name="Anonymous"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>
+        /// Transactions
+        /// </returns>
+        public static List<AccountTransaction> TransactionsSimple(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+            string UserID, string PIN, bool Anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var transactionList = new List<AccountTransaction>();
+
+            foreach (var swiftStatement in Transactions(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, Anonymous, startDate, endDate))
+            {
+                foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
+                {
+                    transactionList.Add(new AccountTransaction()
+                    {
+                         OwnerAccount = swiftStatement.accountCode,
+                         OwnerBankcode= swiftStatement.bankCode,
+                         PartnerBIC = swiftTransaction.bankCode,
+                         PartnerIBAN = swiftTransaction.accountCode,
+                         PartnerName = swiftTransaction.partnerName,
+                         RemittanceText = swiftTransaction.description,
+                         TransactionType = swiftTransaction.text,
+                         TransactionDate = swiftTransaction.inputDate,
+                         ValueDate = swiftTransaction.valueDate
+                    });
+                }
+            }
+            return transactionList;
+        }        
 
         /// <summary>
         /// Transfer money
@@ -1805,7 +1853,7 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Set assembly informations
+        /// Set assembly information
         /// </summary>
         /// <param name="Buildname"></param>
         /// <param name="Version"></param>
@@ -1817,6 +1865,21 @@ namespace libfintx
             Log.Write(Buildname);
             Log.Write(Version);
         }
+
+
+        /// <summary>
+        /// Set assembly information automatically
+        /// </summary>
+        public static void Assembly()
+        {
+            var assemInfo = System.Reflection.Assembly.GetExecutingAssembly().GetName();
+            Program.Buildname = assemInfo.Name;
+            Program.Version = $"{assemInfo.Version.Major}.{assemInfo.Version.Minor}";
+
+            Log.Write(Program.Buildname);
+            Log.Write(Program.Version);
+        }
+
 
         /// <summary>
         /// Get assembly buildname
