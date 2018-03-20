@@ -69,43 +69,21 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
-        /// Balance
+        /// Structured information about balance, creditline and used currency
         /// </returns>
-        public static string Balance(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+        public static AccountBalance Balance(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
             string UserID, string PIN, bool Anonymous)
-        {
+        {            
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 // Success
                 var BankCode = Transaction.HKSAL(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN);
-
-                if (BankCode.Contains("+0020::"))
-                {
-                    // Success
-                    return "Kontostand: " + Helper.Parse_Balance(BankCode);
-                }
-                else
-                {
-                    // Error 
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
-
-                    Log.Write(msg);
-
-                    return msg;
-                }
+                return Helper.Parse_Balance(BankCode);
             }
-            else
-                return "Error";
+            else {
+                Log.Write("Error in initialization.");
+                throw new Exception("Error in initialization.");
+            }
         }
 
         /// <summary>
@@ -345,7 +323,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -510,7 +488,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -672,7 +650,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -835,7 +813,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -999,7 +977,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -1165,7 +1143,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -1326,7 +1304,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -1485,7 +1463,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";
@@ -1654,7 +1632,7 @@ namespace libfintx
 
                         }
 
-                        MatrixCode.setCode(Encoding.Default.GetBytes(PhotoCode), pictureBox);
+                        var mCode = new MatrixCode(PhotoCode);
                     }
 
                     return "OK";

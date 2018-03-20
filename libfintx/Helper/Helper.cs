@@ -74,7 +74,7 @@ namespace libfintx
         static public string DecodeFrom64EncodingDefault(string encodedData)
         {
             byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
-            string returnValue = Encoding.GetEncoding("iso8859-1").GetString(encodedDataAsBytes);
+            string returnValue = Encoding.GetEncoding("ISO-8859-1").GetString(encodedDataAsBytes);
 
             return returnValue;
         }
@@ -342,18 +342,77 @@ namespace libfintx
             }
         }
 
-        public static string Parse_Balance(string Message)
+        public static AccountBalance Parse_Balance(string Message)
         {
-            var Balance = Parse_String(Message, "+EUR+", ":EUR:");
+            var hirms = Message.Substring(Message.IndexOf("HIRMS")+5);
+            hirms = hirms.Substring(0, (hirms.Contains("'") ? hirms.IndexOf('\'') : hirms.Length));
+            var hirmsParts = hirms.Split(':');
 
-            if (Balance.Contains("C:"))
-                Balance = Balance.Replace("C:", "");
-            else if (Balance.Contains("D:"))
-                Balance = "-" + Balance.Replace("D:", "");
+            AccountBalance balance = new AccountBalance();
+            balance.Message = hirmsParts[hirmsParts.Length - 1];
+
+            if (Message.Contains("+0020::"))
+            {
+                var hisal = Message.Substring(Message.IndexOf("HISAL")+5);
+                hisal = hisal.Substring(0, (hisal.Contains("'") ? hisal.IndexOf('\'') : hisal.Length));
+                var hisalParts = hisal.Split('+');
+
+                balance.Successful = true;
+
+                var hisalAccountParts = hisalParts[1].Split(':');
+                balance.AccountType = new AccountInformations()
+                {
+                     Accountnumber = hisalAccountParts[0],
+                     Accountbankcode = hisalAccountParts[3],
+                     Accounttype = hisalParts[2],                     
+                     Accountcurrency = hisalParts[3]
+                };
+
+                var hisalBalanceParts = hisalParts[4].Split(':');
+                balance.Balance = Convert.ToDecimal($"{(hisalBalanceParts[0] == "D" ? "-" : "")}{hisalBalanceParts[1]}");
+
+            
+                //from here on optional fields / see page 46 in "FinTS_3.0_Messages_Geschaeftsvorfaelle_2015-08-07_final_version.pdf"
+                if (hisalParts.Length > 5)
+                {
+                    var hisalMarkedBalanceParts = hisalParts[5].Split(':');
+                    balance.MarkedTransactions = Convert.ToDecimal($"{(hisalMarkedBalanceParts[0] == "D" ? "-" : "")}{hisalMarkedBalanceParts[1]}");
+                }
+
+                if (hisalParts.Length > 6)
+                {                    
+                    balance.CreditLine = Convert.ToDecimal(hisalParts[6].Split(':')[0].TrimEnd(','));
+                }
+
+                if (hisalParts.Length > 7)
+                {
+                    balance.AvailableBalance = Convert.ToDecimal(hisalParts[7].Split(':')[0].TrimEnd(','));
+                }
+
+                /* ---------------------------------------------------------------------------------------------------------
+                 * In addition to the above fields, the following fields from HISAL could also be implemented:
+                 * 
+                 * - 9/Bereits verfügter Betrag
+                 * - 10/Überziehung
+                 * - 11/Buchungszeitpunkt
+                 * - 12/Fälligkeit 
+                 * 
+                 * Unfortunately I'm missing test samples. So I drop support unless we get test messages for this fields.
+                 ------------------------------------------------------------------------------------------------------------ */
+            }
             else
-                Balance = string.Empty;
+            {
+                balance.Successful = false;
+                              
+                string msg = string.Empty;
+                for (int i = 1; i < hirmsParts.Length; i++)
+                {                    
+                    msg = msg + "??" + hirmsParts[i].Replace("::", ": ");
+                }
+                Log.Write(msg);                
+            }
 
-            return Balance;
+            return balance;
         }
 
         public static bool Parse_Accounts(string Message, List<AccountInformations> Items)
@@ -434,3 +493,6 @@ namespace libfintx
         }
     }
 }
+ 
+ 
+ 
