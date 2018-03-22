@@ -26,7 +26,7 @@ namespace test_RDH
             Url = "hbci01.fiducia.de";
             Port = 3000;
             HBCIVersion = 300;
-            UserID = "6726706167001413598";
+            UserID = "xxxx";
 
             HBCI.Assembly("libfintx", "1.0");
 
