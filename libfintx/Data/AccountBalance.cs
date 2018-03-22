@@ -20,7 +20,7 @@ namespace libfintx
         /// Balance as decimal value
         /// </summary>
         public decimal Balance { get; set; }
-        
+
         /// <summary>
         /// (optional) Transactions which are noted, but not already booked. Will be null if not delivered out by bank.
         /// </summary>
@@ -34,7 +34,7 @@ namespace libfintx
         /// <summary>
         /// (optional) Balance available including credit line. Will be null if not delivered out by bank.
         /// </summary>
-        public decimal? AvailableBalance { get; set; }        
+        public decimal? AvailableBalance { get; set; }
 
         /// <summary>
         /// Returns status of balance request
