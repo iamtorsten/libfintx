@@ -473,7 +473,7 @@ namespace libfintx
                         list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
                         break;
                     case "982": // photo-TAN
-                        list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "photo-TAN" });
+                        list.Add(new TANprocess { ProcessNumber = "982", ProcessName = "photo-TAN" });
                         break;
                 }
 
@@ -515,7 +515,7 @@ namespace libfintx
                                 list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
                                 break;
                             case "982": // photo-TAN
-                                list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "photo-TAN" });
+                                list.Add(new TANprocess { ProcessNumber = "982", ProcessName = "photo-TAN" });
                                 break;
                         }
                     }
