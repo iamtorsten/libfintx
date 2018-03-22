@@ -60,7 +60,7 @@ namespace test_balance
 
             Console.WriteLine("[ Balance ]");
             Console.WriteLine();
-            Console.WriteLine(balance);
+            Console.WriteLine(balance.Balance);
             Console.WriteLine();
 
             #endregion
