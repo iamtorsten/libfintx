@@ -21,13 +21,13 @@ namespace asp.net_matrixcode_example
 
             byte[] imgBytes = ImageToByteArray(mCode.CodeImage);
             string imgString = Convert.ToBase64String(imgBytes);
-            PhotoTANString = String.Format("<img src=\"data:image/Bmp;base64,{0}\">", imgString);
+            PhotoTANString = String.Format("<img src=\"data:image/Png;base64,{0}\">", imgString);
         }
 
         public static byte[] ImageToByteArray(System.Drawing.Image img)
         {
             MemoryStream ms = new MemoryStream();
-            img.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             return ms.ToArray();
         }
     }
