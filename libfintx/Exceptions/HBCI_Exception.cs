@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2017 Torsten Klinger
+ *  Copyright (c) 2016 - 2017 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,20 +21,17 @@
  * 	
  */
 
-using System;
 
 namespace libfintx
 {
-    public static class Enc
+    class HBCI_Exception
     {
-        public static String SECFUNC_ENC_3DES = "4";
-        public static String SECFUNC_ENC_PLAIN = "998";
+        public static string CRYPTEDLENGTH() { return "Session key length is not equal to the length of Public bank encryption key length."; }
 
-        public static String ENCALG_2K3DES = "13";
+        public static string SOFTWARE() { return "Software error: "; }
 
-        public static String ENCMODE_CBC = "2";
-        public static String ENCMODE_PKCS1 = "18";
+        public static string INI() { return "Initialisation failed"; }
 
-        public static String ENC_KEYTYPE_RSA = "6";
+        public static string HBCIVERSIONNOTSUPPORTED() { return "HBCI version not supported"; }
     }
 }

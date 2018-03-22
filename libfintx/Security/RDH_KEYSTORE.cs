@@ -21,20 +21,25 @@
  * 	
  */
 
-using System;
-
 namespace libfintx
 {
-    public static class Enc
+    public static class RDH_KEYSTORE
     {
-        public static String SECFUNC_ENC_3DES = "4";
-        public static String SECFUNC_ENC_PLAIN = "998";
+        public static string KEY_ENCRYPTION_PUBLIC_BANK { get; set; }
+        public static string KEY_SIGNING_PUBLIC_BANK { get; set; }
 
-        public static String ENCALG_2K3DES = "13";
+        public static string KEY_ENCRYPTION_PRIVATE { get; set; }
+        public static string KEY_SIGNING_PRIVATE { get; set; }
 
-        public static String ENCMODE_CBC = "2";
-        public static String ENCMODE_PKCS1 = "18";
+        public static string KEY_ENCRYPTION_PRIVATE_XML { get; set; }
+        public static string KEY_SIGNING_PRIVATE_XML { get; set; }
 
-        public static String ENC_KEYTYPE_RSA = "6";
+        public static string BLZ { get; set; }
+
+        public static string UserID { get; set; }
+
+        public static string Country { get; set; }
+
+        public static string ProfileVersion { get; set; }
     }
 }
