@@ -5,6 +5,12 @@ VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx", "libfintx\libfintx.csproj", "{7F69841C-B99E-4236-AE26-5B6AD0538AE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_balance", "test\test_balance\test_balance.csproj", "{85EF29A9-A2D2-45A9-B904-B1502A322A22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asp.net_flicker_example", "test\asp.net_flicker_example\asp.net_flicker_example.csproj", "{867CC96A-C582-488C-9C16-9B9F4AA0670A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_phototan", "test\test_phototan\test_phototan.csproj", "{69187B15-EB72-4344-A2DF-3C8388477FA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{7F69841C-B99E-4236-AE26-5B6AD0538AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F69841C-B99E-4236-AE26-5B6AD0538AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F69841C-B99E-4236-AE26-5B6AD0538AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85EF29A9-A2D2-45A9-B904-B1502A322A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85EF29A9-A2D2-45A9-B904-B1502A322A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85EF29A9-A2D2-45A9-B904-B1502A322A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85EF29A9-A2D2-45A9-B904-B1502A322A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{867CC96A-C582-488C-9C16-9B9F4AA0670A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{867CC96A-C582-488C-9C16-9B9F4AA0670A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{867CC96A-C582-488C-9C16-9B9F4AA0670A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{867CC96A-C582-488C-9C16-9B9F4AA0670A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69187B15-EB72-4344-A2DF-3C8388477FA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69187B15-EB72-4344-A2DF-3C8388477FA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69187B15-EB72-4344-A2DF-3C8388477FA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69187B15-EB72-4344-A2DF-3C8388477FA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
