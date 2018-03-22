@@ -43,8 +43,14 @@
     <Compile Include="..\libfintx\Console\TransactionConsole.cs">
       <Link>Console\TransactionConsole.cs</Link>
     </Compile>
+    <Compile Include="..\libfintx\Data\AccountBalance.cs">
+      <Link>Data\AccountBalance.cs</Link>
+    </Compile>
     <Compile Include="..\libfintx\Data\AccountInformations.cs">
       <Link>Data\AccountInformations.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Data\AccountTransaction.cs">
+      <Link>Data\AccountTransaction.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Data\pain00100203_ct_data.cs">
       <Link>Data\pain00100203_ct_data.cs</Link>
@@ -93,6 +99,9 @@
     </Compile>
     <Compile Include="..\libfintx\Pain\pain00800202.cs">
       <Link>Pain\pain00800202.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Security\Enc.cs">
+      <Link>Security\Enc.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Segments\SEG.cs">
       <Link>Segments\SEG.cs</Link>

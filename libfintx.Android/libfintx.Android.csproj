@@ -186,7 +186,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transactins\Transaction.cs" />
+    <Compile Include="Transactions\Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

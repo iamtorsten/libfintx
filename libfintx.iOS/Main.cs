@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Text.RegularExpressions;
 
 namespace libfintx
 {
@@ -51,7 +51,7 @@ namespace libfintx
                 return false;
         }
 
-        /// <summary>
+        // <summary>
         /// Account balance
         /// </summary>
         /// <param name="Account"></param>
@@ -64,47 +64,26 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="Anonymous"></param>
         /// <returns>
-        /// Balance
+        /// Structured information about balance, creditline and used currency
         /// </returns>
-        public static string Balance(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+        public static AccountBalance Balance(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
             string UserID, string PIN, bool Anonymous)
         {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 // Success
                 var BankCode = Transaction.HKSAL(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN);
-
-                if (BankCode.Contains("+0020::"))
-                {
-                    // Success
-                    return "Kontostand: " + Helper.Parse_Balance(BankCode);
-                }
-                else
-                {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
-
-                    Log.Write(msg);
-
-                    return msg;
-                }
+                return Helper.Parse_Balance(BankCode);
             }
             else
-                return "Error";
+            {
+                Log.Write("Error in initialization.");
+                throw new Exception("Error in initialization.");
+            }
         }
 
         /// <summary>
-        /// Account transactions
+        /// Account transactions in SWIFT-format
         /// </summary>
         /// <param name="Account"></param>
         /// <param name="BLZ"></param>
@@ -115,47 +94,94 @@ namespace libfintx
         /// <param name="UserID"></param>
         /// <param name="PIN"></param>
         /// <param name="Anonymous"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
         /// <returns>
         /// Transactions
         /// </returns>
-        public static string Transactions(int Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
-            string UserID, string PIN, bool Anonymous)
+        public static List<SWIFTStatement> Transactions(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+            string UserID, string PIN, bool Anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
+            var swiftStatements = new List<SWIFTStatement>();
+
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
+
+                var startDateStr = startDate?.ToString("yyyyMMdd");
+                var endDateStr = endDate?.ToString("yyyyMMdd");
+
                 // Success
-                var BankCode = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, null, null);
+                var BankCode = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, startDateStr, endDateStr, null);
 
                 var Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNSHA");
 
-                MT940.Serialize(Transactions, Account);
+                swiftStatements.AddRange(MT940.Serialize(Transactions, Account));
 
-                Further:
 
-                if (BankCode.Contains("+3040::"))
+                string BankCode_ = BankCode;
+                while (BankCode_.Contains("+3040::"))
                 {
-                    Helper.Parse_Message(BankCode);
+                    Helper.Parse_Message(BankCode_);
 
-                    var Startpoint = Helper.Parse_String(BankCode, "vor:", "'");
+                    var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
-                    var BankCode_ = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, null, Startpoint);
+                    BankCode_ = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, startDateStr, endDateStr, Startpoint);
 
                     var Transactions_ = ":20:STARTUMS" + Helper.Parse_String(BankCode_, ":20:STARTUMS", "'HNSHA");
 
-                    MT940.Serialize(Transactions_, Account);
-
-                    if (BankCode_.Contains("+3040::"))
-                    {
-                        BankCode = BankCode_;
-
-                        goto Further;
-                    }
+                    swiftStatements.AddRange(MT940.Serialize(Transactions_, Account));
                 }
-
-                return "OK";
+                return swiftStatements;
             }
             else
-                return "Error";
+            {
+                Log.Write("Initialization/sync failed");
+                throw new Exception("Initialization/sync failed");
+            }
+        }
+
+
+        /// <summary>
+        /// Account transactions in simplified libfintx-format
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="BLZ"></param>
+        /// <param name="IBAN"></param>
+        /// <param name="BIC"></param>
+        /// <param name="URL"></param>
+        /// <param name="HBCIVersion"></param>
+        /// <param name="UserID"></param>
+        /// <param name="PIN"></param>
+        /// <param name="Anonymous"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>
+        /// Transactions
+        /// </returns>
+        public static List<AccountTransaction> TransactionsSimple(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
+            string UserID, string PIN, bool Anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var transactionList = new List<AccountTransaction>();
+
+            foreach (var swiftStatement in Transactions(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, Anonymous, startDate, endDate))
+            {
+                foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
+                {
+                    transactionList.Add(new AccountTransaction()
+                    {
+                        OwnerAccount = swiftStatement.accountCode,
+                        OwnerBankcode = swiftStatement.bankCode,
+                        PartnerBIC = swiftTransaction.bankCode,
+                        PartnerIBAN = swiftTransaction.accountCode,
+                        PartnerName = swiftTransaction.partnerName,
+                        RemittanceText = swiftTransaction.description,
+                        TransactionType = swiftTransaction.text,
+                        TransactionDate = swiftTransaction.inputDate,
+                        ValueDate = swiftTransaction.valueDate
+                    });
+                }
+            }
+            return transactionList;
         }
 
         /// <summary>
@@ -272,9 +298,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string Transfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-			string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID,
+            string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID,
             string PIN, string HIRMS, bool Anonymous)
-		{
+        {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -639,14 +665,14 @@ namespace libfintx
         public static string Collect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Payer, string PayerIBAN, string PayerBIC,
             decimal Amount, string Purpose, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, string UserID,
             string PIN, string HIRMS, bool Anonymous)
-        {			
+        {
             if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
             {
-				TransactionConsole.Output = string.Empty;
+                TransactionConsole.Output = string.Empty;
 
-				if (!String.IsNullOrEmpty(HIRMS))
-					Segment.HIRMS = HIRMS;
-				
+                if (!String.IsNullOrEmpty(HIRMS))
+                    Segment.HIRMS = HIRMS;
+
                 var BankCode = Transaction.HKDSE(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Payer, PayerIBAN, PayerBIC,
                     Convert.ToDecimal(Amount), Purpose, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber, URL, HBCIVersion, UserID, PIN);
 
@@ -659,10 +685,10 @@ namespace libfintx
                     foreach (var item in values)
                     {
                         if (!item.StartsWith("HIRMS"))
-							TransactionConsole.Output = item.Replace("::", ": ");
+                            TransactionConsole.Output = item.Replace("::", ": ");
                     }
-                    
-					var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
+
+                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
                     string HITANFlicker = string.Empty;
 
@@ -1038,7 +1064,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN)
-        {			
+        {
             var BankCode = Transaction.TAN(TAN, URL, HBCIVersion, BLZ, UserID, PIN);
 
             if (BankCode.Contains("+0020::"))
@@ -1139,34 +1165,34 @@ namespace libfintx
         /// TAN mechanism
         /// </returns>
         public static string TAN_Scheme()
-		{
-			return Segment.HIRMSf;
-		}
+        {
+            return Segment.HIRMSf;
+        }
 
-		/// <summary>
+        /// <summary>
         /// Set assembly informations
         /// </summary>
         /// <param name="Buildname"></param>
         /// <param name="Version"></param>
         public static void Assembly(string Buildname, string Version)
-		{
-			Program.Buildname = Buildname;
-			Program.Version = Version;
+        {
+            Program.Buildname = Buildname;
+            Program.Version = Version;
 
             Log.Write(Buildname);
             Log.Write(Version);
         }
 
-		/// <summary>
+        /// <summary>
         /// Get assembly buildname
         /// </summary>
         /// <returns>
         /// Buildname
         /// </returns>
         public static string Buildname()
-		{
-			return Program.Buildname;
-		}
+        {
+            return Program.Buildname;
+        }
 
         /// <summary>
         /// Get assembly version
@@ -1175,9 +1201,9 @@ namespace libfintx
         /// Version
         /// </returns>
         public static string Version()
-		{
-			return Program.Version;
-		}
+        {
+            return Program.Version;
+        }
 
         /// <summary>
         /// Transactions output console
@@ -1186,9 +1212,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static string Transaction_Output()
-		{
-			return TransactionConsole.Output;
-		}
+        {
+            return TransactionConsole.Output;
+        }
 
         /// <summary>
         /// Enable / Disable Tracing
@@ -1196,27 +1222,6 @@ namespace libfintx
         public static void Tracing(bool Enabled)
         {
             Trace.Enabled = Enabled;
-        }
-
-        /// <summary>
-        /// Synchronize bank connection RDH
-        /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="URL"></param>
-        /// <param name="Port"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <returns>
-        /// Success or failure
-        /// </returns>
-        public static bool Synchronization_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
-        {
-            if (Transaction.INI_RDH(BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password) == true)
-            {
-                return true;
-            }
-            else
-                return false;
         }
     }
 }

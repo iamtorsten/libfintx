@@ -48,15 +48,15 @@ namespace libfintx
             return Init_INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous);
         }
 
-        public static string HKSAL(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
+        public static string HKSAL(string Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
         {
             return Init_HKSAL(Konto, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN);
         }
 
-        public static string HKKAZ(int Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID,
-            string PIN, string FromDate, string Startpoint)
+        public static string HKKAZ(string Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID,
+            string PIN, string FromDate, string ToDate, string Startpoint)
         {
-            return Init_HKKAZ(Konto, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, FromDate, Startpoint);
+            return Init_HKKAZ(Konto, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, FromDate, ToDate, Startpoint);
         }
 
         public static string HKCCS(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver,
