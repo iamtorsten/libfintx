@@ -433,6 +433,21 @@ namespace libfintx
                     case "900": // iTAN
                         list.Add(new TANprocess { ProcessNumber = "900", ProcessName = "iTAN" });
                         break;
+                    case "910": // chipTAN manuell
+                        list.Add(new TANprocess { ProcessNumber = "910", ProcessName = "chipTAN manuell" });
+                        break;
+                    case "911": // chipTAN optisch
+                        list.Add(new TANprocess { ProcessNumber = "911", ProcessName = "chipTAN optisch" });
+                        break;
+                    case "912": // chipTAN USB
+                        list.Add(new TANprocess { ProcessNumber = "912", ProcessName = "chipTAN USB" });
+                        break;
+                    case "920": // smsTAN
+                        list.Add(new TANprocess { ProcessNumber = "920", ProcessName = "smsTAN" });
+                        break;
+                    case "921": // pushTAN
+                        list.Add(new TANprocess { ProcessNumber = "921", ProcessName = "pushTAN" });
+                        break;
                     case "942": // mobile-TAN
                         list.Add(new TANprocess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
                         break;
@@ -441,6 +456,9 @@ namespace libfintx
                         break;
                     case "972": // Smart-TAN plus optisch
                         list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
+                        break;
+                    case "982": // photo-TAN
+                        list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "photo-TAN" });
                         break;
                 }
 
@@ -457,6 +475,21 @@ namespace libfintx
                             case "900": // iTAN
                                 list.Add(new TANprocess { ProcessNumber = "900", ProcessName = "iTAN" });
                                 break;
+                            case "910": // chipTAN manuell
+                                list.Add(new TANprocess { ProcessNumber = "910", ProcessName = "chipTAN manuell" });
+                                break;
+                            case "911": // chipTAN optisch
+                                list.Add(new TANprocess { ProcessNumber = "911", ProcessName = "chipTAN optisch" });
+                                break;
+                            case "912": // chipTAN USB
+                                list.Add(new TANprocess { ProcessNumber = "912", ProcessName = "chipTAN USB" });
+                                break;
+                            case "920": // smsTAN
+                                list.Add(new TANprocess { ProcessNumber = "920", ProcessName = "smsTAN" });
+                                break;
+                            case "921": // pushTAN
+                                list.Add(new TANprocess { ProcessNumber = "921", ProcessName = "pushTAN" });
+                                break;
                             case "942": // mobile-TAN
                                 list.Add(new TANprocess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
                                 break;
@@ -465,6 +498,9 @@ namespace libfintx
                                 break;
                             case "972": // Smart-TAN plus optisch
                                 list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
+                                break;
+                            case "982": // photo-TAN
+                                list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "photo-TAN" });
                                 break;
                         }
                     }
@@ -475,6 +511,6 @@ namespace libfintx
                 return true;
             }
             catch { return false; }
-        } 
+        }
     }
 }
