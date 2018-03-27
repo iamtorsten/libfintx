@@ -74,7 +74,7 @@ namespace libfintx
         static public string DecodeFrom64EncodingDefault(string encodedData)
         {
             byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
-            string returnValue = Encoding.GetEncoding("ISO-8859-1").GetString(encodedDataAsBytes);
+            string returnValue = Encoding.GetEncoding("iso8859-1").GetString(encodedDataAsBytes);
 
             return returnValue;
         }
@@ -106,7 +106,15 @@ namespace libfintx
             try
             {
                 String[] values = Message.Split('\'');
-                                
+
+                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var dir = Path.Combine(documents, Program.Buildname);
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
                 List<string> msg = new List<string>();
 
                 foreach (var item in values)
@@ -119,53 +127,42 @@ namespace libfintx
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
                 string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNSHA");
 
-                if (Trace.Enabled) {
+                // BPD
+                dir = Path.Combine(dir, "BPD");
 
-                    var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                    var dir = Path.Combine(documents, Program.Buildname);
-
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    // BPD
-                    dir = Path.Combine(dir, "BPD");
-
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                    {
-                        using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                        { };
-
-                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-                    }
-                    else
-                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-               
-                    // UPD
-                    dir = Path.Combine(documents, Program.Buildname);
-                    dir = Path.Combine(dir, "UPD");
-
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                    {
-                        using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                        { };
-
-                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
-                    }
-                    else
-                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
                 }
+
+                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
+                {
+                    using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
+                    { };
+
+                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
+                }
+                else
+                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
+
+                // UPD
+                dir = Path.Combine(documents, Program.Buildname);
+                dir = Path.Combine(dir, "UPD");
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
+                {
+                    using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
+                    { };
+
+                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
+                }
+                else
+                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
 
                 foreach (var item in values)
                 {
@@ -214,7 +211,7 @@ namespace libfintx
 
                     if (item.Contains("HISYN"))
                     {
-                        var ID = item.Substring(item.IndexOf("+")+1);
+                        var ID = item.Substring(13, item.Length - 13);
                         Segment.HISYN = ID;
                     }
 
@@ -248,23 +245,11 @@ namespace libfintx
 
                     if (item.Contains("HKKAZ"))
                     {
-                        string pattern = @"HKKAZ;.*?;";
-                        Regex rgx = new Regex(pattern);
-                        string sentence = item;
-
-                        foreach (Match match in rgx.Matches(sentence))
+                        if (String.IsNullOrEmpty(Segment.HKKAZ))
                         {
-                            var VER = Parse_String(match.Value, "HKKAZ;", ";");
+                            var VER = Parse_String(item, "HKKAZ;", ";");
 
-                            if (String.IsNullOrEmpty(Segment.HKKAZ))
-                                Segment.HKKAZ = VER;
-                            else
-                            {
-                                if (int.Parse(VER) > int.Parse(Segment.HKKAZ))
-                                {
-                                    Segment.HKKAZ = VER;
-                                }
-                            }
+                            Segment.HKKAZ = VER;
                         }
                     }
                 }
@@ -290,7 +275,7 @@ namespace libfintx
                             Console.WriteLine(item.Replace("::", ": "));
 
                             Log.Write(item.Replace("::", ": "));
-                        } 
+                        }
                     }
 
                     return false;
@@ -344,7 +329,7 @@ namespace libfintx
 
         public static AccountBalance Parse_Balance(string Message)
         {
-            var hirms = Message.Substring(Message.IndexOf("HIRMS")+5);
+            var hirms = Message.Substring(Message.IndexOf("HIRMS") + 5);
             hirms = hirms.Substring(0, (hirms.Contains("'") ? hirms.IndexOf('\'') : hirms.Length));
             var hirmsParts = hirms.Split(':');
 
@@ -353,7 +338,7 @@ namespace libfintx
 
             if (Message.Contains("+0020::"))
             {
-                var hisal = Message.Substring(Message.IndexOf("HISAL")+5);
+                var hisal = Message.Substring(Message.IndexOf("HISAL") + 5);
                 hisal = hisal.Substring(0, (hisal.Contains("'") ? hisal.IndexOf('\'') : hisal.Length));
                 var hisalParts = hisal.Split('+');
 
@@ -362,16 +347,16 @@ namespace libfintx
                 var hisalAccountParts = hisalParts[1].Split(':');
                 balance.AccountType = new AccountInformations()
                 {
-                     Accountnumber = hisalAccountParts[0],
-                     Accountbankcode = hisalAccountParts[3],
-                     Accounttype = hisalParts[2],                     
-                     Accountcurrency = hisalParts[3]
+                    Accountnumber = hisalAccountParts[0],
+                    Accountbankcode = hisalAccountParts[3],
+                    Accounttype = hisalParts[2],
+                    Accountcurrency = hisalParts[3]
                 };
 
                 var hisalBalanceParts = hisalParts[4].Split(':');
                 balance.Balance = Convert.ToDecimal($"{(hisalBalanceParts[0] == "D" ? "-" : "")}{hisalBalanceParts[1]}");
 
-            
+
                 //from here on optional fields / see page 46 in "FinTS_3.0_Messages_Geschaeftsvorfaelle_2015-08-07_final_version.pdf"
                 if (hisalParts.Length > 5)
                 {
@@ -380,7 +365,7 @@ namespace libfintx
                 }
 
                 if (hisalParts.Length > 6)
-                {                    
+                {
                     balance.CreditLine = Convert.ToDecimal(hisalParts[6].Split(':')[0].TrimEnd(','));
                 }
 
@@ -403,13 +388,13 @@ namespace libfintx
             else
             {
                 balance.Successful = false;
-                              
+
                 string msg = string.Empty;
                 for (int i = 1; i < hirmsParts.Length; i++)
-                {                    
+                {
                     msg = msg + "??" + hirmsParts[i].Replace("::", ": ");
                 }
-                Log.Write(msg);                
+                Log.Write(msg);
             }
 
             return balance;
@@ -473,7 +458,7 @@ namespace libfintx
                         list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
                         break;
                     case "982": // photo-TAN
-                        list.Add(new TANprocess { ProcessNumber = "982", ProcessName = "photo-TAN" });
+                        list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "photo-TAN" });
                         break;
                 }
 
@@ -515,7 +500,7 @@ namespace libfintx
                                 list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
                                 break;
                             case "982": // photo-TAN
-                                list.Add(new TANprocess { ProcessNumber = "982", ProcessName = "photo-TAN" });
+                                list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "photo-TAN" });
                                 break;
                         }
                     }
@@ -527,135 +512,5 @@ namespace libfintx
             }
             catch { return false; }
         }
-
-        /* Parse message and extract public bank keys -> Encryption, Signing */
-        public static bool Parse_Segment_RDH_Key(string Message, int BLZ, string UserID)
-        {
-            var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var dir = Path.Combine(documents, Program.Buildname);
-
-            Message = Message.Replace("'?", "||?");
-
-            String[] values = Message.Split('\'');
-
-            List<string> msg = new List<string>();
-
-            foreach (var item in values)
-            {
-                msg.Add(item + Environment.NewLine.Replace(",", ""));
-            }
-
-            string msg_ = string.Join("", msg.ToArray());
-
-            string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
-            string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNSHA");
-
-            // BPD
-            dir = Path.Combine(dir, "BPD");
-
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-
-            if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-            {
-                using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                { };
-
-                File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-            }
-            else
-                File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-
-            // UPD
-            dir = Path.Combine(documents, Program.Buildname);
-            dir = Path.Combine(dir, "UPD");
-
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-
-            if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-            {
-                using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                { };
-
-                File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
-            }
-            else
-                File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
-
-            foreach (var item in values)
-            {
-                if (item.Contains("HNHBK"))
-                {
-                    var ID = Parse_String(item.ToString(), "+1+", ":1");
-                    Segment.HNHBK = ID;
-                }
-
-                if (item.Contains("HISYN"))
-                {
-                    var ID = item.Substring(13, item.Length - 13);
-                    Segment.HISYN = ID;
-                }
-
-                if (item.Contains("HIISA"))
-                {
-                    if (item.Contains(":V:10"))
-                    {
-                        var item_ = item.ToString().Replace("||?", "'?");
-
-                        RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK = Parse_String(item_, "@248@", ":12:");
-                    }
-                }
-
-                if (item.Contains("HIISA"))
-                {
-                    if (item.Contains(":S:10"))
-                    {
-                        var item_ = item.ToString().Replace("||?", "'?");
-
-                        RDH_KEYSTORE.KEY_SIGNING_PUBLIC_BANK = Parse_String(item_, "@248@", ":12:");
-                    }
-                }
-            }
-
-            if (!String.IsNullOrEmpty(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK) &&
-                !String.IsNullOrEmpty(RDH_KEYSTORE.KEY_SIGNING_PUBLIC_BANK))
-            {
-                // Update hbci key
-                RDHKEY.Update(RDHKEY.RDHKEYFILE, RDHKEY.RDHKEYFILEPWD);
-
-                // Release rdhkey credentials
-                RDHKEY.RDHKEYFILE = string.Empty;
-                RDHKEY.RDHKEYFILEPWD = string.Empty;
-
-                return true;
-            }
-            else
-            {
-                // Error
-                var BankCode = "HIRMG" + Helper.Parse_String(msg_, "HIRMG", "HNHBS");
-
-                String[] values_ = BankCode.Split('+');
-
-                foreach (var item in values_)
-                {
-                    if (!item.StartsWith("HIRMG"))
-                    {
-                        Console.WriteLine(item.Replace("::", ": "));
-
-                        Log.Write(item.Replace("::", ": "));
-                    }
-                }
-
-                return false;
-            }
-        }
     }
 }
- 
- 
- 
