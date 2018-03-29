@@ -14,7 +14,7 @@ namespace test_Flicker
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(HBCI.Transaction.TAN(textBox1.Text, Program.URL, Program.HBCIVersion, Program.BLZ, Program.UserID, Program.PIN));
+            Console.WriteLine(HBCI.Transaction.TAN(Program.connectionDetails, textBox1.Text));
         }
     }
 }
