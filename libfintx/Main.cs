@@ -1624,18 +1624,14 @@ namespace libfintx
         /// <summary>
         /// Confirm order with TAN
         /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
         /// <param name="TAN"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="BLZ"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN)
+        public static string TAN(ConnectionDetails connectionDetails, string TAN)
         {
-            var BankCode = Transaction.TAN(TAN, URL, HBCIVersion, BLZ, UserID, PIN);
+            var BankCode = Transaction.TAN(connectionDetails, TAN);
 
             if (BankCode.Contains("+0020::"))
             {
@@ -1677,19 +1673,15 @@ namespace libfintx
         /// <summary>
         /// Confirm order with TAN
         /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
         /// <param name="TAN"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="BLZ"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
         /// <param name="MediumName"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN, string MediumName)
+        public static string TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
         {
-            var BankCode = Transaction.TAN4(TAN, URL, HBCIVersion, BLZ, UserID, PIN, MediumName);
+            var BankCode = Transaction.TAN4(connectionDetails, TAN, MediumName);
 
             if (BankCode.Contains("+0020::"))
             {

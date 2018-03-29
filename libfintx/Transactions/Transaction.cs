@@ -113,14 +113,14 @@ namespace libfintx
             return Init_HKCSB(connectionDetails);
         }
 
-        public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN)
+        public static string TAN(ConnectionDetails connectionDetails, string TAN)
         {
-            return Send_TAN(TAN, URL, HBCIVersion, BLZ, UserID, PIN);
+            return Send_TAN(connectionDetails, TAN);
         }
 
-        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN, string MediumName)
+        public static string TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
         {
-            return Send_TAN4(TAN, URL, HBCIVersion, BLZ, UserID, PIN, MediumName);
+            return Send_TAN4(connectionDetails, TAN, MediumName);
         }
 
         // RDH
