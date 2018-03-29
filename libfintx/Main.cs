@@ -21,6 +21,7 @@
  * 	
  */
 
+using libfintx.Data;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -36,18 +37,14 @@ namespace libfintx
         /// <summary>
         /// Synchronize bank connection
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Success or failure
         /// </returns>
-        public static bool Synchronization(int BLZ, string URL, int HBCIVersion, string UserID, string PIN, bool Anonymous)
+        public static bool Synchronization(ConnectionDetails connectionDetails, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 return true;
             }
@@ -79,25 +76,17 @@ namespace libfintx
         /// <summary>
         /// Account balance
         /// </summary>
-        /// <param name="Account"></param>
-        /// <param name="BLZ"></param>
-        /// <param name="IBAN"></param>
-        /// <param name="BIC"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, Account, IBAN, BIC</param>
         /// <param name="Anonymous"></param>
         /// <returns>
         /// Structured information about balance, creditline and used currency
         /// </returns>
-        public static AccountBalance Balance(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
-            string UserID, string PIN, bool Anonymous)
+        public static AccountBalance Balance(ConnectionDetails connectionDetails, bool anonymous)
         {            
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 // Success
-                var BankCode = Transaction.HKSAL(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKSAL(connectionDetails);
                 return Helper.Parse_Balance(BankCode);
             }
             else {
@@ -109,37 +98,29 @@ namespace libfintx
         /// <summary>
         /// Account transactions in SWIFT-format
         /// </summary>
-        /// <param name="Account"></param>
-        /// <param name="BLZ"></param>
-        /// <param name="IBAN"></param>
-        /// <param name="BIC"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, Account, IBAN, BIC</param>  
+        /// <param name="anonymous"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns>
         /// Transactions
         /// </returns>
-        public static List<SWIFTStatement> Transactions(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
-            string UserID, string PIN, bool Anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        public static List<SWIFTStatement> Transactions(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
             var swiftStatements = new List<SWIFTStatement>();
 
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
 
                 var startDateStr = startDate?.ToString("yyyyMMdd");
                 var endDateStr = endDate?.ToString("yyyyMMdd");
 
                 // Success
-                var BankCode = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, startDateStr, endDateStr, null);
+                var BankCode = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, null);
 
                 var Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNSHA");
 
-                swiftStatements.AddRange(MT940.Serialize(Transactions, Account));
+                swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account));
 
 
                 string BankCode_ = BankCode;
@@ -149,11 +130,11 @@ namespace libfintx
 
                     var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
-                    BankCode_ = Transaction.HKKAZ(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, startDateStr, endDateStr, Startpoint);
+                    BankCode_ = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
 
                     var Transactions_ = ":20:STARTUMS" + Helper.Parse_String(BankCode_, ":20:STARTUMS", "'HNSHA");
 
-                    swiftStatements.AddRange(MT940.Serialize(Transactions_, Account));
+                    swiftStatements.AddRange(MT940.Serialize(Transactions_, connectionDetails.Account));
                 }
                 return swiftStatements;
             }
@@ -164,30 +145,22 @@ namespace libfintx
             }                
         }
 
-        
+
         /// <summary>
         /// Account transactions in simplified libfintx-format
         /// </summary>
-        /// <param name="Account"></param>
-        /// <param name="BLZ"></param>
-        /// <param name="IBAN"></param>
-        /// <param name="BIC"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, Account, IBAN, BIC</param>  
+        /// <param name="anonymous"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns>
         /// Transactions
         /// </returns>
-        public static List<AccountTransaction> TransactionsSimple(string Account, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
-            string UserID, string PIN, bool Anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        public static List<AccountTransaction> TransactionsSimple(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
             var transactionList = new List<AccountTransaction>();
 
-            foreach (var swiftStatement in Transactions(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, Anonymous, startDate, endDate))
+            foreach (var swiftStatement in Transactions(connectionDetails, anonymous, startDate, endDate))
             {
                 foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
                 {
@@ -206,43 +179,34 @@ namespace libfintx
                 }
             }
             return transactionList;
-        }        
+        }
 
         /// <summary>
         /// Transfer money
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="AccountHolder"></param>
-        /// <param name="AccountHolderIBAN"></param>
-        /// <param name="AccountHolderBIC"></param>
-        /// <param name="Receiver"></param>
-        /// <param name="ReceiverIBAN"></param>
-        /// <param name="ReceiverBIC"></param>
-        /// <param name="Amount"></param>
-        /// <param name="Purpose"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Transfer(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox, bool Anonymous)
+        public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCCS(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
-                    Convert.ToDecimal(Amount), Purpose, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKCCS(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -345,42 +309,35 @@ namespace libfintx
                 return "Error";
         }
 
+
+
         /// <summary>
         /// Transfer money at a certain time
-        /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="AccountHolder"></param>
-        /// <param name="AccountHolderIBAN"></param>
-        /// <param name="AccountHolderBIC"></param>
-        /// <param name="Receiver"></param>
-        /// <param name="ReceiverIBAN"></param>
-        /// <param name="ReceiverBIC"></param>
-        /// <param name="Amount"></param>
-        /// <param name="Purpose"></param>
-        /// <param name="ExecutionDay"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// </summary>       
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Transfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string ExecutionDay, string URL, int HBCIVersion, string UserID,
-            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
+        public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCCST(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
-                    Convert.ToDecimal(Amount), Purpose, ExecutionDay, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKCCST(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -486,36 +443,26 @@ namespace libfintx
         /// <summary>
         /// Collective transfer money
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="AccountHolder"></param>
-        /// <param name="AccountHolderIBAN"></param>
-        /// <param name="AccountHolderBIC"></param>
-        /// <param name="PainData"></param>
-        /// <param name="NumberofTransactions"></param>
-        /// <param name="TotalAmount"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="painData"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <param name="totalAmount"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string CollectiveTransfer(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, List<pain00100203_ct_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID,
-            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
+        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData, string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCCM(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, PainData, NumberofTransactions,
-                    Convert.ToDecimal(TotalAmount), URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKCCM(connectionDetails, painData, numberOfTransactions, totalAmount);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -621,37 +568,28 @@ namespace libfintx
         /// <summary>
         /// Collective transfer money terminated
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="AccountHolder"></param>
-        /// <param name="AccountHolderIBAN"></param>
-        /// <param name="AccountHolderBIC"></param>
-        /// <param name="PainData"></param>
-        /// <param name="NumberofTransactions"></param>
-        /// <param name="TotalAmount"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="painData"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <param name="totalAmount"></param>
         /// <param name="ExecutionDay"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string CollectiveTransfer_Terminated(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, List<pain00100203_ct_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string ExecutionDay, string URL, int HBCIVersion,
-            string UserID, string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
+        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCME(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, PainData, NumberofTransactions,
-                    Convert.ToDecimal(TotalAmount), ExecutionDay, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKCME(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -757,38 +695,28 @@ namespace libfintx
         /// <summary>
         /// Rebook money from one to another account
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="AccountHolder"></param>
-        /// <param name="AccountHolderIBAN"></param>
-        /// <param name="AccountHolderBIC"></param>
-        /// <param name="Receiver"></param>
-        /// <param name="ReceiverIBAN"></param>
-        /// <param name="ReceiverBIC"></param>
-        /// <param name="Amount"></param>
-        /// <param name="Purpose"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Rebooking(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC,
-            string Amount, string Purpose, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox, bool Anonymous)
+        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC, decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCUM(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
-                    Convert.ToDecimal(Amount), Purpose, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKCUM(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -894,42 +822,33 @@ namespace libfintx
         /// <summary>
         /// Collect money from another account
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="AccountHolder"></param>
-        /// <param name="AccountHolderIBAN"></param>
-        /// <param name="AccountHolderBIC"></param>
-        /// <param name="Payer"></param>
-        /// <param name="PayerIBAN"></param>
-        /// <param name="PayerBIC"></param>
-        /// <param name="Amount"></param>
-        /// <param name="Purpose"></param>
-        /// <param name="SettlementDate"></param>
-        /// <param name="MandateNumber"></param>
-        /// <param name="MandateDate"></param>
-        /// <param name="CeditorIDNumber"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="payerName">Name of the payer</param>
+        /// <param name="payerIBAN">IBAN of the payer</param>
+        /// <param name="payerBIC">BIC of the payer</param>         
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>    
+        /// <param name="settlementDate"></param>
+        /// <param name="mandateNumber"></param>
+        /// <param name="mandateDate"></param>
+        /// <param name="creditorIdNumber"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Collect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string Payer, string PayerIBAN, string PayerBIC,
-            decimal Amount, string Purpose, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber, string URL, int HBCIVersion, string UserID,
-            string PIN, string HIRMS, PictureBox pictureBox, bool Anonymous)
+        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC, decimal amount, string purpose, DateTime settlementDate, 
+                                     string mandateNumber, DateTime mandateDate, string creditorIdNumber, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKDSE(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Payer, PayerIBAN, PayerBIC,
-                    Convert.ToDecimal(Amount), Purpose, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKDSE(connectionDetails, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -1035,37 +954,28 @@ namespace libfintx
         /// <summary>
         /// Collective collect money from other accounts
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="AccountHolder"></param>
-        /// <param name="AccountHolderIBAN"></param>
-        /// <param name="AccountHolderBIC"></param>
-        /// <param name="SettlementDate"></param>
-        /// <param name="PainData"></param>
-        /// <param name="NumberofTransactions"></param>
-        /// <param name="TotalAmount"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="settlementDate"></param>
+        /// <param name="painData"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <param name="totalAmount"></param>        
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string CollectiveCollect(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC, string SettlementDate, List<pain00800202_cc_data> PainData,
-            string NumberofTransactions, decimal TotalAmount, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox, bool Anonymous)
+        public static string CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
+            string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKDME(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, SettlementDate, PainData, NumberofTransactions,
-                    Convert.ToDecimal(TotalAmount), URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKDME(connectionDetails, settlementDate, painData, numberOfTransactions, totalAmount);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -1171,33 +1081,26 @@ namespace libfintx
         /// <summary>
         /// Load mobile phone prepaid card
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="IBAN"></param>
-        /// <param name="BIC"></param>
-        /// <param name="MobileServiceProvider"></param>
-        /// <param name="PhoneNumber"></param>
-        /// <param name="Amount"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>  
+        /// <param name="mobileServiceProvider"></param>
+        /// <param name="phoneNumber"></param>
+        /// <param name="amount">Amount to transfer</param>            
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Prepaid(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount, string URL, int HBCIVersion, string UserID, string PIN,
-            string HIRMS, PictureBox pictureBox, bool Anonymous)
+        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber, int amount, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKPPD(BLZ, IBAN, BIC, MobileServiceProvider, PhoneNumber, Amount, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKPPD(connectionDetails, mobileServiceProvider, phoneNumber, amount);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -1303,43 +1206,36 @@ namespace libfintx
         /// <summary>
         /// Submit bankers order
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="AccountHolder"></param>
-        /// <param name="AccountHolderIBAN"></param>
-        /// <param name="AccountHolderBIC"></param>
-        /// <param name="Receiver"></param>
-        /// <param name="ReceiverIBAN"></param>
-        /// <param name="ReceiverBIC"></param>
-        /// <param name="Amount"></param>
-        /// <param name="Purpose"></param>
-        /// <param name="FirstTimeExecutionDay"></param>
-        /// <param name="TimeUnit"></param>
-        /// <param name="Rota"></param>
-        /// <param name="ExecutionDay"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="HIRMS"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="mobileServiceProvider"></param>
+        /// <param name="phoneNumber"></param>
+        /// <param name="amount"></param>      
+        /// <param name="receiverName"></param>
+        /// <param name="receiverIBAN"></param>
+        /// <param name="receiverBIC"></param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="firstTimeExecutionDay"></param>
+        /// <param name="timeUnit"></param>
+        /// <param name="rota"></param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>        
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string SubmitBankersOrder(int BLZ, string AccountHolder, string AccountHolderIBAN, string AccountHolderBIC,
-            string Receiver, string ReceiverIBAN, string ReceiverBIC, string Amount, string Purpose, string FirstTimeExecutionDay,
-            string TimeUnit, string Rota, string ExecutionDay, string URL, int HBCIVersion, string UserID, string PIN, string HIRMS,
-            PictureBox pictureBox, bool Anonymous)
+        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay,
+                                                HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
 
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCDE(BLZ, AccountHolder, AccountHolderIBAN, AccountHolderBIC, Receiver, ReceiverIBAN, ReceiverBIC,
-                    Convert.ToDecimal(Amount), Purpose, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKCDE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -1445,24 +1341,17 @@ namespace libfintx
         /// <summary>
         /// Get banker's orders
         /// </summary>
-        /// <param name="BLZ"></param>
-        /// <param name="IBAN"></param>
-        /// <param name="BIC"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="Anonymous"></param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>         
+        /// <param name="anonymous"></param>
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public static string GetBankersOrders(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion,
-            string UserID, string PIN, bool Anonymous)
+        public static string GetBankersOrders(ConnectionDetails connectionDetails, bool anonymous)
         {
-            if (Transaction.INI(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous) == true)
+            if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 // Success
-                var BankCode = Transaction.HKCSB(BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN);
+                var BankCode = Transaction.HKCSB(connectionDetails);
 
                 if (BankCode.Contains("+0020::"))
                 {
@@ -1496,18 +1385,14 @@ namespace libfintx
         /// <summary>
         /// Confirm order with TAN
         /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
         /// <param name="TAN"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="BLZ"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string TAN(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN)
+        public static string TAN(ConnectionDetails connectionDetails, string TAN)
         {
-            var BankCode = Transaction.TAN(TAN, URL, HBCIVersion, BLZ, UserID, PIN);
+            var BankCode = Transaction.TAN(connectionDetails, TAN);
 
             if (BankCode.Contains("+0020::"))
             {
@@ -1549,19 +1434,15 @@ namespace libfintx
         /// <summary>
         /// Confirm order with TAN
         /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
         /// <param name="TAN"></param>
-        /// <param name="URL"></param>
-        /// <param name="HBCIVersion"></param>
-        /// <param name="BLZ"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
         /// <param name="MediumName"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string TAN4(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN, string MediumName)
+        public static string TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
         {
-            var BankCode = Transaction.TAN4(TAN, URL, HBCIVersion, BLZ, UserID, PIN, MediumName);
+            var BankCode = Transaction.TAN4(connectionDetails, TAN, MediumName);
 
             if (BankCode.Contains("+0020::"))
             {

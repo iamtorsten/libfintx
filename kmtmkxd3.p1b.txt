@@ -1,0 +1,38 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   libfintx.Android/libfintx.Android.csproj
+#	modified:   libfintx.Android/libfintx.Android.csproj.bak
+#	new file:   libfintx/Data/ConnectionDetails.cs
+#	modified:   libfintx/Main.cs
+#	modified:   libfintx/Pain/pain00100203.cs
+#	modified:   libfintx/Pain/pain00800202.cs
+#	modified:   libfintx/TAN/TAN.cs
+#	modified:   libfintx/TAN/TAN4.cs
+#	modified:   libfintx/Transactions/HKCCM.cs
+#	modified:   libfintx/Transactions/HKCCS.cs
+#	modified:   libfintx/Transactions/HKCCST.cs
+#	modified:   libfintx/Transactions/HKCDE.cs
+#	modified:   libfintx/Transactions/HKCME.cs
+#	modified:   libfintx/Transactions/HKCSB.cs
+#	modified:   libfintx/Transactions/HKCUM.cs
+#	modified:   libfintx/Transactions/HKDME.cs
+#	modified:   libfintx/Transactions/HKDSE.cs
+#	modified:   libfintx/Transactions/HKKAZ.cs
+#	modified:   libfintx/Transactions/HKPPD.cs
+#	modified:   libfintx/Transactions/HKSAL.cs
+#	modified:   libfintx/Transactions/INI.cs
+#	modified:   libfintx/Transactions/Transaction.cs
+#	modified:   libfintx/libfintx.csproj
+#	modified:   test/asp.net_matrixcode_example/WebForm1.aspx.cs
+#	modified:   test/test_Flicker/Program.cs
+#	modified:   test/test_Flicker/TAN.cs
+#	modified:   test/test_balance/Program.cs
+#	modified:   test/test_phototan/Form1.cs
+#	new file:   test/test_phototan/assets/matrixcode.txt
+#
+
