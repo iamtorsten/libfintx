@@ -428,7 +428,7 @@ namespace libfintx
                     string Accountowner = Parse_String(result[ctr].Value, "EUR+", "+");
                     string Accounttype = Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
 
-                    if (Accountnumber.Length > 2 && Accounttype.ToUpper().Contains("KONTO"))
+                    if (Accountnumber.Length > 2)
                         Items.Add(new AccountInformations() { Accountnumber = Accountnumber, Accountowner = Accountowner, Accounttype = Accounttype });
                 }
 
