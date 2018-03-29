@@ -21,7 +21,7 @@ namespace asp.net_matrixcode_example
 
             byte[] imgBytes = ImageToByteArray(mCode.CodeImage);
             string imgString = Convert.ToBase64String(imgBytes);
-            PhotoTANString = String.Format("<img src=\"data:image/Png;base64,{0}\">", imgString);
+            PhotoTANString = $"<img src=\"data:{mCode.ImageMimeType};base64,{imgString}\">";
         }
 
         public static byte[] ImageToByteArray(System.Drawing.Image img)
