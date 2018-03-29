@@ -28,7 +28,7 @@ namespace libfintx
 {
     public static class pain00100203
     {
-        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string ExecutionDay)
         {
             var RndNr = Guid.NewGuid().ToString();
 
@@ -67,7 +67,7 @@ namespace libfintx
                 "<Cd>SEPA</Cd>" + 
                 "</SvcLvl>" + 
                 "</PmtTpInf>" + 
-                "<ReqdExctnDt>" + ExecutionDay.ToString("yyyy-MM-dd") + " </ReqdExctnDt>" + 
+                "<ReqdExctnDt>" + ExecutionDay + "</ReqdExctnDt>" + 
                 "<Dbtr>" +
                 "<Nm>" + Accountholder + "</Nm>" + 
                 "</Dbtr>" +
@@ -113,7 +113,7 @@ namespace libfintx
             return Message;
         }
 
-        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
+        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string ExecutionDay)
         {
             var RndNr = Guid.NewGuid().ToString();
 
@@ -148,7 +148,7 @@ namespace libfintx
                 "<Cd>SEPA</Cd>" +
                 "</SvcLvl>" +
                 "</PmtTpInf>" +
-                "<ReqdExctnDt>" + ExecutionDay.ToString("yyyy-MM-dd") + " </ReqdExctnDt>" +
+                "<ReqdExctnDt>" + ExecutionDay + "</ReqdExctnDt>" +
                 "<Dbtr>" +
                 "<Nm>" + Accountholder + "</Nm>" +
                 "</Dbtr>" +
