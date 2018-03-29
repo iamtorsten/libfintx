@@ -1,29 +1,25 @@
-﻿using System;
+﻿using libfintx.Data;
+using System;
 
 namespace test_balance
 {
     class Program
     {
-        static string Account;
-        static int BLZ;
-        static string BIC;
-        static string IBAN;
-        static string URL;
-        static int HBCIVersion;
-        static string UserID;
-        static string PIN;
         static bool Anonymous;
 
         static void Main(string[] args)
         {
-            Account = "xxx";
-            BLZ = 76061482;
-            BIC = "GENODEF1HSB";
-            IBAN = "xxx";
-            URL = "https://hbci11.fiducia.de/cgi-bin/hbciservlet";
-            HBCIVersion = 300;
-            UserID = "xxx";
-            PIN = "xxx";
+            var connectionDetails = new ConnectionDetails()
+            {
+                Account = "xxx",
+                Blz = 76061482,
+                BIC = "GENODEF1HSB",
+                IBAN = "xxx",
+                Url = "https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+                HBCIVersion = 300,
+                UserId = "xxx",
+                Pin = "xxx"
+            };            
             Anonymous = false;
 
             #region Sync
@@ -34,7 +30,7 @@ namespace test_balance
 
             libfintx.Main.Tracing(true);
 
-            if (libfintx.Main.Synchronization(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous))
+            if (libfintx.Main.Synchronization(connectionDetails, Anonymous))
             {
                 Console.WriteLine("[ Sync ]");
                 Console.WriteLine();
@@ -56,7 +52,7 @@ namespace test_balance
 
             /* Balance */
 
-            var balance = libfintx.Main.Balance(Account, BLZ, IBAN, BIC, URL, HBCIVersion, UserID, PIN, false);
+            var balance = libfintx.Main.Balance(connectionDetails, false);
 
             Console.WriteLine("[ Balance ]");
             Console.WriteLine();

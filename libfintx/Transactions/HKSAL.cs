@@ -21,6 +21,7 @@
  * 	
  */
 
+using libfintx.Data;
 using System;
 
 namespace libfintx
@@ -30,22 +31,22 @@ namespace libfintx
         /// <summary>
         /// Balance
         /// </summary>
-        public static string Init_HKSAL(string Konto, int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
+        public static string Init_HKSAL(ConnectionDetails connectionDetails)
         {
             Log.Write("Starting job HKSAL: Request balance");
 
             string segments = string.Empty;
 
             if (Convert.ToInt16(Segment.HISALS) >= 7)
-                segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + IBAN + ":" + BIC + "+N'";
+                segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+N'";
             else
             {
-                segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + Konto + "::280:" + BLZ + "+N'";
+                segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
             }
 
             SEG.NUM = SEGNUM.SETInt(3);
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }
     }
 }

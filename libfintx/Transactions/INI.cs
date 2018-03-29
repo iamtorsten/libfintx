@@ -21,6 +21,7 @@
  * 	
  */
 
+using libfintx.Data;
 using System;
 
 namespace libfintx
@@ -30,9 +31,9 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static bool Init_INI(int BLZ, string URL, int HBCIVersion, string UserID, string PIN, bool Anonymous)
+        public static bool Init_INI(ConnectionDetails connectionDetails, bool anonymous)
         {
-            if (!Anonymous)
+            if (!anonymous)
             {
                 /// <summary>
                 /// Sync
@@ -43,17 +44,17 @@ namespace libfintx
 
                     string segments;
 
-                    if (HBCIVersion == 220)
+                    if (connectionDetails.HBCIVersion == 220)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + BLZ + "+" + UserID + "+0+1'" +
+                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+0+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
                             "HKSYN:" + SEGNUM.SETVal(5) + ":2+0'";
 
                         segments = segments_;
                     }
-                    else if (HBCIVersion == 300)
+                    else if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + BLZ + "+" + UserID + "+0+1'" +
+                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+0+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
                             "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
 
@@ -61,8 +62,9 @@ namespace libfintx
                     }
                     else
                     {
-                        UserID = string.Empty;
-                        PIN = null;
+                        //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                        //connectionDetails.UserId = string.Empty;
+                        //connectionDetails.Pin = null;
 
                         Log.Write("HBCI version not supported");
 
@@ -71,9 +73,9 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(5);
 
-                    if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion,
-                        FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), BLZ, UserID,
-                        PIN, SYS.SETVal(0), segments, null, SEG.NUM))))
+                    if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion,
+                        FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId,
+                        connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM))))
                     {
                         // Sync OK
                         Log.Write("Synchronisation ok");
@@ -81,24 +83,25 @@ namespace libfintx
                         /// <summary>
                         /// INI
                         /// </summary>
-                        if (HBCIVersion == 220)
+                        if (connectionDetails.HBCIVersion == 220)
                         {
-                            string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
+                            string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                                 "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
 
                             segments = segments_;
                         }
-                        else if (HBCIVersion == 300)
+                        else if (connectionDetails.HBCIVersion == 300)
                         {
-                            string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
+                            string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                                 "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
 
                             segments = segments_;
                         }
                         else
                         {
-                            UserID = string.Empty;
-                            PIN = null;
+                            //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                            //connectionDetails.UserId = string.Empty;
+                            //connectionDetails.Pin = null;
 
                             Log.Write("HBCI version not supported");
 
@@ -107,14 +110,15 @@ namespace libfintx
 
                         SEG.NUM = SEGNUM.SETInt(4);
 
-                        if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion,
-                            FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), BLZ, UserID, PIN, Segment.HISYN,
+                        if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion,
+                            FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN,
                             segments, Segment.HIRMS, SEG.NUM))))
                             return true;
                         else
                         {
-                            UserID = string.Empty;
-                            PIN = null;
+                            //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                            //connectionDetails.UserId = string.Empty;
+                            //connectionDetails.Pin = null;
 
                             Log.Write("Initialisation failed");
 
@@ -123,8 +127,9 @@ namespace libfintx
                     }
                     else
                     {
-                        UserID = string.Empty;
-                        PIN = null;
+                        //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                        //connectionDetails.UserId = string.Empty;
+                        //connectionDetails.Pin = null;
 
                         Log.Write("Sync failed");
 
@@ -133,8 +138,9 @@ namespace libfintx
                 }
                 catch (Exception ex)
                 {
-                    UserID = string.Empty;
-                    PIN = null;
+                    //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                    //connectionDetails.UserId = string.Empty;
+                    //connectionDetails.Pin = null;
 
                     Log.Write(ex.ToString());
 
@@ -152,17 +158,17 @@ namespace libfintx
 
                     string segments;
 
-                    if (HBCIVersion == 300)
+                    if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + BLZ + "+" + "9999999999" + "+0+0'" +
+                        string segments_ = "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + connectionDetails.Blz + "+" + "9999999999" + "+0+0'" +
                                     "HKVVB:" + SEGNUM.SETVal(3) + ":3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
 
                         segments = segments_;
                     }
                     else
                     {
-                        UserID = string.Empty;
-                        PIN = null;
+                        connectionDetails.UserId = string.Empty;
+                        connectionDetails.Pin = null;
 
                         Log.Write("HBCI version not supported");
 
@@ -171,9 +177,9 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(4);
 
-                    if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion,
-                        FinTSMessage.Send(URL, FinTSMessageAnonymous.Create(HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), BLZ,
-                        UserID, PIN, SYS.SETVal(0), segments, null, SEG.NUM))))
+                    if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion,
+                        FinTSMessage.Send(connectionDetails.Url, FinTSMessageAnonymous.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz,
+                        connectionDetails.UserId, connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM))))
                     {
                         // Sync OK
                         Log.Write("Synchronisation anonymous ok");
@@ -181,9 +187,9 @@ namespace libfintx
                         /// <summary>
                         /// INI
                         /// </summary>
-                        if (HBCIVersion == 300)
+                        if (connectionDetails.HBCIVersion == 300)
                         {
-                            string segments__ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + BLZ + "+" + UserID + "+" + Segment.HISYN + "+1'" +
+                            string segments__ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                                 "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
                                 "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
 
@@ -191,8 +197,9 @@ namespace libfintx
                         }
                         else
                         {
-                            UserID = string.Empty;
-                            PIN = null;
+                            //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                            //connectionDetails.UserId = string.Empty;
+                            //connectionDetails.Pin = null;
 
                             Log.Write("HBCI version not supported");
 
@@ -201,16 +208,17 @@ namespace libfintx
 
                         SEG.NUM = SEGNUM.SETInt(5);
 
-                        if (Helper.Parse_Segment(UserID, BLZ, HBCIVersion,
-                            FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), BLZ, UserID, PIN,
+                        if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion,
+                            FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin,
                             Segment.HISYN, segments, Segment.HIRMS, SEG.NUM))))
                         {
                             return true;
                         }
                         else
                         {
-                            UserID = string.Empty;
-                            PIN = null;
+                            //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                            //connectionDetails.UserId = string.Empty;
+                            //connectionDetails.Pin = null;
 
                             Log.Write("Initialisation failed");
 
@@ -219,8 +227,9 @@ namespace libfintx
                     }
                     else
                     {
-                        UserID = string.Empty;
-                        PIN = null;
+                        //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                        //connectionDetails.UserId = string.Empty;
+                        //connectionDetails.Pin = null;
 
                         Log.Write("Sync failed");
 
@@ -229,8 +238,9 @@ namespace libfintx
                 }
                 catch (Exception ex)
                 {
-                    UserID = string.Empty;
-                    PIN = null;
+                    //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                    //connectionDetails.UserId = string.Empty;
+                    //connectionDetails.Pin = null;
 
                     Log.Write(ex.ToString());
 

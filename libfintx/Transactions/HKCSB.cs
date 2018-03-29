@@ -21,6 +21,8 @@
  * 	
  */
 
+using libfintx.Data;
+
 namespace libfintx
 {
     public static class HKCSB
@@ -28,15 +30,15 @@ namespace libfintx
         /// <summary>
         /// Get bankers orders
         /// </summary>
-        public static string Init_HKCSB(int BLZ, string IBAN, string BIC, string URL, int HBCIVersion, string UserID, string PIN)
+        public static string Init_HKCSB(ConnectionDetails connectionDetails)
         {
             Log.Write("Starting job HKCSB: Get bankers order");
 
-            string segments = "HKCSB:" + SEGNUM.SETVal(3) + ":1+" + IBAN + ":" + BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
+            string segments = "HKCSB:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
             SEG.NUM = SEGNUM.SETInt(3);
 
-            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }
     }
 }

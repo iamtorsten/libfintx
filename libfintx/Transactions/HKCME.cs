@@ -21,6 +21,8 @@
  * 	
  */
 
+using libfintx.Data;
+using System;
 using System.Collections.Generic;
 
 namespace libfintx
@@ -30,17 +32,15 @@ namespace libfintx
         /// <summary>
         /// Collective transfer terminated
         /// </summary>
-        public static string Init_HKCME(int BLZ, string Accountholder, string AccountholderIBAN, string AccountholderBIC,
-            List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, string ExecutionDay,
-            string URL, int HBCIVersion, string UserID, string PIN)
+        public static string Init_HKCME(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
         {
             Log.Write("Starting job HKCME: Collective transfer money terminated");
 
             var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
-            string segments = "HKCME:" + SEGNUM.SETVal(3) + ":1+" + AccountholderIBAN + ":" + AccountholderBIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+            string segments = "HKCME:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
-            var message = pain00100203.Create(Accountholder, AccountholderIBAN, AccountholderBIC, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
+            var message = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
 
             segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
 
@@ -48,7 +48,7 @@ namespace libfintx
 
             SEG.NUM = SEGNUM.SETInt(4);
 
-            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+            var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
