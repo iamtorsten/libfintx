@@ -21,8 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
-
 namespace libfintx
 {
     public static class HKPPD
@@ -30,17 +28,18 @@ namespace libfintx
         /// <summary>
         /// Load prepaid
         /// </summary>
-        public static string Init_HKPPD(ConnectionDetails connectionDetails, int MobileServiceProvider, string PhoneNumber, int Amount)
+        public static string Init_HKPPD(int BLZ, string IBAN, string BIC, int MobileServiceProvider, string PhoneNumber, int Amount,
+            string URL, int HBCIVersion, string UserID, string PIN)
         {
             Log.Write("Starting job HKPPD: Load prepaid");
 
-            string segments = "HKPPD:" + SEGNUM.SETVal(3) + ":2+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
+            string segments = "HKPPD:" + SEGNUM.SETVal(3) + ":2+" + IBAN + ":" + BIC + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 
             segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "'";
 
             SEG.NUM = SEGNUM.SETInt(4);
 
-            var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+            var TAN = FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 

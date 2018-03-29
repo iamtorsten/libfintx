@@ -19,7 +19,7 @@ namespace test_phototan
         {
             InitializeComponent();
 
-            var PhotoCode = File.ReadAllText($"{Application.StartupPath}\\..\\..\\assets\\matrixcode.txt");
+            var PhotoCode = File.ReadAllText(Path.Combine(Application.StartupPath, "matrixcode.txt"));
 
             var mCode = new MatrixCode(PhotoCode);
 

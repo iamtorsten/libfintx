@@ -28,7 +28,7 @@ namespace libfintx
 {
     public static class pain00800202
     {
-        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, DateTime SettlementDate, string MandateNumber, DateTime MandateDate, string CeditorIDNumber)
+        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, string SettlementDate, string MandateNumber, string MandateDate, string CeditorIDNumber)
         {
             var RndNr = Guid.NewGuid().ToString();
 
@@ -71,7 +71,7 @@ namespace libfintx
 				"</LclInstrm>" +
 				"<SeqTp>OOFF</SeqTp>" +
 				"</PmtTpInf>" +
-				"<ReqdColltnDt>" + SettlementDate.ToString("yyyy-MM-dd") + "</ReqdColltnDt>" +
+				"<ReqdColltnDt>" + SettlementDate + "</ReqdColltnDt>" +
 				"<Cdtr>" +
 				"<Nm>" + Accountholder + "</Nm>" +
 				"</Cdtr>" +
@@ -94,7 +94,7 @@ namespace libfintx
 				"<DrctDbtTx>" +
 				"<MndtRltdInf>" +
 				"<MndtId>" + MandateNumber + "</MndtId>" +
-				"<DtOfSgntr>" + MandateDate.ToString("yyyy-MM-dd") + "</DtOfSgntr>" +
+				"<DtOfSgntr>" + MandateDate + "</DtOfSgntr>" +
 				"</MndtRltdInf>" +
 				"<CdtrSchmeId>" +
 				"<Id>" +
@@ -133,7 +133,7 @@ namespace libfintx
             return Message;
         }
 
-        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, DateTime SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount)
+        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount)
         {
             var RndNr = Guid.NewGuid().ToString();
 
@@ -174,7 +174,7 @@ namespace libfintx
                 "</LclInstrm>" +
                 "<SeqTp>OOFF</SeqTp>" +
                 "</PmtTpInf>" +
-                "<ReqdColltnDt>" + SettlementDate.ToString("yyyy-MM-dd") + "</ReqdColltnDt>" +
+                "<ReqdColltnDt>" + SettlementDate + "</ReqdColltnDt>" +
                 "<Cdtr>" +
                 "<Nm>" + Accountholder + "</Nm>" +
                 "</Cdtr>" +

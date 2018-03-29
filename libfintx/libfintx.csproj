@@ -49,7 +49,6 @@
     <Compile Include="Console\TransactionConsole.cs" />
     <Compile Include="Data\AccountBalance.cs" />
     <Compile Include="Data\AccountInformations.cs" />
-    <Compile Include="Data\ConnectionDetails.cs" />
     <Compile Include="Data\pain00100203_ct_data.cs" />
     <Compile Include="Data\pain00800202_cc_data.cs" />
     <Compile Include="Data\TANProcess.cs" />

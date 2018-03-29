@@ -21,8 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
-
 namespace libfintx
 {
     public static class TAN4
@@ -30,7 +28,7 @@ namespace libfintx
         /// <summary>
         /// TAN process 4
         /// </summary>
-        public static string Send_TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
+        public static string Send_TAN4(string TAN, string URL, int HBCIVersion, int BLZ, string UserID, string PIN, string MediumName)
         {
             Log.Write("Starting job TAN process 4");
 
@@ -48,7 +46,7 @@ namespace libfintx
 
             SEG.NUM = SEGNUM.SETInt(3);
 
-            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, SEG.NUM));
+            return FinTSMessage.Send(URL, FinTSMessage.Create(HBCIVersion, Segment.HNHBS, Segment.HNHBK, BLZ, UserID, PIN, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, SEG.NUM));
         }
     }
 }

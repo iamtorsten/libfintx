@@ -15,7 +15,7 @@
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,14 +47,8 @@
     <Compile Include="..\libfintx\Console\TransactionConsole.cs">
       <Link>Console\TransactionConsole.cs</Link>
     </Compile>
-    <Compile Include="..\libfintx\Data\AccountBalance.cs">
-      <Link>Data\AccountBalance.cs</Link>
-    </Compile>
     <Compile Include="..\libfintx\Data\AccountInformations.cs">
       <Link>Data\AccountInformations.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Data\AccountTransaction.cs">
-      <Link>Data\AccountTransaction.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Data\pain00100203_ct_data.cs">
       <Link>Data\pain00100203_ct_data.cs</Link>
@@ -103,9 +97,6 @@
     </Compile>
     <Compile Include="..\libfintx\Pain\pain00800202.cs">
       <Link>Pain\pain00800202.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Security\Enc.cs">
-      <Link>Security\Enc.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Segments\SEG.cs">
       <Link>Segments\SEG.cs</Link>
@@ -186,7 +177,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transactions\Transaction.cs" />
+    <Compile Include="Transactins\Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

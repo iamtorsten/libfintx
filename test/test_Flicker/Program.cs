@@ -5,49 +5,54 @@ using System.Windows.Forms;
 using HBCI = libfintx.Main;
 
 using libfintx;
-using libfintx.Data;
 
 namespace test_Flicker
 {
     class Program
     {
-        static bool anonymous = false;
+        static bool Anonymous = false;
 
-        static string receiver = string.Empty;
-        static string receiverIBAN = string.Empty;
-        static string receiverBIC = string.Empty;
-        static decimal amount = 0;
-        static string usage = string.Empty;
-        public static ConnectionDetails connectionDetails;
+        static string IBAN = string.Empty;
+        static string BIC = string.Empty;
+
+        static string AccountHolder = string.Empty;
+        static string Receiver = string.Empty;
+        static string ReceiverIBAN = string.Empty;
+        static string ReceiverBIC = string.Empty;
+        static string Amount = string.Empty;
+        static string Usage = string.Empty;
+
+        public static string URL { get; set; }
+        public static int HBCIVersion { get; set; }
+        public static int BLZ { get; set; }
+        public static string UserID { get; set; }
+        public static string PIN { get; set; }
 
         public static PictureBox pictureBox { get; set; }
 
         [STAThread]
         static void Main(string[] args)
         {
-            connectionDetails = new ConnectionDetails()
-            {
-                Account = "xxx",
-                Blz = 76061482,
-                BIC = "GENODEF1HSB",
-                IBAN = "xxx",
-                Url = "https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-                HBCIVersion = 300,
-                UserId = "xxx",
-                Pin = "xxx"
-            };
+            URL = "https://hbci11.fiducia.de/cgi-bin/hbciservlet";
+            HBCIVersion = 300;
+            BLZ = 76061482;
+            UserID = "xxxxxx";
+            PIN = "xxxxxx";
 
-            receiver = "xxxxxx";
-            receiverIBAN = "xxxxxx";
-            receiverBIC = "xxx";
-            amount = 1.0m;
-            usage = "TEST";
+            IBAN = "xxxxxx";
+            BIC = "xxxxxx";
+            AccountHolder = "xxxxxx";
+            Receiver = "xxxxxx";
+            ReceiverIBAN = "xxxxxx";
+            ReceiverBIC = "xxx";
+            Amount = "1,0";
+            Usage = "TEST";
 
             HBCI.Assembly("libfintx", "1");
 
             HBCI.Tracing(true);
 
-            if (HBCI.Synchronization(connectionDetails, anonymous))
+            if (HBCI.Synchronization(BLZ, URL, HBCIVersion, UserID, PIN, Anonymous))
             {
                 Task oFlicker = new Task(() => openFlickerWindow());
                 oFlicker.Start();
@@ -59,7 +64,8 @@ namespace test_Flicker
 
                 System.Threading.Thread.Sleep(5000);
 
-                Console.WriteLine(EncodingHelper.ConvertToUTF8(HBCI.Transfer(connectionDetails, receiver, receiverIBAN, receiverBIC, amount, usage, "972", pictureBox, anonymous)));
+                Console.WriteLine(EncodingHelper.ConvertToUTF8(HBCI.Transfer(BLZ, AccountHolder, IBAN, BIC, Receiver, ReceiverIBAN, ReceiverBIC,
+                    Amount, Usage, URL, HBCIVersion, UserID, PIN, "972", pictureBox, Anonymous)));
             }
 
             var timer = new System.Threading.Timer(
