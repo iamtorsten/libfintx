@@ -432,7 +432,10 @@ namespace libfintx
                         Items.Add(new AccountInformations() { Accountnumber = Accountnumber, Accountowner = Accountowner, Accounttype = Accounttype });
                 }
 
-                return true;
+                if (Items.Count > 0)
+                    return true;
+                else
+                    return false;
             }
             catch { return false; }
         }
