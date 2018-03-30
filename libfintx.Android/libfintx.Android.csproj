@@ -56,6 +56,9 @@
     <Compile Include="..\libfintx\Data\AccountTransaction.cs">
       <Link>Data\AccountTransaction.cs</Link>
     </Compile>
+    <Compile Include="..\libfintx\Data\ConnectionDetails.cs">
+      <Link>Data\ConnectionDetails.cs</Link>
+    </Compile>
     <Compile Include="..\libfintx\Data\pain00100203_ct_data.cs">
       <Link>Data\pain00100203_ct_data.cs</Link>
     </Compile>
