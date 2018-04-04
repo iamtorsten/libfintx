@@ -471,6 +471,9 @@ namespace libfintx
                     case "942": // mobile-TAN
                         list.Add(new TANprocess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
                         break;
+                    case "944": // SecureGo
+                        list.Add(new TANprocess { ProcessNumber = "944", ProcessName = "SecureGo" });
+                        break;
                     case "962": // Sm@rt-TAN plus manuell
                         list.Add(new TANprocess { ProcessNumber = "962", ProcessName = "Sm@rt-TAN plus manuell" });
                         break;
@@ -512,6 +515,9 @@ namespace libfintx
                                 break;
                             case "942": // mobile-TAN
                                 list.Add(new TANprocess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
+                                break;
+                            case "944": // SecureGo
+                                list.Add(new TANprocess { ProcessNumber = "944", ProcessName = "SecureGo" });
                                 break;
                             case "962": // Sm@rt-TAN plus manuell
                                 list.Add(new TANprocess { ProcessNumber = "962", ProcessName = "Sm@rt-TAN plus manuell" });
