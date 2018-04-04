@@ -106,7 +106,7 @@ namespace libfintx
             try
             {
                 String[] values = Message.Split('\'');
-                                
+
                 List<string> msg = new List<string>();
 
                 foreach (var item in values)
@@ -119,7 +119,8 @@ namespace libfintx
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
                 string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNSHA");
 
-                if (Trace.Enabled) {
+                if (Trace.Enabled)
+                {
 
                     var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                     var dir = Path.Combine(documents, Program.Buildname);
@@ -146,7 +147,7 @@ namespace libfintx
                     }
                     else
                         File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-               
+
                     // UPD
                     dir = Path.Combine(documents, Program.Buildname);
                     dir = Path.Combine(dir, "UPD");
@@ -214,7 +215,7 @@ namespace libfintx
 
                     if (item.Contains("HISYN"))
                     {
-                        var ID = item.Substring(item.IndexOf("+")+1);
+                        var ID = item.Substring(item.IndexOf("+") + 1);
                         Segment.HISYN = ID;
                     }
 
@@ -290,7 +291,7 @@ namespace libfintx
                             Console.WriteLine(item.Replace("::", ": "));
 
                             Log.Write(item.Replace("::", ": "));
-                        } 
+                        }
                     }
 
                     return false;
@@ -344,7 +345,7 @@ namespace libfintx
 
         public static AccountBalance Parse_Balance(string Message)
         {
-            var hirms = Message.Substring(Message.IndexOf("HIRMS")+5);
+            var hirms = Message.Substring(Message.IndexOf("HIRMS") + 5);
             hirms = hirms.Substring(0, (hirms.Contains("'") ? hirms.IndexOf('\'') : hirms.Length));
             var hirmsParts = hirms.Split(':');
 
@@ -353,7 +354,7 @@ namespace libfintx
 
             if (Message.Contains("+0020::"))
             {
-                var hisal = Message.Substring(Message.IndexOf("HISAL")+5);
+                var hisal = Message.Substring(Message.IndexOf("HISAL") + 5);
                 hisal = hisal.Substring(0, (hisal.Contains("'") ? hisal.IndexOf('\'') : hisal.Length));
                 var hisalParts = hisal.Split('+');
 
@@ -362,16 +363,17 @@ namespace libfintx
                 var hisalAccountParts = hisalParts[1].Split(':');
                 balance.AccountType = new AccountInformations()
                 {
-                     Accountnumber = hisalAccountParts[0],
-                     Accountbankcode = hisalAccountParts[3],
-                     Accounttype = hisalParts[2],                     
-                     Accountcurrency = hisalParts[3]
+                    Accountnumber = hisalAccountParts[0],
+                    Accountbankcode = hisalAccountParts.Length > 3 ? hisalAccountParts[3] : null,
+                    Accounttype = hisalParts[2],
+                    Accountcurrency = hisalParts[3],
+                    Accountbic = !string.IsNullOrEmpty(hisalAccountParts[1]) ? hisalAccountParts[1] : null
                 };
 
                 var hisalBalanceParts = hisalParts[4].Split(':');
                 balance.Balance = Convert.ToDecimal($"{(hisalBalanceParts[0] == "D" ? "-" : "")}{hisalBalanceParts[1]}");
 
-            
+
                 //from here on optional fields / see page 46 in "FinTS_3.0_Messages_Geschaeftsvorfaelle_2015-08-07_final_version.pdf"
                 if (hisalParts.Length > 5)
                 {
@@ -379,12 +381,12 @@ namespace libfintx
                     balance.MarkedTransactions = Convert.ToDecimal($"{(hisalMarkedBalanceParts[0] == "D" ? "-" : "")}{hisalMarkedBalanceParts[1]}");
                 }
 
-                if (hisalParts.Length > 6)
-                {                    
+                if (hisalParts.Length > 6 && hisalParts[6].Contains(":"))
+                {
                     balance.CreditLine = Convert.ToDecimal(hisalParts[6].Split(':')[0].TrimEnd(','));
                 }
 
-                if (hisalParts.Length > 7)
+                if (hisalParts.Length > 7 && hisalParts[7].Contains(":"))
                 {
                     balance.AvailableBalance = Convert.ToDecimal(hisalParts[7].Split(':')[0].TrimEnd(','));
                 }
@@ -403,13 +405,13 @@ namespace libfintx
             else
             {
                 balance.Successful = false;
-                              
+
                 string msg = string.Empty;
                 for (int i = 1; i < hirmsParts.Length; i++)
-                {                    
+                {
                     msg = msg + "??" + hirmsParts[i].Replace("::", ": ");
                 }
-                Log.Write(msg);                
+                Log.Write(msg);
             }
 
             return balance;
@@ -659,6 +661,5 @@ namespace libfintx
         }
     }
 }
- 
- 
- 
+
+
