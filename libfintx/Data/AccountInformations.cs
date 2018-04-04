@@ -30,5 +30,6 @@ namespace libfintx
         public string Accountowner { get; set; }
         public string Accounttype { get; set; }
         public string Accountcurrency { get; set; }
+        public string Accountbic { get; set; }
     }
 }
