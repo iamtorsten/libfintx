@@ -1485,10 +1485,8 @@ namespace libfintx
         /// Request tan medium name
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
-        /// <param name="TAN"></param>
-        /// <param name="MediumName"></param>
         /// <returns>
-        /// Bank return codes
+        /// TAN Medium Name
         /// </returns>
         public static string RequestTANMediumName(ConnectionDetails connectionDetails)
         {
