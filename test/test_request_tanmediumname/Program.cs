@@ -16,8 +16,8 @@ namespace test_request_tanmediumname
                 Blz = 76050101,
                 Url = "https://banking-by1.s-fints-pt-by.de/fints30",
                 HBCIVersion = 300,
-                UserId = "13519244push",
-                Pin = "Mr3Kl"
+                UserId = "xxx",
+                Pin = "xxx"
             };
 
             bool Anonymous = false;
