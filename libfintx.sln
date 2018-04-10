@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_balance_iOS", "test\te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asp.net_matrixcode_example", "test\asp.net_matrixcode_example\asp.net_matrixcode_example.csproj", "{7108534A-3BDD-43DC-BC80-D46B64541B9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_request_tanmediumname", "test_request_tanmediumname\test_request_tanmediumname.csproj", "{C2A037E0-BDBD-4AF1-9D65-8133A9936D0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_request_tanmediumname", "test\test_request_tanmediumname\test_request_tanmediumname.csproj", "{C2A037E0-BDBD-4AF1-9D65-8133A9936D0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
