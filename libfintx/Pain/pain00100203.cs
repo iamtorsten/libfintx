@@ -67,7 +67,7 @@ namespace libfintx
                 "<Cd>SEPA</Cd>" + 
                 "</SvcLvl>" + 
                 "</PmtTpInf>" + 
-                "<ReqdExctnDt>" + ExecutionDay.ToString("yyyy-MM-dd") + " </ReqdExctnDt>" + 
+                "<ReqdExctnDt>" + ExecutionDay.ToString("yyyy-MM-dd") + "</ReqdExctnDt>" + 
                 "<Dbtr>" +
                 "<Nm>" + Accountholder + "</Nm>" + 
                 "</Dbtr>" +
