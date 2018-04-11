@@ -1482,6 +1482,48 @@ namespace libfintx
         }
 
         /// <summary>
+        /// Request tan medium name
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
+        /// <returns>
+        /// TAN Medium Name
+        /// </returns>
+        public static string RequestTANMediumName(ConnectionDetails connectionDetails)
+        {
+            var BankCode = Transaction.HKTAB(connectionDetails);
+
+            if (BankCode.Contains("+0020::"))
+            {
+                var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
+
+                var msg = BankCode;
+
+                msg = Helper.Parse_String(msg, "+A:1", "'").Replace(":", "");
+
+                return msg;
+            }
+            else
+            {
+                // Error
+                var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+                String[] values = BankCode_.Split('+');
+
+                string msg = string.Empty;
+
+                foreach (var item in values)
+                {
+                    if (!item.StartsWith("HIRMS"))
+                        msg = msg + "??" + item.Replace("::", ": ");
+                }
+
+                Log.Write(msg);
+
+                return msg;
+            }
+        }
+
+        /// <summary>
         /// TAN scheme
         /// </summary>
         /// <returns>

@@ -39,6 +39,7 @@ using static libfintx.HKCSB;
 using static libfintx.TAN;
 using static libfintx.TAN4;
 using static libfintx.INI_RDH;
+using static libfintx.HKTAB;
 using libfintx.Data;
 using System;
 
@@ -121,6 +122,11 @@ namespace libfintx
         public static string TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
         {
             return Send_TAN4(connectionDetails, TAN, MediumName);
+        }
+
+        public static string HKTAB(ConnectionDetails connectionDetails)
+        {
+            return Init_HKTAB(connectionDetails);
         }
 
         // RDH

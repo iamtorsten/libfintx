@@ -22,6 +22,7 @@
  */
 
 using libfintx.Data;
+using System;
 
 namespace libfintx
 {
@@ -36,7 +37,20 @@ namespace libfintx
 
             string segments = "HKPPD:" + SEGNUM.SETVal(3) + ":2+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 
-            segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "'";
+            if (String.IsNullOrEmpty(Segment.HITAB)) // TAN Medium Name not set
+                segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "'";
+            else // TAN Medium Name set
+            {
+                // Version 3, Process 4
+                if (Segment.HITANS.Substring(0, 1).Equals("3+4"))
+                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+4+++++++" + Segment.HITAB + "'";
+                // Version 4, Process 4
+                if (Segment.HITANS.Substring(0, 1).Equals("4+4"))
+                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+4++++++++" + Segment.HITAB + "'";
+                // Version 5, Process 4
+                if (Segment.HITANS.Substring(0, 1).Equals("5+4"))
+                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+4++++++++++" + Segment.HITAB + "'";
+            }
 
             SEG.NUM = SEGNUM.SETInt(4);
 
