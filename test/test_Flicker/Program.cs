@@ -28,10 +28,10 @@ namespace test_Flicker
             connectionDetails = new ConnectionDetails()
             {
                 AccountHolder = "Torsten Klinger",
-                Blz = 76050101,
-                BIC = "SSKNDE77XXX",
+                Blz = 76061482,
+                BIC = "GENODEF1HSB",
                 IBAN = "xxx",
-                Url = "https://banking-by1.s-fints-pt-by.de/fints30",
+                Url = "https://hbci11.fiducia.de/cgi-bin/hbciservlet",
                 HBCIVersion = 300,
                 UserId = "xxx",
                 Pin = "xxx"
@@ -55,11 +55,11 @@ namespace test_Flicker
                 Task oTAN = new Task(() => openTANWindow());
                 oTAN.Start();
 
-                Segment.HIRMS = "911";
+                Segment.HIRMS = "972"; // -> Sm@rt-TAN
 
                 System.Threading.Thread.Sleep(5000);
 
-                Console.WriteLine(EncodingHelper.ConvertToUTF8(HBCI.Transfer(connectionDetails, receiver, receiverIBAN, receiverBIC, amount, usage, "972", pictureBox, anonymous)));
+                Console.WriteLine(EncodingHelper.ConvertToUTF8(HBCI.Transfer(connectionDetails, receiver, receiverIBAN, receiverBIC, amount, usage, Segment.HIRMS, pictureBox, anonymous)));
             }
 
             var timer = new System.Threading.Timer(
