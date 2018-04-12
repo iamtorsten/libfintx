@@ -47,12 +47,6 @@ namespace test_Flicker
 
             HBCI.Tracing(true);
 
-            /* Sync */
-
-            libfintx.Main.Assembly("libfintx", "0.1");
-
-            libfintx.Main.Tracing(true);
-
             if (HBCI.Synchronization(connectionDetails, anonymous))
             {
                 Task oFlicker = new Task(() => openFlickerWindow());
