@@ -50,13 +50,13 @@ namespace libfintx
             {
                 // Version 3, Process 4
                 if (Segment.HITANS.Substring(0, 3).Equals("3+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+4+++++++" + Segment.HITAB + "'";
+                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "++++++++" + Segment.HITAB + "'";
                 // Version 4, Process 4
                 if (Segment.HITANS.Substring(0, 3).Equals("4+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+4++++++++" + Segment.HITAB + "'";
+                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++" + Segment.HITAB + "'";
                 // Version 5, Process 4
                 if (Segment.HITANS.Substring(0, 3).Equals("5+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+4++++++++++" + Segment.HITAB + "'";
+                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++++" + Segment.HITAB + "'";
             }
 
             SEG.NUM = SEGNUM.SETInt(4);

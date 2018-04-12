@@ -61,7 +61,7 @@ namespace test_Flicker
                 Task oTAN = new Task(() => openTANWindow());
                 oTAN.Start();
 
-                Segment.HIRMS = "911"; // -> Sm@rt-TAN
+                Segment.HIRMS = "911"; // -> chip-TAN
 
                 System.Threading.Thread.Sleep(5000);
 
