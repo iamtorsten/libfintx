@@ -167,8 +167,9 @@ namespace libfintx
                     }
                     else
                     {
-                        connectionDetails.UserId = string.Empty;
-                        connectionDetails.Pin = null;
+                        //Since connectionDetails is a re-usable object, this shouldn't be cleared.
+                        //connectionDetails.UserId = string.Empty;
+                        //connectionDetails.Pin = null;
 
                         Log.Write("HBCI version not supported");
 
