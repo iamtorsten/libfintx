@@ -28,10 +28,10 @@ namespace test_Flicker
             connectionDetails = new ConnectionDetails()
             {
                 AccountHolder = "Torsten Klinger",
-                Blz = 76061482,
-                BIC = "GENODEF1HSB",
+                Blz = 76050101,
+                BIC = "SSKNDE77XXX",
                 IBAN = "xxx",
-                Url = "https://hbci11.fiducia.de/cgi-bin/hbciservlet",
+                Url = "https://banking-by1.s-fints-pt-by.de/fints30",
                 HBCIVersion = 300,
                 UserId = "xxx",
                 Pin = "xxx"
@@ -47,6 +47,14 @@ namespace test_Flicker
 
             HBCI.Tracing(true);
 
+            #region Sync
+
+            /* Sync */
+
+            libfintx.Main.Assembly("libfintx", "0.1");
+
+            libfintx.Main.Tracing(true);
+
             if (HBCI.Synchronization(connectionDetails, anonymous))
             {
                 Task oFlicker = new Task(() => openFlickerWindow());
@@ -55,7 +63,7 @@ namespace test_Flicker
                 Task oTAN = new Task(() => openTANWindow());
                 oTAN.Start();
 
-                Segment.HIRMS = "972"; // -> Sm@rt-TAN
+                Segment.HIRMS = "911"; // -> Sm@rt-TAN
 
                 System.Threading.Thread.Sleep(5000);
 
