@@ -47,8 +47,6 @@ namespace test_Flicker
 
             HBCI.Tracing(true);
 
-            #region Sync
-
             /* Sync */
 
             libfintx.Main.Assembly("libfintx", "0.1");
