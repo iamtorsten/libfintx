@@ -183,26 +183,27 @@ namespace libfintx
 
                             foreach (string value in procedures)
                             {
-                                if (!string.IsNullOrEmpty(value))
+                                int i;
+                                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out i))
                                 {
-                                    int i = int.Parse(value);
-
                                     if (Convert.ToString(i).StartsWith("9"))
                                     {
                                         if (String.IsNullOrEmpty(TAN))
-                                            TAN = Convert.ToString(i);
+                                        {
+                                            TAN = i.ToString();
+                                        }
                                         else
                                         {
                                             if (String.IsNullOrEmpty(TANf))
-                                                TANf = Convert.ToString(i);
+                                                TANf = i.ToString();
                                             else
-                                                TANf = TANf + ";" + Convert.ToString(i);
+                                                TANf += $";{i}";
                                         }
                                     }
                                 }
                             }
-
-                            Segment.HIRMS = TAN;
+                            if (string.IsNullOrEmpty(Segment.HIRMS))
+                                Segment.HIRMS = TAN;
                             Segment.HIRMSf = TANf;
                         }
                     }
