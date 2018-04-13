@@ -29,10 +29,10 @@ namespace test_Flicker
             connectionDetails = new ConnectionDetails()
             {
                 AccountHolder = "Torsten Klinger",
-                Blz = 76050101,
-                BIC = "SSKNDE77XXX",
+                Blz = 76061482,
+                BIC = "GENODEF1HSB",
                 IBAN = "xxx",
-                Url = "https://banking-by1.s-fints-pt-by.de/fints30",
+                Url = "https://hbci11.fiducia.de/cgi-bin/hbciservlet",
                 HBCIVersion = 300,
                 UserId = "xxx",
                 Pin = "xxx"
@@ -40,7 +40,7 @@ namespace test_Flicker
 
             receiver = "Klinger";
             receiverIBAN = "xxx";
-            receiverBIC = "GENODEF1HSB";
+            receiverBIC = "SSKNDE77XXX";
             amount = 1.0m;
             usage = "TEST";
 
@@ -77,7 +77,7 @@ namespace test_Flicker
             //Transfer with chipTan based on GIF-rendering            
             if (HBCI.Synchronization(connectionDetails, anonymous))
             {   
-                Segment.HIRMS = "911"; // -> chip-TAN               
+                Segment.HIRMS = "972"; // -> chip-TAN               
 
                 Image flickerImage = null;
                 Console.WriteLine(EncodingHelper.ConvertToUTF8(HBCI.Transfer(connectionDetails, receiver, receiverIBAN, receiverBIC, amount, usage, Segment.HIRMS, anonymous, out flickerImage, 220, 160)));
