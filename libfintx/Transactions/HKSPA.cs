@@ -25,20 +25,20 @@ using libfintx.Data;
 
 namespace libfintx
 {
-    public static class HKEND
+    public static class HKSPA
     {
         /// <summary>
-        /// End of dialog
+        /// Request SEPA account connection
         /// </summary>
         /// <param name="connectionDetails"></param>
-        /// <param name="dialogID"></param>
-        public static string Init_HKEND(ConnectionDetails connectionDetails, string dialogID)
+        /// <returns></returns>
+        public static string Init_HKSPA(ConnectionDetails connectionDetails)
         {
-            Log.Write("Starting job HKEND: End of dialog");
+            Log.Write("Starting job HKSPA: Request SEPA account connection");
 
             string segments = string.Empty;
 
-            segments = "HKEND:" + SEGNUM.SETVal(3) + "1+" + dialogID + "'";
+            segments = "HKEND:" + SEGNUM.SETVal(3) + "1'";
 
             SEG.NUM = SEGNUM.SETInt(3);
 

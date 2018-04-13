@@ -111,6 +111,7 @@
     <Compile Include="Transactions\HKKAZ.cs" />
     <Compile Include="Transactions\HKPPD.cs" />
     <Compile Include="Transactions\HKSAL.cs" />
+    <Compile Include="Transactions\HKSPA.cs" />
     <Compile Include="Transactions\HKTAB.cs" />
     <Compile Include="Transactions\HKTAN.cs" />
     <Compile Include="Transactions\INI.cs" />
