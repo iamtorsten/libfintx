@@ -26,12 +26,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace libfintx
 {
     public static class Helper
     {
-        // Pad zeros
+        /// <summary>
+        /// Pad zeros
+        /// </summary>
+        /// <returns></returns>
         private static byte[] PadZero()
         {
             var buffer = new byte[16];
@@ -44,7 +49,12 @@ namespace libfintx
             return buffer;
         }
 
-        // Combine byte arrays
+        /// <summary>
+        /// Combine byte arrays
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public static byte[] CombineByteArrays(byte[] first, byte[] second)
         {
             byte[] ret = new byte[first.Length + second.Length];
@@ -55,6 +65,11 @@ namespace libfintx
             return ret;
         }
 
+        /// <summary>
+        /// Encode to Base64
+        /// </summary>
+        /// <param name="toEncode"></param>
+        /// <returns></returns>
         static public string EncodeTo64(string toEncode)
         {
             byte[] toEncodeAsBytes = Encoding.ASCII.GetBytes(toEncode);
@@ -63,6 +78,11 @@ namespace libfintx
             return returnValue;
         }
 
+        /// <summary>
+        /// Decode from Base64
+        /// </summary>
+        /// <param name="encodedData"></param>
+        /// <returns></returns>
         static public string DecodeFrom64(string encodedData)
         {
             byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
@@ -71,6 +91,11 @@ namespace libfintx
             return returnValue;
         }
 
+        /// <summary>
+        /// Decode from Base64 default
+        /// </summary>
+        /// <param name="encodedData"></param>
+        /// <returns></returns>
         static public string DecodeFrom64EncodingDefault(string encodedData)
         {
             byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
@@ -79,11 +104,23 @@ namespace libfintx
             return returnValue;
         }
 
+        /// <summary>
+        /// Encrypt -> HNVSD
+        /// </summary>
+        /// <param name="Segments"></param>
+        /// <returns></returns>
         static public string Encrypt(string Segments)
         {
             return "HNVSD:999:1+@" + Segments.Length + "@" + Segments + "'";
         }
 
+        /// <summary>
+        /// Extract value from string
+        /// </summary>
+        /// <param name="StrSource"></param>
+        /// <param name="StrStart"></param>
+        /// <param name="StrEnd"></param>
+        /// <returns></returns>
         static public string Parse_String(string StrSource, string StrStart, string StrEnd)
         {
             int Start, End;
@@ -101,6 +138,14 @@ namespace libfintx
             }
         }
 
+        /// <summary>
+        /// Parsing segment -> UPD, BPD
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <param name="BLZ"></param>
+        /// <param name="HBCIVersion"></param>
+        /// <param name="Message"></param>
+        /// <returns></returns>
         public static bool Parse_Segment(string UserID, int BLZ, int HBCIVersion, string Message)
         {
             try
@@ -310,6 +355,11 @@ namespace libfintx
             }
         }
 
+        /// <summary>
+        /// Parsing bank message
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <returns></returns>
         public static bool Parse_Message(string Message)
         {
             try
@@ -344,6 +394,11 @@ namespace libfintx
             }
         }
 
+        /// <summary>
+        /// Parse balance
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <returns></returns>
         public static AccountBalance Parse_Balance(string Message)
         {
             var hirms = Message.Substring(Message.IndexOf("HIRMS") + 5);
@@ -418,6 +473,12 @@ namespace libfintx
             return balance;
         }
 
+        /// <summary>
+        /// Parse accounts and store informations
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="Items"></param>
+        /// <returns></returns>
         public static bool Parse_Accounts(string Message, List<AccountInformations> Items)
         {
             try
@@ -443,6 +504,10 @@ namespace libfintx
             catch { return false; }
         }
 
+        /// <summary>
+        /// Parse tan processes
+        /// </summary>
+        /// <returns></returns>
         public static bool Parse_TANProcesses()
         {
             try
@@ -540,7 +605,13 @@ namespace libfintx
             catch { return false; }
         }
 
-        /* Parse message and extract public bank keys -> Encryption, Signing */
+        /// <summary>
+        /// Parse message and extract public bank keys -> Encryption, Signing
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="BLZ"></param>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
         public static bool Parse_Segment_RDH_Key(string Message, int BLZ, string UserID)
         {
             var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -665,6 +736,156 @@ namespace libfintx
 
                 return false;
             }
+        }
+
+        static FlickerRenderer flickerCodeRenderer = null;
+
+        /// <summary>
+        /// Parse bank message and handle tan process
+        /// </summary>
+        /// <param name="BankCode"></param>
+        public static void Parse_BankCode(string BankCode, PictureBox pictureBox)
+        {
+            var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+            String[] values = BankCode_.Split('+');
+
+            string msg = string.Empty;
+
+            foreach (var item in values)
+            {
+                if (!item.StartsWith("HIRMS"))
+                    TransactionConsole.Output = item.Replace("::", ": ");
+            }
+
+            var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
+
+            string HITANFlicker = string.Empty;
+
+            // chip-TAN / Sm@rt-TAN
+            if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+            {
+                HITANFlicker = HITAN;
+            }
+
+            String[] values_ = HITAN.Split('+');
+
+            int i = 1;
+
+            foreach (var item in values_)
+            {
+                i = i + 1;
+
+                if (i == 6)
+                    TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
+            }
+
+            // chip-TAN
+            if (Segment.HIRMS.Equals("911"))
+            {
+                string FlickerCode = string.Empty;
+
+                FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                RUN_flickerCodeRenderer();
+
+                Action action = STOP_flickerCodeRenderer;
+                TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                Thread thread = new Thread(start);
+                thread.Start();
+            }
+
+            // Sm@rt-TAN
+            if (Segment.HIRMS.Equals("972"))
+            {
+                HITANFlicker = HITAN.Replace("?@", "??");
+
+                string FlickerCode = string.Empty;
+
+                String[] values__ = HITANFlicker.Split('@');
+
+                int ii = 1;
+
+                foreach (var item in values__)
+                {
+                    ii = ii + 1;
+
+                    if (ii == 4)
+                        FlickerCode = item;
+                }
+
+                FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
+
+                flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                RUN_flickerCodeRenderer();
+
+                Action action = STOP_flickerCodeRenderer;
+                TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                Thread thread = new Thread(start);
+                thread.Start();
+            }
+
+            // photo-TAN
+            if (Segment.HIRMS.Equals("982"))
+            {
+                var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
+
+                var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
+            }
+        }
+
+        /// <summary>
+        /// Parse bank error code
+        /// </summary>
+        /// <param name="BankCode"></param>
+        /// <returns></returns>
+        public static string Parse_BankCode_Error(string BankCode)
+        {
+            // Error
+            var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+            String[] values = BankCode_.Split('+');
+
+            string msg = string.Empty;
+
+            foreach (var item in values)
+            {
+                if (!item.StartsWith("HIRMS"))
+                    msg = msg + "??" + item.Replace("::", ": ");
+            }
+
+            return msg;
+        }
+
+        /// <summary>
+        /// RUN Flicker Code Rendering
+        /// </summary>
+        private static void RUN_flickerCodeRenderer()
+        {
+            flickerCodeRenderer.Start();
+        }
+
+        /// <summary>
+        /// STOP Flicker Code Rendering
+        /// </summary>
+        public static void RunAfterTimespan(Action action, TimeSpan span)
+        {
+            Thread.Sleep(span);
+            action();
+        }
+
+        private static void STOP_flickerCodeRenderer()
+        {
+            flickerCodeRenderer.Stop();
         }
     }
 }

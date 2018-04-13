@@ -6,6 +6,7 @@ using HBCI = libfintx.Main;
 
 using libfintx;
 using libfintx.Data;
+using System.Drawing;
 
 namespace test_Flicker
 {
