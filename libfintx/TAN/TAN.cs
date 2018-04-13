@@ -39,39 +39,38 @@ namespace libfintx
 
             if (String.IsNullOrEmpty(Segment.HITAB)) // TAN Medium Name not set
             {
-                // Version 2, Process 2
-                if (Segment.HITANS.Substring(0, 3).Equals("2+2"))
+                // Version 2
+                if (Segment.HITANS.Substring(0, 1).Equals("2"))
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
-                // Version 3, Process 2
-                if (Segment.HITANS.Substring(0, 3).Equals("3+2"))
+                // Version 3
+                if (Segment.HITANS.Substring(0, 1).Equals("3"))
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
-                // Version 4, Process 2
-                if (Segment.HITANS.Substring(0, 3).Equals("4+2"))
+                // Version 4
+                if (Segment.HITANS.Substring(0, 1).Equals("4"))
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
-                // Version 5, Process 2
-                if (Segment.HITANS.Substring(0, 3).Equals("5+2"))
+                // Version 5
+                if (Segment.HITANS.Substring(0, 1).Equals("5"))
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
-                else
+                else // default
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
             }
             else
             {
-                // Version 2, Process 2
-                if (Segment.HITANS.Substring(0, 3).Equals("2+2"))
+                // Version 2
+                if (Segment.HITANS.Substring(0, 1).Equals("2"))
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
-                // Version 3, Process 2
-                if (Segment.HITANS.Substring(0, 3).Equals("3+2"))
+                // Version 3
+                if (Segment.HITANS.Substring(0, 1).Equals("3"))
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
-                // Version 4, Process 2
-                if (Segment.HITANS.Substring(0, 3).Equals("4+2"))
+                // Version 4
+                if (Segment.HITANS.Substring(0, 1).Equals("4"))
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
-                // Version 5, Process 2
-                if (Segment.HITANS.Substring(0, 3).Equals("5+2"))
+                // Version 5
+                if (Segment.HITANS.Substring(0, 1).Equals("5"))
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
-                else
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
+                else // default
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
             }
-            
 
             SEG.NUM = SEGNUM.SETInt(3);
 

@@ -41,11 +41,11 @@ namespace libfintx
         /// <param name="PIN"></param>
         /// <param name="SystemID"></param>
         /// <param name="Segments"></param>
-        /// <param name="TAN"></param>
+        /// <param name="HIRMS_TAN"></param>
         /// <param name="SegmentNum"></param>
         /// <returns></returns>
         public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN, 
-            string SystemID, string Segments, string TAN, int SegmentNum)
+            string SystemID, string Segments, string HIRMS_TAN, int SegmentNum)
         {
             if (String.IsNullOrEmpty(MsgNum))
                 MsgNum = "1";
@@ -70,12 +70,12 @@ namespace libfintx
 
             string TAN_ = string.Empty;
 
-            if (TAN != null)
+            if (HIRMS_TAN != null)
             {
-                if (TAN.Length > 3)
+                if (HIRMS_TAN.Length > 3)
                 {
-                    TAN_ = TAN.Substring(3, 7);
-                    TAN = TAN.Substring(0, 3);
+                    TAN_ = HIRMS_TAN.Substring(3, 7);
+                    HIRMS_TAN = HIRMS_TAN.Substring(0, 3);
                 }
             }
 
@@ -87,7 +87,7 @@ namespace libfintx
 
                 sigHead = string.Empty;
 
-                if (TAN == null)
+                if (HIRMS_TAN == null)
                 {
                     sigHead = "HNSHK:2:3+" + "900" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
@@ -96,9 +96,9 @@ namespace libfintx
 
                 else
                 {
-                    sigHead = "HNSHK:2:3+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:3+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
-                    Log.Write(sigHead.Replace(UserID, "XXXXXX").Replace(TAN, "XXXXXX"));
+                    Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
 
                 if (String.IsNullOrEmpty(TAN_))
@@ -121,7 +121,7 @@ namespace libfintx
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
-                if (TAN == null)
+                if (HIRMS_TAN == null)
                 {
                     sigHead = "HNSHK:2:4+PIN:2+" + "999" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
@@ -129,9 +129,9 @@ namespace libfintx
                 }
                 else
                 {
-                    sigHead = "HNSHK:2:4+PIN:2+" + TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:4+PIN:2+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
-                    Log.Write(sigHead.Replace(UserID, "XXXXXX").Replace(TAN, "XXXXXX"));
+                    Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
 
                 if (String.IsNullOrEmpty(TAN_))
@@ -159,10 +159,10 @@ namespace libfintx
 
             var payload = Helper.Encrypt(Segments);
 
-            if (TAN == null)
+            if (HIRMS_TAN == null)
                 Log.Write(payload.Replace(UserID, "XXXXXX").Replace(PIN, "XXXXXX"));
-            else
-                Log.Write(payload.Replace(UserID, "XXXXXX").Replace(PIN, "XXXXXX").Replace(TAN, "XXXXXX"));
+            else if (!String.IsNullOrEmpty(TAN_))
+                Log.Write(payload.Replace(UserID, "XXXXXX").Replace(PIN, "XXXXXX").Replace(TAN_, "XXXXXX"));
 
             var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length * 2 + DialogID.Length + payload.Length + encHead.Length;
 
