@@ -69,6 +69,7 @@
     <Compile Include="Message\RDHMessage.cs" />
     <Compile Include="Message\RDHMessageAnonymous.cs" />
     <Compile Include="MT940\MT940.cs" />
+    <Compile Include="Pain\pain00100103.cs" />
     <Compile Include="Pain\pain00100203.cs" />
     <Compile Include="Pain\pain00800202.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

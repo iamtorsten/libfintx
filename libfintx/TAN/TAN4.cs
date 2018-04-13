@@ -37,13 +37,13 @@ namespace libfintx
             string segments = string.Empty;
 
             // Version 3, Process 4
-            if (Segment.HITANS.Substring(0, 1).Equals("3+4"))
+            if (Segment.HITANS.Substring(0, 3).Equals("3+4"))
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
             // Version 4, Process 4
-            if (Segment.HITANS.Substring(0, 1).Equals("4+4"))
+            if (Segment.HITANS.Substring(0, 3).Equals("4+4"))
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
             // Version 5, Process 4
-            if (Segment.HITANS.Substring(0, 1).Equals("5+4"))
+            if (Segment.HITANS.Substring(0, 3).Equals("5+4"))
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
 
             SEG.NUM = SEGNUM.SETInt(3);

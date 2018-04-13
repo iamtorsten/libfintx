@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 using HBCI = libfintx.Main;
 
 using libfintx;
 using libfintx.Data;
+using System.Windows.Forms;
 
-namespace test_Flicker
+namespace test_pushTAN
 {
     class Program
     {
@@ -49,13 +48,10 @@ namespace test_Flicker
 
             if (HBCI.Synchronization(connectionDetails, anonymous))
             {
-                Task oFlicker = new Task(() => openFlickerWindow());
-                oFlicker.Start();
+                Segment.HIRMS = "921"; // -> pushTAN
 
-                Task oTAN = new Task(() => openTANWindow());
-                oTAN.Start();
-
-                Segment.HIRMS = "911"; // -> chip-TAN
+                var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
+                Segment.HITAB = tanmediumname;
 
                 System.Threading.Thread.Sleep(5000);
 
@@ -69,18 +65,6 @@ namespace test_Flicker
                 TimeSpan.FromSeconds(10));
 
             Console.ReadLine();
-        }
-
-        static bool openFlickerWindow()
-        {
-            Application.Run(new Flicker());
-            return true;
-        }
-
-        static bool openTANWindow()
-        {
-            Application.Run(new TAN());
-            return true;
         }
 
         static void Output()

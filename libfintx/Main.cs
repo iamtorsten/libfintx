@@ -244,7 +244,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" +Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -276,6 +298,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
@@ -308,8 +331,6 @@ namespace libfintx
             else
                 return "Error";
         }
-
-
 
         /// <summary>
         /// Transfer money at a certain time
@@ -375,7 +396,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -407,6 +450,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
@@ -500,7 +544,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -532,6 +598,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
@@ -627,7 +694,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -659,6 +748,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
@@ -754,7 +844,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -786,6 +898,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
@@ -886,7 +999,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -918,6 +1053,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
@@ -1013,7 +1149,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -1045,6 +1203,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
@@ -1138,7 +1297,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -1170,6 +1351,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
@@ -1273,7 +1455,29 @@ namespace libfintx
                             TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
                     }
 
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+                    // chip-TAN
+                    if (Segment.HIRMS.Equals("911"))
+                    {
+                        string FlickerCode = string.Empty;
+
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
+
+                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+
+                        RUN_flickerCodeRenderer();
+
+                        Action action = STOP_flickerCodeRenderer;
+                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                        Thread thread = new Thread(start);
+                        thread.Start();
+                    }
+
+                    // Sm@rt-TAN
+                    if (Segment.HIRMS.Equals("972"))
                     {
                         HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -1305,6 +1509,7 @@ namespace libfintx
                         thread.Start();
                     }
 
+                    // photo-TAN
                     if (Segment.HIRMS.Equals("982"))
                     {
                         var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
