@@ -261,7 +261,7 @@ namespace libfintx
                 if (BankCode.Contains("+0030::"))
                 {
                     // Gif image instead of picture box
-                    Helper.Parse_BankCode(BankCode, pictureBox, flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
                     
                     return "OK";
                 }

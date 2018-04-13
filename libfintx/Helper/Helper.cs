@@ -853,9 +853,11 @@ namespace libfintx
         /// <param name="flickerWidth"></param>
         /// <param name="flickerHeight"></param>
         /// <param name="renderFlickerCodeAsGif"></param>
-        public static void Parse_BankCode(string BankCode, PictureBox pictureBox, Image flickerImage, int flickerWidth,
+        public static void Parse_BankCode(string BankCode, PictureBox pictureBox, out Image flickerImage, int flickerWidth,
             int flickerHeight, bool renderFlickerCodeAsGif)
         {
+            flickerImage = null;
+
             var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
 
             String[] values = BankCode_.Split('+');
