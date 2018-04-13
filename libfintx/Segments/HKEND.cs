@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2017 Torsten Klinger
+ *  Copyright (c) 2016 - 2018 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,20 +21,28 @@
  * 	
  */
 
-using System;
+using libfintx.Data;
 
 namespace libfintx
 {
-    class MSG
+    public static class HKEND
     {
         /// <summary>
-        /// Message number
+        /// End of dialog
         /// </summary>
-        /// <param name="NUM"></param>
-        /// <returns></returns>
-        public static string SETVal(int NUM)
+        /// <param name="connectionDetails"></param>
+        /// <param name="dialogID"></param>
+        public static string Init_HKEND(ConnectionDetails connectionDetails, string dialogID)
         {
-            return Convert.ToString(NUM);
+            Log.Write("Starting job HKEND: End of dialog");
+
+            string segments = string.Empty;
+
+            segments = "HKEND:" + SEGNUM.SETVal(3) + "1+" + dialogID + "'";
+
+            SEG.NUM = SEGNUM.SETInt(3);
+
+            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }
     }
 }

@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2017 Torsten Klinger
+ *  Copyright (c) 2016 - 2018 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,20 +21,28 @@
  * 	
  */
 
-using System;
+using libfintx.Data;
 
 namespace libfintx
 {
-    class MSG
+    public static class HKSPA
     {
         /// <summary>
-        /// Message number
+        /// Request SEPA account connection
         /// </summary>
-        /// <param name="NUM"></param>
+        /// <param name="connectionDetails"></param>
         /// <returns></returns>
-        public static string SETVal(int NUM)
+        public static string Init_HKSPA(ConnectionDetails connectionDetails)
         {
-            return Convert.ToString(NUM);
+            Log.Write("Starting job HKSPA: Request SEPA account connection");
+
+            string segments = string.Empty;
+
+            segments = "HKEND:" + SEGNUM.SETVal(3) + "1'";
+
+            SEG.NUM = SEGNUM.SETInt(3);
+
+            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
         }
     }
 }

@@ -24,6 +24,9 @@
 
 namespace libfintx
 {
+    /// <summary>
+    /// Exception class
+    /// </summary>
     class HBCI_Exception
     {
         public static string CRYPTEDLENGTH() { return "Session key length is not equal to the length of Public bank encryption key length."; }

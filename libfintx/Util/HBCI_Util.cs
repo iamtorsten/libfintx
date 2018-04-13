@@ -25,7 +25,12 @@ namespace libfintx
 {
     class HBCI_Util
     {
-        // Key size
+        /// <summary>
+        /// Evaluate key size
+        /// </summary>
+        /// <param name="EncKeyLength"></param>
+        /// <param name="EncSessionKeyLength"></param>
+        /// <returns></returns>
         public static bool checkForCryptSize(int EncKeyLength, int EncSessionKeyLength)
         {
             if (EncKeyLength == EncSessionKeyLength)

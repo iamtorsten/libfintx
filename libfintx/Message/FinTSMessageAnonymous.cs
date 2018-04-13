@@ -27,6 +27,20 @@ namespace libfintx
 {
     public static class FinTSMessageAnonymous
     {
+        /// <summary>
+        /// Create anonymous FinTS message
+        /// </summary>
+        /// <param name="Version"></param>
+        /// <param name="MsgNum"></param>
+        /// <param name="DialogID"></param>
+        /// <param name="BLZ"></param>
+        /// <param name="UserID"></param>
+        /// <param name="PIN"></param>
+        /// <param name="SystemID"></param>
+        /// <param name="Segments"></param>
+        /// <param name="TAN"></param>
+        /// <param name="SegmentNum"></param>
+        /// <returns></returns>
         public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN, 
             string SystemID, string Segments, string TAN, int SegmentNum)
         {

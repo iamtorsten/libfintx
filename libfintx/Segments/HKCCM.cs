@@ -23,34 +23,28 @@
 
 using libfintx.Data;
 using System;
+using System.Collections.Generic;
 
 namespace libfintx
 {
-    public static class HKPPD
+    public static class HKCCM
     {
         /// <summary>
-        /// Load prepaid
+        /// Collective transfer
         /// </summary>
-        public static string Init_HKPPD(ConnectionDetails connectionDetails, int MobileServiceProvider, string PhoneNumber, int Amount)
+        public static string Init_HKCCM(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount)
         {
-            Log.Write("Starting job HKPPD: Load prepaid");
+            Log.Write("Starting job HKCCM: Collective transfer money");
 
-            string segments = "HKPPD:" + SEGNUM.SETVal(3) + ":2+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
+            var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
-            if (String.IsNullOrEmpty(Segment.HITAB)) // TAN Medium Name not set
-                segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "'";
-            else // TAN Medium Name set
-            {
-                // Version 3, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("3+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "++++++++" + Segment.HITAB + "'";
-                // Version 4, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("4+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++" + Segment.HITAB + "'";
-                // Version 5, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("5+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++++" + Segment.HITAB + "'";
-            }
+            string segments = "HKCCM:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+
+            var message = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, PainData, NumberofTransactions, TotalAmount, new DateTime(1999,1,1));
+
+            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
+
+            segments = HKTAN.Init_HKTAN(segments);
 
             SEG.NUM = SEGNUM.SETInt(4);
 

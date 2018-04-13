@@ -31,6 +31,18 @@ namespace libfintx
 {
     public static class RDHMessage
     {
+        /// <summary>
+        /// Create RDH message
+        /// </summary>
+        /// <param name="Version"></param>
+        /// <param name="MsgNum"></param>
+        /// <param name="DialogID"></param>
+        /// <param name="BLZ"></param>
+        /// <param name="UserID"></param>
+        /// <param name="SystemID"></param>
+        /// <param name="Segments"></param>
+        /// <param name="SegmentNum"></param>
+        /// <returns></returns>
         public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID,
             string SystemID, string Segments, int SegmentNum)
         {
@@ -111,6 +123,13 @@ namespace libfintx
             return msgHead + encHead + payload + msgEnd;
         }
 
+        /// <summary>
+        /// Send RDH message
+        /// </summary>
+        /// <param name="Url"></param>
+        /// <param name="Port"></param>
+        /// <param name="Message"></param>
+        /// <returns></returns>
         public static string Send(string Url, int Port, string Message)
         {
             Log.Write("Connect to HBCI Server");

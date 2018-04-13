@@ -35,6 +35,9 @@ using System.Threading;
 
 namespace libfintx
 {
+    /// <summary>
+    /// MT940 account statement
+    /// </summary>
     public static class MT940
     {
         public static List<SWIFTStatement> SWIFTStatements;

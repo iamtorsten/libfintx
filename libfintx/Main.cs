@@ -26,15 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace libfintx
 {
     public class Main
     {
-        static FlickerRenderer flickerCodeRenderer = null;
-
         /// <summary>
         /// Synchronize bank connection
         /// </summary>
@@ -263,128 +260,15 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-                        if (!renderFlickerCodeAsGif)
-                        {                            
-                            RUN_flickerCodeRenderer();
-
-                            Action action = STOP_flickerCodeRenderer;
-                            TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                            ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                            Thread thread = new Thread(start);
-                            thread.Start();
-                        }
-                        else
-                        {
-                            flickerImage = flickerCodeRenderer.RenderAsGif(flickerWidth, flickerHeight);
-                        }
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-                        if (!renderFlickerCodeAsGif) {                             
-                            RUN_flickerCodeRenderer();
-
-                            Action action = STOP_flickerCodeRenderer;
-                            TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                            ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                            Thread thread = new Thread(start);
-                            thread.Start();
-                        }
-                        else
-                        {
-                            flickerImage = flickerCodeRenderer.RenderAsGif(flickerWidth, flickerHeight);
-                        }
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
-
+                    // Gif image instead of picture box
+                    Helper.Parse_BankCode(BankCode, pictureBox, flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+                    
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
-
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
+                    
                     Log.Write(msg);
 
                     return msg;
@@ -424,118 +308,13 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
+                    Helper.Parse_BankCode(BankCode, pictureBox);
 
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
 
                     Log.Write(msg);
 
@@ -572,118 +351,13 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
+                    Helper.Parse_BankCode(BankCode, pictureBox);
 
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
 
                     Log.Write(msg);
 
@@ -722,118 +396,13 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
+                    Helper.Parse_BankCode(BankCode, pictureBox);
 
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
 
                     Log.Write(msg);
 
@@ -872,118 +441,13 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
+                    Helper.Parse_BankCode(BankCode, pictureBox);
 
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
 
                     Log.Write(msg);
 
@@ -1027,118 +491,13 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
+                    Helper.Parse_BankCode(BankCode, pictureBox);
 
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
 
                     Log.Write(msg);
 
@@ -1177,118 +536,13 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
+                    Helper.Parse_BankCode(BankCode, pictureBox);
 
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
 
                     Log.Write(msg);
 
@@ -1325,118 +579,13 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
+                    Helper.Parse_BankCode(BankCode, pictureBox);
 
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
 
                     Log.Write(msg);
 
@@ -1483,118 +632,13 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            TransactionConsole.Output = item.Replace("::", ": ");
-                    }
-
-                    var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-                    string HITANFlicker = string.Empty;
-
-                    // chip-TAN / Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN;
-                    }
-
-                    String[] values_ = HITAN.Split('+');
-
-                    int i = 1;
-
-                    foreach (var item in values_)
-                    {
-                        i = i + 1;
-
-                        if (i == 6)
-                            TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-                    }
-
-                    // chip-TAN
-                    if (Segment.HIRMS.Equals("911"))
-                    {
-                        string FlickerCode = string.Empty;
-
-                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // Sm@rt-TAN
-                    if (Segment.HIRMS.Equals("972"))
-                    {
-                        HITANFlicker = HITAN.Replace("?@", "??");
-
-                        string FlickerCode = string.Empty;
-
-                        String[] values__ = HITANFlicker.Split('@');
-
-                        int ii = 1;
-
-                        foreach (var item in values__)
-                        {
-                            ii = ii + 1;
-
-                            if (ii == 4)
-                                FlickerCode = item;
-                        }
-
-                        FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
-                        flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
-
-                        RUN_flickerCodeRenderer();
-
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
-                    }
-
-                    // photo-TAN
-                    if (Segment.HIRMS.Equals("982"))
-                    {
-                        var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
-
-                        var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-                    }
+                    Helper.Parse_BankCode(BankCode, pictureBox);
 
                     return "OK";
                 }
                 else
                 {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
 
                     Log.Write(msg);
 
@@ -1869,28 +913,6 @@ namespace libfintx
         public static void Tracing(bool Enabled)
         {
             Trace.Enabled = Enabled;
-        }
-
-        /// <summary>
-        /// RUN Flicker Code Rendering
-        /// </summary>
-        private static void RUN_flickerCodeRenderer()
-        {
-            flickerCodeRenderer.Start();
-        }
-
-        /// <summary>
-        /// STOP Flicker Code Rendering
-        /// </summary>
-        public static void RunAfterTimespan(Action action, TimeSpan span)
-        {
-            Thread.Sleep(span);
-            action();
-        }
-
-        private static void STOP_flickerCodeRenderer()
-        {
-            flickerCodeRenderer.Stop();
         }
 
         /// <summary>

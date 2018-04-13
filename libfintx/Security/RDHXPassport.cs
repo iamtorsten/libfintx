@@ -37,6 +37,12 @@ namespace libfintx
 
 #region TripleDES
 
+        /// <summary>
+        /// Encrypt RDH-10 key
+        /// </summary>
+        /// <param name="clearText"></param>
+        /// <param name="passPhrase"></param>
+        /// <returns></returns>
         public static string Encrypt_PBEWithMD5AndDES(string clearText, string passPhrase)
         {
             if (string.IsNullOrEmpty(clearText))
@@ -56,6 +62,12 @@ namespace libfintx
             return Convert.ToBase64String(cipherBytes);
         }
 
+        /// <summary>
+        /// Decrypt RDH-10 key
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <param name="passPhrase"></param>
+        /// <returns></returns>
         public static string Decrypt_PBEWithMD5AndDES(string cipherText, string passPhrase)
         {
             if (string.IsNullOrEmpty(cipherText))
@@ -80,6 +92,12 @@ namespace libfintx
 
         #region RSA
 
+        /// <summary>
+        /// Encrypt_RSA_PBEWithMD5AndDES
+        /// </summary>
+        /// <param name="clearText"></param>
+        /// <param name="passPhrase"></param>
+        /// <returns></returns>
         public static string Encrypt_RSA_PBEWithMD5AndDES(string clearText, string passPhrase)
         {
             if (string.IsNullOrEmpty(clearText))
@@ -97,6 +115,12 @@ namespace libfintx
             return Convert.ToBase64String(cipherBytes);
         }
 
+        /// <summary>
+        /// Decrypt_RSA_PBEWithMD5AndDES
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <param name="passPhrase"></param>
+        /// <returns></returns>
         public static string Decrypt_RSA_PBEWithMD5AndDES(string cipherText, string passPhrase)
         {
             if (string.IsNullOrEmpty(cipherText))

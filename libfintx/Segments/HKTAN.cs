@@ -21,29 +21,19 @@
  * 	
  */
 
-using libfintx.Data;
 using System;
-using System.Collections.Generic;
 
 namespace libfintx
 {
-    public static class HKCCM
+    public static class HKTAN
     {
         /// <summary>
-        /// Collective transfer
+        /// Set tan process
         /// </summary>
-        public static string Init_HKCCM(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount)
+        /// <param name="segments"></param>
+        /// <returns></returns>
+        public static string Init_HKTAN(string segments)
         {
-            Log.Write("Starting job HKCCM: Collective transfer money");
-
-            var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
-
-            string segments = "HKCCM:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
-
-            var message = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, PainData, NumberofTransactions, TotalAmount, new DateTime(1999,1,1));
-
-            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
-
             if (String.IsNullOrEmpty(Segment.HITAB)) // TAN Medium Name not set
                 segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "'";
             else // TAN Medium Name set
@@ -59,15 +49,7 @@ namespace libfintx
                     segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++++" + Segment.HITAB + "'";
             }
 
-            SEG.NUM = SEGNUM.SETInt(4);
-
-            var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
-
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
-
-            Helper.Parse_Message(TAN);
-
-            return TAN;
+            return segments;
         }
     }
 }

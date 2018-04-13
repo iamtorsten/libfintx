@@ -23,38 +23,28 @@
 
 using libfintx.Data;
 using System;
+using System.Collections.Generic;
 
 namespace libfintx
 {
-    public static class HKCCS
+    public static class HKDME
     {
         /// <summary>
-        /// Transfer
+        /// Collective collect
         /// </summary>
-        public static string Init_HKCCS(ConnectionDetails connectionDetails, string ReceiverName, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage)
+        public static string Init_HKDME(ConnectionDetails connectionDetails, DateTime SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount)
         {
-            Log.Write("Starting job HKCCS: Transfer money");
+            Log.Write("Starting job HKDME: Collective collect money");
 
-            string segments = "HKCCS:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+            var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
-            var message = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999,1,1));
+            string segments = "HKDME:" + SEGNUM.SETVal(3) + ":2+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+" + TotalAmount_ + ":EUR++" + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
+
+            var message = pain00800202.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, SettlementDate, PainData, NumberofTransactions, TotalAmount);
 
             segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
 
-            if (String.IsNullOrEmpty(Segment.HITAB)) // TAN Medium Name not set
-                segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "'";
-            else // TAN Medium Name set
-            {
-                // Version 3, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("3+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "++++++++" + Segment.HITAB + "'";
-                // Version 4, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("4+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++" + Segment.HITAB + "'";
-                // Version 5, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("5+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++++" + Segment.HITAB + "'";
-            }
+            segments = HKTAN.Init_HKTAN(segments);
 
             SEG.NUM = SEGNUM.SETInt(4);
 
