@@ -33,6 +33,10 @@ namespace libfintx
         public Image CodeImage { get; set; }
         public string ImageMimeType { get; set; }
 
+        /// <summary>
+        /// photoTAN matrix code
+        /// </summary>
+        /// <param name="photoTanString"></param>
         public MatrixCode(string photoTanString)
         {
             try
@@ -69,6 +73,11 @@ namespace libfintx
             
         }
 
+        /// <summary>
+        /// Internal decode picture format
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
         private string Decode(byte[] bytes)
         {
             StringBuilder sb = new StringBuilder();

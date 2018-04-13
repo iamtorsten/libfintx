@@ -42,6 +42,12 @@ namespace libfintx
 
         static byte[] sessionKey;
 
+        /// <summary>
+        /// Encrypt RDH-10 message
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="encSessionKey"></param>
+        /// <param name="encMsg"></param>
         public static void Encrypt(string Message, out byte[] encSessionKey, out byte[] encMsg)
         {
             if (DEBUG.Enabled)
@@ -68,6 +74,11 @@ namespace libfintx
             return k;
         }
 
+        /// <summary>
+        /// Encrpyt DES3 key
+        /// </summary>
+        /// <param name="Key"></param>
+        /// <returns></returns>
         static byte[] encryptKey(byte[] Key)
         {
             sessionKey = InitDES3Key();
@@ -119,6 +130,11 @@ namespace libfintx
             return result;
         }
 
+        /// <summary>
+        /// Encrypt message
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         static byte[] encryptMessage(string msg)
         {
             byte[] plainmsg = Encoding.GetEncoding("iso8859-1").GetBytes(msg);
@@ -140,6 +156,12 @@ namespace libfintx
             return output;
         }
 
+        /// <summary>
+        /// Decrypt message and key (RDH-10)
+        /// </summary>
+        /// <param name="cryptKey"></param>
+        /// <param name="cryptMessage"></param>
+        /// <returns></returns>
         public static string DecryptMessageandKey(byte[] cryptKey, byte[] cryptMessage)
         {
             // Decrypt session key

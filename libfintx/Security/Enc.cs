@@ -25,6 +25,9 @@ using System;
 
 namespace libfintx
 {
+    /// <summary>
+    /// Encryption algs
+    /// </summary>
     public static class Enc
     {
         public static String SECFUNC_ENC_3DES = "4";

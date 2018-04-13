@@ -28,6 +28,19 @@ namespace libfintx
 {
     public static class pain00100203
     {
+        /// <summary>
+        /// Create pain version 00100203
+        /// </summary>
+        /// <param name="Accountholder"></param>
+        /// <param name="AccountholderIBAN"></param>
+        /// <param name="AccountholderBIC"></param>
+        /// <param name="Receiver"></param>
+        /// <param name="ReceiverIBAN"></param>
+        /// <param name="ReceiverBIC"></param>
+        /// <param name="Amount"></param>
+        /// <param name="Usage"></param>
+        /// <param name="ExecutionDay"></param>
+        /// <returns></returns>
         public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
         {
             var RndNr = Guid.NewGuid().ToString();
@@ -113,6 +126,18 @@ namespace libfintx
             return Message;
         }
 
+        /// <summary>
+        /// Create pain version 00100203
+        /// Collective -> approximately 1.000 payments in the order are possible -> This depends on the bank
+        /// </summary>
+        /// <param name="Accountholder"></param>
+        /// <param name="AccountholderIBAN"></param>
+        /// <param name="AccountholderBIC"></param>
+        /// <param name="PainData"></param>
+        /// <param name="NumberofTransactions"></param>
+        /// <param name="TotalAmount"></param>
+        /// <param name="ExecutionDay"></param>
+        /// <returns></returns>
         public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
         {
             var RndNr = Guid.NewGuid().ToString();

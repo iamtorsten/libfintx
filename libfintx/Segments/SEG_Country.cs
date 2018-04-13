@@ -25,6 +25,6 @@ namespace libfintx
 {
     public class SEG_Country
     {
-        public static string Germany = "280";
+        public static string Germany = "280"; // -> hard coded to germany
     }
 }

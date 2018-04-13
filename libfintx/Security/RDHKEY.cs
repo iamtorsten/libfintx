@@ -39,6 +39,16 @@ namespace libfintx
         public static string RDHKEYFILE { get; set; }
         public static string RDHKEYFILEPWD { get; set; }
 
+        /// <summary>
+        /// Create RDH-10 key
+        /// </summary>
+        /// <param name="FilePath"></param>
+        /// <param name="Password"></param>
+        /// <param name="BLZ"></param>
+        /// <param name="UserID"></param>
+        /// <param name="Country"></param>
+        /// <param name="ProfileVersion"></param>
+        /// <returns></returns>
         public static bool Create (string FilePath, string Password, int BLZ, string UserID, int Country, int ProfileVersion)
         {
             Log.Write("Creating RDH-10 key file");

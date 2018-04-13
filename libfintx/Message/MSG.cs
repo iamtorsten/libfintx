@@ -27,6 +27,11 @@ namespace libfintx
 {
     class MSG
     {
+        /// <summary>
+        /// Message number
+        /// </summary>
+        /// <param name="NUM"></param>
+        /// <returns></returns>
         public static string SETVal(int NUM)
         {
             return Convert.ToString(NUM);

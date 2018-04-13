@@ -28,6 +28,22 @@ namespace libfintx
 {
     public static class pain00800202
     {
+        /// <summary>
+        /// Create pain version 00800202
+        /// </summary>
+        /// <param name="Accountholder"></param>
+        /// <param name="AccountholderIBAN"></param>
+        /// <param name="AccountholderBIC"></param>
+        /// <param name="Payer"></param>
+        /// <param name="PayerIBAN"></param>
+        /// <param name="PayerBIC"></param>
+        /// <param name="Amount"></param>
+        /// <param name="Usage"></param>
+        /// <param name="SettlementDate"></param>
+        /// <param name="MandateNumber"></param>
+        /// <param name="MandateDate"></param>
+        /// <param name="CeditorIDNumber"></param>
+        /// <returns></returns>
         public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, DateTime SettlementDate, string MandateNumber, DateTime MandateDate, string CeditorIDNumber)
         {
             var RndNr = Guid.NewGuid().ToString();
@@ -133,6 +149,18 @@ namespace libfintx
             return Message;
         }
 
+        /// <summary>
+        /// Create pain version 00800202
+        /// Collective -> approximately 1.000 payments in the order are possible -> This depends on the bank
+        /// </summary>
+        /// <param name="Accountholder"></param>
+        /// <param name="AccountholderIBAN"></param>
+        /// <param name="AccountholderBIC"></param>
+        /// <param name="SettlementDate"></param>
+        /// <param name="PainData"></param>
+        /// <param name="NumberofTransactions"></param>
+        /// <param name="TotalAmount"></param>
+        /// <returns></returns>
         public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, DateTime SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount)
         {
             var RndNr = Guid.NewGuid().ToString();

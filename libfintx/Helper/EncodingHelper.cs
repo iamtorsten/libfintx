@@ -25,6 +25,11 @@ namespace libfintx
 {
     public class EncodingHelper
     {
+        /// <summary>
+        /// Convert string to UTF-8
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <returns></returns>
         public static string ConvertToUTF8(string Message)
         {
             return Message.Replace("?b", "üb")

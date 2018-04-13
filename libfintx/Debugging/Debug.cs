@@ -29,6 +29,10 @@ namespace libfintx
     {
         public static bool Enabled { get; set; }
 
+        /// <summary>
+        /// Debug
+        /// </summary>
+        /// <param name="Message"></param>
         public static void Write(string Message)
         {
             if (Enabled)

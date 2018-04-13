@@ -27,6 +27,11 @@ namespace libfintx
 {
     public static class Converter
     {
+        /// <summary>
+        /// Convert string from hex
+        /// </summary>
+        /// <param name="hexString"></param>
+        /// <returns></returns>
         public static string FromHexString(string hexString)
         {
             string hexValues = hexString;
