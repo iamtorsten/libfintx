@@ -24,6 +24,7 @@
 using libfintx.Data;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -182,7 +183,7 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Transfer money
+        /// Transfer money - render FlickerCode in WinForms
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="receiverName">Name of the recipient</param>
@@ -190,7 +191,7 @@ namespace libfintx
         /// <param name="receiverBIC">BIC of the recipient</param>
         /// <param name="amount">Amount to transfer</param>
         /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
         /// <returns>
@@ -199,6 +200,58 @@ namespace libfintx
         public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous)
         {
+            Image img = null;
+            return Transfer(connectionDetails, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, HIRMS, pictureBox, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Transfer money - render FlickerCode as Gif
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>        
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return Transfer(connectionDetails, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, HIRMS, null, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        /// <summary>
+        /// Transfer money - General method
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+        {
+            flickerImage = null;
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -249,20 +302,25 @@ namespace libfintx
                     {
                         string FlickerCode = string.Empty;
 
-                        FlickerCode = "CHLGUC" +Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+                        FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode);
-
                         flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        if (!renderFlickerCodeAsGif)
+                        {                            
+                            RUN_flickerCodeRenderer();
 
-                        RUN_flickerCodeRenderer();
+                            Action action = STOP_flickerCodeRenderer;
+                            TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
+                            ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                            Thread thread = new Thread(start);
+                            thread.Start();
+                        }
+                        else
+                        {
+                            flickerImage = flickerCodeRenderer.RenderAsGif(flickerWidth, flickerHeight);
+                        }
                     }
 
                     // Sm@rt-TAN
@@ -285,17 +343,21 @@ namespace libfintx
                         }
 
                         FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-
                         flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                        if (!renderFlickerCodeAsGif) {                             
+                            RUN_flickerCodeRenderer();
 
-                        RUN_flickerCodeRenderer();
+                            Action action = STOP_flickerCodeRenderer;
+                            TimeSpan span = new TimeSpan(0, 0, 0, 50);
 
-                        Action action = STOP_flickerCodeRenderer;
-                        TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                        ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                        Thread thread = new Thread(start);
-                        thread.Start();
+                            ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                            Thread thread = new Thread(start);
+                            thread.Start();
+                        }
+                        else
+                        {
+                            flickerImage = flickerCodeRenderer.RenderAsGif(flickerWidth, flickerHeight);
+                        }
                     }
 
                     // photo-TAN
