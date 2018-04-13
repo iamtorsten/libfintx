@@ -47,6 +47,8 @@ namespace test_Flicker
 
             HBCI.Tracing(true);
 
+            //Transfer with chipTan based on WindowsForms rendering
+            /*
             if (HBCI.Synchronization(connectionDetails, anonymous))
             {
                 Task oFlicker = new Task(() => openFlickerWindow());
@@ -69,6 +71,32 @@ namespace test_Flicker
                 TimeSpan.FromSeconds(10));
 
             Console.ReadLine();
+            */
+
+            //Transfer with chipTan based on GIF-rendering            
+            if (HBCI.Synchronization(connectionDetails, anonymous))
+            {   
+                Segment.HIRMS = "911"; // -> chip-TAN               
+
+                Image flickerImage = null;
+                Console.WriteLine(EncodingHelper.ConvertToUTF8(HBCI.Transfer(connectionDetails, receiver, receiverIBAN, receiverBIC, amount, usage, Segment.HIRMS, anonymous, out flickerImage, 220, 160)));
+
+                Form frm = new Form();
+                frm.Size = new Size(flickerImage.Width + 5, flickerImage.Height + 5);
+                PictureBox pb = new PictureBox();
+                pb.Dock = DockStyle.Fill;
+                frm.Controls.Add(pb);
+                pb.Image = flickerImage;                
+                Application.Run(frm);
+            }
+
+            var timer = new System.Threading.Timer(
+                e => Output(),
+                null,
+                TimeSpan.Zero,
+                TimeSpan.FromSeconds(10));
+
+            Console.ReadLine();            
         }
 
         static bool openFlickerWindow()
