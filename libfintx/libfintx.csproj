@@ -107,6 +107,7 @@
     <Compile Include="Transactions\HKCUM.cs" />
     <Compile Include="Transactions\HKDME.cs" />
     <Compile Include="Transactions\HKDSE.cs" />
+    <Compile Include="Transactions\HKEND.cs" />
     <Compile Include="Transactions\HKKAZ.cs" />
     <Compile Include="Transactions\HKPPD.cs" />
     <Compile Include="Transactions\HKSAL.cs" />
