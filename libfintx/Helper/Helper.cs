@@ -235,22 +235,24 @@ namespace libfintx
                                     if (Convert.ToString(i).StartsWith("9"))
                                     {
                                         if (String.IsNullOrEmpty(TAN))
-                                        {
                                             TAN = i.ToString();
-                                        }
+
+                                        if (String.IsNullOrEmpty(TANf))
+                                            TANf = i.ToString();
                                         else
-                                        {
-                                            if (String.IsNullOrEmpty(TANf))
-                                                TANf = i.ToString();
-                                            else
-                                                TANf += $";{i}";
-                                        }
+                                            TANf += $";{i}";                                        
                                     }
                                 }
                             }
                             if (string.IsNullOrEmpty(Segment.HIRMS))
                                 Segment.HIRMS = TAN;
+                            else
+                            {
+                                if (!TANf.Contains(Segment.HIRMS))
+                                    throw new Exception($"Invalid HIRMS/Tan-Mode detected. Please choose one of the allowed modes: {TANf}");
+                            }
                             Segment.HIRMSf = TANf;
+                            
                         }
                     }
 
@@ -350,7 +352,7 @@ namespace libfintx
 
                 Log.Write(ex.ToString());
 
-                Console.WriteLine("Software error");
+                Console.WriteLine($"Software error: {ex.Message}");
 
                 return false;
             }
