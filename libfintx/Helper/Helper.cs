@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -832,6 +833,125 @@ namespace libfintx
                 ThreadStart start = delegate { RunAfterTimespan(action, span); };
                 Thread thread = new Thread(start);
                 thread.Start();
+            }
+
+            // photo-TAN
+            if (Segment.HIRMS.Equals("982"))
+            {
+                var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
+
+                var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
+            }
+        }
+
+        /// <summary>
+        /// Parse bank message and handle tan process
+        /// </summary>
+        /// <param name="BankCode"></param>
+        /// <param name="pictureBox"></param>
+        /// <param name="flickerImage"></param>
+        /// <param name="flickerWidth"></param>
+        /// <param name="flickerHeight"></param>
+        /// <param name="renderFlickerCodeAsGif"></param>
+        public static void Parse_BankCode(string BankCode, PictureBox pictureBox, Image flickerImage, int flickerWidth = 320,
+            int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+        {
+            var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+            String[] values = BankCode_.Split('+');
+
+            string msg = string.Empty;
+
+            foreach (var item in values)
+            {
+                if (!item.StartsWith("HIRMS"))
+                    TransactionConsole.Output = item.Replace("::", ": ");
+            }
+
+            var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
+
+            string HITANFlicker = string.Empty;
+
+            // chip-TAN / Sm@rt-TAN
+            if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+            {
+                HITANFlicker = HITAN;
+            }
+
+            String[] values_ = HITAN.Split('+');
+
+            int i = 1;
+
+            foreach (var item in values_)
+            {
+                i = i + 1;
+
+                if (i == 6)
+                    TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
+            }
+
+            // chip-TAN
+            if (Segment.HIRMS.Equals("911"))
+            {
+                string FlickerCode = string.Empty;
+
+                FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
+
+                FlickerCode flickerCode = new FlickerCode(FlickerCode);
+                flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                if (!renderFlickerCodeAsGif)
+                {
+                    RUN_flickerCodeRenderer();
+
+                    Action action = STOP_flickerCodeRenderer;
+                    TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                    ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                    Thread thread = new Thread(start);
+                    thread.Start();
+                }
+                else
+                {
+                    flickerImage = flickerCodeRenderer.RenderAsGif(flickerWidth, flickerHeight);
+                }
+            }
+
+            // Sm@rt-TAN
+            if (Segment.HIRMS.Equals("972"))
+            {
+                HITANFlicker = HITAN.Replace("?@", "??");
+
+                string FlickerCode = string.Empty;
+
+                String[] values__ = HITANFlicker.Split('@');
+
+                int ii = 1;
+
+                foreach (var item in values__)
+                {
+                    ii = ii + 1;
+
+                    if (ii == 4)
+                        FlickerCode = item;
+                }
+
+                FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
+                flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), pictureBox);
+                if (!renderFlickerCodeAsGif)
+                {
+                    RUN_flickerCodeRenderer();
+
+                    Action action = STOP_flickerCodeRenderer;
+                    TimeSpan span = new TimeSpan(0, 0, 0, 50);
+
+                    ThreadStart start = delegate { RunAfterTimespan(action, span); };
+                    Thread thread = new Thread(start);
+                    thread.Start();
+                }
+                else
+                {
+                    flickerImage = flickerCodeRenderer.RenderAsGif(flickerWidth, flickerHeight);
+                }
             }
 
             // photo-TAN
