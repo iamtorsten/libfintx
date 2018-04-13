@@ -92,6 +92,7 @@
     <Compile Include="System\SYS.cs" />
     <Compile Include="TAN\FlickerCode.cs" />
     <Compile Include="TAN\FlickerRenderer.cs" />
+    <Compile Include="TAN\GifEncoder.cs" />
     <Compile Include="TAN\MatrixCode.cs" />
     <Compile Include="TAN\TAN.cs" />
     <Compile Include="TAN\TAN4.cs" />

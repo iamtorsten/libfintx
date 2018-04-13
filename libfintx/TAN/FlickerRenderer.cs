@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 
 using System.Windows.Forms;
@@ -100,6 +101,36 @@ namespace libfintx
                 bitarray.Add(bcdmap[Convert.ToString(code[i + 1])]);
                 bitarray.Add(bcdmap[Convert.ToString(code[i])]);
             }
+        }
+
+        public Image RenderAsGif(int width = 320, int height = 120)
+        {            
+            MemoryStream ms = new MemoryStream();
+            using (GifEncoder enc = new GifEncoder(ms, width, height, 1000))
+            {
+                enc.FrameDelay = new TimeSpan(10 * TimeSpan.TicksPerMillisecond);
+
+                Brush brush;
+                int margin = 7, barwidth = width / 5;
+                for (int i = 0; i < bitarray.Count; i++)
+                {
+                    for (int cl = 1; cl >= 0; cl--)
+                    {
+                        int[] bits = this.bitarray[i];
+                        bits[0] = cl;
+                        var bmp = new Bitmap(width, height);
+                        var g = Graphics.FromImage(bmp);
+                        for (int b = 0; b < 5; b++)
+                        {
+                            brush = bitarray[i][b] == 1 ? Brushes.White : Brushes.Black;                          
+                            g.FillRectangle(brush, b * barwidth + margin, margin, barwidth - 2 * margin, height - 2 * margin);                           
+                        }
+                        g.Save();
+                        enc.AddFrame(bmp);
+                    }                    
+                }
+            }
+            return Image.FromStream(ms);
         }
 
         /// <summary>
