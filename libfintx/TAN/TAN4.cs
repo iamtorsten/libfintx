@@ -22,6 +22,7 @@
  */
 
 using libfintx.Data;
+using System;
 
 namespace libfintx
 {
@@ -36,14 +37,16 @@ namespace libfintx
 
             string segments = string.Empty;
 
-            // Version 3, Process 4
-            if (Segment.HITANS.Substring(0, 3).Equals("3+4"))
+            var HITANS = !String.IsNullOrEmpty(Segment.HITANS.Substring(0, 1)) ? Int32.Parse(Segment.HITANS.Substring(0, 1)) : 0;
+
+            // Version 3
+            if (HITANS == 3)
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
-            // Version 4, Process 4
-            if (Segment.HITANS.Substring(0, 3).Equals("4+4"))
+            // Version 4
+            if (HITANS == 4)
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
-            // Version 5, Process 4
-            if (Segment.HITANS.Substring(0, 3).Equals("5+4"))
+            // Version 5
+            if (HITANS == 5)
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
 
             SEG.NUM = SEGNUM.SETInt(3);
