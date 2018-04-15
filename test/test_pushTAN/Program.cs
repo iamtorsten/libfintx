@@ -2,9 +2,10 @@
 
 using HBCI = libfintx.Main;
 
-using libfintx;
 using libfintx.Data;
 using System.Windows.Forms;
+using libfintx;
+using System.Threading.Tasks;
 
 namespace test_pushTAN
 {
@@ -48,6 +49,9 @@ namespace test_pushTAN
 
             if (HBCI.Synchronization(connectionDetails, anonymous))
             {
+                Task oTAN = new Task(() => openTANWindow());
+                oTAN.Start();
+
                 Segment.HIRMS = "921"; // -> pushTAN
 
                 var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
@@ -56,6 +60,8 @@ namespace test_pushTAN
                 System.Threading.Thread.Sleep(5000);
 
                 Console.WriteLine(EncodingHelper.ConvertToUTF8(HBCI.Transfer(connectionDetails, receiver, receiverIBAN, receiverBIC, amount, usage, Segment.HIRMS, pictureBox, anonymous)));
+
+                Console.WriteLine(Segment.HITANS);
             }
 
             var timer = new System.Threading.Timer(
@@ -70,6 +76,12 @@ namespace test_pushTAN
         static void Output()
         {
             Console.WriteLine(HBCI.Transaction_Output());
+        }
+
+        static bool openTANWindow()
+        {
+            Application.Run(new TAN());
+            return true;
         }
     }
 }
