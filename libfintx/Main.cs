@@ -705,7 +705,7 @@ namespace libfintx
         {
             var BankCode = Transaction.TAN(connectionDetails, TAN);
 
-            if (BankCode.Contains("+0020::"))
+            if (BankCode.Contains("+0010::") || BankCode.Contains("+0020::"))
             {
                 var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
 
@@ -755,7 +755,7 @@ namespace libfintx
         {
             var BankCode = Transaction.TAN4(connectionDetails, TAN, MediumName);
 
-            if (BankCode.Contains("+0020::"))
+            if (BankCode.Contains("+0010::") || BankCode.Contains("+0020::"))
             {
                 var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
 
