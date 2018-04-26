@@ -517,6 +517,8 @@ namespace libfintx
         /// <returns></returns>
         public static bool Parse_TANProcesses()
         {
+            // TODO: Parse instead hard coded
+
             try
             {
                 List<TANprocess> list = new List<TANprocess>();

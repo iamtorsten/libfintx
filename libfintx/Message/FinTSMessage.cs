@@ -117,7 +117,10 @@ namespace libfintx
             }
             else if (Version == 300)
             {
-                encHead = "HNVSK:998:3+PIN:1+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                if (HIRMS_TAN == null)
+                    encHead = "HNVSK:998:3+PIN:1+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                else
+                    encHead = "HNVSK:998:3+PIN:2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 

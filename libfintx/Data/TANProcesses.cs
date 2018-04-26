@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace libfintx
 {
-    class TANProcesses
+    public class TANProcesses
     {
         public static List<TANprocess> items { get; set; }
     }
