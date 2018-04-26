@@ -132,7 +132,7 @@ namespace libfintx
                 }
                 else
                 {
-                    var SECFUNC = HIRMS_TAN.Contains("999") ? "1" : "2";
+                    var SECFUNC = HIRMS_TAN.Equals("999") ? "1" : "2";
 
                     sigHead = "HNSHK:2:4+PIN:" + SECFUNC + "+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
