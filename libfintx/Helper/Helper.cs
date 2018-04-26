@@ -252,6 +252,10 @@ namespace libfintx
                                     throw new Exception($"Invalid HIRMS/Tan-Mode detected. Please choose one of the allowed modes: {TANf}");
                             }
                             Segment.HIRMSf = TANf;
+
+                            // Parsing TAN processes
+                            if (!String.IsNullOrEmpty(Segment.HIRMS))
+                                Parse_TANProcesses(bpd);
                             
                         }
                     }
@@ -515,95 +519,36 @@ namespace libfintx
         /// Parse tan processes
         /// </summary>
         /// <returns></returns>
-        public static bool Parse_TANProcesses()
+        private static bool Parse_TANProcesses(string bpd)
         {
-            // TODO: Parse instead hard coded
-
             try
             {
                 List<TANprocess> list = new List<TANprocess>();
 
-                switch (Segment.HIRMS)
+                string[] processes = Segment.HIRMSf.Split(';');
+
+                // Examples from bpd
+                
+                // 944:2:SECUREGO:
+                // 920:2:smsTAN:
+                // 920:2:BestSign:
+
+                foreach (var process in processes)
                 {
-                    case "900": // iTAN
-                        list.Add(new TANprocess { ProcessNumber = "900", ProcessName = "iTAN" });
-                        break;
-                    case "910": // chipTAN manuell
-                        list.Add(new TANprocess { ProcessNumber = "910", ProcessName = "chipTAN manuell" });
-                        break;
-                    case "911": // chipTAN optisch
-                        list.Add(new TANprocess { ProcessNumber = "911", ProcessName = "chipTAN optisch" });
-                        break;
-                    case "912": // chipTAN USB
-                        list.Add(new TANprocess { ProcessNumber = "912", ProcessName = "chipTAN USB" });
-                        break;
-                    case "920": // smsTAN
-                        list.Add(new TANprocess { ProcessNumber = "920", ProcessName = "smsTAN" });
-                        break;
-                    case "921": // pushTAN
-                        list.Add(new TANprocess { ProcessNumber = "921", ProcessName = "pushTAN" });
-                        break;
-                    case "942": // mobile-TAN
-                        list.Add(new TANprocess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
-                        break;
-                    case "944": // SecureGo
-                        list.Add(new TANprocess { ProcessNumber = "944", ProcessName = "SecureGo" });
-                        break;
-                    case "962": // Sm@rt-TAN plus manuell
-                        list.Add(new TANprocess { ProcessNumber = "962", ProcessName = "Sm@rt-TAN plus manuell" });
-                        break;
-                    case "972": // Smart-TAN plus optisch
-                        list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
-                        break;
-                    case "982": // photo-TAN
-                        list.Add(new TANprocess { ProcessNumber = "982", ProcessName = "photo-TAN" });
-                        break;
-                }
+                    string pattern = process + ":.*?:.*?:(?'name'.*?):.*?:(?'name2'.*?):";
 
-                var processes = Segment.HIRMSf;
+                    Console.WriteLine(pattern);
 
-                if (!String.IsNullOrEmpty(processes))
-                {
-                    var process = processes.Split(';');
+                    Regex rgx = new Regex(pattern);
 
-                    foreach (var item in process)
+                    foreach (Match match in rgx.Matches(bpd))
                     {
-                        switch (item)
-                        {
-                            case "900": // iTAN
-                                list.Add(new TANprocess { ProcessNumber = "900", ProcessName = "iTAN" });
-                                break;
-                            case "910": // chipTAN manuell
-                                list.Add(new TANprocess { ProcessNumber = "910", ProcessName = "chipTAN manuell" });
-                                break;
-                            case "911": // chipTAN optisch
-                                list.Add(new TANprocess { ProcessNumber = "911", ProcessName = "chipTAN optisch" });
-                                break;
-                            case "912": // chipTAN USB
-                                list.Add(new TANprocess { ProcessNumber = "912", ProcessName = "chipTAN USB" });
-                                break;
-                            case "920": // smsTAN
-                                list.Add(new TANprocess { ProcessNumber = "920", ProcessName = "smsTAN" });
-                                break;
-                            case "921": // pushTAN
-                                list.Add(new TANprocess { ProcessNumber = "921", ProcessName = "pushTAN" });
-                                break;
-                            case "942": // mobile-TAN
-                                list.Add(new TANprocess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
-                                break;
-                            case "944": // SecureGo
-                                list.Add(new TANprocess { ProcessNumber = "944", ProcessName = "SecureGo" });
-                                break;
-                            case "962": // Sm@rt-TAN plus manuell
-                                list.Add(new TANprocess { ProcessNumber = "962", ProcessName = "Sm@rt-TAN plus manuell" });
-                                break;
-                            case "972": // Smart-TAN plus optisch
-                                list.Add(new TANprocess { ProcessNumber = "972", ProcessName = "Sm@rt-TAN plus optisch" });
-                                break;
-                            case "982": // photo-TAN
-                                list.Add(new TANprocess { ProcessNumber = "982", ProcessName = "photo-TAN" });
-                                break;
-                        }
+                        int i = 0;
+
+                        if (int.TryParse(match.Groups["name2"].Value, out i))
+                            list.Add(new TANprocess { ProcessNumber = process, ProcessName = match.Groups["name"].Value });
+                        else
+                            list.Add(new TANprocess { ProcessNumber = process, ProcessName = match.Groups["name2"].Value });
                     }
                 }
 
@@ -771,8 +716,19 @@ namespace libfintx
 
             string HITANFlicker = string.Empty;
 
-            // chip-TAN / Sm@rt-TAN
-            if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+            var processes = TANProcesses.items;
+
+            var processname = string.Empty;
+
+            foreach (var item in processes)
+            {
+                if (item.ProcessNumber.Equals(Segment.HIRMS))
+                    processname = item.ProcessName;
+            }
+
+            // Smart-TAN plus optisch
+            // chipTAN optisch
+            if (processname.Equals("Smart-TAN plus optisch") || processname.Contains("chipTAN optisch"))
             {
                 HITANFlicker = HITAN;
             }
@@ -789,8 +745,8 @@ namespace libfintx
                     TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
             }
 
-            // chip-TAN
-            if (Segment.HIRMS.Equals("911"))
+            // chipTAN optisch
+            if (processname.Contains("chipTAN optisch"))
             {
                 string FlickerCode = string.Empty;
 
@@ -810,8 +766,8 @@ namespace libfintx
                 thread.Start();
             }
 
-            // Sm@rt-TAN
-            if (Segment.HIRMS.Equals("972"))
+            // Smart-TAN plus optisch
+            if (processname.Equals("Smart-TAN plus optisch"))
             {
                 HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -843,8 +799,8 @@ namespace libfintx
                 thread.Start();
             }
 
-            // photo-TAN
-            if (Segment.HIRMS.Equals("982"))
+            // Smart-TAN photo
+            if (processname.Equals("Smart-TAN photo"))
             {
                 var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
 
@@ -882,8 +838,19 @@ namespace libfintx
 
             string HITANFlicker = string.Empty;
 
-            // chip-TAN / Sm@rt-TAN
-            if (Segment.HIRMS.Equals("911") || Segment.HIRMS.Equals("972"))
+            var processes = TANProcesses.items;
+
+            var processname = string.Empty;
+
+            foreach (var item in processes)
+            {
+                if (item.ProcessNumber.Equals(Segment.HIRMS))
+                    processname = item.ProcessName;
+            }
+
+            // Smart-TAN plus optisch
+            // chipTAN optisch
+            if (processname.Equals("Smart-TAN plus optisch") || processname.Contains("chipTAN optisch"))
             {
                 HITANFlicker = HITAN;
             }
@@ -900,8 +867,8 @@ namespace libfintx
                     TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
             }
 
-            // chip-TAN
-            if (Segment.HIRMS.Equals("911"))
+            // chipTAN optisch
+            if (processname.Contains("chipTAN optisch"))
             {
                 string FlickerCode = string.Empty;
 
@@ -926,8 +893,8 @@ namespace libfintx
                 }
             }
 
-            // Sm@rt-TAN
-            if (Segment.HIRMS.Equals("972"))
+            // Smart-TAN plus optisch
+            if (processname.Equals("Smart-TAN plus optisch"))
             {
                 HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -964,8 +931,8 @@ namespace libfintx
                 }
             }
 
-            // photo-TAN
-            if (Segment.HIRMS.Equals("982"))
+            // Smart-TAN photo
+            if (processname.Equals("Smart-TAN photo"))
             {
                 var PhotoCode = Helper.Parse_String(BankCode, ".+@", "'HNSHA");
 
