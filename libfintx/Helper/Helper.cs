@@ -545,10 +545,13 @@ namespace libfintx
                     {
                         int i = 0;
 
-                        if (int.TryParse(match.Groups["name2"].Value, out i))
-                            list.Add(new TANprocess { ProcessNumber = process, ProcessName = match.Groups["name"].Value });
-                        else
-                            list.Add(new TANprocess { ProcessNumber = process, ProcessName = match.Groups["name2"].Value });
+                        if (!process.Equals("999")) // -> PIN/TAN step 1
+                        {
+                            if (int.TryParse(match.Groups["name2"].Value, out i))
+                                list.Add(new TANprocess { ProcessNumber = process, ProcessName = match.Groups["name"].Value });
+                            else
+                                list.Add(new TANprocess { ProcessNumber = process, ProcessName = match.Groups["name2"].Value });
+                        }
                     }
                 }
 
