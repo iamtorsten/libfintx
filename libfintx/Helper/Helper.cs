@@ -316,6 +316,10 @@ namespace libfintx
                                 }
                             }
                         }
+
+                        // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
+                        if (String.IsNullOrEmpty(Segment.HKKAZ))
+                            Segment.HKKAZ = "6";
                     }
                 }
 

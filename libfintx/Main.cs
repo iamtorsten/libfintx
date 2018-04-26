@@ -116,7 +116,12 @@ namespace libfintx
                 // Success
                 var BankCode = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, null);
 
-                var Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNSHA");
+                var Transactions = string.Empty;
+
+                if (BankCode.Contains("HNSHA"))
+                    Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNSHA");
+                else // -> Postbank finishes with HNHBS
+                    Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNHBS");
 
                 swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account));
 
