@@ -537,8 +537,6 @@ namespace libfintx
                 {
                     string pattern = process + ":.*?:.*?:(?'name'.*?):.*?:(?'name2'.*?):";
 
-                    Console.WriteLine(pattern);
-
                     Regex rgx = new Regex(pattern);
 
                     foreach (Match match in rgx.Matches(bpd))
