@@ -148,6 +148,53 @@ namespace libfintx
             }                
         }
 
+        // TODO: Need a camt052 parser -> camt052 is experimental
+        
+        /// <summary>
+        /// Account transactions in camt052 format
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, Account, IBAN, BIC</param>  
+        /// <param name="anonymous"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>
+        /// Transactions
+        /// </returns>
+        public static string Transactions_camt052(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            if (Transaction.INI(connectionDetails, anonymous) == true)
+            {
+                // Return plain camt052 message
+                var camt052 = string.Empty;
+
+                var startDateStr = startDate?.ToString("yyyyMMdd");
+                var endDateStr = endDate?.ToString("yyyyMMdd");
+
+                // Success
+                var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null);
+
+                camt052 += BankCode;
+
+                string BankCode_ = BankCode;
+
+                while (BankCode_.Contains("+3040::"))
+                {
+                    Helper.Parse_Message(BankCode_);
+
+                    var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+
+                    BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
+
+                    camt052 += BankCode_;
+                }
+                return camt052;
+            }
+            else
+            {
+                Log.Write("Initialization/sync failed");
+                throw new Exception("Initialization/sync failed");
+            }
+        }
 
         /// <summary>
         /// Account transactions in simplified libfintx-format

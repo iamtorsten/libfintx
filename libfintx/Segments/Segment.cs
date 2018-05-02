@@ -68,6 +68,11 @@ namespace libfintx
         public static string HKKAZ { get; set; }
 
         /// <summary>
+        /// Transactions camt052
+        /// </summary>
+        public static string HKCAZ { get { return "1"; } }
+
+        /// <summary>
         /// TAN Medium Name
         /// </summary>
         public static string HITAB { get; set; }

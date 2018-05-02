@@ -40,6 +40,7 @@ using static libfintx.TAN;
 using static libfintx.TAN4;
 using static libfintx.INI_RDH;
 using static libfintx.HKTAB;
+using static libfintx.HKCAZ;
 using libfintx.Data;
 using System;
 
@@ -127,6 +128,11 @@ namespace libfintx
         public static string HKTAB(ConnectionDetails connectionDetails)
         {
             return Init_HKTAB(connectionDetails);
+        }
+
+        public static string HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint)
+        {
+            return Init_HKCAZ(connectionDetails, FromDate, ToDate, Startpoint);
         }
 
         // RDH
