@@ -285,6 +285,7 @@ namespace libfintx
         }
 #endif
 
+#if (DEBUG && WINDOWS)
         public static void Test_RDH()
         {
             string FilePath = @"D:\rdh.rdh";
@@ -325,5 +326,6 @@ namespace libfintx
 
             Console.ReadLine();
         }
+#endif
     }
 }
