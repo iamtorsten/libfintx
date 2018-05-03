@@ -29,9 +29,9 @@ using System.IO;
 
 using HBCI = libfintx.Main;
 
+#if (DEBUG && WINDOWS)
 using hbci = libfintx;
 
-#if (DEBUG && WINDOWS)
 using System.Windows.Forms;
 #endif
 
@@ -39,6 +39,8 @@ namespace libfintx
 {
     public class Test
     {
+
+#if DEBUG
         static bool Anonymous;
 
         public static void Test_Balance()
@@ -217,6 +219,7 @@ namespace libfintx
 
             Console.ReadLine();
         }
+#endif
 
 #if (DEBUG && WINDOWS)
         static bool anonymous = false;
