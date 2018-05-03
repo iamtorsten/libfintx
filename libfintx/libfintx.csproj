@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -129,12 +132,6 @@
     <Compile Include="Transactions\Transaction.cs" />
     <Compile Include="Util\HBCI_Util.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\bc-csharp\crypto\BouncyCastle.csproj">
-      <Project>{4c235092-820c-4deb-9074-d356fb797d8b}</Project>
-      <Name>BouncyCastle</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="BankCodes\blz_2017_09_04_xls.xlsx" />
@@ -166,6 +163,7 @@
     <None Include="Documentation\FinTS_4.1_XML-Syntax_2017-10-06_final_version.pdf" />
     <None Include="Documentation\FinTS_Rueckmeldungscodes_2017-10-06_final_version.pdf" />
     <None Include="Documentation\HBCI22 Final.pdf" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
