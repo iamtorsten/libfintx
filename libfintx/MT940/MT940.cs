@@ -412,28 +412,29 @@ namespace libfintx
                 return SWIFTStatements;
 
             string documents = "", dir = "";
-            if (Trace.Enabled){
-                documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                dir = Path.Combine(documents, Program.Buildname);
 
-                dir = Path.Combine(dir, "STA");
+            documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            dir = Path.Combine(documents, Program.Buildname);
 
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
+            dir = Path.Combine(dir, "STA");
 
-                // STA
-                if (!File.Exists(Path.Combine(dir, Account + ".STA")))
-                {
-                    using (File.Create(Path.Combine(dir, Account + ".STA")))
-                    { };
+            string filename = Helper.PathandFilename(Path.Combine(dir, Account + "_" + DateTime.Now + ".STA"));
 
-                    File.AppendAllText(Path.Combine(dir, Account + ".STA"), STA);
-                }
-                else
-                    File.AppendAllText(Path.Combine(dir, Account + ".STA"), STA);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
             }
+
+            // STA
+            if (!File.Exists(filename))
+            {
+                using (File.Create(filename))
+                { };
+
+                File.AppendAllText(filename, STA);
+            }
+            else
+                File.AppendAllText(filename, STA);
 
             while (STA.Length > 0)
             {
@@ -510,21 +511,23 @@ namespace libfintx
                         dir = Path.Combine(documents, Program.Buildname);
                         dir = Path.Combine(dir, "MT940");
 
+                        string filename_ = Helper.PathandFilename(Path.Combine(dir, Account + "_" + DateTime.Now + ".MT940"));
+
                         if (!Directory.Exists(dir))
                         {
                             Directory.CreateDirectory(dir);
                         }
 
                         // MT940
-                        if (!File.Exists(Path.Combine(dir, Account + ".MT940")))
+                        if (!File.Exists(filename_))
                         {
-                            using (File.Create(Path.Combine(dir, Account + ".MT940")))
+                            using (File.Create(filename_))
                             { };
 
-                            File.AppendAllText(Path.Combine(dir, Account + ".MT940"), UMS);
+                            File.AppendAllText(filename_, UMS);
                         }
                         else
-                            File.AppendAllText(Path.Combine(dir, Account + ".MT940"), UMS);
+                            File.AppendAllText(filename_, UMS);
                     }
                 }
             }

@@ -31,6 +31,9 @@ namespace libfintx
 {
     public static class camt053File
     {
+        /// <summary>
+        /// Save xml string as camt053 file
+        /// </summary>
         public static string Save(string Account, string UMS)
         {
             string documents = "", dir = "";

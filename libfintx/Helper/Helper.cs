@@ -991,7 +991,7 @@ namespace libfintx
         /// </summary>
         public static string PathandFilename (string value)
         {
-            return value.Replace(" ", "").Replace(".", "").Replace(":", "");
+            return value.Replace(" ", "").Replace(":", "");
         }
     }
 }
