@@ -41,22 +41,22 @@ namespace libfintx
             {
                 if (String.IsNullOrEmpty(Startpoint))
                 {
-                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.052.001.02+N'";
+                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02+N'";
                 }
                 else
                 {
-                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.052.001.02+N++++" + Startpoint + "'";
+                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02+N++++" + Startpoint + "'";
                 }
             }
             else
             {
                 if (String.IsNullOrEmpty(Startpoint))
                 {
-                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.052.001.02+N+" + FromDate + "+" + ToDate + "'";
+                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02+N+" + FromDate + "+" + ToDate + "'";
                 }
                 else
                 {
-                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.052.001.02+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                 }
             }
 
