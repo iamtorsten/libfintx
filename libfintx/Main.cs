@@ -148,10 +148,8 @@ namespace libfintx
             }                
         }
 
-        // TODO: Need a camt052 parser -> camt052 is experimental
-        
         /// <summary>
-        /// Account transactions in camt052 format
+        /// Account transactions in camt053 format
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, Account, IBAN, BIC</param>  
         /// <param name="anonymous"></param>
@@ -160,12 +158,12 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static string Transactions_camt052(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        public static List<TStatement> Transactions_camt053(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
-                // Return plain camt052 message
-                var camt052 = string.Empty;
+                // Plain camt053 message
+                var camt053 = string.Empty;
 
                 var startDateStr = startDate?.ToString("yyyyMMdd");
                 var endDateStr = endDate?.ToString("yyyyMMdd");
@@ -173,7 +171,16 @@ namespace libfintx
                 // Success
                 var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null);
 
-                camt052 += BankCode;
+                camt053 = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+
+                // Save camt053 statement to file
+                var camt053f = camt053File.Save(connectionDetails.Account, camt053);
+
+                // Process the camt053 file
+                TCAMTParser CAMTParser = new TCAMTParser();
+                CAMTParser.ProcessFile(camt053f);
+
+                var CAMTStatement = CAMTParser.statements;
 
                 string BankCode_ = BankCode;
 
@@ -185,9 +192,23 @@ namespace libfintx
 
                     BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
 
-                    camt052 += BankCode_;
+                    var camt053_  = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+
+                    // Save camt053 statement to file
+                    var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
+
+                    // Process the camt053 file
+                    TCAMTParser CAMTParser_ = new TCAMTParser();
+                    CAMTParser_.ProcessFile(camt053f_);
+
+                    // Add all items to existing statement
+                    foreach (var item in CAMTParser_.statements)
+                    {
+                        CAMTParser.statements.Add(item);
+                    }
                 }
-                return camt052;
+
+                return CAMTParser.statements;
             }
             else
             {

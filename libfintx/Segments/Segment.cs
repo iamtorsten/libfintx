@@ -68,7 +68,7 @@ namespace libfintx
         public static string HKKAZ { get; set; }
 
         /// <summary>
-        /// Transactions camt052
+        /// Transactions camt053
         /// </summary>
         public static string HKCAZ { get { return "1"; } }
 

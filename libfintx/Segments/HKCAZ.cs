@@ -29,11 +29,11 @@ namespace libfintx
     public static class HKCAZ
     {
         /// <summary>
-        /// Transactions in camt052 format
+        /// Transactions in camt053 format
         /// </summary>
         public static string Init_HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint)
         {
-            Log.Write("Starting job HKCAZ: Request transactions in camt052 format");
+            Log.Write("Starting job HKCAZ: Request transactions in camt053 format");
 
             string segments = string.Empty;
 
