@@ -102,6 +102,7 @@
     <Compile Include="TAN\MatrixCode.cs" />
     <Compile Include="TAN\TAN.cs" />
     <Compile Include="TAN\TAN4.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="Traceing\Trace.cs" />
     <Compile Include="Data\AccountTransaction.cs" />
     <Compile Include="Segments\HKCCM.cs" />
