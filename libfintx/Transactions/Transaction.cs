@@ -130,9 +130,9 @@ namespace libfintx
             return Init_HKTAB(connectionDetails);
         }
 
-        public static string HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint)
+        public static string HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint, camtVersion camtVers)
         {
-            return Init_HKCAZ(connectionDetails, FromDate, ToDate, Startpoint);
+            return Init_HKCAZ(connectionDetails, FromDate, ToDate, Startpoint, camtVers);
         }
 
         // RDH

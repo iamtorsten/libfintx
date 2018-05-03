@@ -31,38 +31,46 @@ namespace libfintx
         /// <summary>
         /// Transactions in camt053 format
         /// </summary>
-        public static string Init_HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint)
+        public static string Init_HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint, camtVersion camtVers)
         {
-            Log.Write("Starting job HKCAZ: Request transactions in camt053 format");
-
-            string segments = string.Empty;
-
-            if (String.IsNullOrEmpty(FromDate))
+            switch (camtVers)
             {
-                if (String.IsNullOrEmpty(Startpoint))
-                {
-                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02+N'";
-                }
-                else
-                {
-                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02+N++++" + Startpoint + "'";
-                }
-            }
-            else
-            {
-                if (String.IsNullOrEmpty(Startpoint))
-                {
-                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02+N+" + FromDate + "+" + ToDate + "'";
-                }
-                else
-                {
-                    segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
-                }
-            }
+                case camtVersion.camt052:
+                    throw new Exception("Not implemented");
+                case camtVersion.camt053:
+                    Log.Write("Starting job HKCAZ: Request transactions in camt053 format");
 
-            SEG.NUM = SEGNUM.SETInt(3);
+                    string segments = string.Empty;
 
-            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+                    if (String.IsNullOrEmpty(FromDate))
+                    {
+                        if (String.IsNullOrEmpty(Startpoint))
+                        {
+                            segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + Scheme.camt053 + "+N'";
+                        }
+                        else
+                        {
+                            segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + Scheme.camt053 + "+N++++" + Startpoint + "'";
+                        }
+                    }
+                    else
+                    {
+                        if (String.IsNullOrEmpty(Startpoint))
+                        {
+                            segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + Scheme.camt053 + "+N+" + FromDate + "+" + ToDate + "'";
+                        }
+                        else
+                        {
+                            segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + Scheme.camt053 + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                        }
+                    }
+
+                    SEG.NUM = SEGNUM.SETInt(3);
+
+                    return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+                default: // -> Will never happen, only for compiler
+                    return string.Empty;
+            }
         }
     }
 }

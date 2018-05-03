@@ -109,7 +109,6 @@ namespace libfintx
 
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
-
                 var startDateStr = startDate?.ToString("yyyyMMdd");
                 var endDateStr = endDate?.ToString("yyyyMMdd");
 
@@ -124,7 +123,6 @@ namespace libfintx
                     Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNHBS");
 
                 swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account));
-
 
                 string BankCode_ = BankCode;
                 while (BankCode_.Contains("+3040::"))
@@ -158,53 +156,70 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static List<TStatement> Transactions_camt053(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        public static List<TStatement> Transactions_camt(ConnectionDetails connectionDetails, bool anonymous, camtVersion camtVers,
+            DateTime? startDate = null, DateTime? endDate = null)
         {
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
-                // Plain camt053 message
-                var camt053 = string.Empty;
+                // Plain camt message
+                var camt = string.Empty;
 
                 var startDateStr = startDate?.ToString("yyyyMMdd");
                 var endDateStr = endDate?.ToString("yyyyMMdd");
 
                 // Success
-                var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null);
+                var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null, camtVers);
 
-                camt053 = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+                camt = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
 
-                // Save camt053 statement to file
-                var camt053f = camt053File.Save(connectionDetails.Account, camt053);
+                TCAMTParser CAMTParser = null;
 
-                // Process the camt053 file
-                TCAMTParser CAMTParser = new TCAMTParser();
-                CAMTParser.ProcessFile(camt053f);
+                switch (camtVers)
+                {
+                    case camtVersion.camt052:
+                        throw new Exception("Not implemented");
+                    case camtVersion.camt053:
+                        // Save camt053 statement to file
+                        var camt053f = camt053File.Save(connectionDetails.Account, camt);
 
-                var CAMTStatement = CAMTParser.statements;
+                        // Process the camt053 file
+                        CAMTParser = new TCAMTParser();
+                        CAMTParser.ProcessFile(camt053f);
+
+                        var CAMTStatement = CAMTParser.statements;
+                        break;
+                }
 
                 string BankCode_ = BankCode;
 
                 while (BankCode_.Contains("+3040::"))
                 {
-                    Helper.Parse_Message(BankCode_);
-
-                    var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
-
-                    BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
-
-                    var camt053_  = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
-
-                    // Save camt053 statement to file
-                    var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
-
-                    // Process the camt053 file
-                    TCAMTParser CAMTParser_ = new TCAMTParser();
-                    CAMTParser_.ProcessFile(camt053f_);
-
-                    // Add all items to existing statement
-                    foreach (var item in CAMTParser_.statements)
+                    switch (camtVers)
                     {
-                        CAMTParser.statements.Add(item);
+                        case camtVersion.camt052:
+                            throw new Exception("Not implemented");
+                        case camtVersion.camt053:
+                            Helper.Parse_Message(BankCode_);
+
+                            var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+
+                            BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
+
+                            var camt053_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+
+                            // Save camt053 statement to file
+                            var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
+
+                            // Process the camt053 file
+                            TCAMTParser CAMTParser_ = new TCAMTParser();
+                            CAMTParser_.ProcessFile(camt053f_);
+
+                            // Add all items to existing statement
+                            foreach (var item in CAMTParser_.statements)
+                            {
+                                CAMTParser.statements.Add(item);
+                            }
+                            break;
                     }
                 }
 
