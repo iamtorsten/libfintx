@@ -21,6 +21,8 @@
  * 	
  */
 
+//#define WINDOWS
+
 using libfintx.Data;
 using System;
 using System.IO;
@@ -29,7 +31,7 @@ using HBCI = libfintx.Main;
 
 using hbci = libfintx;
 
-#if DESKTOP
+#if (DEBUG && WINDOWS)
 using System.Windows.Forms;
 #endif
 
@@ -216,7 +218,7 @@ namespace libfintx
             Console.ReadLine();
         }
 
-#if DESKTOP
+#if (DEBUG && WINDOWS)
         static bool anonymous = false;
 
         static string receiver = string.Empty;
