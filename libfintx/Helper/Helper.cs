@@ -985,6 +985,14 @@ namespace libfintx
         {
             flickerCodeRenderer.Stop();
         }
+
+        /// <summary>
+        /// Make path / filename valid
+        /// </summary>
+        public static string PathandFilename (string value)
+        {
+            return value.Replace(" ", "").Replace(".", "").Replace(":", "");
+        }
     }
 }
 
