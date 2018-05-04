@@ -28,13 +28,17 @@
  *
  */
 
+//#define WINDOWS
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading;
 
+#if WINDOWS
 using System.Windows.Forms;
+#endif
 
 namespace libfintx
 {
@@ -63,14 +67,22 @@ namespace libfintx
         private int iterations = 0;
         private int freq = FREQUENCY_DEFAULT;
 
+#if WINDOWS
         /// <summary>
         /// Flicker graphic
         /// </summary>
         PictureBox pictureBox;
+#endif
 
+#if WINDOWS
         public FlickerRenderer(string code, PictureBox pictureBox)
+#else
+        public FlickerRenderer(string code, object pictureBox)
+#endif
         {
+#if WINDOWS
             this.pictureBox = pictureBox;
+#endif
 
             // Sync-ID
             code = "0FFF" + code;
@@ -171,12 +183,14 @@ namespace libfintx
             // Clock
             this.clock = 1;
 
-			
+#if WINDOWS
             // Flicker code form
             var pictureBox = this.pictureBox;
 
+
             // Flicker graphic
             Graphics graphic = Graphics.FromImage(pictureBox.Image);
+#endif
 
             // Change between black and white
             Brush brush;
@@ -189,9 +203,11 @@ namespace libfintx
                     int[] bits = this.bitarray[this.halfbyteid];
 
                     bits[0] = this.clock;
-					
+
+ #if WINDOWS
 					int margin = 7;
 					int barwidth = pictureBox.Width / 5;
+#endif
 
                     for (int i = 0; i < 5; i++)
                     {
@@ -204,10 +220,12 @@ namespace libfintx
                             brush = Brushes.Black;
                         }
 
+#if WINDOWS
                         graphic.FillRectangle(brush, i * barwidth + margin, margin, barwidth - 2 * margin, pictureBox.Height - 2 * margin);
 
                         // Refresh flicker code
                         pictureBox.Invoke(new MethodInvoker (delegate() { pictureBox.Refresh(); }));
+#endif
                     }
 
                     this.clock--;

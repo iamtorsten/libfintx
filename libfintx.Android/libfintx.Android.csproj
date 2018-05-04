@@ -44,6 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\libfintx\camt053\camt053.cs">
+      <Link>camt053\camt053.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\camt053\camt053File.cs">
+      <Link>camt053\camt053File.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\camt053\camt053TStatement.cs">
+      <Link>camt053\camt053TStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\camt053\camt053TTransaction.cs">
+      <Link>camt053\camt053TTransaction.cs</Link>
+    </Compile>
     <Compile Include="..\libfintx\Console\TransactionConsole.cs">
       <Link>Console\TransactionConsole.cs</Link>
     </Compile>
@@ -83,11 +95,17 @@
     <Compile Include="..\libfintx\Helper\EncodingHelper.cs">
       <Link>Helper\EncodingHelper.cs</Link>
     </Compile>
+    <Compile Include="..\libfintx\Helper\Helper.cs">
+      <Link>Helper\Helper.cs</Link>
+    </Compile>
     <Compile Include="..\libfintx\Helper\Program.cs">
       <Link>Helper\Program.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Logging\Log.cs">
       <Link>Logging\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Main.cs">
+      <Link>Main.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Message\FinTSMessage.cs">
       <Link>Message\FinTSMessage.cs</Link>
@@ -107,8 +125,86 @@
     <Compile Include="..\libfintx\Pain\pain00800202.cs">
       <Link>Pain\pain00800202.cs</Link>
     </Compile>
+    <Compile Include="..\libfintx\Scheme\Scheme.cs">
+      <Link>Scheme\Scheme.cs</Link>
+    </Compile>
     <Compile Include="..\libfintx\Security\Enc.cs">
       <Link>Security\Enc.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKCAZ.cs">
+      <Link>Segments\HKCAZ.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKCCM.cs">
+      <Link>Segments\HKCCM.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKCCS.cs">
+      <Link>Segments\HKCCS.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKCCST.cs">
+      <Link>Segments\HKCCST.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKCDE.cs">
+      <Link>Segments\HKCDE.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKCME.cs">
+      <Link>Segments\HKCME.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKCSB.cs">
+      <Link>Segments\HKCSB.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKCUM.cs">
+      <Link>Segments\HKCUM.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKDME.cs">
+      <Link>Segments\HKDME.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKDSE.cs">
+      <Link>Segments\HKDSE.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKEND.cs">
+      <Link>Segments\HKEND.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKIDN.cs">
+      <Link>Segments\HKIDN.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKKAZ.cs">
+      <Link>Segments\HKKAZ.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKPPD.cs">
+      <Link>Segments\HKPPD.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKSAK.cs">
+      <Link>Segments\HKSAK.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKSAL.cs">
+      <Link>Segments\HKSAL.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKSPA.cs">
+      <Link>Segments\HKSPA.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKSYN.cs">
+      <Link>Segments\HKSYN.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKTAB.cs">
+      <Link>Segments\HKTAB.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKTAN.cs">
+      <Link>Segments\HKTAN.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HKVVB.cs">
+      <Link>Segments\HKVVB.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HNHBK.cs">
+      <Link>Segments\HNHBK.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HNSHA.cs">
+      <Link>Segments\HNSHA.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HNSHK.cs">
+      <Link>Segments\HNSHK.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Segments\HNVSK.cs">
+      <Link>Segments\HNVSK.cs</Link>
     </Compile>
     <Compile Include="..\libfintx\Segments\SEG.cs">
       <Link>Segments\SEG.cs</Link>
@@ -137,6 +233,15 @@
     <Compile Include="..\libfintx\TAN\FlickerCode.cs">
       <Link>TAN\FlickerCode.cs</Link>
     </Compile>
+    <Compile Include="..\libfintx\TAN\FlickerRenderer.cs">
+      <Link>TAN\FlickerRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\TAN\GifEncoder.cs">
+      <Link>TAN\GifEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\TAN\MatrixCode.cs">
+      <Link>TAN\MatrixCode.cs</Link>
+    </Compile>
     <Compile Include="..\libfintx\TAN\TAN.cs">
       <Link>TAN\TAN.cs</Link>
     </Compile>
@@ -146,50 +251,17 @@
     <Compile Include="..\libfintx\Traceing\Trace.cs">
       <Link>Traceing\Trace.cs</Link>
     </Compile>
-    <Compile Include="..\libfintx\Transactions\HKCCM.cs">
-      <Link>Transactins\HKCCM.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKCCS.cs">
-      <Link>Transactins\HKCCS.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKCCST.cs">
-      <Link>Transactins\HKCCST.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKCDE.cs">
-      <Link>Transactins\HKCDE.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKCME.cs">
-      <Link>Transactins\HKCME.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKCSB.cs">
-      <Link>Transactins\HKCSB.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKCUM.cs">
-      <Link>Transactins\HKCUM.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKDME.cs">
-      <Link>Transactins\HKDME.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKDSE.cs">
-      <Link>Transactins\HKDSE.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKKAZ.cs">
-      <Link>Transactins\HKKAZ.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKPPD.cs">
-      <Link>Transactins\HKPPD.cs</Link>
-    </Compile>
-    <Compile Include="..\libfintx\Transactions\HKSAL.cs">
-      <Link>Transactins\HKSAL.cs</Link>
-    </Compile>
     <Compile Include="..\libfintx\Transactions\INI.cs">
-      <Link>Transactins\INI.cs</Link>
+      <Link>Transactions\INI.cs</Link>
     </Compile>
-    <Compile Include="Helper\Helper.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="..\libfintx\Transactions\INI_RDH.cs">
+      <Link>Transactions\INI_RDH.cs</Link>
+    </Compile>
+    <Compile Include="..\libfintx\Transactions\Transaction.cs">
+      <Link>Transactions\Transaction.cs</Link>
+    </Compile>
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transactions\Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

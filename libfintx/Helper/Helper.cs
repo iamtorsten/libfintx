@@ -21,6 +21,8 @@
  * 	
  */
 
+//#define WINDOWS
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,7 +30,10 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+
+#if WINDOWS
 using System.Windows.Forms;
+#endif
 
 namespace libfintx
 {
@@ -699,7 +704,12 @@ namespace libfintx
         /// Parse bank message and handle tan process
         /// </summary>
         /// <param name="BankCode"></param>
+
+#if WINDOWS
         public static void Parse_BankCode(string BankCode, PictureBox pictureBox)
+#else
+        public static void Parse_BankCode(string BankCode, object pictureBox)
+#endif
         {
             var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
 
@@ -818,8 +828,15 @@ namespace libfintx
         /// <param name="flickerWidth"></param>
         /// <param name="flickerHeight"></param>
         /// <param name="renderFlickerCodeAsGif"></param>
+
+#if WINDOWS
         public static void Parse_BankCode(string BankCode, PictureBox pictureBox, out Image flickerImage, int flickerWidth,
             int flickerHeight, bool renderFlickerCodeAsGif)
+#else
+        public static void Parse_BankCode(string BankCode, object pictureBox, out Image flickerImage, int flickerWidth,
+            int flickerHeight, bool renderFlickerCodeAsGif)
+#endif
+
         {
             flickerImage = null;
 

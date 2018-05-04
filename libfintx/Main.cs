@@ -21,12 +21,17 @@
  * 	
  */
 
+//#define WINDOWS
+
 using libfintx.Data;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
+
+#if WINDOWS
 using System.Windows.Forms;
+#endif
 
 namespace libfintx
 {
@@ -147,7 +152,7 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Account transactions in camt053 format
+        /// Account transactions in camt format
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, Account, IBAN, BIC</param>  
         /// <param name="anonymous"></param>
@@ -282,8 +287,15 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
+
+#if WINDOWS
         public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous)
+#else
+        public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
         {
             Image img = null;
             return Transfer(connectionDetails, receiverName, receiverIBAN, receiverBIC,
@@ -333,8 +345,15 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
+
+#if WINDOWS
         public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#else
+        public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#endif
+
         {
             flickerImage = null;
             if (Transaction.INI(connectionDetails, anonymous) == true)
@@ -367,7 +386,7 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Transfer money at a certain time
+        /// Transfer money at a certain time - General method
         /// </summary>       
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="receiverName">Name of the recipient</param>
@@ -376,15 +395,29 @@ namespace libfintx
         /// <param name="amount">Amount to transfer</param>
         /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
         /// <param name="executionDay"></param>
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
         /// <returns>
         /// Bank return codes
         /// </returns>
+
+#if WINDOWS
         public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous)
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous,
+            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#else
+        public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous,
+            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#endif
         {
+            flickerImage = null;
+
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -396,7 +429,7 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    Helper.Parse_BankCode(BankCode, pictureBox);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
                     return "OK";
                 }
@@ -414,20 +447,91 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Collective transfer money
+        /// Transfer money at a certain time - render FlickerCode in WinForms
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
-        /// <param name="painData"></param>
-        /// <param name="numberOfTransactions"></param>
-        /// <param name="totalAmount"></param>
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData, string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous)
+
+#if WINDOWS
+        public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous)
+#else
+        public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
         {
+            Image img = null;
+            return Transfer_Terminated(connectionDetails, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, executionDay, HIRMS, pictureBox, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Transfer money at a certain time - render FlickerCode as Gif
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>        
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return Transfer_Terminated(connectionDetails, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, executionDay, HIRMS, null, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        /// <summary>
+        /// Collective transfer money - General method
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="painData"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <param name="totalAmount"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous,
+            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#else
+        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous,
+            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#endif
+        {
+            flickerImage = null;
+
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -439,7 +543,7 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    Helper.Parse_BankCode(BankCode, pictureBox);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
                     return "OK";
                 }
@@ -457,22 +561,92 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Collective transfer money terminated
+        /// Collective transfer money - render FlickerCode in WinForms
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous)
+#else
+        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
+        {
+            Image img = null;
+            return CollectiveTransfer(connectionDetails, painData, numberOfTransactions, totalAmount, HIRMS, pictureBox, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Collective transfer money - render FlickerCode as Gif
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>        
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth,
+            int flickerHeight)
+        {
+            return CollectiveTransfer(connectionDetails, painData, numberOfTransactions, totalAmount, HIRMS, null, anonymous,
+                out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        /// <summary>
+        /// Collective transfer money terminated - General method
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="painData"></param>
         /// <param name="numberOfTransactions"></param>
         /// <param name="totalAmount"></param>
         /// <param name="ExecutionDay"></param>
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param> 
         /// <returns>
         /// Bank return codes
         /// </returns>
+
+#if WINDOWS
         public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous)
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous,
+            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#else
+        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous,
+            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#endif
         {
+            flickerImage = null;
+
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -484,7 +658,7 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    Helper.Parse_BankCode(BankCode, pictureBox);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
                     return "OK";
                 }
@@ -502,7 +676,64 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Rebook money from one to another account
+        /// Collective transfer money terminated - render FlickerCode in WinForms
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous)
+#else
+        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
+        {
+            Image img = null;
+            return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay, 
+                HIRMS, pictureBox, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Collective transfer money terminated - render FlickerCode as Gif
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>        
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth,
+            int flickerHeight)
+        {
+            return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay, HIRMS, null, anonymous,
+                out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        /// <summary>
+        /// Rebook money from one to another account - General method
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="receiverName">Name of the recipient</param>
@@ -510,14 +741,29 @@ namespace libfintx
         /// <param name="receiverBIC">BIC of the recipient</param>
         /// <param name="amount">Amount to transfer</param>
         /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>  
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC, decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous)
+
+#if WINDOWS
+        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage,
+            int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#else
+        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage,
+            int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#endif
         {
+            flickerImage = null;
+
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -529,7 +775,7 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    Helper.Parse_BankCode(BankCode, pictureBox);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
                     return "OK";
                 }
@@ -547,7 +793,61 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Collect money from another account
+        /// Rebook money from one to another account - render FlickerCode as Gif
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>        
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return Rebooking(connectionDetails, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, HIRMS, null, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        /// <summary>
+        /// Rebook money from one to another account - render FlickerCode in WinForms
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="receiverName">Name of the recipient</param>
+        /// <param name="receiverIBAN">IBAN of the recipient</param>
+        /// <param name="receiverBIC">BIC of the recipient</param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous)
+#else
+        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
+        {
+            Image img = null;
+            return Rebooking(connectionDetails, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, HIRMS, pictureBox, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Collect money from another account - General method
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="payerName">Name of the payer</param>
@@ -559,15 +859,31 @@ namespace libfintx
         /// <param name="mandateNumber"></param>
         /// <param name="mandateDate"></param>
         /// <param name="creditorIdNumber"></param>
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC, decimal amount, string purpose, DateTime settlementDate, 
-                                     string mandateNumber, DateTime mandateDate, string creditorIdNumber, string HIRMS, PictureBox pictureBox, bool anonymous)
+
+#if WINDOWS
+        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
+            decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
+            string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            bool renderFlickerCodeAsGif = false)
+#else
+        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
+            decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
+            string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            bool renderFlickerCodeAsGif = false)
+#endif
         {
+            flickerImage = null;
+
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -575,11 +891,12 @@ namespace libfintx
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKDSE(connectionDetails, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
+                var BankCode = Transaction.HKDSE(connectionDetails, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate,
+                    mandateNumber, mandateDate, creditorIdNumber);
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    Helper.Parse_BankCode(BankCode, pictureBox);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
                     return "OK";
                 }
@@ -597,22 +914,103 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Collective collect money from other accounts
+        /// Collect money from another account - render FlickerCode as Gif
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="payerName">Name of the payer</param>
+        /// <param name="payerIBAN">IBAN of the payer</param>
+        /// <param name="payerBIC">BIC of the payer</param>         
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>    
+        /// <param name="settlementDate"></param>
+        /// <param name="mandateNumber"></param>
+        /// <param name="mandateDate"></param>
+        /// <param name="creditorIdNumber"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
+            decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
+            string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return Collect(connectionDetails, payerName, payerIBAN, payerBIC,
+            amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber, HIRMS, null, anonymous,
+            out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        /// <summary>
+        /// Collect money from another account - render FlickerCode in WinForms
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="payerName">Name of the payer</param>
+        /// <param name="payerIBAN">IBAN of the payer</param>
+        /// <param name="payerBIC">BIC of the payer</param>         
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>    
+        /// <param name="settlementDate"></param>
+        /// <param name="mandateNumber"></param>
+        /// <param name="mandateDate"></param>
+        /// <param name="creditorIdNumber"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
+            decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
+            string HIRMS, object pictureBox, bool anonymous)
+#else
+        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
+            decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
+            string HIRMS, object pictureBox, bool anonymous)
+#endif
+
+        {
+            Image img = null;
+            return Collect(connectionDetails, payerName, payerIBAN, payerBIC,
+            amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber, HIRMS, null, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Collective collect money from other accounts - General method
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="settlementDate"></param>
         /// <param name="painData"></param>
         /// <param name="numberOfTransactions"></param>
         /// <param name="totalAmount"></param>        
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
         /// <returns>
         /// Bank return codes
         /// </returns>
+
+#if WINDOWS
         public static string CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
-            string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous)
+            string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            bool renderFlickerCodeAsGif = false)
+#else
+        public static string CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
+           string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+           bool renderFlickerCodeAsGif = false)
+#endif
         {
+            flickerImage = null;
+
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -624,7 +1022,7 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    Helper.Parse_BankCode(BankCode, pictureBox);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
                     return "OK";
                 }
@@ -642,20 +1040,88 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Load mobile phone prepaid card
+        /// Collective collect money from other accounts - render FlickerCode as Gif
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="settlementDate"></param>
+        /// <param name="painData"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <param name="totalAmount"></param>        
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
+           string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return CollectiveCollect(connectionDetails, settlementDate, painData, numberOfTransactions,
+            totalAmount, HIRMS, null, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        /// <summary>
+        /// Collective collect money from other accounts - render FlickerCode in WinForms
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>  
-        /// <param name="mobileServiceProvider"></param>
-        /// <param name="phoneNumber"></param>
-        /// <param name="amount">Amount to transfer</param>            
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="settlementDate"></param>
+        /// <param name="painData"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <param name="totalAmount"></param>        
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber, int amount, string HIRMS, PictureBox pictureBox, bool anonymous)
+
+#if WINDOWS
+        public static string Collect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
+           string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous)
+#else
+        public static string Collect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
+           string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
         {
+            Image img = null;
+            return CollectiveCollect(connectionDetails, settlementDate, painData, numberOfTransactions,
+            totalAmount, HIRMS, null, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Load mobile phone prepaid card - General method
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>  
+        /// <param name="mobileServiceProvider"></param>
+        /// <param name="phoneNumber"></param>
+        /// <param name="amount">Amount to transfer</param>            
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+            int amount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            bool renderFlickerCodeAsGif = false)
+#else
+        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+            int amount, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            bool renderFlickerCodeAsGif = false)
+#endif
+        {
+            flickerImage = null;
+
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -667,7 +1133,7 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    Helper.Parse_BankCode(BankCode, pictureBox);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
                     return "OK";
                 }
@@ -685,12 +1151,60 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Submit bankers order
+        /// Load mobile phone prepaid card - render FlickerCode in WinForms
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>  
         /// <param name="mobileServiceProvider"></param>
         /// <param name="phoneNumber"></param>
-        /// <param name="amount"></param>      
+        /// <param name="amount">Amount to transfer</param>            
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+            int amount, string HIRMS, PictureBox pictureBox, bool anonymous)
+#else
+        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+            int amount, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
+        {
+            Image img = null;
+            return Prepaid(connectionDetails, mobileServiceProvider, phoneNumber,
+            amount, HIRMS, pictureBox, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Load mobile phone prepaid card - render FlickerCode as Gif
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>  
+        /// <param name="mobileServiceProvider"></param>
+        /// <param name="phoneNumber"></param>
+        /// <param name="amount">Amount to transfer</param>            
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+            int amount, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return Prepaid(connectionDetails, mobileServiceProvider, phoneNumber,
+            amount, HIRMS, pictureBox, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        /// <summary>
+        /// Submit bankers order - General method
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>       
         /// <param name="receiverName"></param>
         /// <param name="receiverIBAN"></param>
         /// <param name="receiverBIC"></param>
@@ -700,15 +1214,31 @@ namespace libfintx
         /// <param name="timeUnit"></param>
         /// <param name="rota"></param>
         /// <param name="executionDay"></param>
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 972 for "Sparkasse chipTan optisch"</param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
-        /// <param name="anonymous"></param>        
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay,
-                                                HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous)
+
+#if WINDOWS
+        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+            int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            bool renderFlickerCodeAsGif = false)
+#else
+        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+           bool renderFlickerCodeAsGif = false)
+#endif
         {
+            flickerImage = null;
+
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 TransactionConsole.Output = string.Empty;
@@ -720,7 +1250,7 @@ namespace libfintx
 
                 if (BankCode.Contains("+0030::"))
                 {
-                    Helper.Parse_BankCode(BankCode, pictureBox);
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
                     return "OK";
                 }
@@ -735,6 +1265,72 @@ namespace libfintx
             }
             else
                 return "Error";
+        }
+
+        /// <summary>
+        /// Submit bankers order - render FlickerCode in WinForms
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>       
+        /// <param name="receiverName"></param>
+        /// <param name="receiverIBAN"></param>
+        /// <param name="receiverBIC"></param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="firstTimeExecutionDay"></param>
+        /// <param name="timeUnit"></param>
+        /// <param name="rota"></param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous)
+#else
+        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
+        {
+            Image img = null;
+            return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC, 
+            amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Submit bankers order - render FlickerCode as Gif
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>       
+        /// <param name="receiverName"></param>
+        /// <param name="receiverIBAN"></param>
+        /// <param name="receiverBIC"></param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="firstTimeExecutionDay"></param>
+        /// <param name="timeUnit"></param>
+        /// <param name="rota"></param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
         }
 
         /// <summary>
