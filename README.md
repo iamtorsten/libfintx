@@ -1,5 +1,7 @@
 # libfintx
 
+[![Build Status](https://travis-ci.org/mrklintscher/libfintx.svg?branch=master)](https://travis-ci.org/mrklintscher/libfintx)
+
 An C# based client library for **HBCI 2.2** and **FinTS 3.0**.
 
 In 1995 the ZKA announced a common online banking standard called *Homebanking Computer Interface* (HBCI). In 2003 they published the next generation of this protocol standard and named it *Financial Transaction Services* (FinTS).
