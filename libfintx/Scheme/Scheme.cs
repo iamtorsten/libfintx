@@ -26,6 +26,8 @@ namespace libfintx
 {
     class Scheme
     {
+        public static string camt052 { get { return "urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.052.001.02"; } }
+
         public static string camt053 { get { return "urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02"; } }
     }
 

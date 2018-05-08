@@ -177,36 +177,67 @@ namespace libfintx
 
                 camt = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
 
-                TCAMTParser CAMTParser = null;
+                TCAM052TParser CAMT052Parser = null;
+                TCAM053TParser CAMT053Parser = null;
 
                 switch (camtVers)
                 {
                     case camtVersion.camt052:
-                        throw new Exception("Not implemented");
+                        // Save camt052 statement to file
+                        var camt052f = camt052File.Save(connectionDetails.Account, camt);
+
+                        // Process the camt053 file
+                        CAMT052Parser = new TCAM052TParser();
+                        CAMT052Parser.ProcessFile(camt052f);
+
+                        var CAMT052Statement = CAMT052Parser.statements;
+                        break;
                     case camtVersion.camt053:
                         // Save camt053 statement to file
                         var camt053f = camt053File.Save(connectionDetails.Account, camt);
 
                         // Process the camt053 file
-                        CAMTParser = new TCAMTParser();
-                        CAMTParser.ProcessFile(camt053f);
+                        CAMT053Parser = new TCAM053TParser();
+                        CAMT053Parser.ProcessFile(camt053f);
 
-                        var CAMTStatement = CAMTParser.statements;
+                        var CAMT053Statement = CAMT053Parser.statements;
                         break;
                 }
 
                 string BankCode_ = BankCode;
+
+                string Startpoint = string.Empty;
 
                 while (BankCode_.Contains("+3040::"))
                 {
                     switch (camtVers)
                     {
                         case camtVersion.camt052:
-                            throw new Exception("Not implemented");
+                            Helper.Parse_Message(BankCode_);
+
+                            Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+
+                            BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
+
+                            var camt052_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+
+                            // Save camt052 statement to file
+                            var camt052f_ = camt053File.Save(connectionDetails.Account, camt052_);
+
+                            // Process the camt053 file
+                            TCAM052TParser CAMTParser_ = new TCAM052TParser();
+                            CAMTParser_.ProcessFile(camt052f_);
+
+                            // Add all items to existing statement
+                            foreach (var item in CAMTParser_.statements)
+                            {
+                                CAMT052Parser.statements.Add(item);
+                            }
+                            break;
                         case camtVersion.camt053:
                             Helper.Parse_Message(BankCode_);
 
-                            var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+                            Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
                             BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
 
@@ -216,19 +247,19 @@ namespace libfintx
                             var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
 
                             // Process the camt053 file
-                            TCAMTParser CAMTParser_ = new TCAMTParser();
-                            CAMTParser_.ProcessFile(camt053f_);
+                            TCAM053TParser CAMTParser__ = new TCAM053TParser();
+                            CAMTParser__.ProcessFile(camt053f_);
 
                             // Add all items to existing statement
-                            foreach (var item in CAMTParser_.statements)
+                            foreach (var item in CAMTParser__.statements)
                             {
-                                CAMTParser.statements.Add(item);
+                                CAMT053Parser.statements.Add(item);
                             }
                             break;
                     }
                 }
 
-                return CAMTParser.statements;
+                return CAMT053Parser.statements;
             }
             else
             {

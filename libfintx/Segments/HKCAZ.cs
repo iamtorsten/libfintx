@@ -33,14 +33,41 @@ namespace libfintx
         /// </summary>
         public static string Init_HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint, camtVersion camtVers)
         {
+            string segments = string.Empty;
+
             switch (camtVers)
             {
                 case camtVersion.camt052:
-                    throw new Exception("Not implemented");
+                    Log.Write("Starting job HKCAZ: Request transactions in camt052 format");
+
+                    if (String.IsNullOrEmpty(FromDate))
+                    {
+                        if (String.IsNullOrEmpty(Startpoint))
+                        {
+                            segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + Scheme.camt052 + "+N'";
+                        }
+                        else
+                        {
+                            segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + Scheme.camt052 + "+N++++" + Startpoint + "'";
+                        }
+                    }
+                    else
+                    {
+                        if (String.IsNullOrEmpty(Startpoint))
+                        {
+                            segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + Scheme.camt052 + "+N+" + FromDate + "+" + ToDate + "'";
+                        }
+                        else
+                        {
+                            segments = "HKCAZ:" + SEGNUM.SETVal(3) + ":" + Segment.HKCAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + Scheme.camt052 + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                        }
+                    }
+
+                    SEG.NUM = SEGNUM.SETInt(3);
+
+                    return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
                 case camtVersion.camt053:
                     Log.Write("Starting job HKCAZ: Request transactions in camt053 format");
-
-                    string segments = string.Empty;
 
                     if (String.IsNullOrEmpty(FromDate))
                     {

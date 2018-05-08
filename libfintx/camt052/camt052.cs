@@ -21,12 +21,6 @@
  * 	
  */
 
-/*
- *
- *	Based on Timotheus Pokorra's C# implementation of OpenPetraPlugin_BankimportCAMT
- *	available at https://github.com/SolidCharity/OpenPetraPlugin_BankimportCAMT/blob/master/Client/ParseCAMT.cs
- *
- */
 
 using System;
 using System.IO;
@@ -45,7 +39,7 @@ namespace libfintx
     /// http://www.national-bank.de/fileadmin/user_upload/nationalbank/Service_Center/Electronic_Banking_Center/Downloads/Handbuecher_und_Bedingungen/SRZ-Anlage_5b_Kontoauszug_ISO_20022_camt_2010-06-15b.pdf
     /// http://www.hettwer-beratung.de/sepa-spezialwissen/sepa-technische-anforderungen/camt-format-camt-053/
     /// </summary>
-    public class TCAM053TParser
+    public class TCAM052TParser
     {
         /// <summary>
         /// the parsed bank statements
@@ -81,7 +75,7 @@ namespace libfintx
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filename);
-                string namespaceName = "urn:iso:std:iso:20022:tech:xsd:camt.053.001.02";
+                string namespaceName = "urn:iso:std:iso:20022:tech:xsd:camt.052.001.02";
                 XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
                 nsmgr.AddNamespace("camt", namespaceName);
 

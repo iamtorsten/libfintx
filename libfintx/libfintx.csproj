@@ -46,10 +46,12 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="camt052\camt052.cs" />
+    <Compile Include="camt052\camt052File.cs" />
     <Compile Include="camt053\camt053.cs" />
     <Compile Include="camt053\camt053File.cs" />
-    <Compile Include="camt053\camt053TStatement.cs" />
-    <Compile Include="camt053\camt053TTransaction.cs" />
+    <Compile Include="camt\camtTStatement.cs" />
+    <Compile Include="camt\camtTTransaction.cs" />
     <Compile Include="Console\TransactionConsole.cs" />
     <Compile Include="Data\AccountBalance.cs" />
     <Compile Include="Data\AccountInformations.cs" />
