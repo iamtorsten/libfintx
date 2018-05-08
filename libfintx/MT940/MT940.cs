@@ -418,7 +418,7 @@ namespace libfintx
 
             dir = Path.Combine(dir, "STA");
 
-            string filename = Helper.PathandFilename(Path.Combine(dir, Account + "_" + DateTime.Now + ".STA"));
+            string filename = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".STA"));
 
             if (!Directory.Exists(dir))
             {
@@ -511,7 +511,7 @@ namespace libfintx
                         dir = Path.Combine(documents, Program.Buildname);
                         dir = Path.Combine(dir, "MT940");
 
-                        string filename_ = Helper.PathandFilename(Path.Combine(dir, Account + "_" + DateTime.Now + ".MT940"));
+                        string filename_ = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".MT940"));
 
                         if (!Directory.Exists(dir))
                         {

@@ -259,7 +259,7 @@ namespace libfintx
                     }
                 }
 
-                return CAMT053Parser.statements;
+                return CAMT052Parser.statements != null ? CAMT052Parser.statements : CAMT053Parser.statements;
             }
             else
             {

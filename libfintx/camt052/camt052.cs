@@ -33,11 +33,7 @@ using System.Text;
 namespace libfintx
 {
     /// <summary>
-    /// parses bank statement files (ISO 20022 CAMT.053) in Germany;
-    /// for the structure of the file see
-    /// https://www.rabobank.com/nl/images/Format%20description%20CAMT.053.pdf
-    /// http://www.national-bank.de/fileadmin/user_upload/nationalbank/Service_Center/Electronic_Banking_Center/Downloads/Handbuecher_und_Bedingungen/SRZ-Anlage_5b_Kontoauszug_ISO_20022_camt_2010-06-15b.pdf
-    /// http://www.hettwer-beratung.de/sepa-spezialwissen/sepa-technische-anforderungen/camt-format-camt-053/
+    /// parses bank statement files (ISO 20022 CAMT.052) in Germany;
     /// </summary>
     public class TCAM052TParser
     {
@@ -86,7 +82,7 @@ namespace libfintx
                     throw new Exception("expecting xmlns = '" + namespaceName + "'");
                 }
 
-                XmlNodeList stmts = nodeDocument.SelectNodes("camt:BkToCstmrStmt/camt:Stmt", nsmgr);
+                XmlNodeList stmts = nodeDocument.SelectNodes("camt:BkToCstmrAcctRpt/camt:Rpt", nsmgr);
                 Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
                 foreach (XmlNode nodeStatement in stmts)
@@ -98,9 +94,6 @@ namespace libfintx
                     stmt.accountCode = nodeStatement.SelectSingleNode("camt:Acct/camt:Id/camt:IBAN", nsmgr).InnerText;
                     stmt.bankCode = nodeStatement.SelectSingleNode("camt:Acct/camt:Svcr/camt:FinInstnId/camt:BIC", nsmgr).InnerText;
                     stmt.currency = nodeStatement.SelectSingleNode("camt:Acct/camt:Ccy", nsmgr).InnerText;
-
-                    Int32 DiffElctrncSeqNb = Convert.ToInt32(stmt.bankCode) / Convert.ToInt32(stmt.accountCode);
-                    stmt.id = (Convert.ToInt32(stmt.id) + DiffElctrncSeqNb).ToString();
 
                     stmt.severalYears = false;
                     XmlNode nm = nodeStatement.SelectSingleNode("camt:Acct/camt:Ownr/camt:Nm", nsmgr);

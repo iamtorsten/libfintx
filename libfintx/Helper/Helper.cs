@@ -170,54 +170,50 @@ namespace libfintx
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
                 string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNSHA");
 
-                if (Trace.Enabled)
+                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var dir = Path.Combine(documents, Program.Buildname);
+
+                if (!Directory.Exists(dir))
                 {
-
-                    var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                    var dir = Path.Combine(documents, Program.Buildname);
-
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    // BPD
-                    dir = Path.Combine(dir, "BPD");
-
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                    {
-                        using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                        { };
-
-                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-                    }
-                    else
-                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-
-                    // UPD
-                    dir = Path.Combine(documents, Program.Buildname);
-                    dir = Path.Combine(dir, "UPD");
-
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                    {
-                        using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                        { };
-
-                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
-                    }
-                    else
-                        File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
+                    Directory.CreateDirectory(dir);
                 }
+
+                // BPD
+                dir = Path.Combine(dir, "BPD");
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
+                {
+                    using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
+                    { };
+
+                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
+                }
+                else
+                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
+
+                // UPD
+                dir = Path.Combine(documents, Program.Buildname);
+                dir = Path.Combine(dir, "UPD");
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
+                {
+                    using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
+                    { };
+
+                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
+                }
+                else
+                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
 
                 foreach (var item in values)
                 {
@@ -1004,11 +1000,11 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Make path / filename valid
+        /// Make filename valid
         /// </summary>
-        public static string PathandFilename (string value)
+        public static string MakeFilenameValid (string value)
         {
-            return value.Replace(" ", "").Replace(":", "");
+            return value.Replace(" ", "_").Replace(":", "");
         }
     }
 }
