@@ -28,6 +28,13 @@ namespace libfintx
 {
     class Trace
     {
+        /// <summary>
+        /// Enable tracecing
+        /// 
+        /// Warning:
+        /// This enables the library to write plain message incl. PIN, UserID and TAN
+        /// human readable into a textfile!
+        /// </summary>
         public static bool Enabled { get; set; }
 
         /// <summary>

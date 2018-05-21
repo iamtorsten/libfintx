@@ -215,6 +215,8 @@ namespace libfintx
             Log.Write("Connect to FinTS Server");
             Log.Write("Url: " + Url);
 
+            // Warning:
+            // This writes plain message incl. PIN, UserID and TAN human readable into a textfile!
             if (Trace.Enabled)
                 Trace.Write(Message);
 
@@ -249,6 +251,8 @@ namespace libfintx
                     }
                 }
 
+                // Warning:
+                // This writes plain message incl. PIN, UserID and TAN human readable into a textfile!
                 if (Trace.Enabled)
                     Trace.Write(FinTSMessage);
 
