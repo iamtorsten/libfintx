@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -72,8 +69,6 @@
     <Compile Include="Message\FinTSMessage.cs" />
     <Compile Include="Message\FinTSMessageAnonymous.cs" />
     <Compile Include="Message\MSG.cs" />
-    <Compile Include="Message\RDHMessage.cs" />
-    <Compile Include="Message\RDHMessageAnonymous.cs" />
     <Compile Include="MT940\MT940.cs" />
     <Compile Include="Pain\pain00100103.cs" />
     <Compile Include="Pain\pain00100203.cs" />
@@ -81,13 +76,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheme\Scheme.cs" />
     <Compile Include="Security\Enc.cs" />
-    <Compile Include="Security\Keytype.cs" />
-    <Compile Include="Security\PKCSKeyGenerator.cs" />
-    <Compile Include="Security\RDHKEY.cs" />
-    <Compile Include="Security\RDHXCrypt.cs" />
-    <Compile Include="Security\RDHXPassport.cs" />
-    <Compile Include="Security\RDH_KEYSTORE.cs" />
-    <Compile Include="Security\RDH_Profile.cs" />
     <Compile Include="Security\Sig.cs" />
     <Compile Include="Segments\HKCAZ.cs" />
     <Compile Include="Segments\SEG.cs" />
@@ -120,7 +108,6 @@
     <Compile Include="Segments\HKIDN.cs" />
     <Compile Include="Segments\HKKAZ.cs" />
     <Compile Include="Segments\HKPPD.cs" />
-    <Compile Include="Segments\HKSAK.cs" />
     <Compile Include="Segments\HKSAL.cs" />
     <Compile Include="Segments\HKSPA.cs" />
     <Compile Include="Segments\HKSYN.cs" />
@@ -132,7 +119,6 @@
     <Compile Include="Segments\HNSHK.cs" />
     <Compile Include="Segments\HNVSK.cs" />
     <Compile Include="Transactions\INI.cs" />
-    <Compile Include="Transactions\INI_RDH.cs" />
     <Compile Include="Transactions\Transaction.cs" />
     <Compile Include="Util\HBCI_Util.cs" />
   </ItemGroup>
@@ -167,7 +153,6 @@
     <None Include="Documentation\FinTS_4.1_XML-Syntax_2017-10-06_final_version.pdf" />
     <None Include="Documentation\FinTS_Rueckmeldungscodes_2017-10-06_final_version.pdf" />
     <None Include="Documentation\HBCI22 Final.pdf" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -38,7 +38,6 @@ using static libfintx.HKCDE;
 using static libfintx.HKCSB;
 using static libfintx.TAN;
 using static libfintx.TAN4;
-using static libfintx.INI_RDH;
 using static libfintx.HKTAB;
 using static libfintx.HKCAZ;
 using libfintx.Data;
@@ -133,12 +132,6 @@ namespace libfintx
         public static string HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint, camtVersion camtVers)
         {
             return Init_HKCAZ(connectionDetails, FromDate, ToDate, Startpoint, camtVers);
-        }
-
-        // RDH
-        public static bool INI_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
-        {
-            return Init_INI_RDH(BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password);
         }
     }
 }

@@ -287,48 +287,5 @@ namespace libfintx
             Console.WriteLine(HBCI.Transaction_Output());
         }
 #endif
-
-#if (DEBUG && WINDOWS)
-        public static void Test_RDH()
-        {
-            string FilePath = @"D:\rdh.rdh";
-            string Pwd = "rdh";
-
-            int BLZ = 0;
-            string Url = string.Empty;
-            int Port = 0;
-            int HBCIVersion = 0;
-            string UserID = string.Empty;
-
-            int Country = 280;
-            int ProfileVersion = 0;
-
-            BLZ = 76061482;
-            Url = "hbci01.fiducia.de";
-            Port = 3000;
-            HBCIVersion = 300;
-            UserID = "xxxx";
-
-            HBCI.Assembly("libfintx", "1.0");
-
-            HBCI.Tracing(true);
-
-            HBCI.Debugging(true);
-
-            // create rdh-10 key file
-            hbci.RDHKEY.Create(FilePath, Pwd, BLZ, UserID, Country, ProfileVersion);
-
-            // hbci key
-            hbci.RDHKEY.RDHKEYFILE = FilePath;
-            hbci.RDHKEY.RDHKEYFILEPWD = Pwd;
-
-            if (!HBCI.Synchronization_RDH(BLZ, Url, Port, HBCIVersion, UserID, FilePath, Pwd))
-            {
-                Console.WriteLine(HBCI.Transaction_Output());
-            }
-
-            Console.ReadLine();
-        }
-#endif
     }
 }
