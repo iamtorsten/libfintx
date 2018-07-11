@@ -1501,11 +1501,7 @@ namespace libfintx
             {
                 var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
 
-                var msg = BankCode;
-
-                msg = Helper.Parse_String(msg, "+A:1", "'").Replace(":", "");
-
-                return msg;
+                return Helper.Parse_TANMedium(BankCode);
             }
             else
             {
