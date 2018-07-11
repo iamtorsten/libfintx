@@ -443,7 +443,7 @@ namespace libfintx
 
 
                 //from here on optional fields / see page 46 in "FinTS_3.0_Messages_Geschaeftsvorfaelle_2015-08-07_final_version.pdf"
-                if (hisalParts.Length > 5)
+                if (hisalParts.Length > 5 && hisalParts[5].Contains(":"))
                 {
                     var hisalMarkedBalanceParts = hisalParts[5].Split(':');
                     balance.MarkedTransactions = Convert.ToDecimal($"{(hisalMarkedBalanceParts[0] == "D" ? "-" : "")}{hisalMarkedBalanceParts[1]}");
