@@ -1611,7 +1611,7 @@ namespace libfintx
         /// <summary>
         /// Enable / Disable Tracing
         /// </summary>
-        public static void Tracing(bool Enabled, bool Formatted)
+        public static void Tracing(bool Enabled, bool Formatted = false)
         {
             Trace.Enabled = Enabled;
             Trace.Formatted = Formatted;
