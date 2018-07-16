@@ -144,7 +144,7 @@ namespace libfintx
 
                     Log.Write(ex.ToString());
 
-                    throw new Exception("Software error");
+                    throw new Exception("Software error", ex);
                 }
             }
             else

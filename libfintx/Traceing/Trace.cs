@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace libfintx
 {
@@ -36,6 +37,8 @@ namespace libfintx
         /// human readable into a textfile!
         /// </summary>
         public static bool Enabled { get; set; }
+
+        public static bool Formatted { get; set; }
 
         /// <summary>
         /// Trace
@@ -68,7 +71,22 @@ namespace libfintx
                     { };
                 }
 
-                File.AppendAllText(Path.Combine(dir, "Trace.txt"), "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
+                var file = Path.Combine(dir, "Trace.txt");
+                if (Formatted)
+                {
+                    var formatted = string.Empty;
+                    var matches = Regex.Matches(Message, "[A-Z]{5}[^']*'");
+                    foreach (Match match in matches)
+                    {
+                        formatted += match.Value + Environment.NewLine;
+                    }
+
+                    File.AppendAllText(file, "[" + DateTime.Now + "]" + Environment.NewLine + formatted + Environment.NewLine);
+                }
+                else
+                {
+                    File.AppendAllText(file, "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
+                }
             }
         }
     }

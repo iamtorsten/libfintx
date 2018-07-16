@@ -321,12 +321,12 @@ namespace libfintx
                                 }
                             }
                         }
-
-                        // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
-                        if (String.IsNullOrEmpty(Segment.HKKAZ))
-                            Segment.HKKAZ = "6";
                     }
                 }
+
+                // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
+                if (String.IsNullOrEmpty(Segment.HKKAZ))
+                    Segment.HKKAZ = "6";
 
                 if (!String.IsNullOrEmpty(Segment.HIRMS))
                 {
@@ -443,7 +443,7 @@ namespace libfintx
 
 
                 //from here on optional fields / see page 46 in "FinTS_3.0_Messages_Geschaeftsvorfaelle_2015-08-07_final_version.pdf"
-                if (hisalParts.Length > 5)
+                if (hisalParts.Length > 5 && hisalParts[5].Contains(":"))
                 {
                     var hisalMarkedBalanceParts = hisalParts[5].Split(':');
                     balance.MarkedTransactions = Convert.ToDecimal($"{(hisalMarkedBalanceParts[0] == "D" ? "-" : "")}{hisalMarkedBalanceParts[1]}");
@@ -559,6 +559,20 @@ namespace libfintx
                 return true;
             }
             catch { return false; }
+        }
+
+        public static string Parse_TANMedium(string BankCode)
+        {
+            if (BankCode.Contains("+A:1"))
+                return Parse_String(BankCode, "+A:1", "'").Replace(":", "");
+
+            var match = Regex.Match(BankCode, @"\+M:1:+(\w+):");
+            if (match.Success) // HITAB:5:4:3+0+M:2:::::::::::Unregistriert 1::01514/654321::::::+M:1:::::::::::Handy:*********4321:::::::
+            {
+                return match.Groups[1].Value;
+            }
+
+            return BankCode;
         }
 
         static FlickerRenderer flickerCodeRenderer = null;

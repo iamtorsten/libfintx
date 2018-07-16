@@ -102,9 +102,9 @@ namespace libfintx
                 var Transactions = string.Empty;
 
                 if (BankCode.Contains("HNSHA"))
-                    Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNSHA");
+                    Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNSHA");
                 else // -> Postbank finishes with HNHBS
-                    Transactions = ":20:STARTUMS" + Helper.Parse_String(BankCode, ":20:STARTUMS", "'HNHBS");
+                    Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNHBS");
 
                 swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account));
 
@@ -117,7 +117,7 @@ namespace libfintx
 
                     BankCode_ = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
 
-                    var Transactions_ = ":20:STARTUMS" + Helper.Parse_String(BankCode_, ":20:STARTUMS", "'HNSHA");
+                    var Transactions_ = ":20:" + Helper.Parse_String(BankCode_, ":20:", "'HNSHA");
 
                     swiftStatements.AddRange(MT940.Serialize(Transactions_, connectionDetails.Account));
                 }
@@ -154,36 +154,55 @@ namespace libfintx
                 // Success
                 var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null, camtVers);
 
-                camt = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+                List<TStatement> result = new List<TStatement>();
 
                 TCAM052TParser CAMT052Parser = null;
                 TCAM053TParser CAMT053Parser = null;
 
-                switch (camtVers)
+                string BankCode_ = BankCode;
+
+                // Es kann sein, dass in der payload mehrere Dokumente enthalten sind
+                var xmlStartIdx = BankCode_.IndexOf("<?xml version=");
+                var xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
+                while (xmlStartIdx >= 0)
                 {
-                    case camtVersion.camt052:
-                        // Save camt052 statement to file
-                        var camt052f = camt052File.Save(connectionDetails.Account, camt);
-
-                        // Process the camt053 file
-                        CAMT052Parser = new TCAM052TParser();
-                        CAMT052Parser.ProcessFile(camt052f);
-
-                        var CAMT052Statement = CAMT052Parser.statements;
+                    if (xmlStartIdx > xmlEndIdx)
                         break;
-                    case camtVersion.camt053:
-                        // Save camt053 statement to file
-                        var camt053f = camt053File.Save(connectionDetails.Account, camt);
 
-                        // Process the camt053 file
-                        CAMT053Parser = new TCAM053TParser();
-                        CAMT053Parser.ProcessFile(camt053f);
+                    camt = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
 
-                        var CAMT053Statement = CAMT053Parser.statements;
-                        break;
+                    switch (camtVers)
+                    {
+                        case camtVersion.camt052:
+                            // Save camt052 statement to file
+                            var camt052f = camt052File.Save(connectionDetails.Account, camt);
+
+                            // Process the camt053 file
+                            if (CAMT052Parser == null)
+                                CAMT052Parser = new TCAM052TParser();
+                            CAMT052Parser.ProcessFile(camt052f);
+
+                            result.AddRange(CAMT052Parser.statements);
+                            break;
+                        case camtVersion.camt053:
+                            // Save camt053 statement to file
+                            var camt053f = camt053File.Save(connectionDetails.Account, camt);
+
+                            // Process the camt053 file
+                            if (CAMT053Parser == null)
+                                CAMT053Parser = new TCAM053TParser();
+                            CAMT053Parser.ProcessFile(camt053f);
+
+                            result.AddRange(CAMT052Parser.statements);
+                            break;
+                    }
+
+                    BankCode_ = BankCode_.Substring(xmlEndIdx);
+                    xmlStartIdx = BankCode_.IndexOf("<?xml version");
+                    xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
                 }
 
-                string BankCode_ = BankCode;
+                BankCode_ = BankCode;
 
                 string Startpoint = string.Empty;
 
@@ -201,17 +220,13 @@ namespace libfintx
                             var camt052_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
 
                             // Save camt052 statement to file
-                            var camt052f_ = camt053File.Save(connectionDetails.Account, camt052_);
+                            var camt052f_ = camt052File.Save(connectionDetails.Account, camt052_);
 
-                            // Process the camt053 file
-                            TCAM052TParser CAMTParser_ = new TCAM052TParser();
-                            CAMTParser_.ProcessFile(camt052f_);
+                            // Process the camt052 file
+                            CAMT052Parser.ProcessFile(camt052f_);
 
-                            // Add all items to existing statement
-                            foreach (var item in CAMTParser_.statements)
-                            {
-                                CAMT052Parser.statements.Add(item);
-                            }
+                            // Add all items
+                            result.AddRange(CAMT052Parser.statements);
                             break;
                         case camtVersion.camt053:
                             Helper.Parse_Message(BankCode_);
@@ -226,19 +241,15 @@ namespace libfintx
                             var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
 
                             // Process the camt053 file
-                            TCAM053TParser CAMTParser__ = new TCAM053TParser();
-                            CAMTParser__.ProcessFile(camt053f_);
+                            CAMT053Parser.ProcessFile(camt053f_);
 
                             // Add all items to existing statement
-                            foreach (var item in CAMTParser__.statements)
-                            {
-                                CAMT053Parser.statements.Add(item);
-                            }
+                            result.AddRange(CAMT053Parser.statements);
                             break;
                     }
                 }
 
-                return CAMT052Parser.statements != null ? CAMT052Parser.statements : CAMT053Parser.statements;
+                return result;
             }
             else
             {
@@ -1501,11 +1512,7 @@ namespace libfintx
             {
                 var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
 
-                var msg = BankCode;
-
-                msg = Helper.Parse_String(msg, "+A:1", "'").Replace(":", "");
-
-                return msg;
+                return Helper.Parse_TANMedium(BankCode);
             }
             else
             {
@@ -1604,9 +1611,10 @@ namespace libfintx
         /// <summary>
         /// Enable / Disable Tracing
         /// </summary>
-        public static void Tracing(bool Enabled)
+        public static void Tracing(bool Enabled, bool Formatted = false)
         {
             Trace.Enabled = Enabled;
+            Trace.Formatted = Formatted;
         }
 
         /// <summary>

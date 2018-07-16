@@ -46,7 +46,7 @@ namespace libfintx
                 Directory.CreateDirectory(dir);
             }
 
-            string filename = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".camt053"));
+            string filename = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + "-" + Guid.NewGuid() + ".camt053"));
 
             // camt053
             if (!File.Exists(filename))
