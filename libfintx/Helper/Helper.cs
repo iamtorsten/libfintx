@@ -170,50 +170,11 @@ namespace libfintx
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
                 string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNSHA");
 
-                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var dir = Path.Combine(documents, Program.Buildname);
-
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
                 // BPD
-                dir = Path.Combine(dir, "BPD");
-
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                {
-                    using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                    { };
-
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-                }
-                else
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
+                SaveBPD(BLZ, bpd);
 
                 // UPD
-                dir = Path.Combine(documents, Program.Buildname);
-                dir = Path.Combine(dir, "UPD");
-
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                {
-                    using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                    { };
-
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
-                }
-                else
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
+                SaveUPD(BLZ, UserID, upd);
 
                 foreach (var item in values)
                 {
@@ -500,12 +461,42 @@ namespace libfintx
 
                 for (int ctr = 0; ctr <= result.Count - 1; ctr++)
                 {
-                    string Accountnumber = "DE" + Parse_String(result[ctr].Value, "+DE", "+");
-                    string Accountowner = Parse_String(result[ctr].Value, "EUR+", "+");
-                    string Accounttype = Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
+                    string Accountnumber = null;
+                    string Accountbankcode = null;
+                    string Accountiban = null;
+                    string Accountuserid = null;
+                    string Accounttype = null;
+                    string Accountcurrency = null;
+                    string Accountowner = null;
 
-                    if (Accountnumber.Length > 2)
-                        Items.Add(new AccountInformations() { Accountnumber = Accountnumber, Accountowner = Accountowner, Accounttype = Accounttype });
+                    // HIUPD:165:6:4+3300785692::280:10050000+DE22100500003300785692+5985932562+10+EUR+Behrendt+Thomas+Sparkassenbuch Gold
+                    var match = Regex.Match(result[ctr].Value, @"HIUPD.*?\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+");
+                    if (match.Success)
+                    {
+                        var accountInfo = match.Groups[1].Value;
+                        var matchInfo = Regex.Match(accountInfo, @"(\d+)::280:(\d+)");
+                        if (matchInfo.Success)
+                        {
+                            Accountnumber = matchInfo.Groups[1].Value;
+                            Accountbankcode = matchInfo.Groups[2].Value;
+                        }
+
+                        Accountiban = match.Groups[2].Value;
+                        Accountuserid = match.Groups[3].Value;
+                        Accounttype = match.Groups[4].Value;
+                        Accountcurrency = match.Groups[5].Value;
+                        Accountowner = $"{match.Groups[6]} {match.Groups[7]}";
+                        Accounttype = match.Groups[8].Value;
+                    }
+                    else // Fallback
+                    {
+                        Accountiban = "DE" + Parse_String(result[ctr].Value, "+DE", "+");
+                        Accountowner = Parse_String(result[ctr].Value, "EUR+", "+");
+                        Accounttype = Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
+                    }
+
+                    if (Accountnumber?.Length > 2 || Accountiban?.Length > 2)
+                        Items.Add(new AccountInformations() { Accountnumber = Accountnumber, Accountbankcode = Accountbankcode, Accountiban = Accountiban, Accountuserid = Accountuserid, Accounttype = Accounttype, Accountcurrency = Accountcurrency, Accountowner = Accountowner});
                 }
 
                 if (Items.Count > 0)
@@ -513,7 +504,11 @@ namespace libfintx
                 else
                     return false;
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                Log.Write(ex.ToString());
+                return false;
+            }
         }
 
         /// <summary>
@@ -886,6 +881,77 @@ namespace libfintx
         public static string MakeFilenameValid (string value)
         {
             return value.Replace(" ", "_").Replace(":", "");
+        }
+
+        public static string GetProgramBaseDir()
+        {
+            var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (Program.Buildname == null)
+            {
+                throw new InvalidOperationException("Der Wert von Program.Buildname muss gesetzt sein.");
+            }
+
+            return Path.Combine(documents, Program.Buildname);
+        }
+
+        private static string GetBPDDir()
+        {
+            var dir = GetProgramBaseDir();
+            return Path.Combine(dir, "BPD");
+        }
+
+        private static string GetBPDFile(string dir, int BLZ)
+        {
+            return Path.Combine(dir, "280_" + BLZ + ".bpd");
+        }
+
+        private static string GetUPDDir()
+        {
+            var dir = GetProgramBaseDir();
+            return Path.Combine(dir, "UPD");
+        }
+
+        private static string GetUPDFile(string dir, int BLZ, string UserID)
+        {
+            return Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd");
+        }
+
+        public static string GetUPD(int BLZ, string UserID)
+        {
+            var dir = GetUPDDir();
+            var file = GetUPDFile(dir, BLZ, UserID);
+            return File.Exists(file) ? File.ReadAllText(file) : string.Empty;
+        }
+
+        public static void SaveUPD(int BLZ, string UserID, string upd)
+        {
+            string dir = GetUPDDir();
+            Directory.CreateDirectory(dir);
+            var file = GetUPDFile(dir, BLZ, UserID);
+            if (!File.Exists(file))
+            {
+                using (File.Create(file)) { };
+            }
+            File.WriteAllText(file, upd);
+        }
+
+        public static string GetBPD(int BLZ)
+        {
+            var dir = GetBPDDir();
+            var file = GetBPDFile(dir, BLZ);
+            return File.Exists(file) ? File.ReadAllText(file) : string.Empty;
+        }
+
+        public static void SaveBPD(int BLZ, string upd)
+        {
+            string dir = GetBPDDir();
+            Directory.CreateDirectory(dir);
+            var file = GetBPDFile(dir, BLZ);
+            if (!File.Exists(file))
+            {
+                using (File.Create(file)) { };
+            }
+            File.WriteAllText(file, upd);
         }
     }
 }

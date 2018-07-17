@@ -27,6 +27,7 @@ using libfintx.Data;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text.RegularExpressions;
 
 #if WINDOWS
@@ -72,6 +73,23 @@ namespace libfintx
                 return Helper.Parse_Balance(BankCode);
             }
             else {
+                Log.Write("Error in initialization.");
+                throw new Exception("Error in initialization.");
+            }
+        }
+
+        public static List<AccountInformations> Accounts(ConnectionDetails connectionDetails, bool anonymous)
+        {
+            if (Transaction.INI(connectionDetails, anonymous) == true)
+            {
+                // Success
+                var upd = Helper.GetUPD(connectionDetails.Blz, connectionDetails.UserId);
+                List<AccountInformations> result = new List<AccountInformations>();
+                Helper.Parse_Accounts(upd, result);
+                return result;
+            }
+            else
+            {
                 Log.Write("Error in initialization.");
                 throw new Exception("Error in initialization.");
             }

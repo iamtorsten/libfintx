@@ -25,8 +25,10 @@ namespace libfintx
 {
     public class AccountInformations
     {
+        public string Accountiban { get; set; }
         public string Accountnumber { get; set; }
         public string Accountbankcode { get; set; }
+        public string Accountuserid { get; set; }
         public string Accountowner { get; set; }
         public string Accounttype { get; set; }
         public string Accountcurrency { get; set; }
