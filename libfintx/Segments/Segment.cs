@@ -21,6 +21,10 @@
  * 	
  */
 
+using System.Reflection;
+using System.Linq;
+using System;
+
 namespace libfintx
 {
     public static class Segment
@@ -76,5 +80,25 @@ namespace libfintx
         /// TAN Medium Name
         /// </summary>
         public static string HITAB { get; set; }
+
+        public static void Reset()
+        {
+            try
+            {
+                var propList = typeof(Segment)
+                    .GetProperties(BindingFlags.Public | BindingFlags.Static)
+                    .Where(f => f.PropertyType == typeof(string));
+
+                foreach (var prop in propList)
+                {
+                    if (prop.CanWrite)
+                        prop.SetValue(null, null, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Couldn't reset Segment.", ex);
+            }
+        }
     }
 }
