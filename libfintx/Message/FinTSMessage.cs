@@ -260,9 +260,7 @@ namespace libfintx
             }
             catch (Exception ex)
             {
-                Log.Write(ex.ToString());
-
-                return string.Empty;
+                throw new InvalidOperationException("Fehler beim Versenden der HBCI-Nachricht.", ex);
             }
         }
     }
