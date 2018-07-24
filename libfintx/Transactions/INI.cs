@@ -33,6 +33,9 @@ namespace libfintx
         /// </summary>
         public static bool Init_INI(ConnectionDetails connectionDetails, bool anonymous)
         {
+            // Reset all Segment values
+            Segment.Reset();
+
             if (!anonymous)
             {
                 /// <summary>
@@ -73,9 +76,9 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(5);
 
-                    if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion,
-                        FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId,
-                        connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM))))
+                    string message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM);
+                    string response = FinTSMessage.Send(connectionDetails.Url, message);
+                    if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response))
                     {
                         // Sync OK
                         Log.Write("Synchronisation ok");
@@ -110,9 +113,9 @@ namespace libfintx
 
                         SEG.NUM = SEGNUM.SETInt(4);
 
-                        if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion,
-                            FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN,
-                            segments, Segment.HIRMS, SEG.NUM))))
+                        message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+                        response = FinTSMessage.Send(connectionDetails.Url, message);
+                        if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response))
                             return true;
                         else
                         {
