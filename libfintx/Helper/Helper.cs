@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -166,9 +167,9 @@ namespace libfintx
                 }
 
                 string msg_ = string.Join("", msg.ToArray());
-
+            
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
-                string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNSHA");
+                string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNHBS");
 
                 // BPD
                 SaveBPD(BLZ, bpd);
@@ -211,7 +212,7 @@ namespace libfintx
                             else
                             {
                                 if (!TANf.Contains(Segment.HIRMS))
-                                    throw new Exception($"Invalid HIRMS/Tan-Mode detected. Please choose one of the allowed modes: {TANf}");
+                                    throw new Exception($"Invalid HIRMS/Tan-Mode {Segment.HIRMS} detected. Please choose one of the allowed modes: {TANf}");
                             }
                             Segment.HIRMSf = TANf;
 
@@ -301,17 +302,23 @@ namespace libfintx
                     // Error
                     var BankCode = "HIRMG" + Helper.Parse_String(msg_, "HIRMG", "HNHBS");
 
-                    String[] values_ = BankCode.Split('+');
+                    // HIRMG:2:2+9800::Dialoginitialisierung abgebrochen.\r\nHIRMS:3:2:2+9210::Benutzerkennung ungültig. Bitte korrigieren Sie Ihre Zugangsdaten.\r\n\r\n
+                    String[] values_ = BankCode.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
+                    const string pattern = @"HIRMS.*?::(.*?)$";
+                    var messages = new List<string>();
                     foreach (var item in values_)
                     {
-                        if (!item.StartsWith("HIRMG"))
+                        var match = Regex.Match(item, pattern);
+                        if (match.Success)
                         {
-                            Console.WriteLine(item.Replace("::", ": "));
-
-                            Log.Write(item.Replace("::", ": "));
+                            var bankMessage = match.Groups[1].Value;
+                            Log.Write(bankMessage);
+                            messages.Add(bankMessage);
                         }
                     }
+
+                    TransactionConsole.Output = string.Join(Environment.NewLine, messages);
 
                     return false;
                 }
@@ -456,8 +463,8 @@ namespace libfintx
         {
             try
             {
-                string pattern = "HIUPD.*?HKSAK";
-                MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Singleline);
+                string pattern = $@"HIUPD.*?$";
+                MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Multiline);
 
                 for (int ctr = 0; ctr <= result.Count - 1; ctr++)
                 {
