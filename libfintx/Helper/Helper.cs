@@ -481,11 +481,11 @@ namespace libfintx
                     if (match.Success)
                     {
                         var accountInfo = match.Groups[1].Value;
-                        var matchInfo = Regex.Match(accountInfo, @"(\d+)::280:(\d+)");
+                        var matchInfo = Regex.Match(accountInfo, @"(\d+):(.*?):280:(\d+)");
                         if (matchInfo.Success)
                         {
                             Accountnumber = matchInfo.Groups[1].Value;
-                            Accountbankcode = matchInfo.Groups[2].Value;
+                            Accountbankcode = matchInfo.Groups[3].Value;
                         }
 
                         Accountiban = match.Groups[2].Value;
