@@ -222,6 +222,8 @@ namespace libfintx
                 SWIFTTransaction.typecode = swiftData.Substring(0, 3);
 
                 swiftData = swiftData.Substring(3);
+                if (swiftData.Length == 0)
+                    return;
 
                 char separator = swiftData[0];
 
