@@ -162,9 +162,17 @@ namespace libfintx
                 if (char.IsDigit(swiftData[0]))
                 {
                     // Posting date (MMDD)
-                    SWIFTTransaction.inputDate = new DateTime(SWIFTTransaction.valueDate.Year,
-                        Convert.ToInt32(swiftData.Substring(0, 2)),
-                        Convert.ToInt32(swiftData.Substring(2, 2)));
+                    int year = SWIFTTransaction.valueDate.Year;
+                    int month = Convert.ToInt32(swiftData.Substring(0, 2));
+                    int day = Convert.ToInt32(swiftData.Substring(2, 2));
+
+                    // Posting date 30 Dec 2017, Valuta date 1 Jan 2018
+                    if (month > SWIFTTransaction.valueDate.Month && month == SWIFTTransaction.valueDate.AddMonths(-1).Month)
+                    {
+                        year--;
+                    }
+
+                    SWIFTTransaction.inputDate = new DateTime(year, month, day);
 
                     swiftData = swiftData.Substring(4);
                 }
