@@ -568,8 +568,10 @@ namespace libfintx
             if (BankCode.Contains("+A:1"))
                 return Parse_String(BankCode, "+A:1", "'").Replace(":", "");
 
-            var match = Regex.Match(BankCode, @"\+M:1:+(\w+):");
-            if (match.Success) // HITAB:5:4:3+0+M:2:::::::::::Unregistriert 1::01514/654321::::::+M:1:::::::::::Handy:*********4321:::::::
+            // HITAB:4:4:3+0+M:1:::::::::::mT?:MFN1:********0340'
+            // HITAB:5:4:3+0+M:2:::::::::::Unregistriert 1::01514/654321::::::+M:1:::::::::::Handy:*********4321:::::::
+            var match = Regex.Match(BankCode, @"\+M:1:+(\w.+)?(:[\**\d]+)");
+            if (match.Success) 
             {
                 return match.Groups[1].Value;
             }
