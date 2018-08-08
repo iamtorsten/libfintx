@@ -38,6 +38,16 @@ namespace libfintx
 {
     public class Main
     {
+        public const string Error = "Error";
+
+        /// <summary>
+        /// Resets all temporary values. Should be used when switching to another bank connection.
+        /// </summary>
+        public static void Reset()
+        {
+            Segment.Reset();
+        }
+
         /// <summary>
         /// Synchronize bank connection
         /// </summary>
@@ -420,8 +430,9 @@ namespace libfintx
                     return msg;
                 }
             }
+
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -482,7 +493,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -596,7 +607,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -711,7 +722,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -828,7 +839,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -949,7 +960,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -1075,7 +1086,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -1186,7 +1197,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -1303,7 +1314,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -1413,7 +1424,7 @@ namespace libfintx
                 }
             }
             else
-                return "Error";
+                return Error;
         }
 
         /// <summary>
@@ -1530,7 +1541,7 @@ namespace libfintx
             {
                 var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
 
-                return Helper.Parse_TANMedium(BankCode);
+                return Helper.Parse_TANMedium(BankCode_);
             }
             else
             {

@@ -33,9 +33,6 @@ namespace libfintx
         /// </summary>
         public static bool Init_INI(ConnectionDetails connectionDetails, bool anonymous)
         {
-            // Reset all Segment values
-            Segment.Reset();
-
             if (!anonymous)
             {
                 /// <summary>
