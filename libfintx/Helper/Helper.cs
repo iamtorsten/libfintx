@@ -177,11 +177,48 @@ namespace libfintx
                 // UPD
                 SaveUPD(BLZ, UserID, upd);
 
+                bool success = true;
                 foreach (var item in values)
                 {
+                    if (item.Contains("HIRMG"))
+                    {
+                        // HIRMG:2:2+9050::Die Nachricht enthÃ¤lt Fehler.+9800::Dialog abgebrochen+9010::Initialisierung fehlgeschlagen, Auftrag nicht bearbeitet.
+                        // HIRMG:2:2+9800::Dialogabbruch.
+                        var match = Regex.Match(item, @"HIRMG:.+?\+(\d{4})::(.+)");
+                        if (match.Success)
+                        {
+                            var code = match.Groups[1].Value;
+                            if (code.StartsWith("9"))
+                            {
+                                success = false;
+
+                                string message = match.Groups[2].Value;
+                                Log.Write(message);
+                                TransactionConsole.Output = code + ":" + message;
+                            }
+                        }
+                    }
+
                     if (item.Contains("HIRMS"))
                     {
                         var item_ = item;
+
+                        // HIRMS:3:2:2+9942::PIN falsch. Zugang gesperrt.'
+                        var match = Regex.Match(item_, @"HIRMS:.*?\+(\d{4}):.*?:(.+)");
+                        if (match.Success)
+                        {
+                            var code = match.Groups[1].Value;
+                            if (code.StartsWith("9"))
+                            {
+                                success = false;
+
+                                if (TransactionConsole.Output != null)
+                                    TransactionConsole.Output += Environment.NewLine;
+                                string message = match.Groups[2].Value;
+                                Log.Write(message);
+                                TransactionConsole.Output += code + ":" + message;
+                            }
+                        }
 
                         if (item_.Contains("3920"))
                         {
@@ -208,7 +245,9 @@ namespace libfintx
                                 }
                             }
                             if (string.IsNullOrEmpty(Segment.HIRMS))
+                            {
                                 Segment.HIRMS = TAN;
+                            }
                             else
                             {
                                 if (!TANf.Contains(Segment.HIRMS))
@@ -290,43 +329,10 @@ namespace libfintx
                 if (String.IsNullOrEmpty(Segment.HKKAZ))
                     Segment.HKKAZ = "6";
 
-                if (!String.IsNullOrEmpty(Segment.HIRMS))
-                {
-                    UserID = string.Empty;
-                    return true;
-                }
-                else
-                {
-                    UserID = string.Empty;
-
-                    // Error
-                    var BankCode = "HIRMG" + Helper.Parse_String(msg_, "HIRMG", "HNHBS");
-
-                    // HIRMG:2:2+9800::Dialoginitialisierung abgebrochen.\r\nHIRMS:3:2:2+9210::Benutzerkennung ungültig. Bitte korrigieren Sie Ihre Zugangsdaten.\r\n\r\n
-                    String[] values_ = BankCode.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-
-                    const string pattern = @"HIRMS.*?::(.*?)$";
-                    var messages = new List<string>();
-                    foreach (var item in values_)
-                    {
-                        var match = Regex.Match(item, pattern);
-                        if (match.Success)
-                        {
-                            var bankMessage = match.Groups[1].Value;
-                            Log.Write(bankMessage);
-                            messages.Add(bankMessage);
-                        }
-                    }
-
-                    TransactionConsole.Output = string.Join(Environment.NewLine, messages);
-
-                    return false;
-                }
+                return success;
             }
             catch (Exception ex)
             {
-                UserID = string.Empty;
-
                 Log.Write(ex.ToString());
 
                 Console.WriteLine($"Software error: {ex.Message}");

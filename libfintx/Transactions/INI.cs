@@ -178,9 +178,9 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(4);
 
-                    if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion,
-                        FinTSMessage.Send(connectionDetails.Url, FinTSMessageAnonymous.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz,
-                        connectionDetails.UserId, connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM))))
+                    string message = FinTSMessageAnonymous.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM);
+                    string response = FinTSMessage.Send(connectionDetails.Url, message);
+                    if (Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response))
                     {
                         // Sync OK
                         Log.Write("Synchronisation anonymous ok");
