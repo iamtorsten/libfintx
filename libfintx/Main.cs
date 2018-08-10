@@ -46,6 +46,7 @@ namespace libfintx
         public static void Reset()
         {
             Segment.Reset();
+            TransactionConsole.Output = null;
         }
 
         /// <summary>
