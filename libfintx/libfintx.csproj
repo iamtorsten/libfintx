@@ -58,6 +58,7 @@
     <Compile Include="Data\TANProcess.cs" />
     <Compile Include="Data\TANProcesses.cs" />
     <Compile Include="Debugging\Debug.cs" />
+    <Compile Include="HBCIDialogResult.cs" />
     <Compile Include="Dialog\DLG.cs" />
     <Compile Include="Exceptions\HBCI_Exception.cs" />
     <Compile Include="Helper\Converter.cs" />

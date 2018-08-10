@@ -75,21 +75,22 @@ namespace libfintx
         /// <returns>
         /// Structured information about balance, creditline and used currency
         /// </returns>
-        public static AccountBalance Balance(ConnectionDetails connectionDetails, bool anonymous)
-        {            
+        public static HBCIDialogResult<AccountBalance> Balance(ConnectionDetails connectionDetails, bool anonymous)
+        {
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 // Success
                 var BankCode = Transaction.HKSAL(connectionDetails);
-                return Helper.Parse_Balance(BankCode);
+                return HBCIDialogResult<AccountBalance>.Success(Helper.Parse_Balance(BankCode));
             }
-            else {
+            else
+            {
                 Log.Write("Error in initialization.");
-                throw new Exception("Error in initialization.");
+                return HBCIDialogResult<AccountBalance>.Error(TransactionConsole.Output);
             }
         }
 
-        public static List<AccountInformations> Accounts(ConnectionDetails connectionDetails, bool anonymous)
+        public static HBCIDialogResult<List<AccountInformations>> Accounts(ConnectionDetails connectionDetails, bool anonymous)
         {
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
@@ -97,12 +98,12 @@ namespace libfintx
                 var upd = Helper.GetUPD(connectionDetails.Blz, connectionDetails.UserId);
                 List<AccountInformations> result = new List<AccountInformations>();
                 Helper.Parse_Accounts(upd, result);
-                return result;
+                return HBCIDialogResult<List<AccountInformations>>.Success(result);
             }
             else
             {
                 Log.Write("Error in initialization.");
-                throw new Exception("Error in initialization.");
+                return HBCIDialogResult<List<AccountInformations>>.Error(TransactionConsole.Output);
             }
         }
 
@@ -116,7 +117,7 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static List<SWIFTStatement> Transactions(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        public static HBCIDialogResult<List<SWIFTStatement>> Transactions(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
             var swiftStatements = new List<SWIFTStatement>();
 
@@ -150,12 +151,13 @@ namespace libfintx
 
                     swiftStatements.AddRange(MT940.Serialize(Transactions_, connectionDetails.Account));
                 }
-                return swiftStatements;
+                return HBCIDialogResult<List<SWIFTStatement>>.Success(swiftStatements);
             }
             else
             {
                 Log.Write("Initialization/sync failed");
-                throw new Exception("Initialization/sync failed");
+
+                return HBCIDialogResult<List<SWIFTStatement>>.Error(TransactionConsole.Output);
             }                
         }
 
@@ -169,7 +171,7 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static List<TStatement> Transactions_camt(ConnectionDetails connectionDetails, bool anonymous, camtVersion camtVers,
+        public static HBCIDialogResult<List<TStatement>> Transactions_camt(ConnectionDetails connectionDetails, bool anonymous, camtVersion camtVers,
             DateTime? startDate = null, DateTime? endDate = null)
         {
             if (Transaction.INI(connectionDetails, anonymous) == true)
@@ -278,12 +280,11 @@ namespace libfintx
                     }
                 }
 
-                return result;
+                return HBCIDialogResult<List<TStatement>>.Success(result);
             }
             else
             {
-                Log.Write("Initialization/sync failed");
-                throw new Exception("Initialization/sync failed");
+                return HBCIDialogResult<List<TStatement>>.Error(TransactionConsole.Output);
             }
         }
 
@@ -297,29 +298,35 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static List<AccountTransaction> TransactionsSimple(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        public static HBCIDialogResult<List<AccountTransaction>> TransactionsSimple(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
             var transactionList = new List<AccountTransaction>();
 
-            foreach (var swiftStatement in Transactions(connectionDetails, anonymous, startDate, endDate))
+            var res = Transactions(connectionDetails, anonymous, startDate, endDate);
+            if (res.IsSuccess)
             {
-                foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
+                foreach (var swiftStatement in res.Result)
                 {
-                    transactionList.Add(new AccountTransaction()
+                    foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
                     {
-                         OwnerAccount = swiftStatement.accountCode,
-                         OwnerBankcode= swiftStatement.bankCode,
-                         PartnerBIC = swiftTransaction.bankCode,
-                         PartnerIBAN = swiftTransaction.accountCode,
-                         PartnerName = swiftTransaction.partnerName,
-                         RemittanceText = swiftTransaction.description,
-                         TransactionType = swiftTransaction.text,
-                         TransactionDate = swiftTransaction.inputDate,
-                         ValueDate = swiftTransaction.valueDate
-                    });
+                        transactionList.Add(new AccountTransaction()
+                        {
+                            OwnerAccount = swiftStatement.accountCode,
+                            OwnerBankcode = swiftStatement.bankCode,
+                            PartnerBIC = swiftTransaction.bankCode,
+                            PartnerIBAN = swiftTransaction.accountCode,
+                            PartnerName = swiftTransaction.partnerName,
+                            RemittanceText = swiftTransaction.description,
+                            TransactionType = swiftTransaction.text,
+                            TransactionDate = swiftTransaction.inputDate,
+                            ValueDate = swiftTransaction.valueDate
+                        });
+                    }
                 }
+                return HBCIDialogResult<List<AccountTransaction>>.Success(transactionList);
             }
-            return transactionList;
+
+            return HBCIDialogResult<List<AccountTransaction>>.Error(res.ErrorMessage);
         }
 
         /// <summary>
@@ -342,7 +349,7 @@ namespace libfintx
         public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous)
 #else
-        public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous)
 #endif
 
@@ -369,7 +376,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
         {
             return Transfer(connectionDetails, receiverName, receiverIBAN, receiverBIC,
@@ -400,7 +407,7 @@ namespace libfintx
         public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
-        public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
 
@@ -420,7 +427,7 @@ namespace libfintx
                     // Gif image instead of picture box
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
                     
-                    return "OK";
+                    return null;
                 }
                 else
                 {
@@ -428,12 +435,13 @@ namespace libfintx
                     
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
-
             else
-                return Error;
+            {
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            }
         }
 
         /// <summary>
@@ -462,7 +470,7 @@ namespace libfintx
             decimal amount, string purpose, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous,
             out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
-        public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous,
             out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
@@ -482,7 +490,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return "OK";
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {
@@ -490,11 +498,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -518,7 +526,7 @@ namespace libfintx
         public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous)
 #else
-        public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous)
 #endif
 
@@ -546,7 +554,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, DateTime executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
         {
             return Transfer_Terminated(connectionDetails, receiverName, receiverIBAN, receiverBIC,
@@ -576,7 +584,7 @@ namespace libfintx
             string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous,
             out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
-        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+        public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous,
             out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
@@ -596,7 +604,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return "OK";
+                    return null;
                 }
                 else
                 {
@@ -604,11 +612,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -632,7 +640,7 @@ namespace libfintx
         public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous)
 #else
-        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+        public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous)
 #endif
 
@@ -659,7 +667,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+        public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth,
             int flickerHeight)
         {
@@ -691,7 +699,7 @@ namespace libfintx
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous,
             out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
-        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+        public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous,
             out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
@@ -711,7 +719,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return "OK";
+                    return null;
                 }
                 else
                 {
@@ -719,11 +727,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -747,7 +755,7 @@ namespace libfintx
         public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous)
 #else
-        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+        public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous)
 #endif
 
@@ -775,7 +783,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
+        public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth,
             int flickerHeight)
         {
@@ -808,7 +816,7 @@ namespace libfintx
             decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage,
             int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
-        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage,
             int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
@@ -828,7 +836,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return "OK";
+                    return null;
                 }
                 else
                 {
@@ -836,11 +844,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -860,7 +868,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
         {
             return Rebooking(connectionDetails, receiverName, receiverIBAN, receiverBIC,
@@ -887,7 +895,7 @@ namespace libfintx
         public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous)
 #else
-        public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
+        public static HBCIDialogResult Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous)
 #endif
 
@@ -927,7 +935,7 @@ namespace libfintx
             string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
-        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
+        public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
             string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
@@ -949,7 +957,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return "OK";
+                    return null;
                 }
                 else
                 {
@@ -957,11 +965,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -986,7 +994,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
+        public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
             string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
         {
@@ -1020,7 +1028,7 @@ namespace libfintx
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
             string HIRMS, object pictureBox, bool anonymous)
 #else
-        public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
+        public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
             string HIRMS, object pictureBox, bool anonymous)
 #endif
@@ -1055,7 +1063,7 @@ namespace libfintx
             string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
-        public static string CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
+        public static HBCIDialogResult CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
            bool renderFlickerCodeAsGif = false)
 #endif
@@ -1075,7 +1083,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return "OK";
+                    return null;
                 }
                 else
                 {
@@ -1083,11 +1091,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -1107,7 +1115,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
+        public static HBCIDialogResult CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
         {
             return CollectiveCollect(connectionDetails, settlementDate, painData, numberOfTransactions,
@@ -1133,7 +1141,7 @@ namespace libfintx
         public static string Collect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous)
 #else
-        public static string Collect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
+        public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous)
 #endif
 
@@ -1166,7 +1174,7 @@ namespace libfintx
             int amount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
-        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+        public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
             int amount, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #endif
@@ -1186,7 +1194,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return "OK";
+                    return null;
                 }
                 else
                 {
@@ -1194,11 +1202,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -1219,7 +1227,7 @@ namespace libfintx
         public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
             int amount, string HIRMS, PictureBox pictureBox, bool anonymous)
 #else
-        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+        public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
             int amount, string HIRMS, object pictureBox, bool anonymous)
 #endif
 
@@ -1245,7 +1253,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+        public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
             int amount, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
         {
             return Prepaid(connectionDetails, mobileServiceProvider, phoneNumber,
@@ -1282,7 +1290,7 @@ namespace libfintx
             int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
-        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+        public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
            int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
            bool renderFlickerCodeAsGif = false)
@@ -1303,7 +1311,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return "OK";
+                    return null;
                 }
                 else
                 {
@@ -1311,11 +1319,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult.DefaultError(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -1343,7 +1351,7 @@ namespace libfintx
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
            int executionDay, string HIRMS, object pictureBox, bool anonymous)
 #else
-        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+        public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
            int executionDay, string HIRMS, object pictureBox, bool anonymous)
 #endif
@@ -1376,7 +1384,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+        public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
            int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
         {
@@ -1392,7 +1400,7 @@ namespace libfintx
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public static string GetBankersOrders(ConnectionDetails connectionDetails, bool anonymous)
+        public static HBCIDialogResult<string> GetBankersOrders(ConnectionDetails connectionDetails, bool anonymous)
         {
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
@@ -1402,7 +1410,7 @@ namespace libfintx
                 if (BankCode.Contains("+0020::"))
                 {
                     // Success
-                    return BankCode;
+                    return HBCIDialogResult<string>.Success(BankCode);
                 }
                 else
                 {
@@ -1421,11 +1429,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return msg;
+                    return HBCIDialogResult<string>.Error(msg);
                 }
             }
             else
-                return Error;
+                return HBCIDialogResult<string>.Error(TransactionConsole.Output);
         }
 
         /// <summary>
@@ -1436,7 +1444,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string TAN(ConnectionDetails connectionDetails, string TAN)
+        public static HBCIDialogResult<string> TAN(ConnectionDetails connectionDetails, string TAN)
         {
             var BankCode = Transaction.TAN(connectionDetails, TAN);
 
@@ -1454,7 +1462,7 @@ namespace libfintx
                         msg = msg + "??" + item.Replace("::", ": ");
                 }
 
-                return msg;
+                return HBCIDialogResult<string>.Success(msg);
             }
             else
             {
@@ -1473,7 +1481,7 @@ namespace libfintx
 
                 Log.Write(msg);
 
-                return msg;
+                return HBCIDialogResult<string>.Error(msg);
             }
         }
 
@@ -1486,7 +1494,7 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static string TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
+        public static HBCIDialogResult TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
         {
             var BankCode = Transaction.TAN4(connectionDetails, TAN, MediumName);
 
@@ -1504,7 +1512,7 @@ namespace libfintx
                         msg = msg + "??" + item.Replace("::", ": ");
                 }
 
-                return msg;
+                return HBCIDialogResult<string>.Success(msg);
             }
             else
             {
@@ -1523,7 +1531,7 @@ namespace libfintx
 
                 Log.Write(msg);
 
-                return msg;
+                return HBCIDialogResult<string>.Error(msg);
             }
         }
 
@@ -1534,7 +1542,7 @@ namespace libfintx
         /// <returns>
         /// TAN Medium Name
         /// </returns>
-        public static string RequestTANMediumName(ConnectionDetails connectionDetails)
+        public static HBCIDialogResult<string> RequestTANMediumName(ConnectionDetails connectionDetails)
         {
             var BankCode = Transaction.HKTAB(connectionDetails);
 
@@ -1542,7 +1550,7 @@ namespace libfintx
             {
                 var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
 
-                return Helper.Parse_TANMedium(BankCode_);
+                return HBCIDialogResult<string>.Success(Helper.Parse_TANMedium(BankCode_));
             }
             else
             {
@@ -1561,7 +1569,7 @@ namespace libfintx
 
                 Log.Write(msg);
 
-                return msg;
+                return HBCIDialogResult<string>.Error(msg);
             }
         }
 
