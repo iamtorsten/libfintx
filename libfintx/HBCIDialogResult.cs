@@ -41,21 +41,21 @@ namespace libfintx
 
     public class HBCIDialogResult<T> : HBCIDialogResult
     {
-        public T Result { get; }
+        public T Data { get; }
 
         public static HBCIDialogResult<T> Error(string errorMessage)
         {
             return new HBCIDialogResult<T>(false, errorMessage, default(T));
         }
 
-        public static HBCIDialogResult<T> Success(T result)
+        public static HBCIDialogResult<T> Success(T data)
         {
-            return new HBCIDialogResult<T>(true, null, result);
+            return new HBCIDialogResult<T>(true, null, data);
         }
 
-        private HBCIDialogResult(bool success, string errorMessage, T result) : base(success, errorMessage)
+        private HBCIDialogResult(bool success, string errorMessage, T data) : base(success, errorMessage)
         {
-            Result = result;
+            Data = data;
         }
     }
 }

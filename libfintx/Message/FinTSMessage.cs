@@ -72,7 +72,7 @@ namespace libfintx
 
             if (HIRMS_TAN != null)
             {
-                if (HIRMS_TAN.Length > 3)
+                if (HIRMS_TAN.Length >= 10)
                 {
                     TAN_ = HIRMS_TAN.Substring(3, 7);
                     HIRMS_TAN = HIRMS_TAN.Substring(0, 3);

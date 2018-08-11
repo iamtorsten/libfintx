@@ -305,7 +305,7 @@ namespace libfintx
             var res = Transactions(connectionDetails, anonymous, startDate, endDate);
             if (res.IsSuccess)
             {
-                foreach (var swiftStatement in res.Result)
+                foreach (var swiftStatement in res.Data)
                 {
                     foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
                     {
@@ -427,7 +427,7 @@ namespace libfintx
                     // Gif image instead of picture box
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
                     
-                    return null;
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {
@@ -604,7 +604,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return null;
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {
@@ -719,7 +719,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return null;
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {
@@ -836,7 +836,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return null;
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {
@@ -957,7 +957,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return null;
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {
@@ -1083,7 +1083,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return null;
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {
@@ -1194,7 +1194,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return null;
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {
@@ -1311,7 +1311,7 @@ namespace libfintx
                 {
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                    return null;
+                    return HBCIDialogResult.DefaultSuccess();
                 }
                 else
                 {

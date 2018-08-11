@@ -45,13 +45,13 @@ namespace libfintx
                 if (HITANS == 2)
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
                 // Version 3
-                if (HITANS == 3)
+                else if (HITANS == 3)
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
                 // Version 4
-                if (HITANS == 4)
+                else if (HITANS == 4)
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
                 // Version 5
-                if (HITANS == 5)
+                else if (HITANS == 5)
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
                 else // default
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
@@ -62,13 +62,13 @@ namespace libfintx
                 if (HITANS == 2)
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
                 // Version 3
-                if (HITANS == 3)
+                else if (HITANS == 3)
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
                 // Version 4
-                if (HITANS == 4)
+                else if (HITANS == 4)
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
                 // Version 5
-                if (HITANS == 5)
+                else if (HITANS == 5)
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
                 else // default
                     segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";

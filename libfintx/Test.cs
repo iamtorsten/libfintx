@@ -140,7 +140,7 @@ namespace libfintx
 
             Console.WriteLine("[ Balance ]");
             Console.WriteLine();
-            Console.WriteLine(balance.Result.Balance);
+            Console.WriteLine(balance.Data.Balance);
             Console.WriteLine();
 
 #endregion
@@ -166,7 +166,7 @@ namespace libfintx
             libfintx.Main.Tracing(true);
 
             var accounts = libfintx.Main.Accounts(connectionDetails, Anonymous);
-            foreach (var acc in accounts.Result)
+            foreach (var acc in accounts.Data)
             {
                 Console.WriteLine(acc.ToString());
             }
@@ -275,7 +275,7 @@ namespace libfintx
                 Segment.HIRMS = "921"; // -> pushTAN
 
                 var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
-                Segment.HITAB = tanmediumname.Result;
+                Segment.HITAB = tanmediumname.Data;
 
                 System.Threading.Thread.Sleep(5000);
 
