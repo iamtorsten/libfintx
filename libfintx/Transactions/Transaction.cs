@@ -36,6 +36,7 @@ using static libfintx.HKDME;
 using static libfintx.HKPPD;
 using static libfintx.HKCDE;
 using static libfintx.HKCSB;
+using static libfintx.HKCDB;
 using static libfintx.TAN;
 using static libfintx.TAN4;
 using static libfintx.HKTAB;
@@ -112,6 +113,11 @@ namespace libfintx
         public static string HKCSB(ConnectionDetails connectionDetails)
         {
             return Init_HKCSB(connectionDetails);
+        }
+
+        public static string HKCDB(ConnectionDetails connectionDetails)
+        {
+            return Init_HKCDB(connectionDetails);
         }
 
         public static string TAN(ConnectionDetails connectionDetails, string TAN)

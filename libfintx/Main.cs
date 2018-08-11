@@ -1405,6 +1405,50 @@ namespace libfintx
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 // Success
+                var BankCode = Transaction.HKCDB(connectionDetails);
+
+                if (BankCode.Contains("+0020::"))
+                {
+                    // Success
+                    return HBCIDialogResult<string>.Success(BankCode);
+                }
+                else
+                {
+                    // Error
+                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+
+                    String[] values = BankCode_.Split('+');
+
+                    string msg = string.Empty;
+
+                    foreach (var item in values)
+                    {
+                        if (!item.StartsWith("HIRMS"))
+                            msg = msg + "??" + item.Replace("::", ": ");
+                    }
+
+                    Log.Write(msg);
+
+                    return HBCIDialogResult<string>.Error(msg);
+                }
+            }
+            else
+                return HBCIDialogResult<string>.Error(TransactionConsole.Output);
+        }
+
+        /// <summary>
+        /// Get terminated transfers
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>         
+        /// <param name="anonymous"></param>
+        /// <returns>
+        /// Banker's orders
+        /// </returns>
+        public static HBCIDialogResult<string> GetTerminatedTransfers(ConnectionDetails connectionDetails, bool anonymous)
+        {
+            if (Transaction.INI(connectionDetails, anonymous) == true)
+            {
+                // Success
                 var BankCode = Transaction.HKCSB(connectionDetails);
 
                 if (BankCode.Contains("+0020::"))
