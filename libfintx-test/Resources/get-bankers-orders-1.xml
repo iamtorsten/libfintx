@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>DA-SEPA-2018081309574540</MsgId>
+            <CreDtTm>2017-05-07T00:00:00</CreDtTm>
+            <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>1.00</CtrlSum>
+            <InitgPty>
+                <Nm>Abid Hussain</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>2109365</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+            </PmtTpInf>
+            <ReqdExctnDt>2018-09-01</ReqdExctnDt>
+            <Dbtr>
+                <Nm>Abid Hussain</Nm>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>DE12100500000940223457</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC>BELADEBEXXX</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+            <ChrgBr>SLEV</ChrgBr>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <EndToEndId>NOTPROVIDED</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="EUR">1.00</InstdAmt>
+                </Amt>
+                <CdtrAgt>
+                    <FinInstnId>
+                        <BIC>SYBKDE22XXX</BIC>
+                    </FinInstnId>
+                </CdtrAgt>
+                <Cdtr>
+                    <Nm>BePB SchönhauserAllee 63</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>DE07215106000123456789</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <Purp>
+                    <Cd>RINP</Cd>
+                </Purp>
+                <RmtInf>
+                    <Ustrd>Miete Abid Hussain, Schönhauser Allee 63</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>

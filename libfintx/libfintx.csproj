@@ -53,6 +53,7 @@
     <Compile Include="Data\AccountBalance.cs" />
     <Compile Include="Data\AccountInformations.cs" />
     <Compile Include="Data\ConnectionDetails.cs" />
+    <Compile Include="Data\pain00100103_ct_data.cs" />
     <Compile Include="Data\pain00100203_ct_data.cs" />
     <Compile Include="Data\pain00800202_cc_data.cs" />
     <Compile Include="Data\TANProcess.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Pain\pain00100103.cs" />
     <Compile Include="Pain\pain00100203.cs" />
     <Compile Include="Pain\pain00800202.cs" />
+    <Compile Include="Pain\pain_001_001_03\pain_001_001_03.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheme\Scheme.cs" />
     <Compile Include="Security\Enc.cs" />
@@ -155,6 +157,9 @@
     <None Include="Documentation\FinTS_4.1_XML-Syntax_2017-10-06_final_version.pdf" />
     <None Include="Documentation\FinTS_Rueckmeldungscodes_2017-10-06_final_version.pdf" />
     <None Include="Documentation\HBCI22 Final.pdf" />
+    <None Include="Pain\pain_001_001_03\pain.001.001.03.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

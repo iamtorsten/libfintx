@@ -15,7 +15,7 @@ namespace libfintx
         {
             Log.Write("Starting job HKCDB: Get bankers order");
 
-            string segments = "HKCDB:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
+            string segments = "HKCDB:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'";
 
             SEG.NUM = SEGNUM.SETInt(3);
 

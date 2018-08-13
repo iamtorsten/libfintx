@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 #if WINDOWS
 using System.Windows.Forms;
@@ -1400,7 +1401,7 @@ namespace libfintx
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public static HBCIDialogResult<string> GetBankersOrders(ConnectionDetails connectionDetails, bool anonymous)
+        public static HBCIDialogResult<List<pain00100103_ct_data>> GetBankersOrders(ConnectionDetails connectionDetails, bool anonymous)
         {
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
@@ -1409,8 +1410,29 @@ namespace libfintx
 
                 if (BankCode.Contains("+0020::"))
                 {
+                    List<pain00100103_ct_data> data = new List<pain00100103_ct_data>();
+
+                    var BankCode_ = BankCode;
+
+                    var xmlStartIdx = BankCode_.IndexOf("<?xml version=");
+                    var xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
+                    while (xmlStartIdx >= 0)
+                    {
+                        if (xmlStartIdx > xmlEndIdx)
+                            break;
+
+                        var xml = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
+
+                        var item = libfintx.pain00100103_ct_data.Create(xml);
+                        data.Add(item);
+
+                        BankCode_ = BankCode_.Substring(xmlEndIdx);
+                        xmlStartIdx = BankCode_.IndexOf("<?xml version");
+                        xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
+                    }
+
                     // Success
-                    return HBCIDialogResult<string>.Success(BankCode);
+                    return HBCIDialogResult<List<pain00100103_ct_data>>.Success(data);
                 }
                 else
                 {
@@ -1429,11 +1451,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return HBCIDialogResult<string>.Error(msg);
+                    return HBCIDialogResult<List<pain00100103_ct_data>>.Error(msg);
                 }
             }
             else
-                return HBCIDialogResult<string>.Error(TransactionConsole.Output);
+                return HBCIDialogResult<List<pain00100103_ct_data>>.Error(TransactionConsole.Output);
         }
 
         /// <summary>
