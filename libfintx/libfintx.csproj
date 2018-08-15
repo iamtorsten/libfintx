@@ -52,6 +52,7 @@
     <Compile Include="Console\TransactionConsole.cs" />
     <Compile Include="Data\AccountBalance.cs" />
     <Compile Include="Data\AccountInformations.cs" />
+    <Compile Include="Data\BankersOrder.cs" />
     <Compile Include="Data\ConnectionDetails.cs" />
     <Compile Include="Data\pain00100103_ct_data.cs" />
     <Compile Include="Data\pain00100203_ct_data.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Security\Sig.cs" />
     <Compile Include="Segments\HKCAZ.cs" />
     <Compile Include="Segments\HKCDB.cs" />
+    <Compile Include="Segments\HKCDL.cs" />
     <Compile Include="Segments\SEG.cs" />
     <Compile Include="Segments\Segment.cs" />
     <Compile Include="Segments\SEGNUM.cs" />

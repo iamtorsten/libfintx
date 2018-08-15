@@ -35,6 +35,7 @@ using static libfintx.HKDSE;
 using static libfintx.HKDME;
 using static libfintx.HKPPD;
 using static libfintx.HKCDE;
+using static libfintx.HKCDL;
 using static libfintx.HKCSB;
 using static libfintx.HKCDB;
 using static libfintx.TAN;
@@ -104,10 +105,14 @@ namespace libfintx
             return Init_HKPPD(connectionDetails, MobileServiceProvider, PhoneNumber, Amount);
         }
 
-        public static string HKCDE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota,
-            int ExecutionDay)
+        public static string HKCDE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota, int ExecutionDay)
         {
             return Init_HKCDE(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
+        }
+
+        public static string HKCDL(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string OrderId, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota, int ExecutionDay)
+        {
+            return Init_HKCDL(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, OrderId, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
         }
 
         public static string HKCSB(ConnectionDetails connectionDetails)

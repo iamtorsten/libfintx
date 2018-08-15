@@ -35,11 +35,11 @@ namespace libfintx
         {
             Log.Write("Starting job HKCDE: Submit bankers order");
 
-            string segments = "HKCDE:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+            string segments = "HKCDE:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 
-            var message = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1));
+            var message = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1));
 
-            message = message.Replace("'", "") + "+" + FirstTimeExecutionDay + ":" + (char)timeUnit + ":" + Rota + ":" + ExecutionDay + "'";
+            message = message.Replace("'", "") + "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char)timeUnit + ":" + Rota + ":" + ExecutionDay + "'";
 
             segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
 

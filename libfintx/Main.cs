@@ -27,9 +27,11 @@ using libfintx.Data;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using static libfintx.HKCDE;
 
 #if WINDOWS
 using System.Windows.Forms;
@@ -1393,6 +1395,57 @@ namespace libfintx
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
         }
 
+        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, string orderId, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
+            object pictureBox, bool anonymous, 
+            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+        {
+            flickerImage = null;
+
+            if (Transaction.INI(connectionDetails, anonymous) == true)
+            {
+                TransactionConsole.Output = string.Empty;
+
+                if (!String.IsNullOrEmpty(HIRMS))
+                    Segment.HIRMS = HIRMS;
+
+                var BankCode = Transaction.HKCDL(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, orderId, firstTimeExecutionDay, timeUnit, rota, executionDay);
+
+                if (BankCode.Contains("+0030::"))
+                {
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+
+                    return HBCIDialogResult.DefaultSuccess();
+                }
+                else
+                {
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
+
+                    Log.Write(msg);
+
+                    return HBCIDialogResult.DefaultError(msg);
+                }
+            }
+            else
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+        }
+
+        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, string orderId, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
+            object pictureBox, bool anonymous)
+        {
+            Image img = null;
+            return DeleteBankersOrder(conn, receiverName, receiverIBAN, receiverBIC, amount, purpose, orderId, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out img);
+        }
+
+        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, string orderId, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
+            object pictureBox, bool anonymous,
+            out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return DeleteBankersOrder(conn, receiverName, receiverIBAN, receiverBIC, amount, purpose, orderId, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
         /// <summary>
         /// Get banker's orders
         /// </summary>
@@ -1401,7 +1454,7 @@ namespace libfintx
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public static HBCIDialogResult<List<pain00100103_ct_data>> GetBankersOrders(ConnectionDetails connectionDetails, bool anonymous)
+        public static HBCIDialogResult<List<BankersOrder>> GetBankersOrders(ConnectionDetails connectionDetails, bool anonymous)
         {
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
@@ -1410,29 +1463,56 @@ namespace libfintx
 
                 if (BankCode.Contains("+0020::"))
                 {
-                    List<pain00100103_ct_data> data = new List<pain00100103_ct_data>();
+                    List<BankersOrder> data = new List<BankersOrder>();
 
                     var BankCode_ = BankCode;
 
-                    var xmlStartIdx = BankCode_.IndexOf("<?xml version=");
-                    var xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
-                    while (xmlStartIdx >= 0)
+                    var startIdx = BankCode_.IndexOf("HICDB");
+                    if (startIdx < 0)
+                        return HBCIDialogResult<List<BankersOrder>>.Success(data);
+                    
+                    BankCode_ = BankCode_.Substring(startIdx);
+                    for (; ; )
                     {
-                        if (xmlStartIdx > xmlEndIdx)
+                        var match = Regex.Match(BankCode_, @"HICDB.+?(<\?xml.+?</Document>)\+(.*?)\+(\d*):([MW]):(\d+):(\d+)", RegexOptions.Singleline);
+                        if (match.Success)
+                        {
+                            var xml = match.Groups[1].Value;
+
+                            var orderId = match.Groups[2].Value;
+
+                            var firstExecutionDateStr = match.Groups[3].Value;
+                            DateTime? firstExecutionDate = !string.IsNullOrWhiteSpace(firstExecutionDateStr) ? DateTime.ParseExact(firstExecutionDateStr, "yyyyMMdd", CultureInfo.InvariantCulture) : default(DateTime?);
+
+                            var timeUnitStr = match.Groups[4].Value;
+                            TimeUnit timeUnit = timeUnitStr == "M" ? TimeUnit.Monthly : TimeUnit.Weekly;
+
+                            var rota = match.Groups[5].Value;
+
+                            var executionDayStr = match.Groups[6].Value;
+                            int executionDay = Convert.ToInt32(executionDayStr);
+
+                            var painData = pain00100103_ct_data.Create(xml);
+
+                            if (firstExecutionDate.HasValue && executionDay > 0)
+                            {
+                                var item = new BankersOrder(orderId, painData, firstExecutionDate.Value, timeUnit, rota, executionDay);
+                                data.Add(item);
+                            }
+                        }
+
+                        var endIdx = BankCode_.IndexOf("'");
+                        if (BankCode_.Length <= endIdx + 1)
                             break;
 
-                        var xml = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
-
-                        var item = libfintx.pain00100103_ct_data.Create(xml);
-                        data.Add(item);
-
-                        BankCode_ = BankCode_.Substring(xmlEndIdx);
-                        xmlStartIdx = BankCode_.IndexOf("<?xml version");
-                        xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
+                        BankCode_ = BankCode_.Substring(endIdx + 1);
+                        startIdx = BankCode_.IndexOf("HICDB");
+                        if (startIdx < 0)
+                            break;
                     }
 
                     // Success
-                    return HBCIDialogResult<List<pain00100103_ct_data>>.Success(data);
+                    return HBCIDialogResult<List<BankersOrder>>.Success(data);
                 }
                 else
                 {
@@ -1451,11 +1531,11 @@ namespace libfintx
 
                     Log.Write(msg);
 
-                    return HBCIDialogResult<List<pain00100103_ct_data>>.Error(msg);
+                    return HBCIDialogResult<List<BankersOrder>>.Error(msg);
                 }
             }
             else
-                return HBCIDialogResult<List<pain00100103_ct_data>>.Error(TransactionConsole.Output);
+                return HBCIDialogResult<List<BankersOrder>>.Error(TransactionConsole.Output);
         }
 
         /// <summary>
