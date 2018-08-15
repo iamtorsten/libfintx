@@ -75,7 +75,7 @@ namespace libfintx
                 if (Formatted)
                 {
                     var formatted = string.Empty;
-                    var matches = Regex.Matches(Message, "[A-Z]{5}[^']*'");
+                    var matches = Regex.Matches(Message, "[A-Z]{5}[^']*'+");
                     foreach (Match match in matches)
                     {
                         formatted += match.Value + Environment.NewLine;
