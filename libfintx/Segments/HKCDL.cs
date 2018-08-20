@@ -18,10 +18,10 @@ namespace libfintx
 
             string segments = "HKCDL:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 
-            var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1));
-            sepaMessage = sepaMessage.Replace("'", "") + "++" + OrderId + "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char)timeUnit + ":" + Rota + ":" + ExecutionDay + "'";
+            var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1)).Replace("'", "");
+            segments = segments.Replace("@@", "@" + sepaMessage.Length + "@") + sepaMessage;
 
-            segments = segments.Replace("@@", "@" + (sepaMessage.Length - 1) + "@") + sepaMessage + "++";
+            segments += "++" + OrderId + "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char)timeUnit + ":" + Rota + ":" + ExecutionDay + "'";
 
             segments = HKTAN.Init_HKTAN(segments);
 
