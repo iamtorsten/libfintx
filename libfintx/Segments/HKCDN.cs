@@ -7,16 +7,16 @@ using static libfintx.HKCDE;
 
 namespace libfintx
 {
-    public class HKCDL
+    public class HKCDN
     {
         /// <summary>
-        /// Delete banker's order
+        /// Submit bankers order
         /// </summary>
-        public static string Init_HKCDL(ConnectionDetails connectionDetails, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit, string Rota, int ExecutionDay)
+        public static string Init_HKCDN(ConnectionDetails connectionDetails, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit, string Rota, int ExecutionDay)
         {
-            Log.Write("Starting job HKCDL: Delete bankers order");
+            Log.Write("Starting job HKCDN: Modify bankers order");
 
-            string segments = "HKCDL:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
+            string segments = "HKCDN:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 
             var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1)).Replace("'", "");
             segments = segments.Replace("@@", "@" + sepaMessage.Length + "@") + sepaMessage;

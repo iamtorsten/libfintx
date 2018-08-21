@@ -1294,7 +1294,7 @@ namespace libfintx
             bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
-           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
            int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
            bool renderFlickerCodeAsGif = false)
 #endif
@@ -1361,7 +1361,7 @@ namespace libfintx
 
         {
             Image img = null;
-            return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC, 
+            return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out img);
         }
 
@@ -1395,10 +1395,17 @@ namespace libfintx
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
         }
 
-        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
-            string receiverBIC, decimal amount, string purpose, string orderId, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
-            object pictureBox, bool anonymous, 
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+#if WINDOWS
+        public static string ModifyBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+            int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            bool renderFlickerCodeAsGif = false)
+#else
+        public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, string OrderId, string receiverName, string receiverIBAN,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+           bool renderFlickerCodeAsGif = false)
+#endif
         {
             flickerImage = null;
 
@@ -1409,7 +1416,7 @@ namespace libfintx
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCDL(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, orderId, firstTimeExecutionDay, timeUnit, rota, executionDay);
+                var BankCode = Transaction.HKCDN(connectionDetails, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
 
                 if (BankCode.Contains("+0030::"))
                 {
@@ -1430,20 +1437,121 @@ namespace libfintx
                 return HBCIDialogResult.DefaultError(TransactionConsole.Output);
         }
 
-        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string receiverName, string receiverIBAN,
-            string receiverBIC, decimal amount, string purpose, string orderId, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
+        /// <summary>
+        /// Modify bankers order - render FlickerCode in WinForms
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>       
+        /// <param name="receiverName"></param>
+        /// <param name="receiverIBAN"></param>
+        /// <param name="receiverBIC"></param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="firstTimeExecutionDay"></param>
+        /// <param name="timeUnit"></param>
+        /// <param name="rota"></param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+
+#if WINDOWS
+        public static string ModifyBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous)
+#else
+        public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous)
+#endif
+
+        {
+            Image img = null;
+            return ModifyBankersOrder(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out img);
+        }
+
+        /// <summary>
+        /// Modify bankers order - render FlickerCode as Gif
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>       
+        /// <param name="receiverName"></param>
+        /// <param name="receiverIBAN"></param>
+        /// <param name="receiverBIC"></param>
+        /// <param name="amount">Amount to transfer</param>
+        /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
+        /// <param name="firstTimeExecutionDay"></param>
+        /// <param name="timeUnit"></param>
+        /// <param name="rota"></param>
+        /// <param name="executionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="anonymous"></param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
+           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+        {
+            return ModifyBankersOrder(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC,
+            amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
+        }
+
+        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
+            object pictureBox, bool anonymous, 
+            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+        {
+            flickerImage = null;
+
+            if (Transaction.INI(connectionDetails, anonymous) == true)
+            {
+                TransactionConsole.Output = string.Empty;
+
+                if (!String.IsNullOrEmpty(HIRMS))
+                    Segment.HIRMS = HIRMS;
+
+                var BankCode = Transaction.HKCDL(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+
+                if (BankCode.Contains("+0030::"))
+                {
+                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+
+                    return HBCIDialogResult.DefaultSuccess();
+                }
+                else
+                {
+                    var msg = Helper.Parse_BankCode_Error(BankCode);
+
+                    Log.Write(msg);
+
+                    return HBCIDialogResult.DefaultError(msg);
+                }
+            }
+            else
+                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+        }
+
+        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string orderId, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
             object pictureBox, bool anonymous)
         {
             Image img = null;
-            return DeleteBankersOrder(conn, receiverName, receiverIBAN, receiverBIC, amount, purpose, orderId, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out img);
+            return DeleteBankersOrder(conn, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out img);
         }
 
-        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string receiverName, string receiverIBAN,
-            string receiverBIC, decimal amount, string purpose, string orderId, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
+        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string orderId, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
             object pictureBox, bool anonymous,
             out Image flickerImage, int flickerWidth, int flickerHeight)
         {
-            return DeleteBankersOrder(conn, receiverName, receiverIBAN, receiverBIC, amount, purpose, orderId, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
+            return DeleteBankersOrder(conn, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out flickerImage, flickerWidth, flickerHeight, true);
         }
 
         /// <summary>

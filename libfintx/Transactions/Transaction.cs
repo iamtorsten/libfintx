@@ -35,6 +35,7 @@ using static libfintx.HKDSE;
 using static libfintx.HKDME;
 using static libfintx.HKPPD;
 using static libfintx.HKCDE;
+using static libfintx.HKCDN;
 using static libfintx.HKCDL;
 using static libfintx.HKCSB;
 using static libfintx.HKCDB;
@@ -110,9 +111,14 @@ namespace libfintx
             return Init_HKCDE(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
         }
 
-        public static string HKCDL(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, string OrderId, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota, int ExecutionDay)
+        public static string HKCDN(ConnectionDetails connectionDetails, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota, int ExecutionDay)
         {
-            return Init_HKCDL(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, OrderId, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
+            return Init_HKCDN(connectionDetails, OrderId, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
+        }
+
+        public static string HKCDL(ConnectionDetails connectionDetails, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota, int ExecutionDay)
+        {
+            return Init_HKCDL(connectionDetails, OrderId, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
         }
 
         public static string HKCSB(ConnectionDetails connectionDetails)

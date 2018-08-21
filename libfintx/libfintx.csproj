@@ -84,6 +84,7 @@
     <Compile Include="Segments\HKCAZ.cs" />
     <Compile Include="Segments\HKCDB.cs" />
     <Compile Include="Segments\HKCDL.cs" />
+    <Compile Include="Segments\HKCDN.cs" />
     <Compile Include="Segments\SEG.cs" />
     <Compile Include="Segments\Segment.cs" />
     <Compile Include="Segments\SEGNUM.cs" />
