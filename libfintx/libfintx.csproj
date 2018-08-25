@@ -104,7 +104,7 @@
     <Compile Include="Data\AccountTransaction.cs" />
     <Compile Include="Segments\HKCCM.cs" />
     <Compile Include="Segments\HKCCS.cs" />
-    <Compile Include="Segments\HKCCST.cs" />
+    <Compile Include="Segments\HKCSE.cs" />
     <Compile Include="Segments\HKCDE.cs" />
     <Compile Include="Segments\HKCME.cs" />
     <Compile Include="Segments\HKCSB.cs" />

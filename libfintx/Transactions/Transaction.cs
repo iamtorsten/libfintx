@@ -27,7 +27,7 @@ using static libfintx.INI;
 using static libfintx.HKSAL;
 using static libfintx.HKKAZ;
 using static libfintx.HKCCS;
-using static libfintx.HKCCST;
+using static libfintx.HKCSE;
 using static libfintx.HKCCM;
 using static libfintx.HKCME;
 using static libfintx.HKCUM;
@@ -70,9 +70,9 @@ namespace libfintx
             return Init_HKCCS(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage);
         }
 
-        public static string HKCCST(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        public static string HKCSE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
         {
-            return Init_HKCCST(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+            return Init_HKCSE(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
         }
 
         public static string HKCCM(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount)

@@ -487,7 +487,7 @@ namespace libfintx
                 if (!String.IsNullOrEmpty(HIRMS))
                     Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCCST(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
+                var BankCode = Transaction.HKCSE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
 
                 if (BankCode.Contains("+0030::"))
                 {

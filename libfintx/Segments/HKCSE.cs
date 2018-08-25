@@ -26,16 +26,16 @@ using System;
 
 namespace libfintx
 {
-    public static class HKCCST
+    public static class HKCSE
     {
         /// <summary>
         /// Transfer terminated
         /// </summary>
-        public static string Init_HKCCST(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        public static string Init_HKCSE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
         {
-            Log.Write("Starting job HKCCS: Transfer money terminated");
+            Log.Write("Starting job HKCSE: Transfer money terminated");
 
-            string segments = "HKCCS:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+            string segments = "HKCSE:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
             var message = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
 
