@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using static libfintx.HKCDE;
@@ -1586,6 +1587,8 @@ namespace libfintx
                         if (match.Success)
                         {
                             var xml = match.Groups[1].Value;
+                            // xml ist UTF-8
+                            xml = Converter.ConvertEncoding(xml, Encoding.GetEncoding("ISO-8859-1"), Encoding.UTF8);
 
                             var orderId = match.Groups[2].Value;
 
