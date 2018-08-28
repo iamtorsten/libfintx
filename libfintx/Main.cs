@@ -420,23 +420,9 @@ namespace libfintx
                 Segment.HIRMS = HIRMS;
 
             var BankCode = Transaction.HKCCS(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+            var messages = Helper.Parse_BankCode(BankCode);
 
-            if (BankCode.Contains("+0030::"))
-            {
-                // Gif image instead of picture box
-                Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                return new HBCIDialogResult();
-            }
-            else
-            {
-                var msg = Helper.Parse_BankCode(BankCode);
-                var result = new HBCIDialogResult(msg);
-
-                Log.Write(result.ToString());
-
-                return result;
-            }
+            return new HBCIDialogResult(messages);
         }
 
         /// <summary>
@@ -480,21 +466,9 @@ namespace libfintx
                 Segment.HIRMS = HIRMS;
 
             var BankCode = Transaction.HKCSE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
+            var messages = Helper.Parse_BankCode(BankCode);
 
-            if (BankCode.Contains("+0030::"))
-            {
-                var messages = Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                return new HBCIDialogResult(messages);
-            }
-            else
-            {
-                var msg = Helper.Parse_BankCode(BankCode);
-                var result = new HBCIDialogResult(msg);
-                Log.Write(result.ToString());
-
-                return result;
-            }
+            return new HBCIDialogResult(messages);
         }
 
         /// <summary>
@@ -591,20 +565,9 @@ namespace libfintx
                 Segment.HIRMS = HIRMS;
 
             var BankCode = Transaction.HKCCM(connectionDetails, painData, numberOfTransactions, totalAmount);
+            var messages = Helper.Parse_BankCode(BankCode);
 
-            if (BankCode.Contains("+0030::"))
-            {
-                var messages = Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-                return new HBCIDialogResult(messages);
-            }
-            else
-            {
-                var msg = Helper.Parse_BankCode(BankCode);
-                var result = new HBCIDialogResult(msg);
-                Log.Write(result);
-
-                return result;
-            }
+            return new HBCIDialogResult(messages);
         }
 
         /// <summary>
@@ -705,9 +668,8 @@ namespace libfintx
 
             var BankCode = Transaction.HKCME(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay);
             var messages = Helper.Parse_BankCode(BankCode);
-            var result = new HBCIDialogResult(messages);
 
-            return result;
+            return new HBCIDialogResult(messages);
         }
 
         /// <summary>

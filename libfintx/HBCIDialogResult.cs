@@ -9,11 +9,11 @@ namespace libfintx
 {
     public class HBCIDialogResult
     {
-        public bool IsSuccess => Messages.Any(m => m.IsSuccess);
+        public bool IsSuccess => messages != null && messages.Any(m => m.IsSuccess);
 
-        public bool HasWarning => Messages.Any(m => m.IsWarning);
+        public bool HasWarning => messages != null && messages.Any(m => m.IsWarning);
 
-        public bool HasError => Messages.Any(m => m.IsError);
+        public bool HasError => messages != null && messages.Any(m => m.IsError);
 
         private List<HBCIBankMessage> messages;
         public IEnumerable<HBCIBankMessage> Messages => messages;
