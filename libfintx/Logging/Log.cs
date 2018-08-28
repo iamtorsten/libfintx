@@ -30,6 +30,11 @@ namespace libfintx
     {
         public static bool Enabled { get; set; }
 
+        public static void Write(object obj)
+        {
+            Write(obj.ToString());
+        }
+
         /// <summary>
         /// Log
         /// </summary>

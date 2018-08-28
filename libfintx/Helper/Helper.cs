@@ -40,6 +40,8 @@ namespace libfintx
 {
     public static class Helper
     {
+        private const string PatternResultMessage = @"(\d+)::(.+)";
+
         /// <summary>
         /// Pad zeros
         /// </summary>
@@ -153,10 +155,12 @@ namespace libfintx
         /// <param name="HBCIVersion"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static bool Parse_Segment(string UserID, int BLZ, int HBCIVersion, string Message)
+        public static List<HBCIBankMessage> Parse_Segment(string UserID, int BLZ, int HBCIVersion, string Message)
         {
             try
             {
+                List<HBCIBankMessage> result = new List<HBCIBankMessage>();
+
                 String[] values = Message.Split('\'');
 
                 List<string> msg = new List<string>();
@@ -177,55 +181,39 @@ namespace libfintx
                 // UPD
                 SaveUPD(BLZ, UserID, upd);
 
-                bool success = true;
                 foreach (var item in values)
                 {
                     if (item.Contains("HIRMG"))
                     {
                         // HIRMG:2:2+9050::Die Nachricht enthÃ¤lt Fehler.+9800::Dialog abgebrochen+9010::Initialisierung fehlgeschlagen, Auftrag nicht bearbeitet.
                         // HIRMG:2:2+9800::Dialogabbruch.
-                        var match = Regex.Match(item, @"HIRMG:.+?\+(\d{4})::(.+)");
-                        if (match.Success)
-                        {
-                            var code = match.Groups[1].Value;
-                            if (code.StartsWith("9"))
-                            {
-                                success = false;
 
-                                string message = match.Groups[2].Value;
-                                Log.Write(message);
-                                TransactionConsole.Output = code + ":" + message;
-                            }
+                        string[] HIRMG_messages = item.Split('+');
+                        foreach (var HIRMG_message in HIRMG_messages)
+                        {
+                            var message = Parse_BankCode_Message(HIRMG_message);
+                            if (message != null)
+                                result.Add(message);
                         }
                     }
 
                     if (item.Contains("HIRMS"))
                     {
-                        var item_ = item;
-
                         // HIRMS:3:2:2+9942::PIN falsch. Zugang gesperrt.'
-                        var match = Regex.Match(item_, @"HIRMS:.*?\+(\d{4}):.*?:(.+)");
-                        if (match.Success)
+                        string[] HIRMS_messages = item.Split('+');
+                        foreach (var HIRMS_message in HIRMS_messages)
                         {
-                            var code = match.Groups[1].Value;
-                            if (code.StartsWith("9"))
-                            {
-                                success = false;
-
-                                if (TransactionConsole.Output != null)
-                                    TransactionConsole.Output += Environment.NewLine;
-                                string message = match.Groups[2].Value;
-                                Log.Write(message);
-                                TransactionConsole.Output += code + ":" + message;
-                            }
+                            var message = Parse_BankCode_Message(HIRMS_message);
+                            if (message != null)
+                                result.Add(message);
                         }
 
-                        if (item_.Contains("3920"))
+                        if (item.Contains("3920"))
                         {
                             string TAN = string.Empty;
                             string TANf = string.Empty;
 
-                            string[] procedures = Regex.Split(item_, @"\D+");
+                            string[] procedures = Regex.Split(item, @"\D+");
 
                             foreach (string value in procedures)
                             {
@@ -329,15 +317,13 @@ namespace libfintx
                 if (String.IsNullOrEmpty(Segment.HKKAZ))
                     Segment.HKKAZ = "6";
 
-                return success;
+                return result;
             }
             catch (Exception ex)
             {
                 Log.Write(ex.ToString());
 
-                Console.WriteLine($"Software error: {ex.Message}");
-
-                return false;
+                throw new InvalidOperationException($"Software error.", ex);
             }
         }
 
@@ -720,11 +706,13 @@ namespace libfintx
         public static void Parse_BankCode(string BankCode, PictureBox pictureBox, out Image flickerImage, int flickerWidth,
             int flickerHeight, bool renderFlickerCodeAsGif)
 #else
-        public static void Parse_BankCode(string BankCode, object pictureBox, out Image flickerImage, int flickerWidth,
+        public static List<HBCIBankMessage> Parse_BankCode(string BankCode, object pictureBox, out Image flickerImage, int flickerWidth,
             int flickerHeight, bool renderFlickerCodeAsGif)
 #endif
 
         {
+            List<HBCIBankMessage> result = new List<HBCIBankMessage>();
+
             flickerImage = null;
 
             var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
@@ -737,6 +725,10 @@ namespace libfintx
             {
                 if (!item.StartsWith("HIRMS"))
                     TransactionConsole.Output = item.Replace("::", ": ");
+
+                var message = Parse_BankCode_Message(item);
+                if (message != null)
+                    result.Add(message);
             }
 
             var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
@@ -843,29 +835,51 @@ namespace libfintx
 
                 var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
             }
+
+            return result;
+        }
+
+        public static HBCIBankMessage Parse_BankCode_Message(string BankCodeMessage)
+        {
+            var match = Regex.Match(BankCodeMessage, PatternResultMessage);
+            if (match.Success)
+            {
+                var code = match.Groups[1].Value;
+                var message = match.Groups[2].Value;
+
+                return new HBCIBankMessage(code, message);
+            }
+            return null;
         }
 
         /// <summary>
-        /// Parse bank error code
+        /// Parse bank error codes
         /// </summary>
         /// <param name="BankCode"></param>
-        /// <returns></returns>
-        public static string Parse_BankCode_Error(string BankCode)
+        /// <returns>Banks messages with "??" as seperator.</returns>
+        public static List<HBCIBankMessage> Parse_BankCode(string BankCode)
         {
-            // Error
-            var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+            List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
+            var BankCode_ = "HIRMG" + Helper.Parse_String(BankCode, "HIRMG", "'");
             String[] values = BankCode_.Split('+');
-
-            string msg = string.Empty;
-
             foreach (var item in values)
             {
-                if (!item.StartsWith("HIRMS"))
-                    msg = msg + "??" + item.Replace("::", ": ");
+                var parsed = Parse_BankCode_Message(item);
+                if (parsed != null)
+                    result.Add(parsed);
             }
 
-            return msg;
+            BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "HIRMS", "'");
+            values = BankCode_.Split('+');
+            foreach (var item in values)
+            {
+                var parsed = Parse_BankCode_Message(item);
+                if (parsed != null)
+                    result.Add(parsed);
+            }
+
+            return result;
         }
 
         /// <summary>

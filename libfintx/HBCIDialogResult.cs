@@ -1,61 +1,96 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace libfintx
 {
     public class HBCIDialogResult
     {
-        public bool IsSuccess { get; }
+        public bool IsSuccess => Messages.Any(m => m.IsSuccess);
 
-        public string ErrorMessage { get; }
+        public bool HasWarning => Messages.Any(m => m.IsWarning);
 
-        protected HBCIDialogResult()
+        public bool HasError => Messages.Any(m => m.IsError);
+
+        private List<HBCIBankMessage> messages;
+        public IEnumerable<HBCIBankMessage> Messages => messages;
+
+        public HBCIDialogResult()
         {
-            IsSuccess = true;
         }
 
-        protected HBCIDialogResult(string errorMessage)
+        public HBCIDialogResult(IEnumerable<HBCIBankMessage> messages)
         {
-            IsSuccess = false;
-            ErrorMessage = errorMessage;
+            this.messages = messages.ToList();
         }
 
-        protected HBCIDialogResult(bool success, string errorMessage)
+        private void AddBankMessages(Dictionary<string, string> bankMessages)
         {
-            IsSuccess = success;
-            ErrorMessage = errorMessage;
+            foreach (var bankMessage in bankMessages)
+            {
+                var code = bankMessage.Key;
+                var message = bankMessage.Value;
+
+                messages.Add(new HBCIBankMessage(code, message));
+            }
         }
 
-        public static HBCIDialogResult DefaultSuccess()
+        public override string ToString()
         {
-            return new HBCIDialogResult();
-        }
-
-        public static HBCIDialogResult DefaultError(string errorMessage)
-        {
-            return new HBCIDialogResult(errorMessage);
+            return string.Join(", ", messages);
         }
     }
 
     public class HBCIDialogResult<T> : HBCIDialogResult
     {
-        public T Data { get; }
+        public T Data { get; set; }
 
-        public static HBCIDialogResult<T> Error(string errorMessage)
-        {
-            return new HBCIDialogResult<T>(false, errorMessage, default(T));
-        }
+        public HBCIDialogResult(IEnumerable<HBCIBankMessage> bankMessages) : base(bankMessages) { }
 
-        public static HBCIDialogResult<T> Success(T data)
-        {
-            return new HBCIDialogResult<T>(true, null, data);
-        }
-
-        private HBCIDialogResult(bool success, string errorMessage, T data) : base(success, errorMessage)
+        public HBCIDialogResult(IEnumerable<HBCIBankMessage> bankMessages, T data) : base(bankMessages)
         {
             Data = data;
+        }
+    }
+
+    public class HBCIBankMessage
+    {
+        public enum TypeEnum
+        {
+            Success, Warning, Error
+        }
+
+        public TypeEnum Type { get; }
+
+        public bool IsSuccess { get => TypeEnum.Success == Type; }
+
+        public bool IsWarning { get => TypeEnum.Warning == Type; }
+
+        public bool IsError { get => TypeEnum.Error == Type; }
+
+        public string Code { get; }
+
+        public string Message { get; }
+
+        public HBCIBankMessage(string code, string message)
+        {
+            Code = code;
+            Message = message;
+
+            if (code.StartsWith("9"))
+                Type = TypeEnum.Error;
+            else if (code.StartsWith("3"))
+                Type = TypeEnum.Warning;
+            else
+                Type = TypeEnum.Success;
+        }
+
+        public override string ToString()
+        {
+            return $"{Code}: {Message}";
         }
     }
 }

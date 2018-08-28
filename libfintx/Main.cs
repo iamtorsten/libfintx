@@ -42,8 +42,6 @@ namespace libfintx
 {
     public class Main
     {
-        public const string Error = "Error";
-
         /// <summary>
         /// Resets all temporary values. Should be used when switching to another bank connection.
         /// </summary>
@@ -61,14 +59,9 @@ namespace libfintx
         /// <returns>
         /// Success or failure
         /// </returns>
-        public static bool Synchronization(ConnectionDetails connectionDetails, bool anonymous)
+        public static HBCIDialogResult Synchronization(ConnectionDetails connectionDetails, bool anonymous)
         {
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                return true;
-            }
-            else
-                return false;
+            return Transaction.INI(connectionDetails, anonymous);
         }
 
         /// <summary>
@@ -81,34 +74,33 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult<AccountBalance> Balance(ConnectionDetails connectionDetails, bool anonymous)
         {
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                // Success
-                var BankCode = Transaction.HKSAL(connectionDetails);
-                return HBCIDialogResult<AccountBalance>.Success(Helper.Parse_Balance(BankCode));
-            }
-            else
-            {
-                Log.Write("Error in initialization.");
-                return HBCIDialogResult<AccountBalance>.Error(TransactionConsole.Output);
-            }
+            HBCIDialogResult iniResult = Transaction.INI(connectionDetails, anonymous);
+            if (!iniResult.IsSuccess)
+                return new HBCIDialogResult<AccountBalance>(iniResult.Messages);
+
+            // Success
+            var BankCode = Transaction.HKSAL(connectionDetails);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult<AccountBalance>(messages);
+            if (!result.IsSuccess)
+                return result;
+
+            result.Data = Helper.Parse_Balance(BankCode);
+            return result;
         }
 
         public static HBCIDialogResult<List<AccountInformations>> Accounts(ConnectionDetails connectionDetails, bool anonymous)
         {
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                // Success
-                var upd = Helper.GetUPD(connectionDetails.Blz, connectionDetails.UserId);
-                List<AccountInformations> result = new List<AccountInformations>();
-                Helper.Parse_Accounts(upd, result);
-                return HBCIDialogResult<List<AccountInformations>>.Success(result);
-            }
-            else
-            {
-                Log.Write("Error in initialization.");
-                return HBCIDialogResult<List<AccountInformations>>.Error(TransactionConsole.Output);
-            }
+            HBCIDialogResult iniResult = Transaction.INI(connectionDetails, anonymous);
+            if (!iniResult.IsSuccess)
+                return new HBCIDialogResult<List<AccountInformations>>(iniResult.Messages, null);
+
+            // Success
+            var upd = Helper.GetUPD(connectionDetails.Blz, connectionDetails.UserId);
+            List<AccountInformations> result = new List<AccountInformations>();
+            Helper.Parse_Accounts(upd, result);
+
+            return new HBCIDialogResult<List<AccountInformations>>(iniResult.Messages, result);
         }
 
         /// <summary>
@@ -123,46 +115,48 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult<List<SWIFTStatement>> Transactions(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
+            HBCIDialogResult iniResult = Transaction.INI(connectionDetails, anonymous);
+            if (!iniResult.IsSuccess)
+                return new HBCIDialogResult<List<SWIFTStatement>>(iniResult.Messages);
+
             var swiftStatements = new List<SWIFTStatement>();
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
+            var startDateStr = startDate?.ToString("yyyyMMdd");
+            var endDateStr = endDate?.ToString("yyyyMMdd");
+
+            // Success
+            var BankCode = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, null);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult<List<SWIFTStatement>>(messages);
+            if (!result.IsSuccess)
+                return result;
+
+            var Transactions = string.Empty;
+
+            if (BankCode.Contains("HNSHA"))
+                Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNSHA");
+            else // -> Postbank finishes with HNHBS
+                Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNHBS");
+
+            swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account));
+
+            string BankCode_ = BankCode;
+            while (BankCode_.Contains("+3040::"))
             {
-                var startDateStr = startDate?.ToString("yyyyMMdd");
-                var endDateStr = endDate?.ToString("yyyyMMdd");
+                Helper.Parse_Message(BankCode_);
 
-                // Success
-                var BankCode = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, null);
+                var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
-                var Transactions = string.Empty;
+                BankCode_ = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
 
-                if (BankCode.Contains("HNSHA"))
-                    Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNSHA");
-                else // -> Postbank finishes with HNHBS
-                    Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNHBS");
+                var Transactions_ = ":20:" + Helper.Parse_String(BankCode_, ":20:", "'HNSHA");
 
-                swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account));
-
-                string BankCode_ = BankCode;
-                while (BankCode_.Contains("+3040::"))
-                {
-                    Helper.Parse_Message(BankCode_);
-
-                    var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
-
-                    BankCode_ = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
-
-                    var Transactions_ = ":20:" + Helper.Parse_String(BankCode_, ":20:", "'HNSHA");
-
-                    swiftStatements.AddRange(MT940.Serialize(Transactions_, connectionDetails.Account));
-                }
-                return HBCIDialogResult<List<SWIFTStatement>>.Success(swiftStatements);
+                swiftStatements.AddRange(MT940.Serialize(Transactions_, connectionDetails.Account));
             }
-            else
-            {
-                Log.Write("Initialization/sync failed");
 
-                return HBCIDialogResult<List<SWIFTStatement>>.Error(TransactionConsole.Output);
-            }                
+            result.Data = swiftStatements;
+
+            return result;
         }
 
         /// <summary>
@@ -178,118 +172,119 @@ namespace libfintx
         public static HBCIDialogResult<List<TStatement>> Transactions_camt(ConnectionDetails connectionDetails, bool anonymous, camtVersion camtVers,
             DateTime? startDate = null, DateTime? endDate = null)
         {
-            if (Transaction.INI(connectionDetails, anonymous) == true)
+            HBCIDialogResult iniResult = Transaction.INI(connectionDetails, anonymous);
+            if (!iniResult.IsSuccess)
+                return new HBCIDialogResult<List<TStatement>>(iniResult.Messages);
+
+            // Plain camt message
+            var camt = string.Empty;
+
+            var startDateStr = startDate?.ToString("yyyyMMdd");
+            var endDateStr = endDate?.ToString("yyyyMMdd");
+
+            // Success
+            var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null, camtVers);
+            var result = new HBCIDialogResult<List<TStatement>>(Helper.Parse_BankCode(BankCode));
+            if (!result.IsSuccess)
+                return result;
+
+            List<TStatement> statements = new List<TStatement>();
+
+            TCAM052TParser CAMT052Parser = null;
+            TCAM053TParser CAMT053Parser = null;
+
+            string BankCode_ = BankCode;
+
+            // Es kann sein, dass in der payload mehrere Dokumente enthalten sind
+            var xmlStartIdx = BankCode_.IndexOf("<?xml version=");
+            var xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
+            while (xmlStartIdx >= 0)
             {
-                // Plain camt message
-                var camt = string.Empty;
+                if (xmlStartIdx > xmlEndIdx)
+                    break;
 
-                var startDateStr = startDate?.ToString("yyyyMMdd");
-                var endDateStr = endDate?.ToString("yyyyMMdd");
+                camt = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
 
-                // Success
-                var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null, camtVers);
-
-                List<TStatement> result = new List<TStatement>();
-
-                TCAM052TParser CAMT052Parser = null;
-                TCAM053TParser CAMT053Parser = null;
-
-                string BankCode_ = BankCode;
-
-                // Es kann sein, dass in der payload mehrere Dokumente enthalten sind
-                var xmlStartIdx = BankCode_.IndexOf("<?xml version=");
-                var xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
-                while (xmlStartIdx >= 0)
+                switch (camtVers)
                 {
-                    if (xmlStartIdx > xmlEndIdx)
+                    case camtVersion.camt052:
+                        // Save camt052 statement to file
+                        var camt052f = camt052File.Save(connectionDetails.Account, camt);
+
+                        // Process the camt053 file
+                        if (CAMT052Parser == null)
+                            CAMT052Parser = new TCAM052TParser();
+                        CAMT052Parser.ProcessFile(camt052f);
+
+                        statements.AddRange(CAMT052Parser.statements);
                         break;
+                    case camtVersion.camt053:
+                        // Save camt053 statement to file
+                        var camt053f = camt053File.Save(connectionDetails.Account, camt);
 
-                    camt = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
+                        // Process the camt053 file
+                        if (CAMT053Parser == null)
+                            CAMT053Parser = new TCAM053TParser();
+                        CAMT053Parser.ProcessFile(camt053f);
 
-                    switch (camtVers)
-                    {
-                        case camtVersion.camt052:
-                            // Save camt052 statement to file
-                            var camt052f = camt052File.Save(connectionDetails.Account, camt);
-
-                            // Process the camt053 file
-                            if (CAMT052Parser == null)
-                                CAMT052Parser = new TCAM052TParser();
-                            CAMT052Parser.ProcessFile(camt052f);
-
-                            result.AddRange(CAMT052Parser.statements);
-                            break;
-                        case camtVersion.camt053:
-                            // Save camt053 statement to file
-                            var camt053f = camt053File.Save(connectionDetails.Account, camt);
-
-                            // Process the camt053 file
-                            if (CAMT053Parser == null)
-                                CAMT053Parser = new TCAM053TParser();
-                            CAMT053Parser.ProcessFile(camt053f);
-
-                            result.AddRange(CAMT052Parser.statements);
-                            break;
-                    }
-
-                    BankCode_ = BankCode_.Substring(xmlEndIdx);
-                    xmlStartIdx = BankCode_.IndexOf("<?xml version");
-                    xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
+                        statements.AddRange(CAMT052Parser.statements);
+                        break;
                 }
 
-                BankCode_ = BankCode;
-
-                string Startpoint = string.Empty;
-
-                while (BankCode_.Contains("+3040::"))
-                {
-                    switch (camtVers)
-                    {
-                        case camtVersion.camt052:
-                            Helper.Parse_Message(BankCode_);
-
-                            Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
-
-                            BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
-
-                            var camt052_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
-
-                            // Save camt052 statement to file
-                            var camt052f_ = camt052File.Save(connectionDetails.Account, camt052_);
-
-                            // Process the camt052 file
-                            CAMT052Parser.ProcessFile(camt052f_);
-
-                            // Add all items
-                            result.AddRange(CAMT052Parser.statements);
-                            break;
-                        case camtVersion.camt053:
-                            Helper.Parse_Message(BankCode_);
-
-                            Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
-
-                            BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
-
-                            var camt053_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
-
-                            // Save camt053 statement to file
-                            var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
-
-                            // Process the camt053 file
-                            CAMT053Parser.ProcessFile(camt053f_);
-
-                            // Add all items to existing statement
-                            result.AddRange(CAMT053Parser.statements);
-                            break;
-                    }
-                }
-
-                return HBCIDialogResult<List<TStatement>>.Success(result);
+                BankCode_ = BankCode_.Substring(xmlEndIdx);
+                xmlStartIdx = BankCode_.IndexOf("<?xml version");
+                xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
             }
-            else
+
+            BankCode_ = BankCode;
+
+            string Startpoint = string.Empty;
+
+            while (BankCode_.Contains("+3040::"))
             {
-                return HBCIDialogResult<List<TStatement>>.Error(TransactionConsole.Output);
+                switch (camtVers)
+                {
+                    case camtVersion.camt052:
+                        Helper.Parse_Message(BankCode_);
+
+                        Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+
+                        BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
+
+                        var camt052_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+
+                        // Save camt052 statement to file
+                        var camt052f_ = camt052File.Save(connectionDetails.Account, camt052_);
+
+                        // Process the camt052 file
+                        CAMT052Parser.ProcessFile(camt052f_);
+
+                        // Add all items
+                        statements.AddRange(CAMT052Parser.statements);
+                        break;
+                    case camtVersion.camt053:
+                        Helper.Parse_Message(BankCode_);
+
+                        Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+
+                        BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
+
+                        var camt053_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+
+                        // Save camt053 statement to file
+                        var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
+
+                        // Process the camt053 file
+                        CAMT053Parser.ProcessFile(camt053f_);
+
+                        // Add all items to existing statement
+                        statements.AddRange(CAMT053Parser.statements);
+                        break;
+                }
             }
+
+            result.Data = statements;
+            return result;
         }
 
         /// <summary>
@@ -304,33 +299,30 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult<List<AccountTransaction>> TransactionsSimple(ConnectionDetails connectionDetails, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var transactionList = new List<AccountTransaction>();
-
             var res = Transactions(connectionDetails, anonymous, startDate, endDate);
-            if (res.IsSuccess)
-            {
-                foreach (var swiftStatement in res.Data)
-                {
-                    foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
-                    {
-                        transactionList.Add(new AccountTransaction()
-                        {
-                            OwnerAccount = swiftStatement.accountCode,
-                            OwnerBankcode = swiftStatement.bankCode,
-                            PartnerBIC = swiftTransaction.bankCode,
-                            PartnerIBAN = swiftTransaction.accountCode,
-                            PartnerName = swiftTransaction.partnerName,
-                            RemittanceText = swiftTransaction.description,
-                            TransactionType = swiftTransaction.text,
-                            TransactionDate = swiftTransaction.inputDate,
-                            ValueDate = swiftTransaction.valueDate
-                        });
-                    }
-                }
-                return HBCIDialogResult<List<AccountTransaction>>.Success(transactionList);
-            }
+            if (!res.IsSuccess)
+                return new HBCIDialogResult<List<AccountTransaction>>(res.Messages);
 
-            return HBCIDialogResult<List<AccountTransaction>>.Error(res.ErrorMessage);
+            var transactionList = new List<AccountTransaction>();
+            foreach (var swiftStatement in res.Data)
+            {
+                foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
+                {
+                    transactionList.Add(new AccountTransaction()
+                    {
+                        OwnerAccount = swiftStatement.accountCode,
+                        OwnerBankcode = swiftStatement.bankCode,
+                        PartnerBIC = swiftTransaction.bankCode,
+                        PartnerIBAN = swiftTransaction.accountCode,
+                        PartnerName = swiftTransaction.partnerName,
+                        RemittanceText = swiftTransaction.description,
+                        TransactionType = swiftTransaction.text,
+                        TransactionDate = swiftTransaction.inputDate,
+                        ValueDate = swiftTransaction.valueDate
+                    });
+                }
+            }
+            return new HBCIDialogResult<List<AccountTransaction>>(res.Messages, transactionList);
         }
 
         /// <summary>
@@ -417,34 +409,33 @@ namespace libfintx
 
         {
             flickerImage = null;
-            if (Transaction.INI(connectionDetails, anonymous) == true)
+
+            HBCIDialogResult iniResult = Transaction.INI(connectionDetails, anonymous);
+            if (!iniResult.IsSuccess)
+                return iniResult;
+
+            TransactionConsole.Output = string.Empty;
+
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
+
+            var BankCode = Transaction.HKCCS(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+
+            if (BankCode.Contains("+0030::"))
             {
-                TransactionConsole.Output = string.Empty;
+                // Gif image instead of picture box
+                Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
-
-                var BankCode = Transaction.HKCCS(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
-
-                if (BankCode.Contains("+0030::"))
-                {
-                    // Gif image instead of picture box
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-                    
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-                    
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
+                return new HBCIDialogResult();
             }
             else
             {
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+                var msg = Helper.Parse_BankCode(BankCode);
+                var result = new HBCIDialogResult(msg);
+
+                Log.Write(result.ToString());
+
+                return result;
             }
         }
 
@@ -481,32 +472,29 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+
+            TransactionConsole.Output = string.Empty;
+
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
+
+            var BankCode = Transaction.HKCSE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
+
+            if (BankCode.Contains("+0030::"))
             {
-                TransactionConsole.Output = string.Empty;
+                var messages = Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
-
-                var BankCode = Transaction.HKCSE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
-
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
+                return new HBCIDialogResult(messages);
             }
             else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            {
+                var msg = Helper.Parse_BankCode(BankCode);
+                var result = new HBCIDialogResult(msg);
+                Log.Write(result.ToString());
+
+                return result;
+            }
         }
 
         /// <summary>
@@ -595,32 +583,28 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+
+            TransactionConsole.Output = string.Empty;
+
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
+
+            var BankCode = Transaction.HKCCM(connectionDetails, painData, numberOfTransactions, totalAmount);
+
+            if (BankCode.Contains("+0030::"))
             {
-                TransactionConsole.Output = string.Empty;
-
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
-
-                var BankCode = Transaction.HKCCM(connectionDetails, painData, numberOfTransactions, totalAmount);
-
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
+                var messages = Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+                return new HBCIDialogResult(messages);
             }
             else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            {
+                var msg = Helper.Parse_BankCode(BankCode);
+                var result = new HBCIDialogResult(msg);
+                Log.Write(result);
+
+                return result;
+            }
         }
 
         /// <summary>
@@ -710,32 +694,20 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                TransactionConsole.Output = string.Empty;
+            var iniResult = Transaction.INI(connectionDetails, anonymous);
+            if (!iniResult.IsSuccess)
+                return new HBCIDialogResult(iniResult.Messages);
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
+            TransactionConsole.Output = string.Empty;
 
-                var BankCode = Transaction.HKCME(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay);
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
 
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+            var BankCode = Transaction.HKCME(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
-            }
-            else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            return result;
         }
 
         /// <summary>
@@ -765,7 +737,7 @@ namespace libfintx
 
         {
             Image img = null;
-            return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay, 
+            return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay,
                 HIRMS, pictureBox, anonymous, out img);
         }
 
@@ -827,32 +799,17 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                TransactionConsole.Output = string.Empty;
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+            TransactionConsole.Output = string.Empty;
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCUM(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+            var BankCode = Transaction.HKCUM(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
-            }
-            else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            return result;
         }
 
         /// <summary>
@@ -947,33 +904,17 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                TransactionConsole.Output = string.Empty;
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+            TransactionConsole.Output = string.Empty;
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKDSE(connectionDetails, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate,
-                    mandateNumber, mandateDate, creditorIdNumber);
+            var BankCode = Transaction.HKDSE(connectionDetails, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
-            }
-            else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            return result;
         }
 
         /// <summary>
@@ -1074,32 +1015,17 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                TransactionConsole.Output = string.Empty;
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+            TransactionConsole.Output = string.Empty;
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKDME(connectionDetails, settlementDate, painData, numberOfTransactions, totalAmount);
+            var BankCode = Transaction.HKDME(connectionDetails, settlementDate, painData, numberOfTransactions, totalAmount);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
-            }
-            else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            return result;
         }
 
         /// <summary>
@@ -1185,32 +1111,17 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                TransactionConsole.Output = string.Empty;
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+            TransactionConsole.Output = string.Empty;
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKPPD(connectionDetails, mobileServiceProvider, phoneNumber, amount);
+            var BankCode = Transaction.HKPPD(connectionDetails, mobileServiceProvider, phoneNumber, amount);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
-            }
-            else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            return result;
         }
 
         /// <summary>
@@ -1302,32 +1213,17 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                TransactionConsole.Output = string.Empty;
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+            TransactionConsole.Output = string.Empty;
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCDE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var BankCode = Transaction.HKCDE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
-            }
-            else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            return result;
         }
 
         /// <summary>
@@ -1410,32 +1306,17 @@ namespace libfintx
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                TransactionConsole.Output = string.Empty;
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+            TransactionConsole.Output = string.Empty;
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCDN(connectionDetails, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var BankCode = Transaction.HKCDN(connectionDetails, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
-            }
-            else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            return result;
         }
 
         /// <summary>
@@ -1506,37 +1387,22 @@ namespace libfintx
 
         public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
             string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
-            object pictureBox, bool anonymous, 
+            object pictureBox, bool anonymous,
             out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
         {
             flickerImage = null;
 
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                TransactionConsole.Output = string.Empty;
+            var iniResult = Transaction.INI(connectionDetails, anonymous); if (!iniResult.IsSuccess) return new HBCIDialogResult(iniResult.Messages);
+            TransactionConsole.Output = string.Empty;
 
-                if (!String.IsNullOrEmpty(HIRMS))
-                    Segment.HIRMS = HIRMS;
+            if (!String.IsNullOrEmpty(HIRMS))
+                Segment.HIRMS = HIRMS;
 
-                var BankCode = Transaction.HKCDL(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var BankCode = Transaction.HKCDL(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-                if (BankCode.Contains("+0030::"))
-                {
-                    Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-
-                    return HBCIDialogResult.DefaultSuccess();
-                }
-                else
-                {
-                    var msg = Helper.Parse_BankCode_Error(BankCode);
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult.DefaultError(msg);
-                }
-            }
-            else
-                return HBCIDialogResult.DefaultError(TransactionConsole.Output);
+            return result;
         }
 
         public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string orderId, string receiverName, string receiverIBAN,
@@ -1565,88 +1431,71 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult<List<BankersOrder>> GetBankersOrders(ConnectionDetails connectionDetails, bool anonymous)
         {
-            if (Transaction.INI(connectionDetails, anonymous) == true)
+            var iniResult = Transaction.INI(connectionDetails, anonymous);
+            if (!iniResult.IsSuccess)
+                return new HBCIDialogResult<List<BankersOrder>>(iniResult.Messages);
+
+            // Success
+            var BankCode = Transaction.HKCDB(connectionDetails);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult<List<BankersOrder>>(messages);
+            if (!result.IsSuccess)
+                return result;
+
+            List<BankersOrder> data = new List<BankersOrder>();
+
+            var BankCode_ = BankCode;
+
+            var startIdx = BankCode_.IndexOf("HICDB");
+            if (startIdx < 0)
+                return result;
+
+            BankCode_ = BankCode_.Substring(startIdx);
+            for (; ; )
             {
-                // Success
-                var BankCode = Transaction.HKCDB(connectionDetails);
-
-                if (BankCode.Contains("+0020::"))
+                var match = Regex.Match(BankCode_, @"HICDB.+?(<\?xml.+?</Document>)\+(.*?)\+(\d*):([MW]):(\d+):(\d+)", RegexOptions.Singleline);
+                if (match.Success)
                 {
-                    List<BankersOrder> data = new List<BankersOrder>();
+                    var xml = match.Groups[1].Value;
+                    // xml ist UTF-8
+                    xml = Converter.ConvertEncoding(xml, Encoding.GetEncoding("ISO-8859-1"), Encoding.UTF8);
 
-                    var BankCode_ = BankCode;
+                    var orderId = match.Groups[2].Value;
 
-                    var startIdx = BankCode_.IndexOf("HICDB");
-                    if (startIdx < 0)
-                        return HBCIDialogResult<List<BankersOrder>>.Success(data);
-                    
-                    BankCode_ = BankCode_.Substring(startIdx);
-                    for (; ; )
+                    var firstExecutionDateStr = match.Groups[3].Value;
+                    DateTime? firstExecutionDate = !string.IsNullOrWhiteSpace(firstExecutionDateStr) ? DateTime.ParseExact(firstExecutionDateStr, "yyyyMMdd", CultureInfo.InvariantCulture) : default(DateTime?);
+
+                    var timeUnitStr = match.Groups[4].Value;
+                    TimeUnit timeUnit = timeUnitStr == "M" ? TimeUnit.Monthly : TimeUnit.Weekly;
+
+                    var rota = match.Groups[5].Value;
+
+                    var executionDayStr = match.Groups[6].Value;
+                    int executionDay = Convert.ToInt32(executionDayStr);
+
+                    var painData = pain00100103_ct_data.Create(xml);
+
+                    if (firstExecutionDate.HasValue && executionDay > 0)
                     {
-                        var match = Regex.Match(BankCode_, @"HICDB.+?(<\?xml.+?</Document>)\+(.*?)\+(\d*):([MW]):(\d+):(\d+)", RegexOptions.Singleline);
-                        if (match.Success)
-                        {
-                            var xml = match.Groups[1].Value;
-                            // xml ist UTF-8
-                            xml = Converter.ConvertEncoding(xml, Encoding.GetEncoding("ISO-8859-1"), Encoding.UTF8);
-
-                            var orderId = match.Groups[2].Value;
-
-                            var firstExecutionDateStr = match.Groups[3].Value;
-                            DateTime? firstExecutionDate = !string.IsNullOrWhiteSpace(firstExecutionDateStr) ? DateTime.ParseExact(firstExecutionDateStr, "yyyyMMdd", CultureInfo.InvariantCulture) : default(DateTime?);
-
-                            var timeUnitStr = match.Groups[4].Value;
-                            TimeUnit timeUnit = timeUnitStr == "M" ? TimeUnit.Monthly : TimeUnit.Weekly;
-
-                            var rota = match.Groups[5].Value;
-
-                            var executionDayStr = match.Groups[6].Value;
-                            int executionDay = Convert.ToInt32(executionDayStr);
-
-                            var painData = pain00100103_ct_data.Create(xml);
-
-                            if (firstExecutionDate.HasValue && executionDay > 0)
-                            {
-                                var item = new BankersOrder(orderId, painData, firstExecutionDate.Value, timeUnit, rota, executionDay);
-                                data.Add(item);
-                            }
-                        }
-
-                        var endIdx = BankCode_.IndexOf("'");
-                        if (BankCode_.Length <= endIdx + 1)
-                            break;
-
-                        BankCode_ = BankCode_.Substring(endIdx + 1);
-                        startIdx = BankCode_.IndexOf("HICDB");
-                        if (startIdx < 0)
-                            break;
+                        var item = new BankersOrder(orderId, painData, firstExecutionDate.Value, timeUnit, rota, executionDay);
+                        data.Add(item);
                     }
-
-                    // Success
-                    return HBCIDialogResult<List<BankersOrder>>.Success(data);
                 }
-                else
-                {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
 
-                    String[] values = BankCode_.Split('+');
+                var endIdx = BankCode_.IndexOf("'");
+                if (BankCode_.Length <= endIdx + 1)
+                    break;
 
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult<List<BankersOrder>>.Error(msg);
-                }
+                BankCode_ = BankCode_.Substring(endIdx + 1);
+                startIdx = BankCode_.IndexOf("HICDB");
+                if (startIdx < 0)
+                    break;
             }
-            else
-                return HBCIDialogResult<List<BankersOrder>>.Error(TransactionConsole.Output);
+
+            // Success
+            result.Data = data;
+
+            return result;
         }
 
         /// <summary>
@@ -1659,38 +1508,16 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult<string> GetTerminatedTransfers(ConnectionDetails connectionDetails, bool anonymous)
         {
-            if (Transaction.INI(connectionDetails, anonymous) == true)
-            {
-                // Success
-                var BankCode = Transaction.HKCSB(connectionDetails);
+            HBCIDialogResult iniResult = Transaction.INI(connectionDetails, anonymous);
+            if (!iniResult.IsSuccess)
+                return new HBCIDialogResult<string>(iniResult.Messages, null);
 
-                if (BankCode.Contains("+0020::"))
-                {
-                    // Success
-                    return HBCIDialogResult<string>.Success(BankCode);
-                }
-                else
-                {
-                    // Error
-                    var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+            // Success
+            var BankCode = Transaction.HKCSB(connectionDetails);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult<string>(messages);
 
-                    String[] values = BankCode_.Split('+');
-
-                    string msg = string.Empty;
-
-                    foreach (var item in values)
-                    {
-                        if (!item.StartsWith("HIRMS"))
-                            msg = msg + "??" + item.Replace("::", ": ");
-                    }
-
-                    Log.Write(msg);
-
-                    return HBCIDialogResult<string>.Error(msg);
-                }
-            }
-            else
-                return HBCIDialogResult<string>.Error(TransactionConsole.Output);
+            return result;
         }
 
         /// <summary>
@@ -1701,45 +1528,13 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static HBCIDialogResult<string> TAN(ConnectionDetails connectionDetails, string TAN)
+        public static HBCIDialogResult TAN(ConnectionDetails connectionDetails, string TAN)
         {
             var BankCode = Transaction.TAN(connectionDetails, TAN);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-            if (BankCode.Contains("+0010::") || BankCode.Contains("+0020::"))
-            {
-                var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                String[] values = BankCode_.Split('+');
-
-                string msg = string.Empty;
-
-                foreach (var item in values)
-                {
-                    if (!item.StartsWith("HIRMS"))
-                        msg = msg + "??" + item.Replace("::", ": ");
-                }
-
-                return HBCIDialogResult<string>.Success(msg);
-            }
-            else
-            {
-                // Error
-                var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                String[] values = BankCode_.Split('+');
-
-                string msg = string.Empty;
-
-                foreach (var item in values)
-                {
-                    if (!item.StartsWith("HIRMS"))
-                        msg = msg + "??" + item.Replace("::", ": ");
-                }
-
-                Log.Write(msg);
-
-                return HBCIDialogResult<string>.Error(msg);
-            }
+            return result;
         }
 
         /// <summary>
@@ -1754,42 +1549,10 @@ namespace libfintx
         public static HBCIDialogResult TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
         {
             var BankCode = Transaction.TAN4(connectionDetails, TAN, MediumName);
+            var messages = Helper.Parse_BankCode(BankCode);
+            var result = new HBCIDialogResult(messages);
 
-            if (BankCode.Contains("+0010::") || BankCode.Contains("+0020::"))
-            {
-                var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                String[] values = BankCode_.Split('+');
-
-                string msg = string.Empty;
-
-                foreach (var item in values)
-                {
-                    if (!item.StartsWith("HIRMS"))
-                        msg = msg + "??" + item.Replace("::", ": ");
-                }
-
-                return HBCIDialogResult<string>.Success(msg);
-            }
-            else
-            {
-                // Error
-                var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                String[] values = BankCode_.Split('+');
-
-                string msg = string.Empty;
-
-                foreach (var item in values)
-                {
-                    if (!item.StartsWith("HIRMS"))
-                        msg = msg + "??" + item.Replace("::", ": ");
-                }
-
-                Log.Write(msg);
-
-                return HBCIDialogResult<string>.Error(msg);
-            }
+            return result;
         }
 
         /// <summary>
@@ -1802,32 +1565,14 @@ namespace libfintx
         public static HBCIDialogResult<string> RequestTANMediumName(ConnectionDetails connectionDetails)
         {
             var BankCode = Transaction.HKTAB(connectionDetails);
+            var result = new HBCIDialogResult<string>(Helper.Parse_BankCode(BankCode));
+            if (!result.IsSuccess)
+                return result;
 
-            if (BankCode.Contains("+0020::"))
-            {
-                var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
+            var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
+            result.Data = Helper.Parse_TANMedium(BankCode_);
 
-                return HBCIDialogResult<string>.Success(Helper.Parse_TANMedium(BankCode_));
-            }
-            else
-            {
-                // Error
-                var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
-
-                String[] values = BankCode_.Split('+');
-
-                string msg = string.Empty;
-
-                foreach (var item in values)
-                {
-                    if (!item.StartsWith("HIRMS"))
-                        msg = msg + "??" + item.Replace("::", ": ");
-                }
-
-                Log.Write(msg);
-
-                return HBCIDialogResult<string>.Error(msg);
-            }
+            return result;
         }
 
         /// <summary>

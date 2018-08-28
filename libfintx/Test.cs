@@ -114,7 +114,7 @@ namespace libfintx
 
             libfintx.Main.Tracing(true);
 
-            if (libfintx.Main.Synchronization(connectionDetails, Anonymous))
+            if (libfintx.Main.Synchronization(connectionDetails, Anonymous).IsSuccess)
             {
                 Console.WriteLine("[ Sync ]");
                 Console.WriteLine();
@@ -195,7 +195,7 @@ namespace libfintx
 
             libfintx.Main.Tracing(true);
 
-            if (libfintx.Main.Synchronization(connectionDetails, Anonymous))
+            if (libfintx.Main.Synchronization(connectionDetails, Anonymous).IsSuccess)
             {
                 Console.WriteLine("[ Sync ]");
                 Console.WriteLine();
@@ -270,7 +270,7 @@ namespace libfintx
 
             HBCI.Tracing(true);
 
-            if (HBCI.Synchronization(connectionDetails, anonymous))
+            if (HBCI.Synchronization(connectionDetails, anonymous).IsSuccess)
             {
                 Segment.HIRMS = "921"; // -> pushTAN
 
