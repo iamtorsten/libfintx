@@ -40,7 +40,10 @@ namespace libfintx
 {
     public static class Helper
     {
-        private const string PatternResultMessage = @"(\d+)::(.+)";
+        /// <summary>
+        /// Regex pattern for HIRMG/HIRMS messages.
+        /// </summary>
+        private const string PatternResultMessage = @"(\d{4}):.*?:(.+)";
 
         /// <summary>
         /// Pad zeros
@@ -861,22 +864,19 @@ namespace libfintx
         {
             List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
-            var BankCode_ = "HIRMG" + Helper.Parse_String(BankCode, "HIRMG", "'");
-            String[] values = BankCode_.Split('+');
-            foreach (var item in values)
+            string[] segments = BankCode.Split('\'');
+            foreach (var segment in segments)
             {
-                var parsed = Parse_BankCode_Message(item);
-                if (parsed != null)
-                    result.Add(parsed);
-            }
-
-            BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "HIRMS", "'");
-            values = BankCode_.Split('+');
-            foreach (var item in values)
-            {
-                var parsed = Parse_BankCode_Message(item);
-                if (parsed != null)
-                    result.Add(parsed);
+                if (segment.Contains("HIRMG") || segment.Contains("HIRMS"))
+                {
+                    string[] messages = segment.Split('+');
+                    foreach (var HIRMG_message in messages)
+                    {
+                        var message = Parse_BankCode_Message(HIRMG_message);
+                        if (message != null)
+                            result.Add(message);
+                    }
+                }
             }
 
             return result;

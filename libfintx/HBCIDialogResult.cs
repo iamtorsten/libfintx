@@ -11,9 +11,13 @@ namespace libfintx
     {
         public bool IsSuccess => messages != null && messages.Any(m => m.IsSuccess);
 
+        public bool HasInfo => messages != null && messages.Any(m => m.IsInfo);
+
         public bool HasWarning => messages != null && messages.Any(m => m.IsWarning);
 
         public bool HasError => messages != null && messages.Any(m => m.IsError);
+
+        public bool HasUnknown => messages != null && messages.Any(m => m.IsUnknown);
 
         private List<HBCIBankMessage> messages;
         public IEnumerable<HBCIBankMessage> Messages => messages;
@@ -60,16 +64,20 @@ namespace libfintx
     {
         public enum TypeEnum
         {
-            Success, Warning, Error
+            Success, Info, Warning, Error, Unknown
         }
 
         public TypeEnum Type { get; }
 
         public bool IsSuccess { get => TypeEnum.Success == Type; }
 
+        public bool IsInfo { get => TypeEnum.Info == Type; }
+
         public bool IsWarning { get => TypeEnum.Warning == Type; }
 
         public bool IsError { get => TypeEnum.Error == Type; }
+
+        public bool IsUnknown { get => TypeEnum.Error == Type; }
 
         public string Code { get; }
 
@@ -80,12 +88,16 @@ namespace libfintx
             Code = code;
             Message = message;
 
-            if (code.StartsWith("9"))
-                Type = TypeEnum.Error;
+            if (code.StartsWith("0"))
+                Type = TypeEnum.Success;
+            else if (code.StartsWith("1"))
+                Type = TypeEnum.Info;
             else if (code.StartsWith("3"))
                 Type = TypeEnum.Warning;
+            else if (code.StartsWith("9"))
+                Type = TypeEnum.Error;
             else
-                Type = TypeEnum.Success;
+                Type = TypeEnum.Unknown;
         }
 
         public override string ToString()
