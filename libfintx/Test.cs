@@ -114,22 +114,6 @@ namespace libfintx
 
             libfintx.Main.Tracing(true);
 
-            if (libfintx.Main.Synchronization(connectionDetails, Anonymous).IsSuccess)
-            {
-                Console.WriteLine("[ Sync ]");
-                Console.WriteLine();
-                Console.WriteLine("Sync ok");
-                Console.WriteLine();
-            }
-
-            else
-            {
-                Console.WriteLine("[ Sync ]");
-                Console.WriteLine();
-                Console.WriteLine(libfintx.Main.Transaction_Output());
-                Console.WriteLine();
-            }
-
 #endregion
 
 #region balance
@@ -195,22 +179,6 @@ namespace libfintx
 
             libfintx.Main.Tracing(true);
 
-            if (libfintx.Main.Synchronization(connectionDetails, Anonymous).IsSuccess)
-            {
-                Console.WriteLine("[ Sync ]");
-                Console.WriteLine();
-                Console.WriteLine("Sync ok");
-                Console.WriteLine();
-            }
-
-            else
-            {
-                Console.WriteLine("[ Sync ]");
-                Console.WriteLine();
-                Console.WriteLine(libfintx.Main.Transaction_Output());
-                Console.WriteLine();
-            }
-
 #endregion
 
 #region tanmediumname
@@ -270,7 +238,7 @@ namespace libfintx
 
             HBCI.Tracing(true);
 
-            if (HBCI.Synchronization(connectionDetails, anonymous).IsSuccess)
+            if (HBCI.Synchronization(connectionDetails).IsSuccess)
             {
                 Segment.HIRMS = "921"; // -> pushTAN
 

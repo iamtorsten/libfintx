@@ -39,6 +39,7 @@ using static libfintx.HKCDN;
 using static libfintx.HKCDL;
 using static libfintx.HKCSB;
 using static libfintx.HKCDB;
+using static libfintx.HKSYN;
 using static libfintx.TAN;
 using static libfintx.TAN4;
 using static libfintx.HKTAB;
@@ -53,6 +54,11 @@ namespace libfintx
         public static HBCIDialogResult INI(ConnectionDetails connectionDetails, bool Anonymous)
         {
             return Init_INI(connectionDetails, Anonymous);
+        }
+
+        public static string HKSYN(ConnectionDetails connectionDetails)
+        {
+            return Init_HKSYN(connectionDetails);
         }
 
         public static string HKSAL(ConnectionDetails connectionDetails)

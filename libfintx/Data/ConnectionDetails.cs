@@ -27,7 +27,6 @@ namespace libfintx.Data
         /// </summary>
         public string Pin { get; set; }
 
-
         /// <summary>
         /// Name of the Accountholder
         /// </summary>
@@ -52,5 +51,10 @@ namespace libfintx.Data
         /// BIC of the bank account
         /// </summary>
         public string BIC { get; set; }
+
+        /// <summary>
+        /// System ID (Kundensystem-ID)
+        /// </summary>
+        public string CustomerSystemId { get; set; }
     }
 }

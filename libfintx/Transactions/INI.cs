@@ -41,52 +41,23 @@ namespace libfintx
                 /// </summary>
                 try
                 {
-                    Log.Write("Starting Synchronisation");
-
-                    string segments;
-
-                    if (connectionDetails.HBCIVersion == 220)
+                    // If there is no customer system ID available, perform sync to get one
+                    if (connectionDetails.CustomerSystemId == null)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+0+1'" +
-                            "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
-                            "HKSYN:" + SEGNUM.SETVal(5) + ":2+0'";
-
-                        segments = segments_;
-                    }
-                    else if (connectionDetails.HBCIVersion == 300)
-                    {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+0+1'" +
-                            "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
-                            "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
-
-                        segments = segments_;
+                        var BankCode = Transaction.HKSYN(connectionDetails);
+                        var syncResult = new HBCIDialogResult(Helper.Parse_BankCode(BankCode));
+                        if (!syncResult.IsSuccess)
+                        {
+                            Log.Write("Synchronisation failed.");
+                            return syncResult;
+                        }
                     }
                     else
                     {
-                        //Since connectionDetails is a re-usable object, this shouldn't be cleared.
-                        //connectionDetails.UserId = string.Empty;
-                        //connectionDetails.Pin = null;
-
-                        Log.Write("HBCI version not supported");
-
-                        throw new Exception("HBCI version not supported");
+                        Segment.HISYN = connectionDetails.CustomerSystemId;
                     }
 
-                    SEG.NUM = SEGNUM.SETInt(5);
-
-                    string message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM);
-                    string response = FinTSMessage.Send(connectionDetails.Url, message);
-
-                    var messages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
-                    var result = new HBCIDialogResult(messages);
-                    if (!result.IsSuccess)
-                    {
-                        Log.Write("Sync failed: " + result);
-                        return result;
-                    }
-
-                    // Sync OK
-                    Log.Write("Synchronisation ok");
+                    string segments;
 
                     /// <summary>
                     /// INI
@@ -118,11 +89,11 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(4);
 
-                    message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
-                    response = FinTSMessage.Send(connectionDetails.Url, message);
+                    var message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+                    var response = FinTSMessage.Send(connectionDetails.Url, message);
 
-                    messages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
-                    result = new HBCIDialogResult(messages);
+                    var bankMessages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
+                    var result = new HBCIDialogResult(bankMessages);
                     if (!result.IsSuccess)
                         Log.Write("Initialisation failed: " + result);
 

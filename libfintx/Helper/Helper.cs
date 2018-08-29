@@ -263,6 +263,8 @@ namespace libfintx
                     {
                         var ID = item.Substring(item.IndexOf("+") + 1);
                         Segment.HISYN = ID;
+
+                        Log.Write("Customer System ID: " + ID);
                     }
 
                     if (item.Contains("HNHBS"))
@@ -842,6 +844,11 @@ namespace libfintx
             return result;
         }
 
+        /// <summary>
+        /// Parse a single bank result message.
+        /// </summary>
+        /// <param name="BankCodeMessage"></param>
+        /// <returns></returns>
         public static HBCIBankMessage Parse_BankCode_Message(string BankCodeMessage)
         {
             var match = Regex.Match(BankCodeMessage, PatternResultMessage);
@@ -849,6 +856,8 @@ namespace libfintx
             {
                 var code = match.Groups[1].Value;
                 var message = match.Groups[2].Value;
+
+                message = message.Replace("?:", ":");
 
                 return new HBCIBankMessage(code, message);
             }

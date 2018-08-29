@@ -64,7 +64,11 @@ namespace libfintx
             SEG.NUM = SEGNUM.SETInt(5);
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM);
-            return FinTSMessage.Send(connectionDetails.Url, message);
+            string response = FinTSMessage.Send(connectionDetails.Url, message);
+
+            Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
+
+            return response;
         }
     }
 }

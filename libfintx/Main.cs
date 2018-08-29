@@ -55,13 +55,17 @@ namespace libfintx
         /// Synchronize bank connection
         /// </summary>
         /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
-        /// <param name="anonymous"></param>
         /// <returns>
-        /// Success or failure
+        /// Customer System ID
         /// </returns>
-        public static HBCIDialogResult Synchronization(ConnectionDetails connectionDetails, bool anonymous)
+        public static HBCIDialogResult<string> Synchronization(ConnectionDetails connectionDetails)
         {
-            return Transaction.INI(connectionDetails, anonymous);
+            string BankCode = Transaction.HKSYN(connectionDetails);
+            var result = new HBCIDialogResult<string>(Helper.Parse_BankCode(BankCode));
+
+            result.Data = Segment.HISYN;
+
+            return result;
         }
 
         /// <summary>
@@ -1526,6 +1530,10 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult<string> RequestTANMediumName(ConnectionDetails connectionDetails)
         {
+            HBCIDialogResult iniResult = Transaction.INI(connectionDetails, false);
+            if (!iniResult.IsSuccess)
+                return new HBCIDialogResult<string>(iniResult.Messages, null);
+
             var BankCode = Transaction.HKTAB(connectionDetails);
             var result = new HBCIDialogResult<string>(Helper.Parse_BankCode(BankCode));
             if (!result.IsSuccess)
