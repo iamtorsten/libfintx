@@ -333,7 +333,7 @@ namespace libfintx
                 }
 
                 // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
-                if (bpd.Contains("ING-DiBa"))
+                if (bpd.ToLower().Contains("ing-diba"))
                 {
                     if (String.IsNullOrEmpty(Segment.HKKAZ))
                         Segment.HKKAZ = "5";
@@ -511,7 +511,7 @@ namespace libfintx
         {
             try
             {
-                string pattern = "HIUPD.*?HKSAK";
+                string pattern = "HIUPD.*?++*?:1";
                 MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Singleline);
 
                 for (int ctr = 0; ctr <= result.Count - 1; ctr++)
