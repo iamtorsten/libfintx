@@ -168,7 +168,15 @@ namespace libfintx
                 string msg_ = string.Join("", msg.ToArray());
 
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
-                string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNSHA");
+
+                string msgend = string.Empty;
+
+                if (msg_.Contains("HNSHA"))
+                    msgend = "HNSHA";
+                else
+                    msgend = "HNHBS";
+
+                string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + msgend);
 
                 var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 var dir = Path.Combine(documents, Program.Buildname);
@@ -325,8 +333,16 @@ namespace libfintx
                 }
 
                 // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
-                if (String.IsNullOrEmpty(Segment.HKKAZ))
-                    Segment.HKKAZ = "6";
+                if (bpd.Contains("ING-DiBa"))
+                {
+                    if (String.IsNullOrEmpty(Segment.HKKAZ))
+                        Segment.HKKAZ = "5";
+                }
+                else
+                {
+                    if (String.IsNullOrEmpty(Segment.HKKAZ))
+                        Segment.HKKAZ = "6";
+                }
 
                 if (!String.IsNullOrEmpty(Segment.HIRMS))
                 {
