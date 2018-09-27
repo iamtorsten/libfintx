@@ -511,7 +511,7 @@ namespace libfintx
         {
             try
             {
-                string pattern = "HIUPD.*?++.*?:1";
+                string pattern = "HIUPD.*?HKCSA";
                 MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Singleline);
 
                 for (int ctr = 0; ctr <= result.Count - 1; ctr++)
