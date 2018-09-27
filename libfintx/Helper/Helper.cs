@@ -169,6 +169,8 @@ namespace libfintx
 
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
 
+                BPD.Value = bpd;
+
                 string msgend = string.Empty;
 
                 if (msg_.Contains("HNSHA"))
@@ -177,6 +179,8 @@ namespace libfintx
                     msgend = "HNHBS";
 
                 string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + msgend);
+
+                UPD.Value = upd;
 
                 var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 var dir = Path.Combine(documents, Program.Buildname);
@@ -249,7 +253,7 @@ namespace libfintx
                                         if (String.IsNullOrEmpty(TANf))
                                             TANf = i.ToString();
                                         else
-                                            TANf += $";{i}";                                        
+                                            TANf += $";{i}";
                                     }
                                 }
                             }
@@ -265,7 +269,7 @@ namespace libfintx
                             // Parsing TAN processes
                             if (!String.IsNullOrEmpty(Segment.HIRMS))
                                 Parse_TANProcesses(bpd);
-                            
+
                         }
                     }
 
@@ -545,7 +549,7 @@ namespace libfintx
                 string[] processes = Segment.HIRMSf.Split(';');
 
                 // Examples from bpd
-                
+
                 // 944:2:SECUREGO:
                 // 920:2:smsTAN:
                 // 920:2:BestSign:
@@ -899,11 +903,9 @@ namespace libfintx
         /// <summary>
         /// Make filename valid
         /// </summary>
-        public static string MakeFilenameValid (string value)
+        public static string MakeFilenameValid(string value)
         {
             return value.Replace(" ", "_").Replace(":", "");
         }
     }
 }
-
-

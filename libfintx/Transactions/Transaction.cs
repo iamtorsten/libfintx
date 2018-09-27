@@ -87,7 +87,7 @@ namespace libfintx
             return Init_HKCUM(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage);
         }
 
-        public static string HKDSE(ConnectionDetails connectionDetails, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, 
+        public static string HKDSE(ConnectionDetails connectionDetails, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage,
             DateTime SettlementDate, string MandateNumber, DateTime MandateDate, string CeditorIDNumber)
         {
             return Init_HKDSE(connectionDetails, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber);

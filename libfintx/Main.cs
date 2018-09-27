@@ -64,14 +64,15 @@ namespace libfintx
         /// Structured information about balance, creditline and used currency
         /// </returns>
         public static AccountBalance Balance(ConnectionDetails connectionDetails, bool anonymous)
-        {            
+        {
             if (Transaction.INI(connectionDetails, anonymous) == true)
             {
                 // Success
                 var BankCode = Transaction.HKSAL(connectionDetails);
                 return Helper.Parse_Balance(BankCode);
             }
-            else {
+            else
+            {
                 Log.Write("Error in initialization.");
                 throw new Exception("Error in initialization.");
             }
@@ -127,7 +128,7 @@ namespace libfintx
             {
                 Log.Write("Initialization/sync failed");
                 throw new Exception("Initialization/sync failed");
-            }                
+            }
         }
 
         /// <summary>
@@ -278,15 +279,15 @@ namespace libfintx
                 {
                     transactionList.Add(new AccountTransaction()
                     {
-                         OwnerAccount = swiftStatement.accountCode,
-                         OwnerBankcode= swiftStatement.bankCode,
-                         PartnerBIC = swiftTransaction.bankCode,
-                         PartnerIBAN = swiftTransaction.accountCode,
-                         PartnerName = swiftTransaction.partnerName,
-                         RemittanceText = swiftTransaction.description,
-                         TransactionType = swiftTransaction.text,
-                         TransactionDate = swiftTransaction.inputDate,
-                         ValueDate = swiftTransaction.valueDate
+                        OwnerAccount = swiftStatement.accountCode,
+                        OwnerBankcode = swiftStatement.bankCode,
+                        PartnerBIC = swiftTransaction.bankCode,
+                        PartnerIBAN = swiftTransaction.accountCode,
+                        PartnerName = swiftTransaction.partnerName,
+                        RemittanceText = swiftTransaction.description,
+                        TransactionType = swiftTransaction.text,
+                        TransactionDate = swiftTransaction.inputDate,
+                        ValueDate = swiftTransaction.valueDate
                     });
                 }
             }
@@ -390,13 +391,13 @@ namespace libfintx
                 {
                     // Gif image instead of picture box
                     Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
-                    
+
                     return "OK";
                 }
                 else
                 {
                     var msg = Helper.Parse_BankCode_Error(BankCode);
-                    
+
                     Log.Write(msg);
 
                     return msg;
@@ -723,7 +724,7 @@ namespace libfintx
 
         {
             Image img = null;
-            return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay, 
+            return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay,
                 HIRMS, pictureBox, anonymous, out img);
         }
 
@@ -1320,7 +1321,7 @@ namespace libfintx
 
         {
             Image img = null;
-            return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC, 
+            return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out img);
         }
 
