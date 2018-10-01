@@ -16,9 +16,11 @@ namespace libfintx
         public bool HasUnknown => messages != null && messages.Any(m => m.IsUnknown);
         private List<HBCIBankMessage> messages;
         public IEnumerable<HBCIBankMessage> Messages => messages;
+
         public HBCIDialogResult()
         {
         }
+
         public HBCIDialogResult(IEnumerable<HBCIBankMessage> messages)
         {
             this.messages = messages.ToList();
@@ -32,11 +34,13 @@ namespace libfintx
                 messages.Add(new HBCIBankMessage(code, message));
             }
         }
+
         public override string ToString()
         {
             return string.Join(", ", messages);
         }
     }
+
     public class HBCIDialogResult<T> : HBCIDialogResult
     {
         public T Data { get; set; }
@@ -46,6 +50,7 @@ namespace libfintx
             Data = data;
         }
     }
+
     public class HBCIBankMessage
     {
         public enum TypeEnum
@@ -75,6 +80,7 @@ namespace libfintx
             else
                 Type = TypeEnum.Unknown;
         }
+
         public override string ToString()
         {
             return $"{Code}: {Message}";
