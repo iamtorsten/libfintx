@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -39,6 +40,11 @@ namespace libfintx
 {
     public static class Helper
     {
+        /// <summary>
+        /// Regex pattern for HIRMG/HIRMS messages.
+        /// </summary>
+        private const string PatternResultMessage = @"(\d{4}):.*?:(.+)";
+
         /// <summary>
         /// Pad zeros
         /// </summary>
@@ -152,10 +158,12 @@ namespace libfintx
         /// <param name="HBCIVersion"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static bool Parse_Segment(string UserID, int BLZ, int HBCIVersion, string Message)
+        public static List<HBCIBankMessage> Parse_Segment(string UserID, int BLZ, int HBCIVersion, string Message)
         {
             try
             {
+                List<HBCIBankMessage> result = new List<HBCIBankMessage>();
+
                 String[] values = Message.Split('\'');
 
                 List<string> msg = new List<string>();
@@ -166,79 +174,49 @@ namespace libfintx
                 }
 
                 string msg_ = string.Join("", msg.ToArray());
-
+            
                 string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
-
-                BPD.Value = bpd;
-
-                string msgend = string.Empty;
-
-                if (msg_.Contains("HNSHA"))
-                    msgend = "HNSHA";
-                else
-                    msgend = "HNHBS";
-
-                string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + msgend);
-
-                UPD.Value = upd;
-
-                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var dir = Path.Combine(documents, Program.Buildname);
-
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
+                string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNHBS");
 
                 // BPD
-                dir = Path.Combine(dir, "BPD");
-
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                {
-                    using (File.Create(Path.Combine(dir, "280_" + BLZ + ".bpd")))
-                    { };
-
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
-                }
-                else
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
+                SaveBPD(BLZ, bpd);
 
                 // UPD
-                dir = Path.Combine(documents, Program.Buildname);
-                dir = Path.Combine(dir, "UPD");
-
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                if (!File.Exists(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                {
-                    using (File.Create(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd")))
-                    { };
-
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
-                }
-                else
-                    File.WriteAllText(Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd"), upd);
+                SaveUPD(BLZ, UserID, upd);
 
                 foreach (var item in values)
                 {
+                    if (item.Contains("HIRMG"))
+                    {
+                        // HIRMG:2:2+9050::Die Nachricht enthÃ¤lt Fehler.+9800::Dialog abgebrochen+9010::Initialisierung fehlgeschlagen, Auftrag nicht bearbeitet.
+                        // HIRMG:2:2+9800::Dialogabbruch.
+
+                        string[] HIRMG_messages = item.Split('+');
+                        foreach (var HIRMG_message in HIRMG_messages)
+                        {
+                            var message = Parse_BankCode_Message(HIRMG_message);
+                            if (message != null)
+                                result.Add(message);
+                        }
+                    }
+
                     if (item.Contains("HIRMS"))
                     {
-                        var item_ = item;
+                        // HIRMS:3:2:2+9942::PIN falsch. Zugang gesperrt.'
+                        string[] HIRMS_messages = item.Split('+');
+                        foreach (var HIRMS_message in HIRMS_messages)
+                        {
+                            var message = Parse_BankCode_Message(HIRMS_message);
+                            if (message != null)
+                                result.Add(message);
+                        }
 
-                        if (item_.Contains("3920"))
+                        if (item.Contains("3920"))
                         {
                             string TAN = string.Empty;
                             string TANf = string.Empty;
 
-                            string[] procedures = Regex.Split(item_, @"\D+");
+                            string[] procedures = Regex.Split(item, @"\D+");
 
                             foreach (string value in procedures)
                             {
@@ -253,23 +231,25 @@ namespace libfintx
                                         if (String.IsNullOrEmpty(TANf))
                                             TANf = i.ToString();
                                         else
-                                            TANf += $";{i}";
+                                            TANf += $";{i}";                                        
                                     }
                                 }
                             }
                             if (string.IsNullOrEmpty(Segment.HIRMS))
+                            {
                                 Segment.HIRMS = TAN;
+                            }
                             else
                             {
                                 if (!TANf.Contains(Segment.HIRMS))
-                                    throw new Exception($"Invalid HIRMS/Tan-Mode detected. Please choose one of the allowed modes: {TANf}");
+                                    throw new Exception($"Invalid HIRMS/Tan-Mode {Segment.HIRMS} detected. Please choose one of the allowed modes: {TANf}");
                             }
                             Segment.HIRMSf = TANf;
 
                             // Parsing TAN processes
                             if (!String.IsNullOrEmpty(Segment.HIRMS))
                                 Parse_TANProcesses(bpd);
-
+                            
                         }
                     }
 
@@ -283,6 +263,8 @@ namespace libfintx
                     {
                         var ID = item.Substring(item.IndexOf("+") + 1);
                         Segment.HISYN = ID;
+
+                        Log.Write("Customer System ID: " + ID);
                     }
 
                     if (item.Contains("HNHBS"))
@@ -337,53 +319,16 @@ namespace libfintx
                 }
 
                 // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
-                if (bpd.ToLower().Contains("ing-diba"))
-                {
-                    if (String.IsNullOrEmpty(Segment.HKKAZ))
-                        Segment.HKKAZ = "5";
-                }
-                else
-                {
-                    if (String.IsNullOrEmpty(Segment.HKKAZ))
-                        Segment.HKKAZ = "6";
-                }
+                if (String.IsNullOrEmpty(Segment.HKKAZ))
+                    Segment.HKKAZ = "6";
 
-                if (!String.IsNullOrEmpty(Segment.HIRMS))
-                {
-                    UserID = string.Empty;
-                    return true;
-                }
-                else
-                {
-                    UserID = string.Empty;
-
-                    // Error
-                    var BankCode = "HIRMG" + Helper.Parse_String(msg_, "HIRMG", "HNHBS");
-
-                    String[] values_ = BankCode.Split('+');
-
-                    foreach (var item in values_)
-                    {
-                        if (!item.StartsWith("HIRMG"))
-                        {
-                            Console.WriteLine(item.Replace("::", ": "));
-
-                            Log.Write(item.Replace("::", ": "));
-                        }
-                    }
-
-                    return false;
-                }
+                return result;
             }
             catch (Exception ex)
             {
-                UserID = string.Empty;
-
                 Log.Write(ex.ToString());
 
-                Console.WriteLine($"Software error: {ex.Message}");
-
-                return false;
+                throw new InvalidOperationException($"Software error.", ex);
             }
         }
 
@@ -515,17 +460,47 @@ namespace libfintx
         {
             try
             {
-                string pattern = "HIUPD.*?:1+";
-                MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Singleline);
+                string pattern = $@"HIUPD.*?$";
+                MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Multiline);
 
                 for (int ctr = 0; ctr <= result.Count - 1; ctr++)
                 {
-                    string Accountnumber = "DE" + Parse_String(result[ctr].Value, "+DE", "+");
-                    string Accountowner = Parse_String(result[ctr].Value, "EUR+", "+");
-                    string Accounttype = Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
+                    string Accountnumber = null;
+                    string Accountbankcode = null;
+                    string Accountiban = null;
+                    string Accountuserid = null;
+                    string Accounttype = null;
+                    string Accountcurrency = null;
+                    string Accountowner = null;
 
-                    if (Accountnumber.Length > 2)
-                        Items.Add(new AccountInformations() { Accountnumber = Accountnumber, Accountowner = Accountowner, Accounttype = Accounttype });
+                    // HIUPD:165:6:4+3300785692::280:10050000+DE22100500003300785692+5985932562+10+EUR+Behrendt+Thomas+Sparkassenbuch Gold
+                    var match = Regex.Match(result[ctr].Value, @"HIUPD.*?\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+");
+                    if (match.Success)
+                    {
+                        var accountInfo = match.Groups[1].Value;
+                        var matchInfo = Regex.Match(accountInfo, @"(\d+):(.*?):280:(\d+)");
+                        if (matchInfo.Success)
+                        {
+                            Accountnumber = matchInfo.Groups[1].Value;
+                            Accountbankcode = matchInfo.Groups[3].Value;
+                        }
+
+                        Accountiban = match.Groups[2].Value;
+                        Accountuserid = match.Groups[3].Value;
+                        Accounttype = match.Groups[4].Value;
+                        Accountcurrency = match.Groups[5].Value;
+                        Accountowner = $"{match.Groups[6]} {match.Groups[7]}";
+                        Accounttype = match.Groups[8].Value;
+                    }
+                    else // Fallback
+                    {
+                        Accountiban = "DE" + Parse_String(result[ctr].Value, "+DE", "+");
+                        Accountowner = Parse_String(result[ctr].Value, "EUR+", "+");
+                        Accounttype = Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
+                    }
+
+                    if (Accountnumber?.Length > 2 || Accountiban?.Length > 2)
+                        Items.Add(new AccountInformations() { Accountnumber = Accountnumber, Accountbankcode = Accountbankcode, Accountiban = Accountiban, Accountuserid = Accountuserid, Accounttype = Accounttype, Accountcurrency = Accountcurrency, Accountowner = Accountowner});
                 }
 
                 if (Items.Count > 0)
@@ -533,7 +508,11 @@ namespace libfintx
                 else
                     return false;
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                Log.Write(ex.ToString());
+                return false;
+            }
         }
 
         /// <summary>
@@ -549,7 +528,7 @@ namespace libfintx
                 string[] processes = Segment.HIRMSf.Split(';');
 
                 // Examples from bpd
-
+                
                 // 944:2:SECUREGO:
                 // 920:2:smsTAN:
                 // 920:2:BestSign:
@@ -586,8 +565,10 @@ namespace libfintx
             if (BankCode.Contains("+A:1"))
                 return Parse_String(BankCode, "+A:1", "'").Replace(":", "");
 
-            var match = Regex.Match(BankCode, @"\+M:1:+(\w+):");
-            if (match.Success) // HITAB:5:4:3+0+M:2:::::::::::Unregistriert 1::01514/654321::::::+M:1:::::::::::Handy:*********4321:::::::
+            // HITAB:4:4:3+0+M:1:::::::::::mT?:MFN1:********0340'
+            // HITAB:5:4:3+0+M:2:::::::::::Unregistriert 1::01514/654321::::::+M:1:::::::::::Handy:*********4321:::::::
+            var match = Regex.Match(BankCode, @"\+M:1:+(\w.+)?(:[\**\d]+)");
+            if (match.Success) 
             {
                 return match.Groups[1].Value;
             }
@@ -730,11 +711,13 @@ namespace libfintx
         public static void Parse_BankCode(string BankCode, PictureBox pictureBox, out Image flickerImage, int flickerWidth,
             int flickerHeight, bool renderFlickerCodeAsGif)
 #else
-        public static void Parse_BankCode(string BankCode, object pictureBox, out Image flickerImage, int flickerWidth,
+        public static List<HBCIBankMessage> Parse_BankCode(string BankCode, object pictureBox, out Image flickerImage, int flickerWidth,
             int flickerHeight, bool renderFlickerCodeAsGif)
 #endif
 
         {
+            List<HBCIBankMessage> result = new List<HBCIBankMessage>();
+
             flickerImage = null;
 
             var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
@@ -747,6 +730,10 @@ namespace libfintx
             {
                 if (!item.StartsWith("HIRMS"))
                     TransactionConsole.Output = item.Replace("::", ": ");
+
+                var message = Parse_BankCode_Message(item);
+                if (message != null)
+                    result.Add(message);
             }
 
             var HITAN = "HITAN" + Helper.Parse_String(BankCode.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
@@ -853,29 +840,55 @@ namespace libfintx
 
                 var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
             }
+
+            return result;
         }
 
         /// <summary>
-        /// Parse bank error code
+        /// Parse a single bank result message.
+        /// </summary>
+        /// <param name="BankCodeMessage"></param>
+        /// <returns></returns>
+        public static HBCIBankMessage Parse_BankCode_Message(string BankCodeMessage)
+        {
+            var match = Regex.Match(BankCodeMessage, PatternResultMessage);
+            if (match.Success)
+            {
+                var code = match.Groups[1].Value;
+                var message = match.Groups[2].Value;
+
+                message = message.Replace("?:", ":");
+
+                return new HBCIBankMessage(code, message);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Parse bank error codes
         /// </summary>
         /// <param name="BankCode"></param>
-        /// <returns></returns>
-        public static string Parse_BankCode_Error(string BankCode)
+        /// <returns>Banks messages with "??" as seperator.</returns>
+        public static List<HBCIBankMessage> Parse_BankCode(string BankCode)
         {
-            // Error
-            var BankCode_ = "HIRMS" + Helper.Parse_String(BankCode, "'HIRMS", "'");
+            List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
-            String[] values = BankCode_.Split('+');
-
-            string msg = string.Empty;
-
-            foreach (var item in values)
+            string[] segments = BankCode.Split('\'');
+            foreach (var segment in segments)
             {
-                if (!item.StartsWith("HIRMS"))
-                    msg = msg + "??" + item.Replace("::", ": ");
+                if (segment.Contains("HIRMG") || segment.Contains("HIRMS"))
+                {
+                    string[] messages = segment.Split('+');
+                    foreach (var HIRMG_message in messages)
+                    {
+                        var message = Parse_BankCode_Message(HIRMG_message);
+                        if (message != null)
+                            result.Add(message);
+                    }
+                }
             }
 
-            return msg;
+            return result;
         }
 
         /// <summary>
@@ -903,9 +916,82 @@ namespace libfintx
         /// <summary>
         /// Make filename valid
         /// </summary>
-        public static string MakeFilenameValid(string value)
+        public static string MakeFilenameValid (string value)
         {
             return value.Replace(" ", "_").Replace(":", "");
         }
+
+        public static string GetProgramBaseDir()
+        {
+            var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (Program.Buildname == null)
+            {
+                throw new InvalidOperationException("Der Wert von Program.Buildname muss gesetzt sein.");
+            }
+
+            return Path.Combine(documents, Program.Buildname);
+        }
+
+        private static string GetBPDDir()
+        {
+            var dir = GetProgramBaseDir();
+            return Path.Combine(dir, "BPD");
+        }
+
+        private static string GetBPDFile(string dir, int BLZ)
+        {
+            return Path.Combine(dir, "280_" + BLZ + ".bpd");
+        }
+
+        private static string GetUPDDir()
+        {
+            var dir = GetProgramBaseDir();
+            return Path.Combine(dir, "UPD");
+        }
+
+        private static string GetUPDFile(string dir, int BLZ, string UserID)
+        {
+            return Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd");
+        }
+
+        public static string GetUPD(int BLZ, string UserID)
+        {
+            var dir = GetUPDDir();
+            var file = GetUPDFile(dir, BLZ, UserID);
+            return File.Exists(file) ? File.ReadAllText(file) : string.Empty;
+        }
+
+        public static void SaveUPD(int BLZ, string UserID, string upd)
+        {
+            string dir = GetUPDDir();
+            Directory.CreateDirectory(dir);
+            var file = GetUPDFile(dir, BLZ, UserID);
+            if (!File.Exists(file))
+            {
+                using (File.Create(file)) { };
+            }
+            File.WriteAllText(file, upd);
+        }
+
+        public static string GetBPD(int BLZ)
+        {
+            var dir = GetBPDDir();
+            var file = GetBPDFile(dir, BLZ);
+            return File.Exists(file) ? File.ReadAllText(file) : string.Empty;
+        }
+
+        public static void SaveBPD(int BLZ, string upd)
+        {
+            string dir = GetBPDDir();
+            Directory.CreateDirectory(dir);
+            var file = GetBPDFile(dir, BLZ);
+            if (!File.Exists(file))
+            {
+                using (File.Create(file)) { };
+            }
+            File.WriteAllText(file, upd);
+        }
     }
 }
+
+

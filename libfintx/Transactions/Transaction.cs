@@ -27,7 +27,7 @@ using static libfintx.INI;
 using static libfintx.HKSAL;
 using static libfintx.HKKAZ;
 using static libfintx.HKCCS;
-using static libfintx.HKCCST;
+using static libfintx.HKCSE;
 using static libfintx.HKCCM;
 using static libfintx.HKCME;
 using static libfintx.HKCUM;
@@ -35,7 +35,11 @@ using static libfintx.HKDSE;
 using static libfintx.HKDME;
 using static libfintx.HKPPD;
 using static libfintx.HKCDE;
+using static libfintx.HKCDN;
+using static libfintx.HKCDL;
 using static libfintx.HKCSB;
+using static libfintx.HKCDB;
+using static libfintx.HKSYN;
 using static libfintx.TAN;
 using static libfintx.TAN4;
 using static libfintx.HKTAB;
@@ -47,9 +51,14 @@ namespace libfintx
 {
     public static class Transaction
     {
-        public static bool INI(ConnectionDetails connectionDetails, bool Anonymous)
+        public static HBCIDialogResult INI(ConnectionDetails connectionDetails, bool Anonymous)
         {
             return Init_INI(connectionDetails, Anonymous);
+        }
+
+        public static string HKSYN(ConnectionDetails connectionDetails)
+        {
+            return Init_HKSYN(connectionDetails);
         }
 
         public static string HKSAL(ConnectionDetails connectionDetails)
@@ -67,9 +76,9 @@ namespace libfintx
             return Init_HKCCS(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage);
         }
 
-        public static string HKCCST(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        public static string HKCSE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
         {
-            return Init_HKCCST(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+            return Init_HKCSE(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
         }
 
         public static string HKCCM(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount)
@@ -87,7 +96,7 @@ namespace libfintx
             return Init_HKCUM(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage);
         }
 
-        public static string HKDSE(ConnectionDetails connectionDetails, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage,
+        public static string HKDSE(ConnectionDetails connectionDetails, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, 
             DateTime SettlementDate, string MandateNumber, DateTime MandateDate, string CeditorIDNumber)
         {
             return Init_HKDSE(connectionDetails, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber);
@@ -103,15 +112,29 @@ namespace libfintx
             return Init_HKPPD(connectionDetails, MobileServiceProvider, PhoneNumber, Amount);
         }
 
-        public static string HKCDE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota,
-            int ExecutionDay)
+        public static string HKCDE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota, int ExecutionDay)
         {
             return Init_HKCDE(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
+        }
+
+        public static string HKCDN(ConnectionDetails connectionDetails, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota, int ExecutionDay)
+        {
+            return Init_HKCDN(connectionDetails, OrderId, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
+        }
+
+        public static string HKCDL(ConnectionDetails connectionDetails, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit TimeUnit, string Rota, int ExecutionDay)
+        {
+            return Init_HKCDL(connectionDetails, OrderId, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, FirstTimeExecutionDay, TimeUnit, Rota, ExecutionDay);
         }
 
         public static string HKCSB(ConnectionDetails connectionDetails)
         {
             return Init_HKCSB(connectionDetails);
+        }
+
+        public static string HKCDB(ConnectionDetails connectionDetails)
+        {
+            return Init_HKCDB(connectionDetails);
         }
 
         public static string TAN(ConnectionDetails connectionDetails, string TAN)

@@ -52,5 +52,10 @@ namespace libfintx.Data
         /// BIC of the bank account
         /// </summary>
         public string BIC { get; set; }
+
+        /// <summary>
+        /// System ID (Kundensystem-ID)
+        /// </summary>
+        public string CustomerSystemId { get; set; }
     }
 }

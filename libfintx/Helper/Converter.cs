@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Text;
 
 namespace libfintx
 {
@@ -57,6 +58,12 @@ namespace libfintx
         {
             string hex = BitConverter.ToString(ba);
             return hex.Replace("-", " ");
+        }
+
+        public static string ConvertEncoding(string str, Encoding input, Encoding result)
+        {
+            byte[] bytes = input.GetBytes(str);
+            return result.GetString(bytes);
         }
     }
 }

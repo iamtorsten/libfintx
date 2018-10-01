@@ -25,6 +25,7 @@
 
 using libfintx.Data;
 using System;
+using System.Linq;
 using System.IO;
 
 using HBCI = libfintx.Main;
@@ -43,9 +44,56 @@ namespace libfintx
 #if DEBUG
         static bool Anonymous;
 
+        static ConnectionDetails _conn = null;
+
+        static Test()
+        {
+            // Damit keine Zugangsdaten direkt im Code hinterlegt sind, kann optional eine Datei verwendet werden.
+            // Datei liegt in C:/Users/<username>/libfintx_test_connection.csv
+
+            var userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var connFile = Path.Combine(userDir, "libfintx_test_connnection.csv");
+            if (File.Exists(connFile))
+            {
+                var lines = File.ReadAllLines(connFile).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
+                if (lines.Length != 2)
+                {
+                    Console.WriteLine($"File {connFile} exists but has wrong format.");
+                    return;
+                }
+
+                var values = lines[1].Split(';');
+                if (values.Length != 8)
+                {
+                    Console.WriteLine($"File {connFile} exists but has wrong format.");
+                    return;
+                }
+                var account = values[0];
+                var blz = Convert.ToInt32(values[1]);
+                var bic = values[2];
+                var iban = values[3].Replace(" ", "");
+                var url = values[4];
+                var hbciVersion = Convert.ToInt32(values[5]);
+                var userId = values[6];
+                var pin = values[7];
+
+                _conn = new ConnectionDetails()
+                {
+                    Account = account,
+                    Blz = blz,
+                    BIC = bic,
+                    IBAN = iban,
+                    Url = url,
+                    HBCIVersion = hbciVersion,
+                    UserId = userId,
+                    Pin = pin
+                };
+            }
+        }
+
         public static void Test_Balance()
         {
-            var connectionDetails = new ConnectionDetails()
+            var connectionDetails = _conn ?? new ConnectionDetails()
             {
                 Account = "xxx",
                 Blz = 76061482,
@@ -66,22 +114,6 @@ namespace libfintx
 
             libfintx.Main.Tracing(true);
 
-            if (libfintx.Main.Synchronization(connectionDetails, Anonymous))
-            {
-                Console.WriteLine("[ Sync ]");
-                Console.WriteLine();
-                Console.WriteLine("Sync ok");
-                Console.WriteLine();
-            }
-
-            else
-            {
-                Console.WriteLine("[ Sync ]");
-                Console.WriteLine();
-                Console.WriteLine(libfintx.Main.Transaction_Output());
-                Console.WriteLine();
-            }
-
 #endregion
 
 #region balance
@@ -92,7 +124,7 @@ namespace libfintx
 
             Console.WriteLine("[ Balance ]");
             Console.WriteLine();
-            Console.WriteLine(balance.Balance);
+            Console.WriteLine(balance.Data.Balance);
             Console.WriteLine();
 
 #endregion
@@ -100,9 +132,35 @@ namespace libfintx
             Console.ReadLine();
         }
 
+
+        public static void Test_Accounts()
+        {
+            var connectionDetails = _conn ?? new ConnectionDetails()
+            {
+                // ...
+            };
+            Anonymous = false;
+
+            #region Sync
+
+            /* Sync */
+
+            libfintx.Main.Assembly("libfintx", "0.1");
+
+            libfintx.Main.Tracing(true);
+
+            var accounts = libfintx.Main.Accounts(connectionDetails, Anonymous);
+            foreach (var acc in accounts.Data)
+            {
+                Console.WriteLine(acc.ToString());
+            }
+
+            #endregion
+        }
+
         public static void Test_Request_TANMediumName()
         {
-            var connectionDetails = new ConnectionDetails()
+            var connectionDetails = _conn ?? new ConnectionDetails()
             {
                 Blz = 76050101,
                 Url = "https://banking-by1.s-fints-pt-by.de/fints30",
@@ -120,22 +178,6 @@ namespace libfintx
             libfintx.Main.Assembly("libfintx", "0.1");
 
             libfintx.Main.Tracing(true);
-
-            if (libfintx.Main.Synchronization(connectionDetails, Anonymous))
-            {
-                Console.WriteLine("[ Sync ]");
-                Console.WriteLine();
-                Console.WriteLine("Sync ok");
-                Console.WriteLine();
-            }
-
-            else
-            {
-                Console.WriteLine("[ Sync ]");
-                Console.WriteLine();
-                Console.WriteLine(libfintx.Main.Transaction_Output());
-                Console.WriteLine();
-            }
 
 #endregion
 
@@ -174,7 +216,7 @@ namespace libfintx
 
             bool anonymous = false;
 
-            ConnectionDetails connectionDetails = new ConnectionDetails()
+            ConnectionDetails connectionDetails = _conn ?? new ConnectionDetails()
             {
                 AccountHolder = "Torsten Klinger",
                 Blz = 76050101,
@@ -196,12 +238,12 @@ namespace libfintx
 
             HBCI.Tracing(true);
 
-            if (HBCI.Synchronization(connectionDetails, anonymous))
+            if (HBCI.Synchronization(connectionDetails).IsSuccess)
             {
                 Segment.HIRMS = "921"; // -> pushTAN
 
                 var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
-                Segment.HITAB = tanmediumname;
+                Segment.HITAB = tanmediumname.Data;
 
                 System.Threading.Thread.Sleep(5000);
 
@@ -235,7 +277,7 @@ namespace libfintx
 
         public static void Test_Flicker()
         {
-            connectionDetails = new ConnectionDetails()
+            connectionDetails = _conn ?? new ConnectionDetails()
             {
                 AccountHolder = "Torsten Klinger",
                 Blz = 76061482,

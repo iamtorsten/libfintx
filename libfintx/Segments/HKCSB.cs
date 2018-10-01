@@ -28,17 +28,18 @@ namespace libfintx
     public static class HKCSB
     {
         /// <summary>
-        /// Get bankers orders
+        /// Get terminated transfers
         /// </summary>
         public static string Init_HKCSB(ConnectionDetails connectionDetails)
         {
-            Log.Write("Starting job HKCSB: Get bankers order");
+            Log.Write("Starting job HKCSB: Get terminated transfers");
 
             string segments = "HKCSB:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
             SEG.NUM = SEGNUM.SETInt(3);
 
-            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+            string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            return FinTSMessage.Send(connectionDetails.Url, message);
         }
     }
 }
