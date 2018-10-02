@@ -30,15 +30,7 @@ There are many reasons why you need to use a banking library which can exchange 
 
 # Sample
 
-e.g. read balance
-
-```cs
-libfintx.Main.Assembly("Your build name", "Your build version");
-
-public static AccountBalance Balance(ConnectionDetails connectionDetails, bool anonymous)
-
-libfintx.Main.Balance ( ... );
-```
+See the demo project https://github.com/mrklintscher/libfintx_test
 
 # Features
 
