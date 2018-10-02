@@ -571,7 +571,7 @@ namespace libfintx
         public static string Parse_TANMedium(string BankCode)
         {
             if (BankCode.Contains("+A:1"))
-                return Parse_String(BankCode, "+A:1", "'").Replace(":", "");
+                return Parse_String(BankCode + "'", "+A:1", "'").Replace(":", "");
 
             // HITAB:4:4:3+0+M:1:::::::::::mT?:MFN1:********0340'
             // HITAB:5:4:3+0+M:2:::::::::::Unregistriert 1::01514/654321::::::+M:1:::::::::::Handy:*********4321:::::::
