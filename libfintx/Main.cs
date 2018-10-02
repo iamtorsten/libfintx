@@ -426,6 +426,9 @@ namespace libfintx
             var BankCode = Transaction.HKCCS(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
             var messages = Helper.Parse_BankCode(BankCode);
 
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+
             return new HBCIDialogResult(messages);
         }
 
@@ -471,6 +474,9 @@ namespace libfintx
 
             var BankCode = Transaction.HKCSE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
             var messages = Helper.Parse_BankCode(BankCode);
+
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
             return new HBCIDialogResult(messages);
         }
@@ -570,6 +576,9 @@ namespace libfintx
 
             var BankCode = Transaction.HKCCM(connectionDetails, painData, numberOfTransactions, totalAmount);
             var messages = Helper.Parse_BankCode(BankCode);
+
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
             return new HBCIDialogResult(messages);
         }
@@ -673,6 +682,9 @@ namespace libfintx
             var BankCode = Transaction.HKCME(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay);
             var messages = Helper.Parse_BankCode(BankCode);
 
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+
             return new HBCIDialogResult(messages);
         }
 
@@ -774,6 +786,9 @@ namespace libfintx
             var BankCode = Transaction.HKCUM(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
             var messages = Helper.Parse_BankCode(BankCode);
             var result = new HBCIDialogResult(messages);
+
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
             return result;
         }
@@ -879,6 +894,9 @@ namespace libfintx
             var BankCode = Transaction.HKDSE(connectionDetails, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
             var messages = Helper.Parse_BankCode(BankCode);
             var result = new HBCIDialogResult(messages);
+
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
             return result;
         }
@@ -991,6 +1009,9 @@ namespace libfintx
             var messages = Helper.Parse_BankCode(BankCode);
             var result = new HBCIDialogResult(messages);
 
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+
             return result;
         }
 
@@ -1086,6 +1107,9 @@ namespace libfintx
             var BankCode = Transaction.HKPPD(connectionDetails, mobileServiceProvider, phoneNumber, amount);
             var messages = Helper.Parse_BankCode(BankCode);
             var result = new HBCIDialogResult(messages);
+
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
             return result;
         }
@@ -1189,6 +1213,9 @@ namespace libfintx
             var messages = Helper.Parse_BankCode(BankCode);
             var result = new HBCIDialogResult(messages);
 
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+
             return result;
         }
 
@@ -1282,6 +1309,9 @@ namespace libfintx
             var messages = Helper.Parse_BankCode(BankCode);
             var result = new HBCIDialogResult(messages);
 
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
+
             return result;
         }
 
@@ -1367,6 +1397,9 @@ namespace libfintx
             var BankCode = Transaction.HKCDL(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
             var messages = Helper.Parse_BankCode(BankCode);
             var result = new HBCIDialogResult(messages);
+
+            // Parsing HITAN -> Transaction output
+            Helper.Parse_BankCode(BankCode, pictureBox, out flickerImage, flickerWidth, flickerHeight, renderFlickerCodeAsGif);
 
             return result;
         }
