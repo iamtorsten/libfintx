@@ -316,6 +316,19 @@ namespace libfintx
                             }
                         }
                     }
+
+                    if (item.Contains("HISPAS"))
+                    {
+                        if (item.Contains("pain.001.001.03"))
+                            Segment.HISPAS = 1;
+                        else if (item.Contains("pain.001.002.03"))
+                            Segment.HISPAS = 2;
+                        else if (item.Contains("pain.001.003.03"))
+                            Segment.HISPAS = 3;
+
+                        if (Segment.HISPAS == 0)
+                            Segment.HISPAS = 3; // -> Fallback. Most banks accept the newest pain version
+                    }
                 }
 
                 // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)

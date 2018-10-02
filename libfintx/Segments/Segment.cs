@@ -81,6 +81,11 @@ namespace libfintx
         /// </summary>
         public static string HITAB { get; set; }
 
+        /// <summary>
+        /// PAIN version
+        /// </summary>
+        public static int HISPAS { get; set; }
+
         public static void Reset()
         {
             try
