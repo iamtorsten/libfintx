@@ -77,6 +77,7 @@
     <Compile Include="MT940\MT940.cs" />
     <Compile Include="Pain\pain00100103.cs" />
     <Compile Include="Pain\pain00100203.cs" />
+    <Compile Include="Pain\pain00100303.cs" />
     <Compile Include="Pain\pain00800202.cs" />
     <Compile Include="Pain\pain_001_001_03\pain_001_001_03.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
