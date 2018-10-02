@@ -639,7 +639,20 @@ namespace libfintx
                 i = i + 1;
 
                 if (i == 6)
+                {
                     TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
+
+                    TransactionConsole.Output = TransactionConsole.Output.Replace("??", " ")
+                            .Replace("0030: ", "")
+                            .Replace("1.", Environment.NewLine + "1.")
+                            .Replace("2.", Environment.NewLine + "2.")
+                            .Replace("3.", Environment.NewLine + "3.")
+                            .Replace("4.", Environment.NewLine + "4.")
+                            .Replace("5.", Environment.NewLine + "5.")
+                            .Replace("6.", Environment.NewLine + "6.")
+                            .Replace("7.", Environment.NewLine + "7.")
+                            .Replace("8.", Environment.NewLine + "8.");
+                }
             }
 
             // chipTAN optisch
@@ -774,7 +787,20 @@ namespace libfintx
                 i = i + 1;
 
                 if (i == 6)
+                {
                     TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
+
+                    TransactionConsole.Output = TransactionConsole.Output.Replace("??", " ")
+                            .Replace("0030: ", "")
+                            .Replace("1.", Environment.NewLine + "1.")
+                            .Replace("2.", Environment.NewLine + "2.")
+                            .Replace("3.", Environment.NewLine + "3.")
+                            .Replace("4.", Environment.NewLine + "4.")
+                            .Replace("5.", Environment.NewLine + "5.")
+                            .Replace("6.", Environment.NewLine + "6.")
+                            .Replace("7.", Environment.NewLine + "7.")
+                            .Replace("8.", Environment.NewLine + "8.");
+                }
             }
 
             // chipTAN optisch
