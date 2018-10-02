@@ -186,7 +186,7 @@ namespace libfintx
                             continue;
                         }
 
-                        tr.amount = Decimal.Parse(nodeEntry.SelectSingleNode("camt:Amt", nsmgr).InnerText);
+                        tr.amount = Decimal.Parse(nodeEntry.SelectSingleNode("camt:Amt", nsmgr).InnerText, NumberStyles.Currency);
 
                         if (nodeEntry.SelectSingleNode("camt:Amt", nsmgr).Attributes["Ccy"].Value != stmt.currency)
                         {
@@ -201,7 +201,7 @@ namespace libfintx
 
                         XmlNode desc = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:RmtInf/camt:Ustrd", nsmgr);
                         tr.description = desc != null ? desc.InnerText : String.Empty;
-                        XmlNode partnerName = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:RltdPties/camt:Dbtr/camt:Nm", nsmgr);
+                        XmlNode partnerName = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:RltdPties/camt:Cdtr/camt:Nm", nsmgr);
 
                         if (partnerName != null)
                         {
