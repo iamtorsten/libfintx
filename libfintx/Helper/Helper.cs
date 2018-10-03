@@ -332,16 +332,8 @@ namespace libfintx
                 }
 
                 // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
-                if (bpd.ToLower().Contains("ing-diba")) //-> ing needs segment 5
-                {
-                    if (String.IsNullOrEmpty(Segment.HKKAZ))
-                        Segment.HKKAZ = "5";
-                }
-                else
-                {
-                    if (String.IsNullOrEmpty(Segment.HKKAZ)) // -> this should handle all other banks
-                        Segment.HKKAZ = "6";
-                }
+                if (String.IsNullOrEmpty(Segment.HKKAZ))
+                    Segment.HKKAZ = "5";
 
                 return result;
             }
