@@ -169,8 +169,6 @@ namespace libfintx
                 Pin = "xxx"
             };
 
-            bool Anonymous = false;
-
 #region Sync
 
             /* Sync */

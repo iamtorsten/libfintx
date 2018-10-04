@@ -485,6 +485,7 @@ namespace libfintx
                     string Accounttype = null;
                     string Accountcurrency = null;
                     string Accountowner = null;
+                    List<AccountPermissions> Accountpermissions = new List<AccountPermissions>();
 
                     // HIUPD:165:6:4+3300785692::280:10050000+DE22100500003300785692+5985932562+10+EUR+Behrendt+Thomas+Sparkassenbuch Gold
                     var match = Regex.Match(result[ctr].Value, @"HIUPD.*?\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+");
@@ -504,16 +505,64 @@ namespace libfintx
                         Accountcurrency = match.Groups[5].Value;
                         Accountowner = $"{match.Groups[6]} {match.Groups[7]}";
                         Accounttype = match.Groups[8].Value;
+
+                        if (Accountiban?.Length > 2)
+                        {
+                            // Account permissions
+                            string pat = "\\+.*?:1";
+                            MatchCollection res = Regex.Matches(result[ctr].Value, pat, RegexOptions.Singleline);
+
+                            for (int c = 0; c <= res.Count - 1; c++)
+                            {
+                                if (res[c].Value.Length < 10)
+                                {
+                                    Accountpermissions.Add(new AccountPermissions
+                                    {
+                                        Segment = res[c].Value.Replace("+", "").Replace(":1", ""),
+                                        Description = AccountPermissions.Permission(res[c].Value.Replace("+", "").Replace(":1", ""))
+                                    });
+                                }
+                            }
+                        }
                     }
                     else // Fallback
                     {
                         Accountiban = "DE" + Parse_String(result[ctr].Value, "+DE", "+");
                         Accountowner = Parse_String(result[ctr].Value, "EUR+", "+");
                         Accounttype = Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
+
+                        if (Accountiban?.Length > 2)
+                        {
+                            // Account permissions
+                            string pat = "\\+.*?:1";
+                            MatchCollection res = Regex.Matches(result[ctr].Value, pat, RegexOptions.Singleline);
+
+                            for (int c = 0; c <= res.Count - 1; c++)
+                            {
+                                if (res[c].Value.Length < 10)
+                                {
+                                    Accountpermissions.Add(new AccountPermissions
+                                    {
+                                        Segment = res[c].Value.Replace("+", "").Replace(":1", ""),
+                                        Description = AccountPermissions.Permission(res[c].Value.Replace("+", "").Replace(":1", ""))
+                                    });
+                                }
+                            }
+                        }
                     }
 
                     if (Accountnumber?.Length > 2 || Accountiban?.Length > 2)
-                        Items.Add(new AccountInformations() { Accountnumber = Accountnumber, Accountbankcode = Accountbankcode, Accountiban = Accountiban, Accountuserid = Accountuserid, Accounttype = Accounttype, Accountcurrency = Accountcurrency, Accountowner = Accountowner});
+                        Items.Add(new AccountInformations()
+                        {
+                            Accountnumber = Accountnumber,
+                            Accountbankcode = Accountbankcode,
+                            Accountiban = Accountiban,
+                            Accountuserid = Accountuserid,
+                            Accounttype = Accounttype,
+                            Accountcurrency = Accountcurrency,
+                            Accountowner = Accountowner,
+                            Accountpermissions = Accountpermissions
+                        });
                 }
 
                 if (Items.Count > 0)
