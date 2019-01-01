@@ -437,7 +437,6 @@ namespace libfintx
                 Content = String.Empty;
             }
 
-            line = line.Trim();
             line = line.Replace("™", "Ö");
             line = line.Replace("š", "Ü");
             line = line.Replace("Ž", "Ä");
