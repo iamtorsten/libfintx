@@ -24,6 +24,7 @@
 using System.Reflection;
 using System.Linq;
 using System;
+using System.Text;
 
 namespace libfintx
 {
@@ -104,6 +105,22 @@ namespace libfintx
             {
                 throw new InvalidOperationException("Couldn't reset Segment.", ex);
             }
+        }
+
+        public static string AsString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var propList = typeof(Segment)
+                .GetProperties(BindingFlags.Public | BindingFlags.Static)
+                .Where(f => f.PropertyType == typeof(string));
+
+            foreach (var prop in propList)
+            {
+                sb.AppendLine($"{prop.Name}: {prop.GetValue(null, null)}");
+            }
+
+            return sb.ToString();
         }
     }
 }
