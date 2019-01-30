@@ -21,10 +21,16 @@
  * 	
  */
 
+// #define WINDOWS
+
 using System;
 using System.Drawing;
 using System.IO;
 using System.Text;
+
+#if WINDOWS
+using System.Windows.Forms;
+#endif
 
 namespace libfintx
 {
@@ -68,7 +74,7 @@ namespace libfintx
             {
                 var errMsg = $"Invalid photoTan image returned. Error: {ex.Message}";
                 Log.Write(errMsg);
-                throw new Exception(errMsg);
+                throw new Exception(errMsg, ex);
             }
             
         }
@@ -86,6 +92,18 @@ namespace libfintx
                 sb.Append(Convert.ToString(bytes[i], 10));
             }
             return sb.ToString();
+        }
+
+        public void Render(object pictureBox)
+        {
+            if (pictureBox == null)
+                return;
+#if WINDOWS
+            if (pictureBox is PictureBox pBox)
+            {
+                pBox.Image = CodeImage;
+            }
+#endif
         }
     }
 }

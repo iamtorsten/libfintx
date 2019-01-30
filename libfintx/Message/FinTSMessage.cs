@@ -74,8 +74,12 @@ namespace libfintx
             {
                 if (HIRMS_TAN.Length >= 10)
                 {
-                    TAN_ = HIRMS_TAN.Substring(3, 7);
-                    HIRMS_TAN = HIRMS_TAN.Substring(0, 3);
+                    var split = HIRMS_TAN.Split(':');
+                    if (split.Length == 2)
+                    {
+                        HIRMS_TAN = split[0];
+                        TAN_ = ":" + split[1];
+                    }
                 }
             }
 
