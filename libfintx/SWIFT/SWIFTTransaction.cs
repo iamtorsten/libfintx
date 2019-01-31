@@ -22,11 +22,37 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace libfintx
 {
     public class SWIFTTransaction
     {
+        public enum SEPAPurpose
+        {
+            // https://www.hettwer-beratung.de/sepa-spezialwissen/sepa-technische-anforderungen/sepa-gesch%C3%A4ftsvorfallcodes-gvc-mt-940/
+
+            IBAN, // SEPA IBAN Auftraggeber
+            BIC, // SEPA BIC Auftraggeber
+            EREF, // SEPA End to End-Referenz
+            KREF, // Kundenreferenz
+            MREF, // SEPA Mandatsreferenz
+            CRED, // SEPA Creditor Identifier
+            DEBT, // Originator Identifier
+            COAM, // Zinskompensationsbetrag
+            OAMT, // Ursprünglicher Umsatzbetrag
+            SVWZ, // SEPA Verwendungszweck
+            ABWA, // Abweichender SEPA Auftraggeber
+            ABWE, // Abweichender SEPA Empfänger
+            BREF, // Bankreferenz, Instruction ID
+            RREF // Retourenreferenz
+        }
+
+        public SWIFTTransaction()
+        {
+            SEPAPurposes = new Dictionary<SEPAPurpose, string>();
+        }
+
         public DateTime valueDate;
 
         public DateTime inputDate;
@@ -38,6 +64,8 @@ namespace libfintx
         public string typecode;
 
         public string description;
+
+        public Dictionary<SEPAPurpose, string> SEPAPurposes;
 
         public string bankCode;
 

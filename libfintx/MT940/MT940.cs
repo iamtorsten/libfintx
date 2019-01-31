@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Threading;
 
@@ -494,6 +495,39 @@ namespace libfintx
             {
                 SWIFTStatements.Add(SWIFTStatement);
                 SWIFTStatement = null;
+            }
+
+            // Parse SEPA purposes
+            foreach (var stmt in SWIFTStatements)
+            {
+                foreach (var tx in stmt.SWIFTTransactions)
+                {
+                    if (string.IsNullOrWhiteSpace(tx.description))
+                        continue;
+
+                    // Collect all occuring SEPA purposes ordered by their position
+                    List<Tuple<int, SWIFTTransaction.SEPAPurpose>> indices = new List<Tuple<int, SWIFTTransaction.SEPAPurpose>>();
+                    foreach (SWIFTTransaction.SEPAPurpose sepaPurpose in Enum.GetValues(typeof(SWIFTTransaction.SEPAPurpose)))
+                    {
+                        string prefix = $"{sepaPurpose}+";
+                        var idx = tx.description.IndexOf(prefix);
+                        if (idx >= 0)
+                        {
+                            indices.Add(Tuple.Create(idx, sepaPurpose));
+                        }
+                    }
+                    indices = indices.OrderBy(v => v.Item1).ToList();
+
+                    // Then get the values
+                    for (int i = 0; i < indices.Count; i++)
+                    {
+                        var beginIdx = indices[i].Item1 + $"{indices[i].Item2}+".Length;
+                        var endIdx = i < indices.Count - 1 ? indices[i + 1].Item1 : tx.description.Length;
+
+                        var value = tx.description.Substring(beginIdx, endIdx - beginIdx);
+                        tx.SEPAPurposes[indices[i].Item2] = value;
+                    }
+                }
             }
 
             if (Trace.Enabled)
