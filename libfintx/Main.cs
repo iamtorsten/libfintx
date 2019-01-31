@@ -1221,6 +1221,13 @@ namespace libfintx
             return Prepaid(connectionDetails, mobileServiceProvider, phoneNumber, amount, HIRMS, pictureBox, anonymous, out matrixImage, out img);
         }
 
+        public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
+            int amount, string HIRMS, bool anonymous, out Image matrixImage)
+        {
+            Image img = null;
+            return Prepaid(connectionDetails, mobileServiceProvider, phoneNumber, amount, HIRMS, null, anonymous, out matrixImage, out img);
+        }
+
         /// <summary>
         /// Load mobile phone prepaid card - render FlickerCode as Gif
         /// </summary>
@@ -1369,8 +1376,9 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-           int executionDay, string HIRMS, bool anonymous, out Image matrixImage, out Image flickerImage, int flickerWidth, int flickerHeight)
+           int executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
         {
+            Image matrixImage = null;
             return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
@@ -1440,6 +1448,14 @@ namespace libfintx
             Image matrixImage = null;
             Image img = null;
             return ModifyBankersOrder(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out matrixImage, out img);
+        }
+
+        public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
+          string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
+          int executionDay, string HIRMS, bool anonymous, out Image matrixImage)
+        {
+            Image img = null;
+            return ModifyBankersOrder(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, null, anonymous, out matrixImage, out img);
         }
 
         /// <summary>
