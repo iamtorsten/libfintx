@@ -348,7 +348,7 @@ namespace libfintx
                     return;
                 }
 
-                if (swiftTag == "62F")
+                if (swiftTag == "62F" || swiftTag == "62M")
                 {
                     SWIFTStatement.date = postingDate;
                     SWIFTStatements.Add(SWIFTStatement);
@@ -489,6 +489,12 @@ namespace libfintx
                 Data(swiftTag, swiftData);
             }
 
+            // If there are remaining unprocessed statements - add them
+            if (SWIFTStatement != null)
+            {
+                SWIFTStatements.Add(SWIFTStatement);
+                SWIFTStatement = null;
+            }
 
             if (Trace.Enabled)
             {
