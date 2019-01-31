@@ -153,7 +153,12 @@ namespace libfintx
 
                 BankCode_ = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
 
-                var Transactions_ = ":20:" + Helper.Parse_String(BankCode_, ":20:", "'HNSHA");
+                // Subsequent transactions can also begin with :61: (e.g. Berliner Sparkasse)
+                var startToken = ":20:";
+                if (BankCode_.Contains(":61:") && BankCode_.IndexOf(":61:") < BankCode_.IndexOf(":20:"))
+                    startToken = ":61:";
+
+                var Transactions_ = startToken + Helper.Parse_String(BankCode_, startToken, "'HNSHA");
 
                 swiftStatements.AddRange(MT940.Serialize(Transactions_, connectionDetails.Account));
             }

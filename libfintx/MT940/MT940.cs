@@ -136,6 +136,13 @@ namespace libfintx
             }
             else if (swiftTag == "61")
             {
+                // If there is no SWIFTStatement available, create one
+                if (SWIFTStatement == null)
+                {
+                    SWIFTStatement = new SWIFTStatement();
+                    SWIFTStatement.lines.Add(new SWIFTLine(swiftTag, swiftData));
+                }
+
                 SWIFTTransaction SWIFTTransaction = new SWIFTTransaction();
 
                 // Valuta date (YYMMDD)
@@ -165,7 +172,7 @@ namespace libfintx
                     int year = SWIFTTransaction.valueDate.Year;
                     int month = Convert.ToInt32(swiftData.Substring(0, 2));
                     int day = Convert.ToInt32(swiftData.Substring(2, 2));
-                    
+
                     // Posting date 30 Dec 2017, Valuta date 1 Jan 2018
                     if (month > SWIFTTransaction.valueDate.Month && month == SWIFTTransaction.valueDate.AddMonths(-1).Month)
                     {
