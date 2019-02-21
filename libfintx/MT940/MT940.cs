@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace libfintx
@@ -247,7 +248,7 @@ namespace libfintx
                 swiftData = swiftData.Substring(1);
 
                 string[] elements = swiftData.Split(new char[] { separator });
-
+				string lastDescriptionSubfield = string.Empty;
                 foreach (string element in elements)
                 {
                     int key = 0;
@@ -281,7 +282,8 @@ namespace libfintx
                     {
                         // No space between description lines
                         SWIFTTransaction.description += value;
-                    }
+						AssignDescriptionSubField(SWIFTTransaction, value, ref lastDescriptionSubfield);
+					}
                     else if (key == 30)
                     {
                         SWIFTTransaction.bankCode = value;
@@ -306,7 +308,8 @@ namespace libfintx
                     else if ((key >= 60) && (key <= 63))
                     {
                         SWIFTTransaction.description += value;
-                    }
+						AssignDescriptionSubField(SWIFTTransaction, value, ref lastDescriptionSubfield);
+					}
                     else
                     {
                         // Unknown key
@@ -371,6 +374,44 @@ namespace libfintx
             }
         }
 
+		private static bool SetDescriptionSubField(string designator, SWIFTTransaction transaction, string value)
+		{
+			switch (designator)
+			{
+				case "ABWA": transaction.ABWA += value; break;
+				case "EREF": transaction.EREF += value; break;
+				case "KREF": transaction.KREF += value; break;
+				case "MREF": transaction.MREF += value; break;
+				case "BREF": transaction.BREF += value; break;
+				case "RREF": transaction.RREF += value; break;
+				case "CRED": transaction.CRED += value; break;
+				case "DEBT": transaction.DEBT += value; break;
+				case "COAM": transaction.COAM += value; break;
+				case "OAMT": transaction.OAMT += value; break;
+				case "SVWZ": transaction.SVWZ += value; break;
+				case "ABWE": transaction.ABWE += value; break;
+				case "IBAN": transaction.IBAN += value; break;
+				case "BIC": transaction.BIC += value; break;
+				default:
+					//something is wrong here
+					return false;
+			}
+			return true;
+		}
+		private static void AssignDescriptionSubField(SWIFTTransaction transaction, string value, ref string lastSubfield)
+		{
+			string pattern = $@"^((?<designator>EREF|KREF|MREF|BREF|RREF|CRED|DEBT|COAM|OAMT|SVWZ|ABWA|ABWE|IBAN|BIC)\+)(?<content>.+)";
+			Match result = Regex.Match(value, pattern);
+			if (result.Success)
+			{
+				if (SetDescriptionSubField(result.Groups["designator"].Value, transaction, result.Groups["content"].Value))
+					lastSubfield = result.Groups["designator"].Value;
+				else
+					lastSubfield = string.Empty;
+			}
+			else if (!string.IsNullOrEmpty(lastSubfield))
+				SetDescriptionSubField(lastSubfield, transaction, value);
+		}
         private static string Read(ref string Content)
         {
             Int32 counter;
@@ -404,7 +445,6 @@ namespace libfintx
                 Content = String.Empty;
             }
 
-            line = line.Trim();
             line = line.Replace("™", "Ö");
             line = line.Replace("š", "Ü");
             line = line.Replace("Ž", "Ä");
