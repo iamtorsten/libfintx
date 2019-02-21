@@ -183,7 +183,7 @@ namespace libfintx
 
             /* TANMediumname */
 
-            var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
+            var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails).Data?.FirstOrDefault();
 
             Console.WriteLine("[ TAN Medium Name ]");
             Console.WriteLine();
@@ -241,7 +241,7 @@ namespace libfintx
                 Segment.HIRMS = "921"; // -> pushTAN
 
                 var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
-                Segment.HITAB = tanmediumname.Data;
+                Segment.HITAB = tanmediumname.Data.FirstOrDefault();
 
                 System.Threading.Thread.Sleep(5000);
 

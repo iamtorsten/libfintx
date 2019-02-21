@@ -1679,14 +1679,14 @@ namespace libfintx
         /// <returns>
         /// TAN Medium Name
         /// </returns>
-        public static HBCIDialogResult<string> RequestTANMediumName(ConnectionDetails connectionDetails)
+        public static HBCIDialogResult<List<string>> RequestTANMediumName(ConnectionDetails connectionDetails)
         {
             HBCIDialogResult iniResult = Transaction.INI(connectionDetails, false);
             if (!iniResult.IsSuccess)
-                return new HBCIDialogResult<string>(iniResult.Messages, null);
+                return new HBCIDialogResult<List<string>>(iniResult.Messages, null);
 
             var BankCode = Transaction.HKTAB(connectionDetails);
-            var result = new HBCIDialogResult<string>(Helper.Parse_BankCode(BankCode));
+            var result = new HBCIDialogResult<List<string>>(Helper.Parse_BankCode(BankCode));
             if (!result.IsSuccess)
                 return result;
 
