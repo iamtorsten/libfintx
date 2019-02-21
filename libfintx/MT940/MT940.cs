@@ -180,6 +180,11 @@ namespace libfintx
                     {
                         year--;
                     }
+                    // Posting date 1 Jan 2018, Valuta date 30 Dec 2017
+                    else if (month < SWIFTTransaction.valueDate.Month && month == SWIFTTransaction.valueDate.AddMonths(1).Month)
+                    {
+                        year++;
+                    }
 
                     SWIFTTransaction.inputDate = new DateTime(year, month, day);
 
