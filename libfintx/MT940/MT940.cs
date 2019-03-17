@@ -102,20 +102,11 @@ namespace libfintx
                 decimal balance = DebitCreditIndicator * Convert.ToDecimal(swiftData.Substring(10).Replace(",",
                         Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
 
-                // We only want to use the first start balance
-                if (swiftTag == "60F")
+                // Use first start balance. If missing, use intermediate balance.
+                if (swiftTag == "60F" || SWIFTStatement.startBalance == 0 && swiftTag == "60M")
                 {
                     SWIFTStatement.startBalance = balance;
                     SWIFTStatement.endBalance = balance;
-                }
-                else
-                {
-                    // Check if the balance inside the SWIFTStatement is valid
-                    // Check it fits the balance of the previous page
-                    if (Convert.ToDecimal(Math.Round(SWIFTStatement.endBalance, 2)) != Convert.ToDecimal(balance))
-                    {
-                        return;
-                    }
                 }
             }
             else if (swiftTag == "28C")
@@ -346,16 +337,9 @@ namespace libfintx
                 }
 
                 // End balance
-                decimal shouldBeBalance = debitCreditIndicator * Convert.ToDecimal(swiftData.Replace(",",
+                decimal endBalance = debitCreditIndicator * Convert.ToDecimal(swiftData.Replace(",",
                         Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
-
-                SWIFTStatement.endBalance = Math.Round(SWIFTStatement.endBalance, 2);
-
-                if (Convert.ToDecimal(Math.Round(SWIFTStatement.endBalance, 2)) != Convert.ToDecimal(shouldBeBalance))
-                {
-                    // End balance does not match
-                    return;
-                }
+                SWIFTStatement.endBalance = endBalance;
 
                 if (swiftTag == "62F" || swiftTag == "62M")
                 {
@@ -462,7 +446,7 @@ namespace libfintx
             return line;
         }
 
-        public static List<SWIFTStatement> Serialize(string STA, string Account)
+        public static List<SWIFTStatement> Serialize(string STA, string Account, bool writeToFile = true)
         {
             int LineCounter = 0;
 
@@ -475,30 +459,33 @@ namespace libfintx
             if (STA == null || STA.Length == 0)
                 return SWIFTStatements;
 
-            string documents = "", dir = "";
-
-            documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            dir = Path.Combine(documents, Program.Buildname);
-
-            dir = Path.Combine(dir, "STA");
-
-            string filename = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".STA"));
-
-            if (!Directory.Exists(dir))
+            string dir = null;
+            string documents = null;
+            if (writeToFile)
             {
-                Directory.CreateDirectory(dir);
-            }
+                documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                dir = Path.Combine(documents, Program.Buildname);
 
-            // STA
-            if (!File.Exists(filename))
-            {
-                using (File.Create(filename))
-                { };
+                dir = Path.Combine(dir, "STA");
 
-                File.AppendAllText(filename, STA);
+                string filename = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".STA"));
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                // STA
+                if (!File.Exists(filename))
+                {
+                    using (File.Create(filename))
+                    { };
+
+                    File.AppendAllText(filename, STA);
+                }
+                else
+                    File.AppendAllText(filename, STA);
             }
-            else
-                File.AppendAllText(filename, STA);
 
             while (STA.Length > 0)
             {
