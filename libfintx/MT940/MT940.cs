@@ -76,7 +76,7 @@ namespace libfintx
                 // the whole SWIFTStatement closes with 62F
                 if (SWIFTStatement == null)
                 {
-                    SWIFTStatement = new SWIFTStatement();
+                    SWIFTStatement = new SWIFTStatement() { type = swiftData };
                     SWIFTStatement.lines.Add(new SWIFTLine(swiftTag, swiftData));
                 }
             }

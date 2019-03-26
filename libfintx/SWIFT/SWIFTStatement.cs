@@ -28,6 +28,8 @@ namespace libfintx
 {
     public class SWIFTStatement
     {
+        public string type;
+
         public string id;
 
         public string bankCode;
