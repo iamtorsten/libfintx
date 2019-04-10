@@ -64,14 +64,14 @@ namespace libfintx
                     /// </summary>
                     if (connectionDetails.HBCIVersion == 220)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
 
                         segments = segments_;
                     }
                     else if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
 
                         segments = segments_;
@@ -89,7 +89,7 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(4);
 
-                    var message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+                    var message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
                     var response = FinTSMessage.Send(connectionDetails.Url, message);
 
                     var bankMessages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
@@ -123,7 +123,7 @@ namespace libfintx
 
                     if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + connectionDetails.Blz + "+" + "9999999999" + "+0+0'" +
+                        string segments_ = "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
                                     "HKVVB:" + SEGNUM.SETVal(3) + ":3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
 
                         segments = segments_;
@@ -160,7 +160,7 @@ namespace libfintx
                     /// </summary>
                     if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments__ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.Blz + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                        string segments__ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
                             "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
 
@@ -179,7 +179,7 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(5);
 
-                    message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+                    message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
                     response = FinTSMessage.Send(connectionDetails.Url, message);
 
                     messages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);

@@ -44,6 +44,16 @@ namespace libfintx.Data
         public int Blz { get; set; }
 
         /// <summary>
+        /// Bankcode of the bank's headquarter (e.g. to be used in Hypovereinsbank)
+        /// </summary>
+        public int? BlzHeadquarter { get; set; }
+
+        /// <summary>
+        /// BLZ needed for message header (HNVSK, HNSHK) - either BlzHeaderquarter or Blz
+        /// </summary>
+        public int BlzPrimary => BlzHeadquarter ?? Blz;
+
+        /// <summary>
         /// IBAN of the bank account
         /// </summary>
         public string IBAN { get; set; }
