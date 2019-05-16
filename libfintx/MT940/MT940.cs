@@ -496,7 +496,7 @@ namespace libfintx
                 if ((line.Length > 0) && (!line.StartsWith("-")))
                 {
                     // A swift chunk starts with a swiftTag, which is between colons
-                    if (line.StartsWith(":"))
+                    if (Regex.IsMatch(line, @"^:[\w]+:"))
                     {
                         // Process previously read swift chunk
                         if (swiftTag.Length > 0)
