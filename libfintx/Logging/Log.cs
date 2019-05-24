@@ -30,6 +30,11 @@ namespace libfintx
     {
         public static bool Enabled { get; set; }
 
+        /// <summary>
+        /// Maximum size of trace file in MB after file will be cleared. Non-positive value means that file will never be cleared.
+        /// </summary>
+        public static int MaxFileSize { get; set; }
+
         public static void Write(object obj)
         {
             Write(obj.ToString());
@@ -60,13 +65,21 @@ namespace libfintx
                     Directory.CreateDirectory(dir);
                 }
 
-                if (!File.Exists(Path.Combine(dir, "Log.txt")))
+                string file = Path.Combine(dir, "Log.txt");
+                if (!File.Exists(file))
                 {
-                    using (File.Create(Path.Combine(dir, "Log.txt")))
+                    using (File.Create(file))
                     { };
                 }
 
-                File.AppendAllText(Path.Combine(dir, "Log.txt"), "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
+                if (MaxFileSize > 0)
+                {
+                    var sizeMB = (double)new FileInfo(file).Length / (double)1000000;
+                    if (sizeMB > MaxFileSize)
+                        File.WriteAllText(file, string.Empty);
+                }
+
+                File.AppendAllText(file, "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
             }
         }
     }

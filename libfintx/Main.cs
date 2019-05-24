@@ -1772,10 +1772,11 @@ namespace libfintx
         /// <summary>
         /// Enable / Disable Tracing
         /// </summary>
-        public static void Tracing(bool Enabled, bool Formatted = false)
+        public static void Tracing(bool Enabled, bool Formatted = false, int maxFileSizeMB = 10)
         {
             Trace.Enabled = Enabled;
             Trace.Formatted = Formatted;
+            Trace.MaxFileSize = maxFileSizeMB;
         }
 
         /// <summary>
@@ -1789,9 +1790,10 @@ namespace libfintx
         /// <summary>
         /// Enable / Disable Logging
         /// </summary>
-        public static void Logging(bool Enabled)
+        public static void Logging(bool Enabled, int maxFileSizeMB = 10)
         {
             Log.Enabled = Enabled;
+            Log.MaxFileSize = maxFileSizeMB;
         }
     }
 }
