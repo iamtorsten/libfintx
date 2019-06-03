@@ -1052,7 +1052,11 @@ namespace libfintx
         /// </summary>
         public static string MakeFilenameValid(string value)
         {
-            return value.Replace(" ", "_").Replace(":", "");
+			foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+			{
+				value = value.Replace(c, '_');
+			}
+			return value.Replace(" ", "_");
         }
 
         public static string GetProgramBaseDir()
