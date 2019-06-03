@@ -446,7 +446,7 @@ namespace libfintx
             return line;
         }
 
-        public static List<SWIFTStatement> Serialize(string STA, string Account, bool writeToFile = true)
+        public static List<SWIFTStatement> Serialize(string STA, string Account, bool writeToFile = false)
         {
             int LineCounter = 0;
 
