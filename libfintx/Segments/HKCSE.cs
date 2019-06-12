@@ -31,21 +31,38 @@ namespace libfintx
         /// <summary>
         /// Transfer terminated
         /// </summary>
-        public static string Init_HKCSE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        public static string Init_HKCSE(ConnectionDetails connectionDetails, string ReceiverName, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
         {
             Log.Write("Starting job HKCSE: Transfer money terminated");
 
-            string segments = "HKCSE:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+            string segments = string.Empty;
 
-            var message = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+            string sepaMessage = string.Empty;
 
-            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
+            if (Segment.HISPAS == 1)
+            {
+                segments = "HKCSE:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
+                sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+            }
+            else if (Segment.HISPAS == 2)
+            {
+                segments = "HKCSE:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+                sepaMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+            }
+            else if (Segment.HISPAS == 3)
+            {
+                segments = "HKCSE:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@";
+                sepaMessage = pain00100303.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+            }
+                
+            segments = segments.Replace("@@", "@" + (sepaMessage.Length - 1) + "@") + sepaMessage;
 
             segments = HKTAN.Init_HKTAN(segments);
 
             SEG.NUM = SEGNUM.SETInt(4);
 
-            var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+            var message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            var TAN = FinTSMessage.Send(connectionDetails.Url, message);
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
