@@ -493,7 +493,7 @@ namespace libfintx
 
                 LineCounter++;
 
-                if (line == "-") // end of block
+                if (line.StartsWith("-")) // end of block
                 {
                     // Process previously read swift chunk
                     if (swiftTag.Length > 0)
