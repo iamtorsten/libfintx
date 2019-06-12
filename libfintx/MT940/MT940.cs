@@ -598,6 +598,7 @@ namespace libfintx
                             "TypeCode: " + TypeCode + " ' " +
                             "Amount: " + Amount + " ' " + "++ENDUMS++";
 
+                        documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                         dir = Path.Combine(documents, Program.Buildname);
                         dir = Path.Combine(dir, "MT940");
 
