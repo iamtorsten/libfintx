@@ -28,6 +28,7 @@
  *
  */
 
+using libfintx.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -66,17 +67,7 @@ namespace libfintx
 
         public override string ToString()
         {
-            return new StringBuilder()
-                .Append($"Id: {id}")
-                .Append($", BankCode: {bankCode}")
-                .Append($", AccountCode: {accountCode}")
-                .Append($", Currency: {currency}")
-                .Append($", StartBalance: {startBalance}")
-                .Append($", EndBalance: {endBalance}")
-                .Append($", Date: {date}")
-                .Append($", SeveralYears: {severalYears}")
-                .Append($", Transactions: {transactions.Count}")
-                .ToString();
+            return ReflectionUtil.ToString(this);
         }
     }
 }

@@ -21,6 +21,7 @@
  * 	
  */
 
+using libfintx.Util;
 using System.Collections.Generic;
 
 namespace libfintx
@@ -36,6 +37,11 @@ namespace libfintx
         public string Accountcurrency { get; set; }
         public string Accountbic { get; set; }
         public List<AccountPermissions> Accountpermissions { get; set; }
+
+        public override string ToString()
+        {
+            return ReflectionUtil.ToString(this);
+        }
     }
 
     public class AccountPermissions
@@ -579,6 +585,11 @@ namespace libfintx
                 case "IISEPS": return "Auslandsüberweisung Parameter";
                 default: return string.Empty;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{Segment}: {Description}";
         }
     }
 }

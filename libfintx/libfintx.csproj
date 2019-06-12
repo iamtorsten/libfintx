@@ -131,6 +131,7 @@
     <Compile Include="Transactions\INI.cs" />
     <Compile Include="Transactions\Transaction.cs" />
     <Compile Include="Util\HBCI_Util.cs" />
+    <Compile Include="Util\ReflectionUtil.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
