@@ -493,7 +493,20 @@ namespace libfintx
 
                 LineCounter++;
 
-                if ((line.Length > 0) && (!line.StartsWith("-")))
+                if (line == "-") // end of block
+                {
+                    // Process previously read swift chunk
+                    if (swiftTag.Length > 0)
+                    {
+                        Data(swiftTag, swiftData);
+                    }
+
+                    swiftTag = string.Empty;
+                    swiftData = string.Empty;
+                    continue;
+                }
+
+                if (line.Length > 0)
                 {
                     // A swift chunk starts with a swiftTag, which is between colons
                     if (Regex.IsMatch(line, @"^:[\w]+:"))
