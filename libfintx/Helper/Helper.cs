@@ -640,7 +640,7 @@ namespace libfintx
                 // For easier matching, replace '?:' by some special character
                 BankCode = BankCode.Replace("?:", @"\");
 
-                foreach (Match match in Regex.Matches(BankCode, @"\+[MG]:1:(?<Kartennummer>[\w\d\\]*):(?<Kartenfolgenummer>[\w\d\\]*):+(?<Bezeichnung>[\w\d\s\\]+)"))
+                foreach (Match match in Regex.Matches(BankCode, @"\+[MG]:1:(?<Kartennummer>[^:]*):(?<Kartenfolgenummer>[^:]*):+(?<Bezeichnung>[^+:]+)"))
                 {
                     result.Add(match.Groups["Bezeichnung"].Value.Replace(@"\", "?:"));
                 }
