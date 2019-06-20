@@ -83,9 +83,12 @@ namespace libfintx
             else if (swiftTag == "25")
             {
                 int posSlash = swiftData.IndexOf("/");
-
-                SWIFTStatement.bankCode = swiftData.Substring(0, posSlash);
-                SWIFTStatement.accountCode = LTrim(swiftData.Substring(posSlash + 1));
+                if (posSlash >= 0)
+                {
+                    SWIFTStatement.bankCode = swiftData.Substring(0, posSlash);
+                    if (posSlash < swiftData.Length)
+                        SWIFTStatement.accountCode = LTrim(swiftData.Substring(posSlash + 1));
+                }
             }
             else if (swiftTag.StartsWith("60"))
             {
