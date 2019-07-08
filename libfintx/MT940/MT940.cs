@@ -184,10 +184,6 @@ namespace libfintx
 
                     swiftData = swiftData.Substring(4);
                 }
-                else
-                {
-                    SWIFTTransaction.inputDate = SWIFTTransaction.valueDate;
-                }
 
                 // Debit or credit, or storno debit or credit
                 int debitCreditIndicator = 0;
@@ -348,6 +344,16 @@ namespace libfintx
                 {
                     SWIFTStatement.date = postingDate;
                     SWIFTStatements.Add(SWIFTStatement);
+
+                    // Process missing input dates
+                    foreach (var tx in SWIFTStatement.SWIFTTransactions)
+                    {
+                        if (tx.inputDate == default)
+                        {
+                            tx.inputDate = SWIFTStatement.date;
+                        }
+                    }
+
                     SWIFTStatement = null;
                 }
             }
@@ -542,6 +548,16 @@ namespace libfintx
             if (SWIFTStatement != null)
             {
                 SWIFTStatements.Add(SWIFTStatement);
+
+                // Process missing input dates
+                foreach (var tx in SWIFTStatement.SWIFTTransactions)
+                {
+                    if (tx.inputDate == default)
+                    {
+                        tx.inputDate = SWIFTStatement.date;
+                    }
+                }
+
                 SWIFTStatement = null;
             }
 
