@@ -416,7 +416,7 @@ namespace libfintx
 
             for (counter = 0; counter < Content.Length; counter++)
             {
-                if ((Content[counter] == (char)10) || (Content[counter] == (char)13))
+                if ((Content[counter] == (char)10) || (Content[counter] == (char)13) || (Content[counter] == '@'))
                 {
                     break;
                 }
@@ -430,6 +430,11 @@ namespace libfintx
             }
 
             if ((counter < Content.Length) && (Content[counter] == (char)10))
+            {
+                counter++;
+            }
+		
+	    while ((counter < Content.Length) && (Content[counter] == '@'))
             {
                 counter++;
             }
