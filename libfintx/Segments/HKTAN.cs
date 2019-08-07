@@ -47,6 +47,9 @@ namespace libfintx
                 // Version 5, Process 4
                 if (Segment.HITANS.Substring(0, 3).Equals("5+4"))
                     segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++++" + Segment.HITAB + "'";
+                // Version 6, Process 4
+                if (Segment.HITANS.Substring(0, 3).Equals("6+4"))
+                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "++++++++++" + Segment.HITAB + "'";
             }
 
             return segments;
