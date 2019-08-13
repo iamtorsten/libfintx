@@ -211,12 +211,15 @@ namespace libfintx
                                 result.Add(message);
                         }
 
-                        if (item.Contains("3920"))
+                        var securityMessage = result.FirstOrDefault(m => m.Code == "3920");
+                        if (securityMessage != null)
                         {
+                            string message = securityMessage.Message;
+
                             string TAN = string.Empty;
                             string TANf = string.Empty;
 
-                            string[] procedures = Regex.Split(item, @"\D+");
+                            string[] procedures = Regex.Split(message, @"\D+");
 
                             foreach (string value in procedures)
                             {
