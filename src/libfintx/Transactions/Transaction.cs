@@ -51,7 +51,7 @@ namespace libfintx
 {
     public static class Transaction
     {
-        public static HBCIDialogResult INI(ConnectionDetails connectionDetails, bool Anonymous)
+        public static string INI(ConnectionDetails connectionDetails, bool Anonymous)
         {
             return Init_INI(connectionDetails, Anonymous);
         }
