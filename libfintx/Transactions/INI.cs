@@ -32,7 +32,7 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static HBCIDialogResult Init_INI(ConnectionDetails connectionDetails, bool anonymous)
+        public static string Init_INI(ConnectionDetails connectionDetails, bool anonymous)
         {
             if (!anonymous)
             {
@@ -41,22 +41,6 @@ namespace libfintx
                 /// </summary>
                 try
                 {
-                    // If there is no customer system ID available, perform sync to get one
-                    if (connectionDetails.CustomerSystemId == null)
-                    {
-                        var BankCode = Transaction.HKSYN(connectionDetails);
-                        var syncResult = new HBCIDialogResult(Helper.Parse_BankCode(BankCode));
-                        if (!syncResult.IsSuccess)
-                        {
-                            Log.Write("Synchronisation failed.");
-                            return syncResult;
-                        }
-                    }
-                    else
-                    {
-                        Segment.HISYN = connectionDetails.CustomerSystemId;
-                    }
-
                     string segments;
 
                     /// <summary>
@@ -64,15 +48,20 @@ namespace libfintx
                     /// </summary>
                     if (connectionDetails.HBCIVersion == 220)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                        string segments_ =
+                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
 
                         segments = segments_;
                     }
                     else if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                        string segments_ =
+                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
+
+                        if (Segment.HITANS.Substring(0, 3).Equals("6+4"))
+                            segments_ = HKTAN.Init_HKTAN(segments_, "HKIDN");
 
                         segments = segments_;
                     }
@@ -92,12 +81,8 @@ namespace libfintx
                     var message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
                     var response = FinTSMessage.Send(connectionDetails.Url, message);
 
-                    var bankMessages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
-                    var result = new HBCIDialogResult(bankMessages);
-                    if (!result.IsSuccess)
-                        Log.Write("Initialisation failed: " + result);
-
-                    return result;
+                    Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
+                    return response;
                 }
                 catch (Exception ex)
                 {
@@ -123,8 +108,9 @@ namespace libfintx
 
                     if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments_ = "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
-                                    "HKVVB:" + SEGNUM.SETVal(3) + ":3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
+                        string segments_ = 
+                            "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
+                            "HKVVB:" + SEGNUM.SETVal(3) + ":3+0+0+1+" + Program.Buildname + "+" + Program.Version + "'";
 
                         segments = segments_;
                     }
@@ -145,11 +131,11 @@ namespace libfintx
                     string response = FinTSMessage.Send(connectionDetails.Url, message);
 
                     var messages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
-                    var result = new HBCIDialogResult(messages);
+                    var result = new HBCIDialogResult(messages, response);
                     if (!result.IsSuccess)
                     {
                         Log.Write("Synchronisation anonymous failed. " + result);
-                        return result;
+                        return response;
                     }
 
                     // Sync OK
@@ -168,10 +154,6 @@ namespace libfintx
                     }
                     else
                     {
-                        //Since connectionDetails is a re-usable object, this shouldn't be cleared.
-                        //connectionDetails.UserId = string.Empty;
-                        //connectionDetails.Pin = null;
-
                         Log.Write("HBCI version not supported");
 
                         throw new Exception("HBCI version not supported");
@@ -183,11 +165,11 @@ namespace libfintx
                     response = FinTSMessage.Send(connectionDetails.Url, message);
 
                     messages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
-                    result = new HBCIDialogResult(messages);
+                    result = new HBCIDialogResult(messages, response);
                     if (!result.IsSuccess)
                         Log.Write("Initialisation failed.");
 
-                    return result;
+                    return response;
                 }
                 catch (Exception ex)
                 {

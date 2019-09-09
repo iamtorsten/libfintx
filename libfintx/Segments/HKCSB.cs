@@ -36,6 +36,8 @@ namespace libfintx
 
             string segments = "HKCSB:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
+            segments = HKTAN.Init_HKTAN(segments);
+
             SEG.NUM = SEGNUM.SETInt(3);
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);

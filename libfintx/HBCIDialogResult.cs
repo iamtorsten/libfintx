@@ -9,30 +9,41 @@ namespace libfintx
 {
     public class HBCIDialogResult
     {
-        public bool IsSuccess => messages != null && messages.Any(m => m.IsSuccess);
-        public bool HasInfo => messages != null && messages.Any(m => m.IsInfo);
-        public bool HasWarning => messages != null && messages.Any(m => m.IsWarning);
-        public bool HasError => messages != null && messages.Any(m => m.IsError);
-        public bool HasUnknown => messages != null && messages.Any(m => m.IsUnknown);
+        public string RawData { get; internal set; }
+
+        public bool IsSuccess => messages.Any(m => m.IsSuccess);
+        public bool HasInfo => messages.Any(m => m.IsInfo);
+        public bool HasWarning => messages.Any(m => m.IsWarning);
+        public bool HasError => messages.Any(m => m.IsError);
+        public bool HasUnknown => messages.Any(m => m.IsUnknown);
+
+        /// <summary>
+        /// Returns true if there is any message with code <i>0030</i>.
+        /// </summary>
+        public bool IsSCARequired => GetMessage("0030") != null;
+
         private List<HBCIBankMessage> messages;
         public IEnumerable<HBCIBankMessage> Messages => messages;
 
-        public HBCIDialogResult()
-        {
-        }
-
-        public HBCIDialogResult(IEnumerable<HBCIBankMessage> messages)
+        public HBCIDialogResult(IEnumerable<HBCIBankMessage> messages, string rawData)
         {
             this.messages = messages.ToList();
+            RawData = rawData;
         }
-        private void AddBankMessages(Dictionary<string, string> bankMessages)
+
+        public string GetMessage(string code)
         {
-            foreach (var bankMessage in bankMessages)
-            {
-                var code = bankMessage.Key;
-                var message = bankMessage.Value;
-                messages.Add(new HBCIBankMessage(code, message));
-            }
+            return messages.FirstOrDefault(m => m.Code == code)?.Message;
+        }
+
+        public HBCIDialogResult<T> TypedResult<T>()
+        {
+            return new HBCIDialogResult<T>(Messages, RawData);
+        }
+
+        public HBCIDialogResult<T> TypedResult<T>(T data)
+        {
+            return new HBCIDialogResult<T>(Messages, RawData, data);
         }
 
         public override string ToString()
@@ -44,8 +55,8 @@ namespace libfintx
     public class HBCIDialogResult<T> : HBCIDialogResult
     {
         public T Data { get; set; }
-        public HBCIDialogResult(IEnumerable<HBCIBankMessage> bankMessages) : base(bankMessages) { }
-        public HBCIDialogResult(IEnumerable<HBCIBankMessage> bankMessages, T data) : base(bankMessages)
+        public HBCIDialogResult(IEnumerable<HBCIBankMessage> bankMessages, string rawData) : base(bankMessages, rawData) { }
+        public HBCIDialogResult(IEnumerable<HBCIBankMessage> bankMessages, string rawData, T data) : base(bankMessages, rawData)
         {
             Data = data;
         }

@@ -106,7 +106,7 @@ namespace libfintx
             };
             Anonymous = false;
 
-#region Sync
+            #region Sync
 
             /* Sync */
 
@@ -114,20 +114,20 @@ namespace libfintx
 
             libfintx.Main.Tracing(true);
 
-#endregion
+            #endregion
 
-#region balance
+            #region balance
 
             /* Balance */
 
-            var balance = libfintx.Main.Balance(connectionDetails, false);
+            var balance = libfintx.Main.Balance(connectionDetails, new TANDialog(WaitForTAN), false);
 
             Console.WriteLine("[ Balance ]");
             Console.WriteLine();
             Console.WriteLine(balance.Data.Balance);
             Console.WriteLine();
 
-#endregion
+            #endregion
 
             Console.ReadLine();
         }
@@ -149,7 +149,7 @@ namespace libfintx
 
             libfintx.Main.Tracing(true);
 
-            var accounts = libfintx.Main.Accounts(connectionDetails, Anonymous);
+            var accounts = libfintx.Main.Accounts(connectionDetails, new TANDialog(WaitForTAN), Anonymous);
             foreach (var acc in accounts.Data)
             {
                 Console.WriteLine(acc.ToString());
@@ -169,7 +169,7 @@ namespace libfintx
                 Pin = "xxx"
             };
 
-#region Sync
+            #region Sync
 
             /* Sync */
 
@@ -177,20 +177,20 @@ namespace libfintx
 
             libfintx.Main.Tracing(true);
 
-#endregion
+            #endregion
 
-#region tanmediumname
+            #region tanmediumname
 
             /* TANMediumname */
 
-            var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails).Data?.FirstOrDefault();
+            var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails, new TANDialog(WaitForTAN)).Data?.FirstOrDefault();
 
             Console.WriteLine("[ TAN Medium Name ]");
             Console.WriteLine();
             Console.WriteLine(tanmediumname);
             Console.WriteLine();
 
-#endregion
+            #endregion
 
             Console.ReadLine();
         }
@@ -240,13 +240,12 @@ namespace libfintx
             {
                 Segment.HIRMS = "921"; // -> pushTAN
 
-                var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
+                var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails, new TANDialog(WaitForTAN));
                 Segment.HITAB = tanmediumname.Data.FirstOrDefault();
 
                 System.Threading.Thread.Sleep(5000);
 
-                Console.WriteLine(HBCI.Transfer(connectionDetails, receiver, receiverIBAN, receiverBIC,
-                    amount, usage, Segment.HIRMS, null, anonymous));
+                Console.WriteLine(HBCI.Transfer(connectionDetails, new TANDialog(WaitForTAN), receiver, receiverIBAN, receiverBIC, amount, usage, Segment.HIRMS, anonymous));
 
                 Console.WriteLine(Segment.HITANS);
             }
@@ -327,5 +326,12 @@ namespace libfintx
             Console.WriteLine(HBCI.Transaction_Output());
         }
 #endif
+        public static string WaitForTAN(TANDialog tanDialog)
+        {
+            foreach (var msg in tanDialog.DialogResult.Messages)
+                Console.WriteLine(msg);
+
+            return Console.ReadLine();
+        }
     }
 }
