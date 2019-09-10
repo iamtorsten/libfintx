@@ -119,7 +119,8 @@ namespace libfintx
             if (!result.IsSuccess)
                 return result.TypedResult<AccountBalance>();
 
-            var balance = Helper.Parse_Balance(result.RawData);
+            BankCode = result.RawData;
+            var balance = Helper.Parse_Balance(BankCode);
             return result.TypedResult(balance);
         }
 
@@ -136,9 +137,8 @@ namespace libfintx
             // Success
             var upd = Helper.GetUPD(connectionDetails.Blz, connectionDetails.UserId);
             List<AccountInformations> accounts = new List<AccountInformations>();
-            Helper.Parse_Accounts(upd, accounts);
 
-            return new HBCIDialogResult<List<AccountInformations>>(result.Messages, upd, accounts);
+            return new HBCIDialogResult<List<AccountInformations>>(result.Messages, upd.Value, accounts);
         }
 
         /// <summary>
@@ -176,6 +176,7 @@ namespace libfintx
             if (!result.IsSuccess)
                 return result.TypedResult<List<SWIFTStatement>>();
 
+            BankCode = result.RawData;
             string Transactions;
             if (BankCode.Contains("HNSHA"))
                 Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNSHA");
@@ -200,6 +201,7 @@ namespace libfintx
                 if (!result.IsSuccess)
                     return result.TypedResult<List<SWIFTStatement>>();
 
+                BankCode_ = result.RawData;
                 // Subsequent transactions can also begin with :61: (e.g. Berliner Sparkasse)
                 var startToken = ":20:";
                 if (BankCode_.Contains(":61:") && BankCode_.IndexOf(":61:") < BankCode_.IndexOf(":20:"))
@@ -250,6 +252,7 @@ namespace libfintx
             if (!result.IsSuccess)
                 return result.TypedResult<List<TStatement>>();
 
+            BankCode = result.RawData;
             List<TStatement> statements = new List<TStatement>();
 
             TCAM052TParser CAMT052Parser = null;
@@ -320,7 +323,8 @@ namespace libfintx
                         if (!result.IsSuccess)
                             return result.TypedResult<List<TStatement>>();
 
-                        var camt052_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+                        BankCode_ = result.RawData;
+                        var camt052_ = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
 
                         // Save camt052 statement to file
                         var camt052f_ = camt052File.Save(connectionDetails.Account, camt052_);
@@ -337,8 +341,17 @@ namespace libfintx
                         Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
                         BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
+                        result = new HBCIDialogResult<List<TStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
+                        if (!result.IsSuccess)
+                            return result.TypedResult<List<TStatement>>();
 
-                        var camt053_ = "<?xml version=" + Helper.Parse_String(BankCode, "<?xml version=", "</Document>") + "</Document>";
+                        result = ProcessSCA(connectionDetails, result, tanDialog);
+                        if (!result.IsSuccess)
+                            return result.TypedResult<List<TStatement>>();
+
+                        BankCode_ = result.RawData;
+
+                        var camt053_ = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
 
                         // Save camt053 statement to file
                         var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
@@ -391,7 +404,7 @@ namespace libfintx
                 }
             }
 
-            return result.TypedResult<List<AccountTransaction>>(transactionList);
+            return result.TypedResult(transactionList);
         }
 
         /// <summary>
@@ -958,6 +971,7 @@ namespace libfintx
             if (!result.IsSuccess)
                 return result.TypedResult<List<BankersOrder>>();
 
+            BankCode = result.RawData;
             var startIdx = BankCode.IndexOf("HICDB");
             if (startIdx < 0)
                 return result.TypedResult<List<BankersOrder>>();
@@ -1098,6 +1112,7 @@ namespace libfintx
             if (!result.IsSuccess)
                 return result.TypedResult<List<string>>();
 
+            BankCode = result.RawData;
             var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
             return result.TypedResult(Helper.Parse_TANMedium(BankCode_));
         }

@@ -67,5 +67,15 @@ namespace libfintx.Data
         /// System ID (Kundensystem-ID)
         /// </summary>
         public string CustomerSystemId { get; set; }
+
+        /// <summary>
+        /// BPD
+        /// </summary>
+        public BPD BPD { get; set; }
+
+        /// <summary>
+        /// UPD
+        /// </summary>
+        public UPD UPD { get; set; }
     }
 }

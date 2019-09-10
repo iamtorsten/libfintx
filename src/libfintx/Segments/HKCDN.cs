@@ -23,7 +23,8 @@ namespace libfintx
 
             segments += "++" + OrderId + "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char)timeUnit + ":" + Rota + ":" + ExecutionDay + "'";
 
-            segments = HKTAN.Init_HKTAN(segments);
+            if (Helper.IsTANRequired(connectionDetails.BPD, "HKCDN"))
+                segments = HKTAN.Init_HKTAN(segments);
 
             SEG.NUM = SEGNUM.SETInt(4);
 

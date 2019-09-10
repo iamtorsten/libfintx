@@ -40,21 +40,23 @@ namespace libfintx
 
             string segments = "HKCME:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
-            var message = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
+            var painMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
 
-            segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
+            segments = segments.Replace("@@", "@" + (painMessage.Length - 1) + "@") + painMessage;
 
-            segments = HKTAN.Init_HKTAN(segments);
+            if (Helper.IsTANRequired(connectionDetails.BPD, "HKCME"))
+                segments = HKTAN.Init_HKTAN(segments);
 
             SEG.NUM = SEGNUM.SETInt(4);
 
-            var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+            string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            var response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
-            Helper.Parse_Message(TAN);
+            Helper.Parse_Message(response);
 
-            return TAN;
+            return response;
         }
     }
 }
