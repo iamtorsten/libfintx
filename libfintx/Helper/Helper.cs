@@ -31,6 +31,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using libfintx.Data;
 
 #if WINDOWS
 using System.Windows.Forms;
@@ -467,120 +468,6 @@ namespace libfintx
         }
 
         /// <summary>
-        /// Parse accounts and store informations
-        /// </summary>
-        /// <param name="Message"></param>
-        /// <param name="Items"></param>
-        /// <returns></returns>
-        public static bool Parse_Accounts(string Message, List<AccountInformations> Items)
-        {
-            try
-            {
-                string pattern = $@"HIUPD.*?$";
-                MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Multiline);
-
-                for (int ctr = 0; ctr <= result.Count - 1; ctr++)
-                {
-                    string Accountnumber = null;
-                    string Accountbankcode = null;
-                    string Accountiban = null;
-                    string Accountuserid = null;
-                    string Accounttype = null;
-                    string Accountcurrency = null;
-                    string Accountowner = null;
-                    List<AccountPermissions> Accountpermissions = new List<AccountPermissions>();
-
-                    // HIUPD:165:6:4+3300785692::280:10050000+DE22100500003300785692+5985932562+10+EUR+Behrendt+Thomas+Sparkassenbuch Gold
-                    var match = Regex.Match(result[ctr].Value, @"HIUPD.*?\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+");
-                    if (match.Success)
-                    {
-                        var accountInfo = match.Groups[1].Value;
-                        var matchInfo = Regex.Match(accountInfo, @"(\d+):(.*?):280:(\d+)");
-                        if (matchInfo.Success)
-                        {
-                            Accountnumber = matchInfo.Groups[1].Value;
-                            Accountbankcode = matchInfo.Groups[3].Value;
-                        }
-
-                        Accountiban = match.Groups[2].Value;
-                        Accountuserid = match.Groups[3].Value;
-                        Accounttype = match.Groups[4].Value;
-                        Accountcurrency = match.Groups[5].Value;
-                        Accountowner = $"{match.Groups[6]} {match.Groups[7]}";
-                        Accounttype = match.Groups[8].Value;
-
-                        if (Accountiban?.Length > 2)
-                        {
-                            // Account permissions
-                            string pat = "\\+.*?:1";
-                            MatchCollection res = Regex.Matches(result[ctr].Value, pat, RegexOptions.Singleline);
-
-                            for (int c = 0; c <= res.Count - 1; c++)
-                            {
-                                if (res[c].Value.Length < 10)
-                                {
-                                    Accountpermissions.Add(new AccountPermissions
-                                    {
-                                        Segment = res[c].Value.Replace("+", "").Replace(":1", ""),
-                                        Description = AccountPermissions.Permission(res[c].Value.Replace("+", "").Replace(":1", ""))
-                                    });
-                                }
-                            }
-                        }
-                    }
-                    else // Fallback
-                    {
-                        Accountiban = "DE" + Parse_String(result[ctr].Value, "+DE", "+");
-                        Accountowner = Parse_String(result[ctr].Value, "EUR+", "+");
-                        Accounttype = Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
-
-                        if (Accountiban?.Length > 2)
-                        {
-                            // Account permissions
-                            string pat = "\\+.*?:1";
-                            MatchCollection res = Regex.Matches(result[ctr].Value, pat, RegexOptions.Singleline);
-
-                            for (int c = 0; c <= res.Count - 1; c++)
-                            {
-                                if (res[c].Value.Length < 10)
-                                {
-                                    Accountpermissions.Add(new AccountPermissions
-                                    {
-                                        Segment = res[c].Value.Replace("+", "").Replace(":1", ""),
-                                        Description = AccountPermissions.Permission(res[c].Value.Replace("+", "").Replace(":1", ""))
-                                    });
-                                }
-                            }
-                        }
-                    }
-
-                    if (Accountnumber?.Length > 2 || Accountiban?.Length > 2)
-                        Items.Add(new AccountInformations()
-                        {
-                            Accountnumber = Accountnumber,
-                            Accountbankcode = Accountbankcode,
-                            Accountiban = Accountiban,
-                            Accountuserid = Accountuserid,
-                            Accounttype = Accounttype,
-                            Accountcurrency = Accountcurrency,
-                            Accountowner = Accountowner,
-                            Accountpermissions = Accountpermissions
-                        });
-                }
-
-                if (Items.Count > 0)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                Log.Write(ex.ToString());
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Parse tan processes
         /// </summary>
         /// <returns></returns>
@@ -934,13 +821,6 @@ namespace libfintx
             return Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd");
         }
 
-        public static string GetUPD(int BLZ, string UserID)
-        {
-            var dir = GetUPDDir();
-            var file = GetUPDFile(dir, BLZ, UserID);
-            return File.Exists(file) ? File.ReadAllText(file) : string.Empty;
-        }
-
         public static void SaveUPD(int BLZ, string UserID, string upd)
         {
             string dir = GetUPDDir();
@@ -953,11 +833,13 @@ namespace libfintx
             File.WriteAllText(file, upd);
         }
 
-        public static string GetBPD(int BLZ)
+        public static UPD GetUPD(int BLZ, string UserID)
         {
-            var dir = GetBPDDir();
-            var file = GetBPDFile(dir, BLZ);
-            return File.Exists(file) ? File.ReadAllText(file) : string.Empty;
+            var dir = GetUPDDir();
+            var file = GetUPDFile(dir, BLZ, UserID);
+            var content = File.Exists(file) ? File.ReadAllText(file) : string.Empty;
+
+            return UPD.Parse_UPD(content);
         }
 
         public static void SaveBPD(int BLZ, string upd)
@@ -970,6 +852,21 @@ namespace libfintx
                 using (File.Create(file)) { };
             }
             File.WriteAllText(file, upd);
+        }
+
+        public static BPD GetBPD(int BLZ)
+        {
+            var dir = GetBPDDir();
+            var file = GetBPDFile(dir, BLZ);
+            var content = File.Exists(file) ? File.ReadAllText(file) : string.Empty;
+
+            return BPD.Parse_BPD(content);
+        }
+
+        public static bool IsTANRequired(BPD bpd, string gvName)
+        {
+            var HIPINS = bpd?.HIPINS;
+            return HIPINS != null && HIPINS.IsTANRequired(gvName);
         }
     }
 }

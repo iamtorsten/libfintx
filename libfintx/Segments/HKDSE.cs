@@ -41,7 +41,8 @@ namespace libfintx
 
             segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
 
-            segments = HKTAN.Init_HKTAN(segments);
+            if (Helper.IsTANRequired(connectionDetails.BPD, "HKDSE"))
+                segments = HKTAN.Init_HKTAN(segments);
 
             SEG.NUM = SEGNUM.SETInt(4);
 

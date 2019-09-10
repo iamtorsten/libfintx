@@ -44,18 +44,19 @@ namespace libfintx
 
             segments = segments.Replace("@@", "@" + (painMessage.Length - 1) + "@") + painMessage;
 
-            segments = HKTAN.Init_HKTAN(segments);
+            if (Helper.IsTANRequired(connectionDetails.BPD, "HKCCM"))
+                segments = HKTAN.Init_HKTAN(segments);
 
             SEG.NUM = SEGNUM.SETInt(4);
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
-            var TAN = FinTSMessage.Send(connectionDetails.Url, message);
+            var response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
-            Helper.Parse_Message(TAN);
+            Helper.Parse_Message(response);
 
-            return TAN;
+            return response;
         }
     }
 }

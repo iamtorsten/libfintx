@@ -23,6 +23,7 @@
 
 using libfintx.Util;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace libfintx
 {
@@ -36,7 +37,13 @@ namespace libfintx
         public string Accounttype { get; set; }
         public string Accountcurrency { get; set; }
         public string Accountbic { get; set; }
+
         public List<AccountPermissions> Accountpermissions { get; set; }
+
+        public bool IsSegmentPermitted(string segment)
+        {
+            return Accountpermissions.Any(a => a.Segment == segment);
+        }
 
         public override string ToString()
         {

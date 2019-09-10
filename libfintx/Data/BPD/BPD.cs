@@ -22,14 +22,28 @@
  */
 
 using System;
-using System.IO;
+using System.Linq;
 
 namespace libfintx
 {
-    public static class Program
+    public class BPD
     {
-        public static string Buildname { get; set; } = "libfintx";
+        public string Value { get; set; }
 
-        public static string Version { get; set; } = "0.1";
+        public HIPINS HIPINS { get; set; }
+
+        public static BPD Parse_BPD(string bpd)
+        {
+            var result = new BPD();
+
+            result.Value = bpd;
+
+            var lines = bpd.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            var hipins = lines.FirstOrDefault(l => l.StartsWith("HIPINS"));
+            result.HIPINS = HIPINS.Parse_HIPINS(hipins);
+
+            return result;
+        }
     }
 }

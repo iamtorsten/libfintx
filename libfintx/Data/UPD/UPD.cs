@@ -21,15 +21,26 @@
  * 	
  */
 
-using System;
-using System.IO;
-
 namespace libfintx
 {
-    public static class Program
+    public class UPD
     {
-        public static string Buildname { get; set; } = "libfintx";
+        public string Value { get; set; }
 
-        public static string Version { get; set; } = "0.1";
+        public HIUPD HIUPD { get; set; }
+
+        public UPD()
+        {
+        }
+
+        public static UPD Parse_UPD(string upd)
+        {
+            var result = new UPD();
+
+            result.Value = upd;
+            result.HIUPD = HIUPD.Parse_HIPUPD(upd);
+
+            return result;
+        }
     }
 }
