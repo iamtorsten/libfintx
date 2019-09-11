@@ -166,19 +166,20 @@ namespace libfintx
             {
                 List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
-                String[] values = Message.Split('\'');
+                string[] values = Message.Split('\'');
 
-                List<string> msg = new List<string>();
+                string msg = string.Join(Environment.NewLine, values);
 
-                foreach (var item in values)
-                {
-                    msg.Add(item + Environment.NewLine.Replace(",", ""));
-                }
+                string bpd = string.Empty;
+                string upd = string.Empty;
 
-                string msg_ = string.Join("", msg.ToArray());
+                var bpaMatch = Regex.Match(msg, @"(HIBPA.+?)\b(HNHBS|HIUPA)\b", RegexOptions.Singleline);
+                if (bpaMatch.Success)
+                    bpd = bpaMatch.Groups[1].Value;
 
-                string bpd = "HIBPA" + Parse_String(msg_, "HIBPA", "\r\n" + "HIUPA");
-                string upd = "HIUPA" + Parse_String(msg_, "HIUPA", "\r\n" + "HNHBS");
+                var upaMatch = Regex.Match(msg, @"(HIUPA.+?)\b(HITAN|HNHBS)\b", RegexOptions.Singleline);
+                if (upaMatch.Success)
+                    upd = upaMatch.Groups[1].Value;
 
                 // BPD
                 SaveBPD(BLZ, bpd);
@@ -856,11 +857,6 @@ namespace libfintx
             return content;
         }
 
-        public static void InitUPD(int BLZ, string UserID)
-        {
-            UPD.Parse_UPD(GetUPD(BLZ, UserID));
-        }
-
         public static void SaveBPD(int BLZ, string upd)
         {
             string dir = GetBPDDir();
@@ -880,11 +876,6 @@ namespace libfintx
             var content = File.Exists(file) ? File.ReadAllText(file) : string.Empty;
 
             return content;
-        }
-
-        public static void InitBPD(int BLZ)
-        {
-            BPD.Parse_BPD(GetBPD(BLZ));
         }
 
         public static bool IsTANRequired(string gvName)
