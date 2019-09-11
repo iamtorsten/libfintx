@@ -34,12 +34,15 @@ namespace libfintx
         {
             Log.Write("Starting job HKCSB: Get terminated transfers");
 
-            string segments = "HKCSB:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
+            SEG.NUM = SEGNUM.SETInt(3);
 
-            SEG.NUM = SEGNUM.SETInt(4);
+            string segments = "HKCSB:" + SEG.NUM + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
             if (Helper.IsTANRequired("HKCSB"))
+            {
+                SEG.NUM = SEGNUM.SETInt(4);
                 segments = HKTAN.Init_HKTAN(segments);
+            }
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);

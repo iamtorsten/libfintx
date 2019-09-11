@@ -35,16 +35,19 @@ namespace libfintx
         {
             Log.Write("Starting job HKDSE: Collect money");
 
-            string segments = "HKDSE:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
+            SEG.NUM = SEGNUM.SETInt(4);
+
+            string segments = "HKDSE:" + SEG.NUM + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
 
             var message = pain00800202.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CreditorIDNumber);
 
             segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
 
-            SEG.NUM = SEGNUM.SETInt(4);
-
             if (Helper.IsTANRequired("HKDSE"))
+            {
+                SEG.NUM = SEGNUM.SETInt(4);
                 segments = HKTAN.Init_HKTAN(segments);
+            }
 
             var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
 

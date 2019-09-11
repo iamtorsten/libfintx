@@ -37,15 +37,18 @@ namespace libfintx
 
             string segments = string.Empty;
 
-            if (Convert.ToInt16(Segment.HISALS) >= 7)
-                segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+N'";
-            else
-                segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
+            SEG.NUM = SEGNUM.SETInt(3);
 
-            SEG.NUM = SEGNUM.SETInt(4);
+            if (Convert.ToInt16(Segment.HISALS) >= 7)
+                segments = "HKSAL:" + SEG.NUM + ":" + Segment.HISALS + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+N'";
+            else
+                segments = "HKSAL:" + SEG.NUM + ":" + Segment.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
 
             if (Helper.IsTANRequired("HKSAL"))
+            {
+                SEG.NUM = SEGNUM.SETInt(4);
                 segments = HKTAN.Init_HKTAN(segments);
+            }
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
