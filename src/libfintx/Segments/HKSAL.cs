@@ -42,10 +42,10 @@ namespace libfintx
             else
                 segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
 
+            SEG.NUM = SEGNUM.SETInt(4);
+
             if (Helper.IsTANRequired("HKSAL"))
                 segments = HKTAN.Init_HKTAN(segments);
-
-            SEG.NUM = SEGNUM.SETInt(3);
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
