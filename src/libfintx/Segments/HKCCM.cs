@@ -44,10 +44,10 @@ namespace libfintx
 
             segments = segments.Replace("@@", "@" + (painMessage.Length - 1) + "@") + painMessage;
 
-            if (Helper.IsTANRequired(connectionDetails.BPD, "HKCCM"))
-                segments = HKTAN.Init_HKTAN(segments);
-
             SEG.NUM = SEGNUM.SETInt(4);
+
+            if (Helper.IsTANRequired("HKCCM"))
+                segments = HKTAN.Init_HKTAN(segments);
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
             var response = FinTSMessage.Send(connectionDetails.Url, message);

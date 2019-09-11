@@ -41,10 +41,10 @@ namespace libfintx
 
             segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
 
-            if (Helper.IsTANRequired(connectionDetails.BPD, "HKCUM"))
-                segments = HKTAN.Init_HKTAN(segments);
-
             SEG.NUM = SEGNUM.SETInt(4);
+
+            if (Helper.IsTANRequired("HKCUM"))
+                segments = HKTAN.Init_HKTAN(segments);
 
             var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
 

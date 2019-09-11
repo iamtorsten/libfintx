@@ -42,7 +42,7 @@ namespace libfintx
             else
                 segments = "HKSAL:" + SEGNUM.SETVal(3) + ":" + Segment.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
 
-            if (Helper.IsTANRequired(connectionDetails.BPD, "HKSAL"))
+            if (Helper.IsTANRequired("HKSAL"))
                 segments = HKTAN.Init_HKTAN(segments);
 
             SEG.NUM = SEGNUM.SETInt(3);

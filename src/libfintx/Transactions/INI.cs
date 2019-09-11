@@ -43,6 +43,8 @@ namespace libfintx
                 {
                     string segments;
 
+                    SEG.NUM = SEGNUM.SETInt(5);
+
                     /// <summary>
                     /// INI
                     /// </summary>
@@ -75,8 +77,6 @@ namespace libfintx
 
                         throw new Exception("HBCI version not supported");
                     }
-
-                    SEG.NUM = SEGNUM.SETInt(4);
 
                     var message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
                     var response = FinTSMessage.Send(connectionDetails.Url, message);

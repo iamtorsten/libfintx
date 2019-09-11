@@ -37,28 +37,28 @@ namespace libfintx
             if (String.IsNullOrEmpty(Segment.HITAB)) // TAN Medium Name not set
             {
                 if (Segment.HITANS.Substring(0, 3).Equals("6+4") && segmentId != null)
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+" + segmentId + "'";
+                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+" + segmentId + "'";
                 else
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+'";
+                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+'";
             }
             else // TAN Medium Name set
             {
                 // Version 3, Process 4
                 if (Segment.HITANS.Substring(0, 3).Equals("3+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "++++++++" + Segment.HITAB + "'";
+                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "++++++++" + Segment.HITAB + "'";
                 // Version 4, Process 4
                 if (Segment.HITANS.Substring(0, 3).Equals("4+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++" + Segment.HITAB + "'";
+                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+++++++++" + Segment.HITAB + "'";
                 // Version 5, Process 4
                 if (Segment.HITANS.Substring(0, 3).Equals("5+4"))
-                    segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+++++++++++" + Segment.HITAB + "'";
+                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+++++++++++" + Segment.HITAB + "'";
                 // Version 6, Process 4
                 if (Segment.HITANS.Substring(0, 3).Equals("6+4"))
                 {
                     if (segmentId != null)
-                        segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "+" + segmentId + "+++++++++" + Segment.HITAB + "'";
+                        segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+" + segmentId + "+++++++++" + Segment.HITAB + "'";
                     else
-                        segments = segments + "HKTAN:" + SEGNUM.SETVal(4) + ":" + Segment.HITANS + "++++++++++" + Segment.HITAB + "'";
+                        segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "++++++++++" + Segment.HITAB + "'";
                 }
             }
 
