@@ -43,18 +43,10 @@ namespace libfintx
         /// <returns></returns>
         public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
         {
-            var RndNr = Guid.NewGuid().ToString();
-
-            if (RndNr.Length > 20)
-                RndNr = RndNr.Substring(0, 20);
-
-            var RndNr_ = Guid.NewGuid().ToString();
-
-            if (RndNr_.Length > 20)
-                RndNr_ = RndNr_.Substring(0, 20);
-
             DateTime datetime = DateTime.Now;
-            var datetime_ = string.Format("{0:s}", datetime);
+            var creDtTm = $"{datetime:s}";
+            var msgId = $"{datetime:yyyy-MM-dd HH:mm:ss.fff}";
+            var pmtInfId = msgId;
 
             var Amount_ = Amount.ToString().Replace(",", ".");
 
@@ -62,8 +54,8 @@ namespace libfintx
                 "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03 pain.001.002.03.xsd\">" +
                 "<CstmrCdtTrfInitn>" + 
                 "<GrpHdr>" + 
-                "<MsgId>" + Program.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" + 
-                "<CreDtTm>" + datetime_ + "</CreDtTm>" + 
+                "<MsgId>" + msgId + "</MsgId>" + 
+                "<CreDtTm>" + creDtTm + "</CreDtTm>" + 
                 "<NbOfTxs>1</NbOfTxs>" + 
                 "<CtrlSum>" + Amount_ + "</CtrlSum>" + 
                 "<InitgPty>" +
@@ -71,7 +63,7 @@ namespace libfintx
                 "</InitgPty>" + 
                 "</GrpHdr>" + 
                 "<PmtInf>" + 
-                "<PmtInfId>" + Program.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" + 
+                "<PmtInfId>" + pmtInfId + "</PmtInfId>" + 
                 "<PmtMtd>TRF</PmtMtd>" + 
                 "<NbOfTxs>1</NbOfTxs>" + 
                 "<CtrlSum>" + Amount_ + "</CtrlSum>" +
