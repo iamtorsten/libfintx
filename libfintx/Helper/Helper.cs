@@ -181,9 +181,11 @@ namespace libfintx
 
                 // BPD
                 SaveBPD(BLZ, bpd);
+                BPD.Parse_BPD(bpd);
 
                 // UPD
                 SaveUPD(BLZ, UserID, upd);
+                UPD.Parse_UPD(upd);
 
                 foreach (var item in values)
                 {
@@ -833,13 +835,18 @@ namespace libfintx
             File.WriteAllText(file, upd);
         }
 
-        public static UPD GetUPD(int BLZ, string UserID)
+        public static string GetUPD(int BLZ, string UserID)
         {
             var dir = GetUPDDir();
             var file = GetUPDFile(dir, BLZ, UserID);
             var content = File.Exists(file) ? File.ReadAllText(file) : string.Empty;
 
-            return UPD.Parse_UPD(content);
+            return content;
+        }
+
+        public static void InitUPD(int BLZ, string UserID)
+        {
+            UPD.Parse_UPD(GetUPD(BLZ, UserID));
         }
 
         public static void SaveBPD(int BLZ, string upd)
@@ -854,18 +861,23 @@ namespace libfintx
             File.WriteAllText(file, upd);
         }
 
-        public static BPD GetBPD(int BLZ)
+        public static string GetBPD(int BLZ)
         {
             var dir = GetBPDDir();
             var file = GetBPDFile(dir, BLZ);
             var content = File.Exists(file) ? File.ReadAllText(file) : string.Empty;
 
-            return BPD.Parse_BPD(content);
+            return content;
         }
 
-        public static bool IsTANRequired(BPD bpd, string gvName)
+        public static void InitBPD(int BLZ)
         {
-            var HIPINS = bpd?.HIPINS;
+            BPD.Parse_BPD(GetBPD(BLZ));
+        }
+
+        public static bool IsTANRequired(string gvName)
+        {
+            var HIPINS = BPD.HIPINS;
             return HIPINS != null && HIPINS.IsTANRequired(gvName);
         }
     }

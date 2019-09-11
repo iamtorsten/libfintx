@@ -1,12 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace libfintx.Util
 {
     public static class ReflectionUtil
     {
+        public static void ResetStaticFields(Type type)
+        {
+            var propList = type
+                .GetProperties(BindingFlags.Public | BindingFlags.Static)
+                .Where(f => f.PropertyType == typeof(string));
+
+            foreach (var prop in propList)
+            {
+                if (prop.CanWrite)
+                    prop.SetValue(null, null, null);
+            }
+        }
+
         public static string ToString(object obj)
         {
             StringBuilder sb = new StringBuilder();
