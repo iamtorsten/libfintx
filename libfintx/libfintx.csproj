@@ -142,12 +142,12 @@
     <None Include="BankCodes\fints_institute.xls" />
     <None Include="Documentation\Documentation.xml" />
     <None Include="Documentation\FinTS_3.0_Formals_2017-10-06_final_version.pdf" />
-    <None Include="Documentation\FinTS_3.0_Master_2017-10-06_final_version.pdf" />
+    <None Include="Documentation\FinTS_3.0_Master_2018-11-29.pdf" />
     <None Include="Documentation\FinTS_3.0_Messages_Finanzdatenformate_2010-08-06_final_version.pdf" />
     <None Include="Documentation\FinTS_3.0_Messages_Geschaeftsvorfaelle_2015-08-07_final_version.pdf" />
     <None Include="Documentation\FinTS_3.0_Security_Alternative_Sicherheitsverfahren_Rel_20130122_final_version.pdf" />
-    <None Include="Documentation\FinTS_3.0_Security_Sicherheitsverfahren_HBCI_Rel_20130718_final_version.pdf" />
-    <None Include="Documentation\FinTS_3.0_Security_Sicherheitsverfahren_PINTAN_2017-10-06_final_version.pdf" />
+    <None Include="Documentation\FinTS_3.0_Security_Sicherheitsverfahren_HBCI_Rel_20181129_final_version.pdf" />
+    <None Include="Documentation\FinTS_3.0_Security_Sicherheitsverfahren_PINTAN_2018-02-23_final_version.pdf" />
     <None Include="Documentation\FinTS_4.0_Anlagen.pdf" />
     <None Include="Documentation\FinTS_4.0_Data-Dictionary.pdf" />
     <None Include="Documentation\FinTS_4.0_Formals.pdf" />
@@ -165,7 +165,7 @@
     <None Include="Documentation\FinTS_4.1_Security_HBCI_2014-01-20-FV.pdf" />
     <None Include="Documentation\FinTS_4.1_Security_PINTAN_2017-10-06_final_version.pdf" />
     <None Include="Documentation\FinTS_4.1_XML-Syntax_2017-10-06_final_version.pdf" />
-    <None Include="Documentation\FinTS_Rueckmeldungscodes_2017-10-06_final_version.pdf" />
+    <None Include="Documentation\FinTS_Rueckmeldungscodes_2019-07-22_final_version.pdf" />
     <None Include="Documentation\HBCI22 Final.pdf" />
     <None Include="Pain\pain_001_001_03\pain.001.001.03.xsd">
       <SubType>Designer</SubType>
