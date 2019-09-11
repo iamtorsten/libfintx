@@ -17,10 +17,10 @@ namespace libfintx
 
             string segments = "HKCDB:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'";
 
-            if (Helper.IsTANRequired(connectionDetails.BPD, "HKCDB"))
-                segments = HKTAN.Init_HKTAN(segments);
-
             SEG.NUM = SEGNUM.SETInt(3);
+
+            if (Helper.IsTANRequired("HKCDB"))
+                segments = HKTAN.Init_HKTAN(segments);
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);

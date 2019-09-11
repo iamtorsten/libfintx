@@ -54,14 +54,17 @@ namespace libfintx
         /// <summary>
         /// Synchronize bank connection
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
+        /// <param name="conn">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
         /// <returns>
         /// Customer System ID
         /// </returns>
-        public static HBCIDialogResult<string> Synchronization(ConnectionDetails connectionDetails)
+        public static HBCIDialogResult<string> Synchronization(ConnectionDetails conn)
         {
-            string BankCode = Transaction.HKSYN(connectionDetails);
-            return new HBCIDialogResult<string>(Helper.Parse_BankCode(BankCode), BankCode, Segment.HISYN);
+            string BankCode = Transaction.HKSYN(conn);
+
+            var messages = Helper.Parse_Segment(conn.UserId, conn.Blz, conn.HBCIVersion, BankCode);
+
+            return new HBCIDialogResult<string>(messages, BankCode, Segment.HISYN);
         }
 
         private static HBCIDialogResult Init(ConnectionDetails conn, bool anonymous)
@@ -134,10 +137,9 @@ namespace libfintx
                 return result.TypedResult<List<AccountInformations>>();
 
             // Success
-            var upd = Helper.GetUPD(connectionDetails.Blz, connectionDetails.UserId);
-            List<AccountInformations> accounts = new List<AccountInformations>();
+            Helper.InitUPD(connectionDetails.Blz, connectionDetails.UserId);
 
-            return new HBCIDialogResult<List<AccountInformations>>(result.Messages, upd.Value, accounts);
+            return new HBCIDialogResult<List<AccountInformations>>(result.Messages, UPD.Value, UPD.HIUPD.AccountList);
         }
 
         /// <summary>

@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Linq;
 using System;
 using System.Text;
+using libfintx.Util;
 
 namespace libfintx
 {
@@ -89,22 +90,7 @@ namespace libfintx
 
         public static void Reset()
         {
-            try
-            {
-                var propList = typeof(Segment)
-                    .GetProperties(BindingFlags.Public | BindingFlags.Static)
-                    .Where(f => f.PropertyType == typeof(string));
-
-                foreach (var prop in propList)
-                {
-                    if (prop.CanWrite)
-                        prop.SetValue(null, null, null);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Couldn't reset Segment.", ex);
-            }
+            ReflectionUtil.ResetStaticFields(typeof(Segment));
         }
 
         public static string AsString()

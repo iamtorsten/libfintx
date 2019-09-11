@@ -72,10 +72,10 @@ namespace libfintx
                 }
             }
 
-            if (Helper.IsTANRequired(connectionDetails.BPD, "HKKAZ"))
-                segments = HKTAN.Init_HKTAN(segments);
+            SEG.NUM = SEGNUM.SETInt(4);
 
-            SEG.NUM = SEGNUM.SETInt(3);
+            if (Helper.IsTANRequired("HKKAZ"))
+                segments = HKTAN.Init_HKTAN(segments);
 
             string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
