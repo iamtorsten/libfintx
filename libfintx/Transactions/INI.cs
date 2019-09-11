@@ -63,7 +63,7 @@ namespace libfintx
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
 
                         if (Segment.HITANS.Substring(0, 3).Equals("6+4"))
-                            segments_ = HKTAN.Init_HKTAN(segments_, "HKIDN");
+                            segments_ = HKTAN.Init_HKTAN(segments_);
 
                         segments = segments_;
                     }
@@ -146,7 +146,8 @@ namespace libfintx
                     /// </summary>
                     if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments__ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                        string segments__ = 
+                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'" +
                             "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
 

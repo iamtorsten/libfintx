@@ -92,7 +92,7 @@ namespace libfintx
                         }
                     }
 
-                    SEG.NUM = SEGNUM.SETInt(3);
+                    SEG.NUM = SEGNUM.SETInt(4);
                     break;
 
                 default: // -> Will never happen, only for compiler

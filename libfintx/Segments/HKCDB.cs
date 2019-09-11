@@ -17,7 +17,7 @@ namespace libfintx
 
             string segments = "HKCDB:" + SEGNUM.SETVal(3) + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'";
 
-            SEG.NUM = SEGNUM.SETInt(3);
+            SEG.NUM = SEGNUM.SETInt(4);
 
             if (Helper.IsTANRequired("HKCDB"))
                 segments = HKTAN.Init_HKTAN(segments);

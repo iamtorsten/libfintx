@@ -62,30 +62,41 @@ namespace libfintx
         {
             string BankCode = Transaction.HKSYN(conn);
 
-            var messages = Helper.Parse_Segment(conn.UserId, conn.Blz, conn.HBCIVersion, BankCode);
+            var messages = Helper.Parse_BankCode(BankCode);
 
             return new HBCIDialogResult<string>(messages, BankCode, Segment.HISYN);
         }
 
         private static HBCIDialogResult Init(ConnectionDetails conn, bool anonymous)
         {
+            if (Segment.HKTAN == null)
+                Segment.HKTAN = "HKIDN";
+
             HBCIDialogResult result;
-            if (conn.CustomerSystemId == null)
+            string BankCode;
+            try
             {
-                result = Synchronization(conn);
-                if (!result.IsSuccess)
+                if (conn.CustomerSystemId == null)
                 {
-                    Log.Write("Synchronisation failed.");
-                    return result;
+                    result = Synchronization(conn);
+                    if (!result.IsSuccess)
+                    {
+                        Log.Write("Synchronisation failed.");
+                        return result;
+                    }
                 }
+                else
+                {
+                    Segment.HISYN = conn.CustomerSystemId;
+                }
+                BankCode = Transaction.INI(conn, anonymous);
             }
-            else
+            finally
             {
-                Segment.HISYN = conn.CustomerSystemId;
+                Segment.HKTAN = null;
             }
 
-            var BankCode = Transaction.INI(conn, anonymous);
-            var bankMessages = Helper.Parse_Segment(conn.UserId, conn.Blz, conn.HBCIVersion, BankCode);
+            var bankMessages = Helper.Parse_BankCode(BankCode);
             result = new HBCIDialogResult(bankMessages, BankCode);
             if (!result.IsSuccess)
                 Log.Write("Initialisation failed: " + result);
@@ -135,9 +146,6 @@ namespace libfintx
             result = ProcessSCA(connectionDetails, result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<AccountInformations>>();
-
-            // Success
-            Helper.InitUPD(connectionDetails.Blz, connectionDetails.UserId);
 
             return new HBCIDialogResult<List<AccountInformations>>(result.Messages, UPD.Value, UPD.HIUPD.AccountList);
         }
@@ -1096,6 +1104,8 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult<List<string>> RequestTANMediumName(ConnectionDetails connectionDetails, TANDialog tanDialog)
         {
+            Segment.HKTAN = "HKTAB";
+
             HBCIDialogResult result = Init(connectionDetails, false);
             if (!result.IsSuccess)
                 return result.TypedResult<List<string>>();
