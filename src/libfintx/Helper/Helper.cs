@@ -414,14 +414,25 @@ namespace libfintx
                 balance.Successful = true;
 
                 var hisalAccountParts = hisalParts[1].Split(':');
-                balance.AccountType = new AccountInformations()
+                if (hisalAccountParts.Length == 4)
                 {
-                    Accountnumber = hisalAccountParts[0],
-                    Accountbankcode = hisalAccountParts.Length > 3 ? hisalAccountParts[3] : null,
-                    Accounttype = hisalParts[2],
-                    Accountcurrency = hisalParts[3],
-                    Accountbic = !string.IsNullOrEmpty(hisalAccountParts[1]) ? hisalAccountParts[1] : null
-                };
+                    balance.AccountType = new AccountInformations()
+                    {
+                        Accountnumber = hisalAccountParts[0],
+                        Accountbankcode = hisalAccountParts.Length > 3 ? hisalAccountParts[3] : null,
+                        Accounttype = hisalParts[2],
+                        Accountcurrency = hisalParts[3],
+                        Accountbic = !string.IsNullOrEmpty(hisalAccountParts[1]) ? hisalAccountParts[1] : null
+                    };
+                }
+                else if (hisalAccountParts.Length == 2)
+                {
+                    balance.AccountType = new AccountInformations()
+                    {
+                        Accountiban = hisalAccountParts[0],
+                        Accountbic = hisalAccountParts[1]
+                    };
+                }
 
                 var hisalBalanceParts = hisalParts[4].Split(':');
                 balance.Balance = Convert.ToDecimal($"{(hisalBalanceParts[0] == "D" ? "-" : "")}{hisalBalanceParts[1]}");
