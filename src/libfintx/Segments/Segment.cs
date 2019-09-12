@@ -69,11 +69,6 @@ namespace libfintx
         public static string HISALSf { get; set; }
 
         /// <summary>
-        /// HKTAN Segment (e.g. HKIDN)
-        /// </summary>
-        public static string HKTAN { get; set; }
-
-        /// <summary>
         /// Transactions
         /// </summary>
         public static string HKKAZ { get; set; }

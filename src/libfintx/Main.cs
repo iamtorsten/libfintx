@@ -64,8 +64,8 @@ namespace libfintx
 
         private static HBCIDialogResult Init(ConnectionDetails conn, bool anonymous)
         {
-            if (Segment.HKTAN == null)
-                Segment.HKTAN = "HKIDN";
+            if (HKTAN.SegmentId == null)
+                HKTAN.SegmentId = "HKIDN";
 
             HBCIDialogResult result;
             string BankCode;
@@ -88,7 +88,7 @@ namespace libfintx
             }
             finally
             {
-                Segment.HKTAN = null;
+                HKTAN.SegmentId = null;
             }
 
             var bankMessages = Helper.Parse_BankCode(BankCode);
@@ -1034,26 +1034,28 @@ namespace libfintx
         /// <returns>
         /// TAN Medium Name
         /// </returns>
-        public static HBCIDialogResult<List<string>> RequestTANMediumName(ConnectionDetails connectionDetails, TANDialog tanDialog)
+        public static HBCIDialogResult<List<string>> RequestTANMediumName(ConnectionDetails connectionDetails)
         {
-            Segment.HKTAN = "HKTAB";
+            HKTAN.SegmentId = "HKTAB";
 
             HBCIDialogResult result = Init(connectionDetails, false);
             if (!result.IsSuccess)
                 return result.TypedResult<List<string>>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
-            if (!result.IsSuccess)
-                return result.TypedResult<List<string>>();
+            // Should not be needed when processing HKTAB
+            //result = ProcessSCA(connectionDetails, result, tanDialog);
+            //if (!result.IsSuccess)
+            //    return result.TypedResult<List<string>>();
 
             var BankCode = Transaction.HKTAB(connectionDetails);
             result = new HBCIDialogResult<List<string>>(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<string>>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
-            if (!result.IsSuccess)
-                return result.TypedResult<List<string>>();
+            // Should not be needed when processing HKTAB
+            //result = ProcessSCA(connectionDetails, result, tanDialog);
+            //if (!result.IsSuccess)
+            //    return result.TypedResult<List<string>>();
 
             BankCode = result.RawData;
             var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
