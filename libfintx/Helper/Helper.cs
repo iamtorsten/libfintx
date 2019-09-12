@@ -21,8 +21,6 @@
  * 	
  */
 
-//#define WINDOWS
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,11 +29,6 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using libfintx.Data;
-
-#if WINDOWS
-using System.Windows.Forms;
-#endif
 
 namespace libfintx
 {
@@ -556,7 +549,7 @@ namespace libfintx
         static FlickerRenderer flickerCodeRenderer = null;
 
         /// <summary>
-        /// Parse bank message and handle tan process
+        /// Fill given <code>TANDialog</code> and wait for user to enter a TAN.
         /// </summary>
         /// <param name="BankCode"></param>
         /// <param name="pictureBox"></param>
@@ -564,14 +557,7 @@ namespace libfintx
         /// <param name="flickerWidth"></param>
         /// <param name="flickerHeight"></param>
         /// <param name="renderFlickerCodeAsGif"></param>
-
-#if WINDOWS
-        public static void Parse_BankCode(string BankCode, PictureBox pictureBox, out Image flickerImage, int flickerWidth,
-            int flickerHeight, bool renderFlickerCodeAsGif)
-#else
         public static string WaitForTAN(HBCIDialogResult dialogResult, TANDialog tanDialog)
-#endif
-
         {
             var BankCode_ = "HIRMS" + Helper.Parse_String(dialogResult.RawData, "'HIRMS", "'");
             String[] values = BankCode_.Split('+');

@@ -4,6 +4,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
+#if WINDOWS
+using System.Windows.Forms;
+#endif
+
 namespace libfintx
 {
     /// <summary>
@@ -11,7 +15,11 @@ namespace libfintx
     /// </summary>
     public class TANDialog
     {
+#if WINDOWS
+        public PictureBox PictureBox { get; }
+#else
         public object PictureBox { get; }
+#endif
 
         public bool RenderFlickerCodeAsGif { get; }
 
