@@ -21,8 +21,6 @@
  * 	
  */
 
-//#define WINDOWS
-
 using libfintx.Data;
 using System;
 using System.Collections.Generic;
@@ -34,10 +32,6 @@ using System.Xml.Serialization;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using static libfintx.HKCDE;
-
-#if WINDOWS
-using System.Windows.Forms;
-#endif
 
 namespace libfintx
 {
@@ -437,14 +431,8 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string Transfer(ConnectionDetails connectionDetails, UserTANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult Transfer(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, bool anonymous)
-#endif
-
         {
             HBCIDialogResult result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -490,14 +478,8 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string Transfer_Terminated(ConnectionDetails connectionDetails, UserTANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous,
-            out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, DateTime executionDay, string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -540,14 +522,8 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string CollectiveTransfer(ConnectionDetails connectionDetails, UserTANDialog tanDialog, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, TANDialog tanDialog, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -591,14 +567,8 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, UserTANDialog tanDialog, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, TANDialog tanDialog, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -643,14 +613,8 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string Rebooking(ConnectionDetails connectionDetails, UserTANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage,
-            int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult Rebooking(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -699,16 +663,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string Collect(ConnectionDetails connectionDetails, UserTANDialog tanDialog, string payerName, string payerIBAN, string payerBIC,
-            decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
-            string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
-            bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, TANDialog tanDialog, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
             string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -752,14 +709,8 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string CollectiveCollect(ConnectionDetails connectionDetails, UserTANDialog tanDialog, DateTime settlementDate, List<pain00800202_cc_data> painData,
-            string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
-            bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult CollectiveCollect(ConnectionDetails connectionDetails, TANDialog tanDialog, DateTime settlementDate, List<pain00800202_cc_data> painData,
            string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -802,14 +753,8 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string Prepaid(ConnectionDetails connectionDetails, UserTANDialog tanDialog, int mobileServiceProvider, string phoneNumber,
-            int amount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
-            bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, TANDialog tanDialog, int mobileServiceProvider, string phoneNumber,
             int amount, string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -858,16 +803,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-#if WINDOWS
-        public static string SubmitBankersOrder(ConnectionDetails connectionDetails, UserTANDialog tanDialog, string receiverName, string receiverIBAN,
-            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-            int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
-            bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
            int executionDay, string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -892,16 +830,9 @@ namespace libfintx
             return result;
         }
 
-#if WINDOWS
-        public static string ModifyBankersOrder(ConnectionDetails connectionDetails, UserTANDialog tanDialog, string receiverName, string receiverIBAN,
-            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-            int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
-            bool renderFlickerCodeAsGif = false)
-#else
         public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string OrderId, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
            int executionDay, string HIRMS, bool anonymous)
-#endif
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
