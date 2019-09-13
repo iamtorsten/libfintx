@@ -62,7 +62,7 @@ namespace libfintx
                             "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.Buildname + "+" + Program.Version + "'";
 
-                        if (Segment.HITANS.Substring(0, 3).Equals("6+4"))
+                        if (Segment.HITANS != null && Segment.HITANS.Substring(0, 3).Equals("6+4"))
                             segments_ = HKTAN.Init_HKTAN(segments_);
 
                         segments = segments_;

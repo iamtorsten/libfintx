@@ -55,6 +55,7 @@
     <Compile Include="Data\BankersOrder.cs" />
     <Compile Include="Data\BPD\BPD.cs" />
     <Compile Include="Data\BPD\HIPINS.cs" />
+    <Compile Include="Data\BPD\HITANS.cs" />
     <Compile Include="Data\ConnectionDetails.cs" />
     <Compile Include="Data\pain00100103_ct_data.cs" />
     <Compile Include="Data\pain00100203_ct_data.cs" />

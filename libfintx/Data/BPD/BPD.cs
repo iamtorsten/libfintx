@@ -23,6 +23,7 @@
 
 using libfintx.Util;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace libfintx
@@ -32,6 +33,8 @@ namespace libfintx
         public static string Value { get; set; }
 
         public static HIPINS HIPINS { get; set; }
+
+        public static List<HITANS> HITANS { get; set; }
 
         public static void Reset()
         {
@@ -45,7 +48,15 @@ namespace libfintx
             var lines = bpd.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
             var hipins = lines.FirstOrDefault(l => l.StartsWith("HIPINS"));
-            HIPINS = HIPINS.Parse_HIPINS(hipins);
+            HIPINS = HIPINS.Parse_HIPINS(hipins ?? string.Empty);
+
+            HITANS = new List<HITANS>();
+            var list = lines.Where(l => l.StartsWith("HITANS"));
+            foreach (var hitans in list)
+            {
+                var item = libfintx.HITANS.Parse_HITANS(hitans);
+                HITANS.Add(item);
+            }
         }
     }
 }
