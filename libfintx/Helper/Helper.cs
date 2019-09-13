@@ -165,7 +165,7 @@ namespace libfintx
                 string bpd = string.Empty;
                 string upd = string.Empty;
 
-                var bpaMatch = Regex.Match(msg, @"(HIBPA.+?)\b(HNHBS|HIUPA)\b", RegexOptions.Singleline);
+                var bpaMatch = Regex.Match(msg, @"(HIBPA.+?)\b(HNHBS|HISYN|HIUPA)\b", RegexOptions.Singleline);
                 if (bpaMatch.Success)
                     bpd = bpaMatch.Groups[1].Value;
 
