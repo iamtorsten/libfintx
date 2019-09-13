@@ -162,9 +162,9 @@ namespace libfintx
 
                 swiftData = swiftData.Substring(6);
 
-                if (char.IsDigit(swiftData[0]))
+                // Posting date (MMDD)
+                if (Regex.IsMatch(swiftData, @"\d{4}"))
                 {
-                    // Posting date (MMDD)
                     int year = SWIFTTransaction.valueDate.Year;
                     int month = Convert.ToInt32(swiftData.Substring(0, 2));
                     int day = Convert.ToInt32(swiftData.Substring(2, 2));
@@ -182,47 +182,49 @@ namespace libfintx
 
                     SWIFTTransaction.inputDate = new DateTime(year, month, day);
 
-                    swiftData = swiftData.Substring(4);
+                    swiftData = swiftData.Length > 4 ? swiftData.Substring(4) : string.Empty;
                 }
 
-                // Debit or credit, or storno debit or credit
-                int debitCreditIndicator = 0;
-
-                if (swiftData[0] == 'R')
+                // Amount - some characters followed by an 'N'
+                if (Regex.IsMatch(swiftData, @".+N"))
                 {
-                    // Storno means: reverse the debit credit flag
-                    debitCreditIndicator = (swiftData[1] == 'D' ? 1 : -1);
+                    // Debit or credit, or storno debit or credit
+                    int debitCreditIndicator = 0;
+                    if (swiftData[0] == 'R')
+                    {
+                        // Storno means: reverse the debit credit flag
+                        debitCreditIndicator = (swiftData[1] == 'D' ? 1 : -1);
+                        swiftData = swiftData.Substring(2);
+                    }
+                    else
+                    {
+                        debitCreditIndicator = (swiftData[0] == 'D' ? -1 : 1);
+                        swiftData = swiftData.Substring(1);
+                    }
 
-                    swiftData = swiftData.Substring(2);
+                    // Sometimes there is something about currency
+                    if (char.IsLetter(swiftData[0]))
+                    {
+                        // Just skip it for the moment
+                        swiftData = swiftData.Substring(1);
+                    }
+
+                    // The amount, finishing with N
+                    SWIFTTransaction.amount =
+                        debitCreditIndicator * Convert.ToDecimal(swiftData.Substring(0, swiftData.IndexOf("N")).Replace(",",
+                                Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
+
+                    SWIFTStatement.endBalance += SWIFTTransaction.amount;
+                    swiftData = swiftData.Substring(swiftData.IndexOf("N"));
+
+                    // Geschaeftsvorfallcode
+                    swiftData = swiftData.Length > 4 ? swiftData.Substring(4) : string.Empty;
+
+                    // The following sub fields are ignored
+                    // Optional: customer reference; ends with //
+                    // Optional: bank reference; ends with CR/LF
+                    // Something else about original currency and SWIFTTransaction fees
                 }
-                else
-                {
-                    debitCreditIndicator = (swiftData[0] == 'D' ? -1 : 1);
-                    swiftData = swiftData.Substring(1);
-                }
-
-                // Sometimes there is something about currency
-                if (Char.IsLetter(swiftData[0]))
-                {
-                    // Just skip it for the moment
-                    swiftData = swiftData.Substring(1);
-                }
-
-                // The amount, finishing with N
-                SWIFTTransaction.amount =
-                    debitCreditIndicator * Convert.ToDecimal(swiftData.Substring(0, swiftData.IndexOf("N")).Replace(",",
-                            Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
-
-                SWIFTStatement.endBalance += SWIFTTransaction.amount;
-                swiftData = swiftData.Substring(swiftData.IndexOf("N"));
-
-                // Geschaeftsvorfallcode
-                swiftData = swiftData.Substring(4);
-
-                // The following sub fields are ignored
-                // Optional: customer reference; ends with //
-                // Optional: bank reference; ends with CR/LF
-                // Something else about original currency and SWIFTTransaction fees
 
                 SWIFTStatement.SWIFTTransactions.Add(SWIFTTransaction);
             }
@@ -327,18 +329,21 @@ namespace libfintx
                 swiftData = swiftData.Substring(6);
 
                 // Currency
-                swiftData = swiftData.Substring(3);
-
-                // Sometimes, this line is the last line, and it has -NULNULNUL at the end
-                if (swiftData.Contains("-\0"))
+                if (swiftData.Length > 3) // Assure that currency and end balance are valid
                 {
-                    swiftData = swiftData.Substring(0, swiftData.IndexOf("-\0"));
-                }
+                    swiftData = swiftData.Substring(3);
 
-                // End balance
-                decimal endBalance = debitCreditIndicator * Convert.ToDecimal(swiftData.Replace(",",
-                        Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
-                SWIFTStatement.endBalance = endBalance;
+                    // Sometimes, this line is the last line, and it has -NULNULNUL at the end
+                    if (swiftData.Contains("-\0"))
+                    {
+                        swiftData = swiftData.Substring(0, swiftData.IndexOf("-\0"));
+                    }
+
+                    // End balance
+                    decimal endBalance = debitCreditIndicator * Convert.ToDecimal(swiftData.Replace(",",
+                            Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
+                    SWIFTStatement.endBalance = endBalance;
+                }
 
                 if (swiftTag == "62F" || swiftTag == "62M")
                 {
