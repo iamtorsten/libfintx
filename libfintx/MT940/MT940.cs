@@ -163,7 +163,7 @@ namespace libfintx
                 swiftData = swiftData.Substring(6);
 
                 // Posting date (MMDD)
-                if (Regex.IsMatch(swiftData, @"\d{4}"))
+                if (Regex.IsMatch(swiftData, @"^\d{4}"))
                 {
                     int year = SWIFTTransaction.valueDate.Year;
                     int month = Convert.ToInt32(swiftData.Substring(0, 2));
@@ -186,7 +186,7 @@ namespace libfintx
                 }
 
                 // Amount - some characters followed by an 'N'
-                if (Regex.IsMatch(swiftData, @".+N"))
+                if (Regex.IsMatch(swiftData, @"^.+N"))
                 {
                     // Debit or credit, or storno debit or credit
                     int debitCreditIndicator = 0;
