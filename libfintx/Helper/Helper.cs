@@ -790,13 +790,15 @@ namespace libfintx
 
         public static string GetProgramBaseDir()
         {
-            var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (Program.Buildname == null)
             {
                 throw new InvalidOperationException("Der Wert von Program.Buildname muss gesetzt sein.");
             }
 
-            return Path.Combine(documents, Program.Buildname);
+            var buildname = Program.Buildname.StartsWith(".") ? Program.Buildname : $".{Program.Buildname}";
+
+            return Path.Combine(userHome, buildname);
         }
 
         private static string GetBPDDir()
