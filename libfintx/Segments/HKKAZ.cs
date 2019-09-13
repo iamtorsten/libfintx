@@ -37,7 +37,7 @@ namespace libfintx
 
             string segments = string.Empty;
 
-            SEG.NUM = SEGNUM.SETInt(4);
+            SEG.NUM = SEGNUM.SETInt(3);
 
             if (String.IsNullOrEmpty(FromDate))
             {
