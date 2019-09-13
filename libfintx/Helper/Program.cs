@@ -31,5 +31,7 @@ namespace libfintx
         public static string Buildname { get; set; } = "libfintx";
 
         public static string Version { get; set; } = "0.1";
+
+        public static string ProductId { get; set; } = "libfintx";
     }
 }
