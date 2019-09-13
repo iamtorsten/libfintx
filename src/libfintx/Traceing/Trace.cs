@@ -54,8 +54,7 @@ namespace libfintx
             if (Enabled)
             {
                 // Directory
-                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var dir = Path.Combine(documents, Program.Buildname);
+                var dir = Helper.GetProgramBaseDir();
 
                 if (!Directory.Exists(dir))
                 {

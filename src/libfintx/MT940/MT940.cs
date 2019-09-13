@@ -482,8 +482,7 @@ namespace libfintx
             string documents = null;
             if (writeToFile)
             {
-                documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                dir = Path.Combine(documents, Program.Buildname);
+                dir = Helper.GetProgramBaseDir();
 
                 dir = Path.Combine(dir, "STA");
 
@@ -640,8 +639,7 @@ namespace libfintx
                             "TypeCode: " + TypeCode + " ' " +
                             "Amount: " + Amount + " ' " + "++ENDUMS++";
 
-                        documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                        dir = Path.Combine(documents, Program.Buildname);
+                        dir = Helper.GetProgramBaseDir();
                         dir = Path.Combine(dir, "MT940");
 
                         string filename_ = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".MT940"));
