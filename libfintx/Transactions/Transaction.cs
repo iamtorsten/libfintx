@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 
 using static libfintx.INI;
+using static libfintx.HKEND;
 using static libfintx.HKSAL;
 using static libfintx.HKKAZ;
 using static libfintx.HKCCS;
@@ -54,6 +55,11 @@ namespace libfintx
         public static string INI(ConnectionDetails connectionDetails, bool Anonymous)
         {
             return Init_INI(connectionDetails, Anonymous);
+        }
+
+        public static string HKEND(ConnectionDetails connectionDetails, string dialogId)
+        {
+            return Init_HKEND(connectionDetails, dialogId);
         }
 
         public static string HKSYN(ConnectionDetails connectionDetails)

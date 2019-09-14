@@ -1167,7 +1167,15 @@ namespace libfintx
             if (result.IsSCARequired)
             {
                 var tan = Helper.WaitForTAN(result, tanDialog);
-                result = TAN(conn, tan);
+                if (tan == null)
+                {
+                    var BankCode = Transaction.HKEND(conn, Segment.HNHBK);
+                    result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+                }
+                else
+                {
+                    result = TAN(conn, tan);
+                }
             }
 
             return result;
