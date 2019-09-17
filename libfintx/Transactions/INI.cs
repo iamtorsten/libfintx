@@ -82,6 +82,9 @@ namespace libfintx
                     var response = FinTSMessage.Send(connectionDetails.Url, message);
 
                     Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
+
+                    Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN:", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+
                     return response;
                 }
                 catch (Exception ex)
@@ -165,10 +168,9 @@ namespace libfintx
                     message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
                     response = FinTSMessage.Send(connectionDetails.Url, message);
 
-                    messages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
-                    result = new HBCIDialogResult(messages, response);
-                    if (!result.IsSuccess)
-                        Log.Write("Initialisation failed.");
+                    Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
+
+                    Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN:", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
                     return response;
                 }
