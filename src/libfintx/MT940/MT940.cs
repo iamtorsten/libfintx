@@ -186,7 +186,7 @@ namespace libfintx
                 }
 
                 // Amount - some characters followed by an 'N'
-                if (Regex.IsMatch(swiftData, @"^.+N"))
+                if (Regex.IsMatch(swiftData, @"^.+N.*"))
                 {
                     // Debit or credit, or storno debit or credit
                     int debitCreditIndicator = 0;
@@ -217,13 +217,34 @@ namespace libfintx
                     SWIFTStatement.endBalance += SWIFTTransaction.amount;
                     swiftData = swiftData.Substring(swiftData.IndexOf("N"));
 
-                    // Geschaeftsvorfallcode
-                    swiftData = swiftData.Length > 4 ? swiftData.Substring(4) : string.Empty;
+                    // Buchungsschlüssel
+                    if (swiftData.Length >= 4)
+                        SWIFTTransaction.transactionTypeId = swiftData.Substring(0, 4);
 
-                    // The following sub fields are ignored
                     // Optional: customer reference; ends with //
+                    swiftData = swiftData.Length > 4 ? swiftData.Substring(4) : string.Empty;
+                    if (swiftData.Length > 0)
+                    {
+                        int idxDelimiter = swiftData.IndexOf("//");
+                        if (idxDelimiter > 0)
+                            SWIFTTransaction.customerReference = swiftData.Substring(0, idxDelimiter);
+                        else
+                            SWIFTTransaction.customerReference = swiftData;
+
+                        if (idxDelimiter > 0)
+                            swiftData = swiftData.Length > idxDelimiter + 2 ? swiftData.Substring(idxDelimiter + 2) : string.Empty;
+                        else
+                            swiftData = string.Empty;
+                    }
+
                     // Optional: bank reference; ends with CR/LF
-                    // Something else about original currency and SWIFTTransaction fees
+                    if (swiftData.Length > 0)
+                    {
+                        if (swiftData.IndexOf(@"\r\n") > 0)
+                            SWIFTTransaction.bankReference = swiftData.Substring(0, swiftData.IndexOf(@"\r\n"));
+                        else
+                            SWIFTTransaction.bankReference = swiftData;
+                    }
                 }
 
                 SWIFTStatement.SWIFTTransactions.Add(SWIFTTransaction);

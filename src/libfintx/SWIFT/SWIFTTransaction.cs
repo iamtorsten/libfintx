@@ -59,6 +59,12 @@ namespace libfintx
 
         public decimal amount;
 
+        public string transactionTypeId;
+
+        public string customerReference;
+
+        public string bankReference;
+
         public string text;
 
         public string typecode;
