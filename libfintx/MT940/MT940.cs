@@ -102,14 +102,21 @@ namespace libfintx
                 // Next 3 characters: Currency
                 // Last characters: Balance with comma for decimal point
                 SWIFTStatement.currency = swiftData.Substring(7, 3);
-                decimal balance = DebitCreditIndicator * Convert.ToDecimal(swiftData.Substring(10).Replace(",",
-                        Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
-
-                // Use first start balance. If missing, use intermediate balance.
-                if (swiftTag == "60F" || SWIFTStatement.startBalance == 0 && swiftTag == "60M")
+                try
                 {
-                    SWIFTStatement.startBalance = balance;
-                    SWIFTStatement.endBalance = balance;
+                    decimal balance = DebitCreditIndicator * Convert.ToDecimal(swiftData.Substring(10).Replace(",",
+                            Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
+
+                    // Use first start balance. If missing, use intermediate balance.
+                    if (swiftTag == "60F" || SWIFTStatement.startBalance == 0 && swiftTag == "60M")
+                    {
+                        SWIFTStatement.startBalance = balance;
+                        SWIFTStatement.endBalance = balance;
+                    }
+                }
+                catch (FormatException)
+                {
+                    Log.Write($"Invalid balance: {swiftData}");
                 }
             }
             else if (swiftTag == "28C")
