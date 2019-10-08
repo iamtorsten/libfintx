@@ -26,12 +26,13 @@
 using libfintx.Data;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using static libfintx.HKCDE;
 
 #if WINDOWS
@@ -358,16 +359,16 @@ namespace libfintx
             decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous)
 #endif
         {
-            Image matrixImage = null;
-            Image flickerImage = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> flickerImage = null;
             return Transfer(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, HIRMS, pictureBox, anonymous, out matrixImage, out flickerImage);
         }
 
         public static HBCIDialogResult Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-           decimal amount, string purpose, string HIRMS, bool anonymous, out Image matrixImage)
+           decimal amount, string purpose, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
 
         {
-            Image flickerImage = null;
+            Image<Rgba32> flickerImage = null;
             return Transfer(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, HIRMS, null, anonymous, out matrixImage, out flickerImage);
         }
 
@@ -389,9 +390,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static HBCIDialogResult Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+            decimal amount, string purpose, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image img = null;
+            Image<Rgba32> img = null;
             return Transfer(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, HIRMS, null, anonymous, out img, out flickerImage, flickerWidth, flickerHeight, true);
         }
 
@@ -417,10 +418,10 @@ namespace libfintx
 
 #if WINDOWS
         public static string Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult Transfer(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
 
         {
@@ -469,11 +470,11 @@ namespace libfintx
 #if WINDOWS
         public static string Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage,
+            out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
         {
             matrixImage = null;
@@ -523,17 +524,17 @@ namespace libfintx
 #endif
 
         {
-            Image matrixImage = null;
-            Image flickerImage = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> flickerImage = null;
             return Transfer_Terminated(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, executionDay, HIRMS, pictureBox, anonymous, out matrixImage, out flickerImage);
         }
 
         public static HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, DateTime executionDay, string HIRMS, bool anonymous, out Image matrixImage)
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
 
         {
-            Image flickerImage = null;
+            Image<Rgba32> flickerImage = null;
             return Transfer_Terminated(connectionDetails, receiverName, receiverIBAN, receiverBIC,
                 amount, purpose, executionDay, HIRMS, null, anonymous, out matrixImage, out flickerImage);
         }
@@ -557,9 +558,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, DateTime executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+            decimal amount, string purpose, DateTime executionDay, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return Transfer_Terminated(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, executionDay, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
@@ -585,11 +586,11 @@ namespace libfintx
 #if WINDOWS
         public static string CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage,
+            out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
         {
             matrixImage = null;
@@ -639,15 +640,15 @@ namespace libfintx
 #endif
 
         {
-            Image matrixImage = null;
-            Image flickerImage = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> flickerImage = null;
             return CollectiveTransfer(connectionDetails, painData, numberOfTransactions, totalAmount, HIRMS, pictureBox, anonymous, out matrixImage, out flickerImage);
         }
 
         public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image matrixImage)
+            string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
         {
-            Image flickerImage = null;
+            Image<Rgba32> flickerImage = null;
             return CollectiveTransfer(connectionDetails, painData, numberOfTransactions, totalAmount, HIRMS, null, anonymous, out matrixImage, out flickerImage);
         }
 
@@ -670,10 +671,10 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth,
+            string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth,
             int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return CollectiveTransfer(connectionDetails, painData, numberOfTransactions, totalAmount, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
 
@@ -699,11 +700,11 @@ namespace libfintx
 #if WINDOWS
         public static string CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, PictureBox pictureBox, bool anonymous,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage,
+            out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
         {
             matrixImage = null;
@@ -753,16 +754,16 @@ namespace libfintx
 #endif
 
         {
-            Image matrixImage = null;
-            Image flickerImage = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> flickerImage = null;
             return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay,
                 HIRMS, pictureBox, anonymous, out matrixImage, out flickerImage);
         }
 
         public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous, out Image matrixImage)
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
         {
-            Image img = null;
+            Image<Rgba32> img = null;
             return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay,
                 HIRMS, null, anonymous, out matrixImage, out img);
         }
@@ -786,10 +787,10 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, List<pain00100203_ct_data> painData,
-            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth,
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth,
             int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return CollectiveTransfer_Terminated(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay, HIRMS, null, anonymous, out matrixImage,
                 out flickerImage, flickerWidth, flickerHeight, true);
         }
@@ -816,11 +817,11 @@ namespace libfintx
 
 #if WINDOWS
         public static string Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage,
+            decimal amount, string purpose, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage,
             int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage, out Image flickerImage,
+            decimal amount, string purpose, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage, out Image<Rgba32> flickerImage,
             int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
 #endif
         {
@@ -861,9 +862,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static HBCIDialogResult Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+            decimal amount, string purpose, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return Rebooking(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
@@ -893,15 +894,15 @@ namespace libfintx
 #endif
 
         {
-            Image matrixImage = null;
-            Image flickerImage = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> flickerImage = null;
             return Rebooking(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, HIRMS, pictureBox, anonymous, out matrixImage, out flickerImage);
         }
 
         public static HBCIDialogResult Rebooking(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, bool anonymous, out Image matrixImage)
+            decimal amount, string purpose, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
         {
-            Image flickerImage = null;
+            Image<Rgba32> flickerImage = null;
             return Rebooking(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, HIRMS, null, anonymous, out matrixImage, out flickerImage);
         }
 
@@ -932,12 +933,12 @@ namespace libfintx
 #if WINDOWS
         public static string Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
-            string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
-            string HIRMS, object pictureBox, bool anonymous, out Image matrixImage, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #endif
         {
@@ -984,9 +985,9 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
-            string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+            string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return Collect(connectionDetails, payerName, payerIBAN, payerBIC,
             amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
@@ -1022,17 +1023,17 @@ namespace libfintx
 #endif
 
         {
-            Image matrixImage = null;
-            Image flickerImage = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> flickerImage = null;
             return Collect(connectionDetails, payerName, payerIBAN, payerBIC,
             amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber, HIRMS, null, anonymous, out matrixImage, out flickerImage);
         }
 
         public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, string payerName, string payerIBAN, string payerBIC,
            decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
-           string HIRMS, bool anonymous, Image matrixImage)
+           string HIRMS, bool anonymous, Image<Rgba32> matrixImage)
         {
-            Image img = null;
+            Image<Rgba32> img = null;
             return Collect(connectionDetails, payerName, payerIBAN, payerBIC,
             amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber, HIRMS, null, anonymous, out matrixImage, out img);
         }
@@ -1058,11 +1059,11 @@ namespace libfintx
 
 #if WINDOWS
         public static string CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
-            string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            string numberOfTransactions, decimal totalAmount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
-           string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+           string numberOfTransactions, decimal totalAmount, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
            bool renderFlickerCodeAsGif = false)
 #endif
         {
@@ -1103,9 +1104,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static HBCIDialogResult CollectiveCollect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
-           string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+           string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return CollectiveCollect(connectionDetails, settlementDate, painData, numberOfTransactions,
             totalAmount, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
@@ -1134,15 +1135,15 @@ namespace libfintx
 #endif
 
         {
-            Image matrixImage = null;
-            Image img = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> img = null;
             return CollectiveCollect(connectionDetails, settlementDate, painData, numberOfTransactions, totalAmount, HIRMS, null, anonymous, out matrixImage, out img);
         }
 
         public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, DateTime settlementDate, List<pain00800202_cc_data> painData,
-           string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image matrixImage)
+           string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
         {
-            Image img = null;
+            Image<Rgba32> img = null;
             return CollectiveCollect(connectionDetails, settlementDate, painData, numberOfTransactions, totalAmount, HIRMS, null, anonymous, out matrixImage, out img);
         }
 
@@ -1166,11 +1167,11 @@ namespace libfintx
 
 #if WINDOWS
         public static string Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
-            int amount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            int amount, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
-            int amount, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            int amount, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #endif
         {
@@ -1216,15 +1217,15 @@ namespace libfintx
 #endif
 
         {
-            Image matrixImage = null;
-            Image img = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> img = null;
             return Prepaid(connectionDetails, mobileServiceProvider, phoneNumber, amount, HIRMS, pictureBox, anonymous, out matrixImage, out img);
         }
 
         public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
-            int amount, string HIRMS, bool anonymous, out Image matrixImage)
+            int amount, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
         {
-            Image img = null;
+            Image<Rgba32> img = null;
             return Prepaid(connectionDetails, mobileServiceProvider, phoneNumber, amount, HIRMS, null, anonymous, out matrixImage, out img);
         }
 
@@ -1245,9 +1246,9 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
         public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, int mobileServiceProvider, string phoneNumber,
-            int amount, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+            int amount, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return Prepaid(connectionDetails, mobileServiceProvider, phoneNumber,
             amount, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
@@ -1279,12 +1280,12 @@ namespace libfintx
 #if WINDOWS
         public static string SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
             string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-            int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
-           int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
            bool renderFlickerCodeAsGif = false)
 #endif
         {
@@ -1337,17 +1338,17 @@ namespace libfintx
            int executionDay, string HIRMS, object pictureBox, bool anonymous)
 #endif
         {
-            Image matrixImage = null;
-            Image img = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> img = null;
             return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out matrixImage, out img);
         }
 
         public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-           int executionDay, string HIRMS, bool anonymous, out Image matrixImage)
+           int executionDay, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
         {
-            Image img = null;
+            Image<Rgba32> img = null;
             return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, null, anonymous, out matrixImage, out img);
         }
@@ -1376,9 +1377,9 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-           int executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+           int executionDay, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return SubmitBankersOrder(connectionDetails, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
@@ -1386,12 +1387,12 @@ namespace libfintx
 #if WINDOWS
         public static string ModifyBankersOrder(ConnectionDetails connectionDetails, string receiverName, string receiverIBAN,
             string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-            int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+            int executionDay, string HIRMS, PictureBox pictureBox, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
             bool renderFlickerCodeAsGif = false)
 #else
         public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, string OrderId, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
-           int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image matrixImage, out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120,
+           int executionDay, string HIRMS, object pictureBox, bool anonymous, out Image<Rgba32> matrixImage, out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120,
            bool renderFlickerCodeAsGif = false)
 #endif
         {
@@ -1445,16 +1446,16 @@ namespace libfintx
 #endif
 
         {
-            Image matrixImage = null;
-            Image img = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> img = null;
             return ModifyBankersOrder(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out matrixImage, out img);
         }
 
         public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
           string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-          int executionDay, string HIRMS, bool anonymous, out Image matrixImage)
+          int executionDay, string HIRMS, bool anonymous, out Image<Rgba32> matrixImage)
         {
-            Image img = null;
+            Image<Rgba32> img = null;
             return ModifyBankersOrder(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, null, anonymous, out matrixImage, out img);
         }
 
@@ -1482,17 +1483,17 @@ namespace libfintx
         /// </returns>
         public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota,
-           int executionDay, string HIRMS, bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+           int executionDay, string HIRMS, bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return ModifyBankersOrder(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC,
             amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
 
         public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, string orderId, string receiverName, string receiverIBAN,
             string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
-            object pictureBox, bool anonymous, out Image matrixImage,
-            out Image flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
+            object pictureBox, bool anonymous, out Image<Rgba32> matrixImage,
+            out Image<Rgba32> flickerImage, int flickerWidth = 320, int flickerHeight = 120, bool renderFlickerCodeAsGif = false)
         {
             matrixImage = null;
             flickerImage = null;
@@ -1517,24 +1518,24 @@ namespace libfintx
             string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
             object pictureBox, bool anonymous)
         {
-            Image matrixImage = null;
-            Image img = null;
+            Image<Rgba32> matrixImage = null;
+            Image<Rgba32> img = null;
             return DeleteBankersOrder(conn, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, pictureBox, anonymous, out matrixImage, out img);
         }
 
         public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string orderId, string receiverName, string receiverIBAN,
             string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
-            bool anonymous, out Image matrixImage)
+            bool anonymous, out Image<Rgba32> matrixImage)
         {
-            Image img = null;
+            Image<Rgba32> img = null;
             return DeleteBankersOrder(conn, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, null, anonymous, out matrixImage, out img);
         }
 
         public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails conn, string orderId, string receiverName, string receiverIBAN,
             string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
-            bool anonymous, out Image flickerImage, int flickerWidth, int flickerHeight)
+            bool anonymous, out Image<Rgba32> flickerImage, int flickerWidth, int flickerHeight)
         {
-            Image matrixImage = null;
+            Image<Rgba32> matrixImage = null;
             return DeleteBankersOrder(conn, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, HIRMS, null, anonymous, out matrixImage, out flickerImage, flickerWidth, flickerHeight, true);
         }
 

@@ -24,19 +24,16 @@
 // #define WINDOWS
 
 using System;
-using System.Drawing;
 using System.IO;
 using System.Text;
-
-#if WINDOWS
-using System.Windows.Forms;
-#endif
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace libfintx
 {
     public class MatrixCode
     {
-        public Image CodeImage { get; set; }
+        public Image<Rgba32> CodeImage { get; set; }
         public string ImageMimeType { get; set; }
 
         /// <summary>
@@ -68,7 +65,7 @@ namespace libfintx
                 b = new byte[len];
                 Array.Copy(data, offset, b, 0, len);
                 MemoryStream ms = new MemoryStream(b);
-                CodeImage = Image.FromStream(ms);                
+                CodeImage = Image.Load(ms);                
             }
             catch (Exception ex)
             {
@@ -98,12 +95,6 @@ namespace libfintx
         {
             if (pictureBox == null)
                 return;
-#if WINDOWS
-            if (pictureBox is PictureBox pBox)
-            {
-                pBox.Image = CodeImage;
-            }
-#endif
         }
     }
 }

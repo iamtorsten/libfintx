@@ -25,12 +25,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 #if WINDOWS
 using System.Windows.Forms;
@@ -812,10 +813,10 @@ namespace libfintx
         /// <param name="renderFlickerCodeAsGif"></param>
 
 #if WINDOWS
-        public static void Parse_BankCode(string BankCode, PictureBox pictureBox, out Image flickerImage, int flickerWidth,
+        public static void Parse_BankCode(string BankCode, PictureBox pictureBox, out Image<Rgba32> flickerImage, int flickerWidth,
             int flickerHeight, bool renderFlickerCodeAsGif)
 #else
-        public static List<HBCIBankMessage> Parse_BankCode(string BankCode, object pictureBox, out Image matrixImage, out Image flickerImage, int flickerWidth,
+        public static List<HBCIBankMessage> Parse_BankCode(string BankCode, object pictureBox, out Image<Rgba32> matrixImage, out Image<Rgba32> flickerImage, int flickerWidth,
             int flickerHeight, bool renderFlickerCodeAsGif)
 #endif
 

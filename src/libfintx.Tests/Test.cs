@@ -36,6 +36,10 @@ using hbci = libfintx;
 using System.Windows.Forms;
 #endif
 
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+
 namespace libfintx
 {
     public class Test
@@ -201,7 +205,7 @@ namespace libfintx
 
             var mCode = new MatrixCode(PhotoCode);
 
-            mCode.CodeImage.Save(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "matrixcode.png"));
+            mCode.CodeImage.SaveAsPng(File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "matrixcode.png")));
         }
 
         public static void Test_PushTAN()
