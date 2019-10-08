@@ -20,13 +20,7 @@ There are many reasons why you need to use a banking library which can exchange 
 
 # Target platforms
 
-* .NET Framework 4.5 and higher
-* MONO (Windows, MacOS, Linux)
-* Windows Phone 8
-* WinRT
-* Xamarin.Android
-* Xamarin.iOS
-* ASP.NET (Web)
+* .NET Standard 2.0
 
 # Sample
 

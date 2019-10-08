@@ -1,2 +1,2 @@
 language: csharp
-solution: libfintx.sln
+solution: src/libfintx.sln
