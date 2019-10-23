@@ -32,6 +32,6 @@ namespace libfintx
 
         public static string Version { get; set; } = "0.1";
 
-        public static string ProductId { get; set; } = "libfintx";
+        public static string ProductId { get; set; } = "9FA6681DEC0CF3046BFC2F8A6";
     }
 }
