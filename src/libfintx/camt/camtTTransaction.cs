@@ -61,5 +61,18 @@ namespace libfintx
 
         /// todoComment
         public string partnerName;
+
+        public string endToEndId;
+
+        public string mndtId;
+        
+        /// <summary>
+        /// Unique Identifier
+        /// </summary>
+        public string id;
+
+        public string pmtInfId;
+
+        public string msgId;
     }
 }

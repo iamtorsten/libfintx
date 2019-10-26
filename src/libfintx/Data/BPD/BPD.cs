@@ -36,6 +36,8 @@ namespace libfintx
 
         public static List<HITANS> HITANS { get; set; }
 
+        public static HICAZS HICAZS { get; set; }
+
         public static void Reset()
         {
             ReflectionUtil.ResetStaticFields(typeof(BPD));
@@ -57,6 +59,9 @@ namespace libfintx
                 var item = libfintx.HITANS.Parse_HITANS(hitans);
                 HITANS.Add(item);
             }
+
+            var hicazs = lines.FirstOrDefault(l => l.StartsWith("HICAZS"));
+            HICAZS = HICAZS.Parse_HICAZS(hicazs);
         }
     }
 }

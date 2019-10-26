@@ -507,7 +507,6 @@ namespace libfintx
                 return SWIFTStatements;
 
             string dir = null;
-            string documents = null;
             if (writeToFile)
             {
                 dir = Helper.GetProgramBaseDir();

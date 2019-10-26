@@ -23,12 +23,15 @@
 
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Threading;
 using System.Text;
+using System.Xml.Serialization;
+using libfintx.camt_052_001_02;
 
 namespace libfintx
 {
@@ -41,21 +44,6 @@ namespace libfintx
         /// the parsed bank statements
         /// </summary>
         public List<TStatement> statements;
-        private TStatement currentStatement = null;
-
-        private static string WithoutLeadingZeros(string ACode)
-        {
-            // cut off leading zeros
-            try
-            {
-                return Convert.ToInt64(ACode).ToString();
-            }
-            catch (Exception)
-            {
-                // IBAN or BIC
-                return ACode;
-            }
-        }
 
         /// <summary>
         /// processing CAMT file
@@ -63,89 +51,87 @@ namespace libfintx
         /// <param name="filename"></param>
         public void ProcessFile(string filename)
         {
-            Console.WriteLine("Read file " + filename);
-            statements = new List<TStatement>();
+            if (File.ReadAllText(filename).Contains("5.79"))
+            {
+                int x = 5;
+            }
 
-            CultureInfo backupCulture = Thread.CurrentThread.CurrentCulture;
+            Log.Write("Read file " + filename);
+            statements = new List<TStatement>();
             try
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filename);
-                string namespaceName = "urn:iso:std:iso:20022:tech:xsd:camt.052.001.02";
-                XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
-                nsmgr.AddNamespace("camt", namespaceName);
+                XmlSerializer serializer = new XmlSerializer(typeof(Document));
+                FileStream stream = new FileStream(filename, FileMode.Open);
+                Document document = (Document)serializer.Deserialize(stream);
 
-                XmlNode nodeDocument = doc.DocumentElement;
+                var stmts = document.BkToCstmrAcctRpt.Rpt;
 
-                if ((nodeDocument == null) || (nodeDocument.Attributes["xmlns"].Value != namespaceName))
-                {
-                    throw new Exception("expecting xmlns = '" + namespaceName + "'");
-                }
-
-                XmlNodeList stmts = nodeDocument.SelectNodes("camt:BkToCstmrAcctRpt/camt:Rpt", nsmgr);
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
-                foreach (XmlNode nodeStatement in stmts)
+                foreach (AccountReport11 accReport in stmts)
                 {
                     TStatement stmt = new TStatement();
-                    currentStatement = stmt;
 
-                    stmt.id = nodeStatement.SelectSingleNode("camt:ElctrncSeqNb", nsmgr).InnerText;
-                    stmt.accountCode = nodeStatement.SelectSingleNode("camt:Acct/camt:Id/camt:IBAN", nsmgr).InnerText;
-                    stmt.bankCode = nodeStatement.SelectSingleNode("camt:Acct/camt:Svcr/camt:FinInstnId/camt:BIC", nsmgr).InnerText;
-                    stmt.currency = nodeStatement.SelectSingleNode("camt:Acct/camt:Ccy", nsmgr).InnerText;
+                    stmt.id = accReport.ElctrncSeqNb.ToString();
+                    stmt.accountCode = accReport.Acct?.Id?.Item?.ToString();
+                    stmt.bankCode = accReport.Acct?.Svcr?.FinInstnId?.BIC;
+                    stmt.currency = accReport.Acct?.Ccy;
+
+                    //int DiffElctrncSeqNb = Convert.ToInt32(stmt.bankCode) / Convert.ToInt32(stmt.accountCode);
+                    //stmt.id = (accReport.ElctrncSeqNb + DiffElctrncSeqNb).ToString();
 
                     stmt.severalYears = false;
-                    XmlNode nm = nodeStatement.SelectSingleNode("camt:Acct/camt:Ownr/camt:Nm", nsmgr);
-                    string ownName = nm != null ? nm.InnerText :
-                        "AccountNameFor" + stmt.bankCode + "/" + stmt.accountCode;
-                    XmlNodeList nodeBalances = nodeStatement.SelectNodes("camt:Bal", nsmgr);
+                    string nm = accReport.Acct?.Ownr?.Nm;
+                    string ownName = nm ?? "AccountNameFor" + stmt.bankCode + "/" + stmt.accountCode;
 
-                    foreach (XmlNode nodeBalance in nodeBalances)
+                    CashBalance3[] balances = accReport.Bal;
+                    if (balances != null)
                     {
-                        // PRCD: PreviouslyClosedBooked
-                        if (nodeBalance.SelectSingleNode("camt:Tp/camt:CdOrPrtry/camt:Cd", nsmgr).InnerText == "PRCD")
+                        foreach (CashBalance3 balance in balances)
                         {
-                            stmt.startBalance = Decimal.Parse(nodeBalance.SelectSingleNode("camt:Amt", nsmgr).InnerText);
-
-                            // CreditDebitIndicator: CRDT or DBIT for credit or debit
-                            if (nodeBalance.SelectSingleNode("camt:CdtDbtInd", nsmgr).InnerText == "DBIT")
+                            // PRCD: PreviouslyClosedBooked
+                            if (balance.Tp?.CdOrPrtry?.Item?.ToString() == "PRCD")
                             {
-                                stmt.startBalance *= -1.0m;
+                                stmt.startBalance = balance.Amt.Value;
+
+                                // CreditDebitIndicator: CRDT or DBIT for credit or debit
+                                if (balance.CdtDbtInd == CreditDebitCode.DBIT)
+                                {
+                                    stmt.startBalance *= -1.0m;
+                                }
+
+                                stmt.date = balance.Dt.Item;
+                            }
+                            // CLBD: ClosingBooked
+                            else if (balance.Tp?.CdOrPrtry?.Item?.ToString() == "CLBD")
+                            {
+                                stmt.endBalance = balance.Amt.Value;
+
+                                // CreditDebitIndicator: CRDT or DBIT for credit or debit
+                                if (balance.CdtDbtInd == CreditDebitCode.DBIT)
+                                {
+                                    stmt.endBalance *= -1.0m;
+                                }
+
+                                stmt.date = balance.Dt.Item;
                             }
 
-                            stmt.date = DateTime.Parse(nodeBalance.SelectSingleNode("camt:Dt", nsmgr).InnerText);
-                        }
-                        // CLBD: ClosingBooked
-                        else if (nodeBalance.SelectSingleNode("camt:Tp/camt:CdOrPrtry/camt:Cd", nsmgr).InnerText == "CLBD")
-                        {
-                            stmt.endBalance = Decimal.Parse(nodeBalance.SelectSingleNode("camt:Amt", nsmgr).InnerText);
-
-                            // CreditDebitIndicator: CRDT or DBIT for credit or debit
-                            if (nodeBalance.SelectSingleNode("camt:CdtDbtInd", nsmgr).InnerText == "DBIT")
-                            {
-                                stmt.endBalance *= -1.0m;
-                            }
-
-                            stmt.date = DateTime.Parse(nodeBalance.SelectSingleNode("camt:Dt", nsmgr).InnerText);
+                            // ITBD: InterimBooked
+                            // CLAV: ClosingAvailable
+                            // FWAV: ForwardAvailable
                         }
 
-                        // ITBD: InterimBooked
-                        // CLAV: ClosingAvailable
-                        // FWAV: ForwardAvailable
                     }
 
-                    string strDiffBalance = "DiffBalanceFor" + stmt.bankCode + "/" + stmt.accountCode;
-                    Decimal DiffBalance = 0.0m;
-                    if (Decimal.TryParse(strDiffBalance, out DiffBalance))
-                    {
-                        stmt.startBalance += DiffBalance;
-                        stmt.endBalance += DiffBalance;
-                    }
-                    else
-                    {
-                        Log.Write("problem parsing decimal from configuration setting DiffBalanceFor" + stmt.bankCode + "/" + stmt.accountCode);
-                    }
+                    //string strDiffBalance = "DiffBalanceFor" + stmt.bankCode + "/" + stmt.accountCode;
+                    //Decimal DiffBalance = 0.0m;
+                    //if (Decimal.TryParse(strDiffBalance, out DiffBalance))
+                    //{
+                    //    stmt.startBalance += DiffBalance;
+                    //    stmt.endBalance += DiffBalance;
+                    //}
+                    //else
+                    //{
+                    //    Log.Write("problem parsing decimal from configuration setting DiffBalanceFor" + stmt.bankCode + "/" + stmt.accountCode);
+                    //}
 
                     string filenameWithoutExtension = Path.GetFileNameWithoutExtension(filename);
 
@@ -158,101 +144,98 @@ namespace libfintx
                         stmt.date = new DateTime(stmt.date.Year - 1, 12, 31);
                     }
 
-                    XmlNodeList nodeEntries = nodeStatement.SelectNodes("camt:Ntry", nsmgr);
-
-                    foreach (XmlNode nodeEntry in nodeEntries)
+                    ReportEntry2[] entries = accReport.Ntry;
+                    if (entries != null)
                     {
-                        TTransaction tr = new TTransaction();
-                        tr.inputDate = DateTime.Parse(nodeEntry.SelectSingleNode("camt:BookgDt/camt:Dt", nsmgr).InnerText);
-                        tr.valueDate = DateTime.Parse(nodeEntry.SelectSingleNode("camt:ValDt/camt:Dt", nsmgr).InnerText);
-
-                        if (tr.valueDate.Year != stmt.date.Year)
+                        foreach (ReportEntry2 entry in entries)
                         {
-                            // ignore transactions that are in a different year than the statement
-                            stmt.severalYears = true;
-                            continue;
-                        }
+                            TTransaction tr = new TTransaction();
+                            tr.inputDate = entry.BookgDt.Item;
+                            tr.valueDate = entry.ValDt.Item;
 
-                        tr.amount = Decimal.Parse(nodeEntry.SelectSingleNode("camt:Amt", nsmgr).InnerText, NumberStyles.Currency);
-
-                        if (nodeEntry.SelectSingleNode("camt:Amt", nsmgr).Attributes["Ccy"].Value != stmt.currency)
-                        {
-                            throw new Exception("transaction currency " + nodeEntry.SelectSingleNode("camt:Amt",
-                                    nsmgr).Attributes["Ccy"].Value + " does not match the bank statement currency");
-                        }
-
-                        if (nodeEntry.SelectSingleNode("camt:CdtDbtInd", nsmgr).InnerText == "DBIT")
-                        {
-                            tr.amount *= -1.0m;
-                        }
-
-                        XmlNode desc = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:RmtInf/camt:Ustrd", nsmgr);
-                        tr.description = desc != null ? desc.InnerText : String.Empty;
-                        XmlNode partnerName = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:RltdPties/camt:Cdtr/camt:Nm", nsmgr);
-
-                        if (partnerName != null)
-                        {
-                            tr.partnerName = partnerName.InnerText;
-                        }
-
-                        XmlNode accountCode = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:RltdPties/camt:DbtrAcct/camt:Id/camt:IBAN",
-                            nsmgr);
-
-                        if (accountCode != null)
-                        {
-                            tr.accountCode = accountCode.InnerText;
-                        }
-
-                        XmlNode CrdtName = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:RltdPties/camt:Cdtr/camt:Nm", nsmgr);
-                        XmlNode DbtrName = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:RltdPties/camt:Dbtr/camt:Nm", nsmgr);
-
-                        if ((CrdtName != null) && (CrdtName.InnerText != ownName))
-                        {
-                            if ((DbtrName != null) && (DbtrName.InnerText == ownName))
+                            if (tr.valueDate.Year != stmt.date.Year)
                             {
-                                // we are the debitor
+                                stmt.severalYears = true;
                             }
-                            else if (ownName != String.Empty)
+
+                            tr.amount = entry.Amt.Value;
+
+                            if (entry.Amt.Ccy != stmt.currency)
                             {
-                                // sometimes donors write the project or recipient in the field where the organisation is supposed to be
-                                Log.Write("CrdtName is not like expected: " + tr.description + " --- " + CrdtName.InnerText);
-                                tr.description += " " + CrdtName.InnerText;
+                                throw new Exception("transaction currency " + entry.Amt.Ccy + " does not match the bank statement currency");
                             }
+
+                            bool debit = entry.CdtDbtInd == CreditDebitCode.DBIT;
+                            if (debit)
+                            {
+                                tr.amount *= -1.0m;
+                            }
+
+                            EntryDetails1 entryDetails = entry.NtryDtls?.FirstOrDefault();
+                            EntryTransaction2 txDetails = entryDetails?.TxDtls?.FirstOrDefault();
+
+                            if (txDetails?.RmtInf?.Ustrd != null)
+                            {
+                                tr.description = string.Join(string.Empty, txDetails.RmtInf.Ustrd);
+                            }
+
+                            tr.text = entry.AddtlNtryInf;
+
+                            tr.bankCode = debit ?
+                                txDetails?.RltdAgts?.CdtrAgt?.FinInstnId?.BIC :
+                                txDetails?.RltdAgts?.DbtrAgt?.FinInstnId?.BIC;
+
+                            tr.partnerName = debit ?
+                                txDetails?.RltdPties?.Cdtr?.Nm :
+                                txDetails?.RltdPties?.Dbtr?.Nm;
+
+                            tr.accountCode = debit ?
+                                txDetails?.RltdPties?.CdtrAcct?.Id?.Item?.ToString() :
+                                txDetails?.RltdPties?.DbtrAcct?.Id?.Item?.ToString();
+
+                            string CrdtName = txDetails?.RltdPties?.Cdtr?.Nm;
+                            string DbtrName = txDetails?.RltdPties?.Dbtr?.Nm;
+
+                            if ((CrdtName != null) && (CrdtName != ownName))
+                            {
+                                if ((DbtrName != null) && (DbtrName == ownName))
+                                {
+                                    // we are the debitor
+                                }
+                                else if (ownName != string.Empty)
+                                {
+                                    // sometimes donors write the project or recipient in the field where the organisation is supposed to be
+                                    Log.Write("CrdtName is not like expected: " + tr.description + " --- " + CrdtName);
+                                }
+                            }
+
+                            tr.endToEndId = txDetails?.Refs?.EndToEndId;
+
+                            tr.msgId = txDetails?.Refs?.MsgId;
+                            tr.pmtInfId = txDetails?.Refs?.PmtInfId;
+                            tr.pmtInfId = txDetails?.Refs?.MndtId;
+                            tr.id = txDetails?.Refs?.Prtry?.Ref;
+
+                            if (txDetails?.BkTxCd.Prtry.Cd != null)
+                            {
+                                // eg NSTO+152+00900. look for SEPA Geschäftsvorfallcodes
+                                // see the codes: https://www.wgzbank.de/export/sites/wgzbank/de/wgzbank/downloads/produkte_leistungen/firmenkunden/zv_aktuelles/Uebersicht-GVC-und-Buchungstexte-WGZ-BANK_V062015.pdf
+                                string[] GVCCode = txDetails?.BkTxCd.Prtry.Cd?.Split(new char[] { '+' });
+                                if (GVCCode.Length > 0)
+                                    tr.typecode = GVCCode[1];
+                            }
+
+                            // for SEPA direct debit batches, there are multiple TxDtls records
+                            if (entryDetails.TxDtls?.Count() > 1)
+                            {
+                                tr.partnerName = string.Empty;
+                                tr.description = string.Format("SEPA Sammel-Basislastschrift mit {0} Lastschriften", entryDetails.TxDtls?.Count());
+                            }
+
+                            stmt.transactions.Add(tr);
+
+                            Log.Write("count : " + stmt.transactions.Count.ToString());
                         }
-
-                        XmlNode EndToEndId = nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:Refs/camt:EndToEndId", nsmgr);
-
-                        if ((EndToEndId != null)
-                            && (EndToEndId.InnerText != "NOTPROVIDED")
-                            && !EndToEndId.InnerText.StartsWith("LS-")
-                            && !EndToEndId.InnerText.StartsWith("ZV")
-                            && !EndToEndId.InnerText.StartsWith("IZV-DISPO"))
-                        {
-                            // sometimes donors write the project or recipient in unexpected field
-                            Log.Write("EndToEndId: " + tr.description + " --- " + EndToEndId.InnerText);
-                            tr.description += " " + EndToEndId.InnerText;
-                        }
-
-                        // eg NSTO+152+00900. look for SEPA Geschäftsvorfallcodes
-                        // see the codes: https://www.wgzbank.de/export/sites/wgzbank/de/wgzbank/downloads/produkte_leistungen/firmenkunden/zv_aktuelles/Uebersicht-GVC-und-Buchungstexte-WGZ-BANK_V062015.pdf
-                        string[] GVCCode =
-                            nodeEntry.SelectSingleNode("camt:NtryDtls/camt:TxDtls/camt:BkTxCd/camt:Prtry/camt:Cd", nsmgr).InnerText.Split(
-                                new char[] { '+' });
-                        tr.typecode = GVCCode[1];
-
-                        // for SEPA direct debit batches, there are multiple TxDtls records
-                        XmlNodeList transactionDetails = nodeEntry.SelectNodes("camt:NtryDtls/camt:TxDtls", nsmgr);
-
-                        if (transactionDetails.Count > 1)
-                        {
-                            tr.partnerName = String.Empty;
-                            tr.description = String.Format("SEPA Sammel-Basislastschrift mit {0} Lastschriften",
-                                transactionDetails.Count);
-                        }
-
-                        stmt.transactions.Add(tr);
-
-                        Log.Write("count : " + stmt.transactions.Count.ToString());
                     }
 
                     statements.Add(stmt);
@@ -260,12 +243,7 @@ namespace libfintx
             }
             catch (Exception e)
             {
-                throw new Exception(
-                    "problem with file " + filename + "; " + e.Message + Environment.NewLine + e.StackTrace);
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = backupCulture;
+                throw new Exception("problem with file " + filename + "; " + e.Message + Environment.NewLine + e.StackTrace, e);
             }
         }
     }

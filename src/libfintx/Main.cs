@@ -307,65 +307,54 @@ namespace libfintx
 
             BankCode_ = BankCode;
 
-            string Startpoint = string.Empty;
-
             while (BankCode_.Contains("+3040::"))
             {
-                switch (camtVers)
+                string Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+                BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
+                result = new HBCIDialogResult<List<TStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
+                if (!result.IsSuccess)
+                    return result.TypedResult<List<TStatement>>();
+
+                BankCode_ = result.RawData;
+
+                // Es kann sein, dass in der payload mehrere Dokumente enthalten sind
+                xmlStartIdx = BankCode_.IndexOf("<?xml version=");
+                xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
+
+                while (xmlStartIdx >= 0)
                 {
-                    case camtVersion.camt052:
-                        Helper.Parse_Message(BankCode_);
-
-                        Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
-
-                        BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
-                        result = new HBCIDialogResult<List<TStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
-                        if (!result.IsSuccess)
-                            return result.TypedResult<List<TStatement>>();
-
-                        result = ProcessSCA(connectionDetails, result, tanDialog);
-                        if (!result.IsSuccess)
-                            return result.TypedResult<List<TStatement>>();
-
-                        BankCode_ = result.RawData;
-                        var camt052_ = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
-
-                        // Save camt052 statement to file
-                        var camt052f_ = camt052File.Save(connectionDetails.Account, camt052_);
-
-                        // Process the camt052 file
-                        CAMT052Parser.ProcessFile(camt052f_);
-
-                        // Add all items
-                        statements.AddRange(CAMT052Parser.statements);
+                    if (xmlStartIdx > xmlEndIdx)
                         break;
-                    case camtVersion.camt053:
-                        Helper.Parse_Message(BankCode_);
 
-                        Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+                    camt = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
 
-                        BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
-                        result = new HBCIDialogResult<List<TStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
-                        if (!result.IsSuccess)
-                            return result.TypedResult<List<TStatement>>();
+                    switch (camtVers)
+                    {
+                        case camtVersion.camt052:
+                            // Save camt052 statement to file
+                            var camt052f_ = camt052File.Save(connectionDetails.Account, camt);
 
-                        result = ProcessSCA(connectionDetails, result, tanDialog);
-                        if (!result.IsSuccess)
-                            return result.TypedResult<List<TStatement>>();
+                            // Process the camt052 file
+                            CAMT052Parser.ProcessFile(camt052f_);
 
-                        BankCode_ = result.RawData;
+                            // Add all items
+                            statements.AddRange(CAMT052Parser.statements);
+                            break;
+                        case camtVersion.camt053:
+                            // Save camt053 statement to file
+                            var camt053f_ = camt053File.Save(connectionDetails.Account, camt);
 
-                        var camt053_ = "<?xml version=" + Helper.Parse_String(BankCode_, "<?xml version=", "</Document>") + "</Document>";
+                            // Process the camt053 file
+                            CAMT053Parser.ProcessFile(camt053f_);
 
-                        // Save camt053 statement to file
-                        var camt053f_ = camt053File.Save(connectionDetails.Account, camt053_);
+                            // Add all items to existing statement
+                            statements.AddRange(CAMT053Parser.statements);
+                            break;
+                    }
 
-                        // Process the camt053 file
-                        CAMT053Parser.ProcessFile(camt053f_);
-
-                        // Add all items to existing statement
-                        statements.AddRange(CAMT053Parser.statements);
-                        break;
+                    BankCode_ = BankCode_.Substring(xmlEndIdx);
+                    xmlStartIdx = BankCode_.IndexOf("<?xml version");
+                    xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
                 }
             }
 

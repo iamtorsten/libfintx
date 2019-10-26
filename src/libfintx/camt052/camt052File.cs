@@ -36,9 +36,8 @@ namespace libfintx
         /// </summary>
         public static string Save(string Account, string UMS)
         {
-            string documents = "", dir = "";
+            string dir = Helper.GetProgramBaseDir();
 
-            dir = Path.Combine(documents, Program.Buildname);
             dir = Path.Combine(dir, "camt052");
 
             if (!Directory.Exists(dir))
