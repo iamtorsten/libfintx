@@ -35,6 +35,11 @@ namespace libfintx
     /// todoComment
     public class TTransaction
     {
+        /// <summary>
+        /// Pending (Vorgemerkt)
+        /// </summary>
+        public bool pending;
+
         /// todoComment
         public DateTime valueDate;
 

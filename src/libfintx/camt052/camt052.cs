@@ -175,8 +175,13 @@ namespace libfintx
                     foreach (ReportEntry2 entry in entries)
                     {
                         TTransaction tr = new TTransaction();
-                        tr.inputDate = entry.BookgDt.Item;
-                        tr.valueDate = entry.ValDt.Item;
+                        
+                        tr.pending = entry.Sts == EntryStatus2Code.PDNG;
+
+                        if (entry.BookgDt != null)
+                            tr.inputDate = entry.BookgDt.Item;
+                        if (entry.ValDt != null)
+                            tr.valueDate = entry.ValDt.Item;
 
                         if (tr.valueDate.Year != stmt.date.Year)
                         {
