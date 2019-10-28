@@ -11,4524 +11,5426 @@
 // 
 // Dieser Quellcode wurde automatisch generiert von xsd, Version=4.6.1055.0.
 // 
-namespace libfintx.pain_001_001_03 {
-    using System.Xml.Serialization;
-    
-    
+namespace libfintx.pain_001_001_03
+{
+
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IsNullable=false)]
-    public partial class Document {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IsNullable = false)]
+    public partial class Document
+    {
+
         private CustomerCreditTransferInitiationV03 cstmrCdtTrfInitnField;
-        
+
         /// <remarks/>
-        public CustomerCreditTransferInitiationV03 CstmrCdtTrfInitn {
-            get {
+        public CustomerCreditTransferInitiationV03 CstmrCdtTrfInitn
+        {
+            get
+            {
                 return this.cstmrCdtTrfInitnField;
             }
-            set {
+            set
+            {
                 this.cstmrCdtTrfInitnField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class CustomerCreditTransferInitiationV03 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class CustomerCreditTransferInitiationV03
+    {
+
         private GroupHeader32 grpHdrField;
-        
+
         private PaymentInstructionInformation3[] pmtInfField;
-        
+
         /// <remarks/>
-        public GroupHeader32 GrpHdr {
-            get {
+        public GroupHeader32 GrpHdr
+        {
+            get
+            {
                 return this.grpHdrField;
             }
-            set {
+            set
+            {
                 this.grpHdrField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("PmtInf")]
-        public PaymentInstructionInformation3[] PmtInf {
-            get {
+        public PaymentInstructionInformation3[] PmtInf
+        {
+            get
+            {
                 return this.pmtInfField;
             }
-            set {
+            set
+            {
                 this.pmtInfField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class GroupHeader32 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class GroupHeader32
+    {
+
         private string msgIdField;
-        
+
         private System.DateTime creDtTmField;
-        
+
         private Authorisation1Choice[] authstnField;
-        
+
         private string nbOfTxsField;
-        
+
         private decimal ctrlSumField;
-        
+
         private bool ctrlSumFieldSpecified;
-        
+
         private PartyIdentification32 initgPtyField;
-        
+
         private BranchAndFinancialInstitutionIdentification4 fwdgAgtField;
-        
+
         /// <remarks/>
-        public string MsgId {
-            get {
+        public string MsgId
+        {
+            get
+            {
                 return this.msgIdField;
             }
-            set {
+            set
+            {
                 this.msgIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public System.DateTime CreDtTm {
-            get {
+        public System.DateTime CreDtTm
+        {
+            get
+            {
                 return this.creDtTmField;
             }
-            set {
+            set
+            {
                 this.creDtTmField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Authstn")]
-        public Authorisation1Choice[] Authstn {
-            get {
+        public Authorisation1Choice[] Authstn
+        {
+            get
+            {
                 return this.authstnField;
             }
-            set {
+            set
+            {
                 this.authstnField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string NbOfTxs {
-            get {
+        public string NbOfTxs
+        {
+            get
+            {
                 return this.nbOfTxsField;
             }
-            set {
+            set
+            {
                 this.nbOfTxsField = value;
             }
         }
-        
+
         /// <remarks/>
-        public decimal CtrlSum {
-            get {
+        public decimal CtrlSum
+        {
+            get
+            {
                 return this.ctrlSumField;
             }
-            set {
+            set
+            {
                 this.ctrlSumField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CtrlSumSpecified {
-            get {
+        public bool CtrlSumSpecified
+        {
+            get
+            {
                 return this.ctrlSumFieldSpecified;
             }
-            set {
+            set
+            {
                 this.ctrlSumFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public PartyIdentification32 InitgPty {
-            get {
+        public PartyIdentification32 InitgPty
+        {
+            get
+            {
                 return this.initgPtyField;
             }
-            set {
+            set
+            {
                 this.initgPtyField = value;
             }
         }
-        
+
         /// <remarks/>
-        public BranchAndFinancialInstitutionIdentification4 FwdgAgt {
-            get {
+        public BranchAndFinancialInstitutionIdentification4 FwdgAgt
+        {
+            get
+            {
                 return this.fwdgAgtField;
             }
-            set {
+            set
+            {
                 this.fwdgAgtField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class Authorisation1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class Authorisation1Choice
+    {
+
         private object itemField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(Authorisation1Code))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
-        public object Item {
-            get {
+        public object Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum Authorisation1Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum Authorisation1Code
+    {
+
         /// <remarks/>
         AUTH,
-        
+
         /// <remarks/>
         FDET,
-        
+
         /// <remarks/>
         FSUM,
-        
+
         /// <remarks/>
         ILEV,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class CreditorReferenceType1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class CreditorReferenceType1Choice
+    {
+
         private object itemField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(DocumentType3Code))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
-        public object Item {
-            get {
+        public object Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum DocumentType3Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum DocumentType3Code
+    {
+
         /// <remarks/>
         RADM,
-        
+
         /// <remarks/>
         RPIN,
-        
+
         /// <remarks/>
         FXDR,
-        
+
         /// <remarks/>
         DISP,
-        
+
         /// <remarks/>
         PUOR,
-        
+
         /// <remarks/>
         SCOR,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class CreditorReferenceType2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class CreditorReferenceType2
+    {
+
         private CreditorReferenceType1Choice cdOrPrtryField;
-        
+
         private string issrField;
-        
+
         /// <remarks/>
-        public CreditorReferenceType1Choice CdOrPrtry {
-            get {
+        public CreditorReferenceType1Choice CdOrPrtry
+        {
+            get
+            {
                 return this.cdOrPrtryField;
             }
-            set {
+            set
+            {
                 this.cdOrPrtryField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Issr {
-            get {
+        public string Issr
+        {
+            get
+            {
                 return this.issrField;
             }
-            set {
+            set
+            {
                 this.issrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class CreditorReferenceInformation2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class CreditorReferenceInformation2
+    {
+
         private CreditorReferenceType2 tpField;
-        
+
         private string refField;
-        
+
         /// <remarks/>
-        public CreditorReferenceType2 Tp {
-            get {
+        public CreditorReferenceType2 Tp
+        {
+            get
+            {
                 return this.tpField;
             }
-            set {
+            set
+            {
                 this.tpField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Ref {
-            get {
+        public string Ref
+        {
+            get
+            {
                 return this.refField;
             }
-            set {
+            set
+            {
                 this.refField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class DocumentAdjustment1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class DocumentAdjustment1
+    {
+
         private ActiveOrHistoricCurrencyAndAmount amtField;
-        
+
         private CreditDebitCode cdtDbtIndField;
-        
+
         private bool cdtDbtIndFieldSpecified;
-        
+
         private string rsnField;
-        
+
         private string addtlInfField;
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount Amt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount Amt
+        {
+            get
+            {
                 return this.amtField;
             }
-            set {
+            set
+            {
                 this.amtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public CreditDebitCode CdtDbtInd {
-            get {
+        public CreditDebitCode CdtDbtInd
+        {
+            get
+            {
                 return this.cdtDbtIndField;
             }
-            set {
+            set
+            {
                 this.cdtDbtIndField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CdtDbtIndSpecified {
-            get {
+        public bool CdtDbtIndSpecified
+        {
+            get
+            {
                 return this.cdtDbtIndFieldSpecified;
             }
-            set {
+            set
+            {
                 this.cdtDbtIndFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Rsn {
-            get {
+        public string Rsn
+        {
+            get
+            {
                 return this.rsnField;
             }
-            set {
+            set
+            {
                 this.rsnField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string AddtlInf {
-            get {
+        public string AddtlInf
+        {
+            get
+            {
                 return this.addtlInfField;
             }
-            set {
+            set
+            {
                 this.addtlInfField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ActiveOrHistoricCurrencyAndAmount {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ActiveOrHistoricCurrencyAndAmount
+    {
+
         private string ccyField;
-        
+
         private decimal valueField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Ccy {
-            get {
+        public string Ccy
+        {
+            get
+            {
                 return this.ccyField;
             }
-            set {
+            set
+            {
                 this.ccyField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-        public decimal Value {
-            get {
+        public decimal Value
+        {
+            get
+            {
                 return this.valueField;
             }
-            set {
+            set
+            {
                 this.valueField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum CreditDebitCode {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum CreditDebitCode
+    {
+
         /// <remarks/>
         CRDT,
-        
+
         /// <remarks/>
         DBIT,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class RemittanceAmount1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class RemittanceAmount1
+    {
+
         private ActiveOrHistoricCurrencyAndAmount duePyblAmtField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount dscntApldAmtField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount cdtNoteAmtField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount taxAmtField;
-        
+
         private DocumentAdjustment1[] adjstmntAmtAndRsnField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount rmtdAmtField;
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount DuePyblAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount DuePyblAmt
+        {
+            get
+            {
                 return this.duePyblAmtField;
             }
-            set {
+            set
+            {
                 this.duePyblAmtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount DscntApldAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount DscntApldAmt
+        {
+            get
+            {
                 return this.dscntApldAmtField;
             }
-            set {
+            set
+            {
                 this.dscntApldAmtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount CdtNoteAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount CdtNoteAmt
+        {
+            get
+            {
                 return this.cdtNoteAmtField;
             }
-            set {
+            set
+            {
                 this.cdtNoteAmtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount TaxAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount TaxAmt
+        {
+            get
+            {
                 return this.taxAmtField;
             }
-            set {
+            set
+            {
                 this.taxAmtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("AdjstmntAmtAndRsn")]
-        public DocumentAdjustment1[] AdjstmntAmtAndRsn {
-            get {
+        public DocumentAdjustment1[] AdjstmntAmtAndRsn
+        {
+            get
+            {
                 return this.adjstmntAmtAndRsnField;
             }
-            set {
+            set
+            {
                 this.adjstmntAmtAndRsnField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount RmtdAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount RmtdAmt
+        {
+            get
+            {
                 return this.rmtdAmtField;
             }
-            set {
+            set
+            {
                 this.rmtdAmtField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ReferredDocumentType1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ReferredDocumentType1Choice
+    {
+
         private object itemField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(DocumentType5Code))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
-        public object Item {
-            get {
+        public object Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum DocumentType5Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum DocumentType5Code
+    {
+
         /// <remarks/>
         MSIN,
-        
+
         /// <remarks/>
         CNFA,
-        
+
         /// <remarks/>
         DNFA,
-        
+
         /// <remarks/>
         CINV,
-        
+
         /// <remarks/>
         CREN,
-        
+
         /// <remarks/>
         DEBN,
-        
+
         /// <remarks/>
         HIRI,
-        
+
         /// <remarks/>
         SBIN,
-        
+
         /// <remarks/>
         CMCN,
-        
+
         /// <remarks/>
         SOAC,
-        
+
         /// <remarks/>
         DISP,
-        
+
         /// <remarks/>
         BOLD,
-        
+
         /// <remarks/>
         VCHR,
-        
+
         /// <remarks/>
         AROI,
-        
+
         /// <remarks/>
         TSUT,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ReferredDocumentType2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ReferredDocumentType2
+    {
+
         private ReferredDocumentType1Choice cdOrPrtryField;
-        
+
         private string issrField;
-        
+
         /// <remarks/>
-        public ReferredDocumentType1Choice CdOrPrtry {
-            get {
+        public ReferredDocumentType1Choice CdOrPrtry
+        {
+            get
+            {
                 return this.cdOrPrtryField;
             }
-            set {
+            set
+            {
                 this.cdOrPrtryField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Issr {
-            get {
+        public string Issr
+        {
+            get
+            {
                 return this.issrField;
             }
-            set {
+            set
+            {
                 this.issrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ReferredDocumentInformation3 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ReferredDocumentInformation3
+    {
+
         private ReferredDocumentType2 tpField;
-        
+
         private string nbField;
-        
+
         private System.DateTime rltdDtField;
-        
+
         private bool rltdDtFieldSpecified;
-        
+
         /// <remarks/>
-        public ReferredDocumentType2 Tp {
-            get {
+        public ReferredDocumentType2 Tp
+        {
+            get
+            {
                 return this.tpField;
             }
-            set {
+            set
+            {
                 this.tpField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Nb {
-            get {
+        public string Nb
+        {
+            get
+            {
                 return this.nbField;
             }
-            set {
+            set
+            {
                 this.nbField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime RltdDt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime RltdDt
+        {
+            get
+            {
                 return this.rltdDtField;
             }
-            set {
+            set
+            {
                 this.rltdDtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool RltdDtSpecified {
-            get {
+        public bool RltdDtSpecified
+        {
+            get
+            {
                 return this.rltdDtFieldSpecified;
             }
-            set {
+            set
+            {
                 this.rltdDtFieldSpecified = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class StructuredRemittanceInformation7 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class StructuredRemittanceInformation7
+    {
+
         private ReferredDocumentInformation3[] rfrdDocInfField;
-        
+
         private RemittanceAmount1 rfrdDocAmtField;
-        
+
         private CreditorReferenceInformation2 cdtrRefInfField;
-        
+
         private PartyIdentification32 invcrField;
-        
+
         private PartyIdentification32 invceeField;
-        
+
         private string[] addtlRmtInfField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("RfrdDocInf")]
-        public ReferredDocumentInformation3[] RfrdDocInf {
-            get {
+        public ReferredDocumentInformation3[] RfrdDocInf
+        {
+            get
+            {
                 return this.rfrdDocInfField;
             }
-            set {
+            set
+            {
                 this.rfrdDocInfField = value;
             }
         }
-        
+
         /// <remarks/>
-        public RemittanceAmount1 RfrdDocAmt {
-            get {
+        public RemittanceAmount1 RfrdDocAmt
+        {
+            get
+            {
                 return this.rfrdDocAmtField;
             }
-            set {
+            set
+            {
                 this.rfrdDocAmtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public CreditorReferenceInformation2 CdtrRefInf {
-            get {
+        public CreditorReferenceInformation2 CdtrRefInf
+        {
+            get
+            {
                 return this.cdtrRefInfField;
             }
-            set {
+            set
+            {
                 this.cdtrRefInfField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PartyIdentification32 Invcr {
-            get {
+        public PartyIdentification32 Invcr
+        {
+            get
+            {
                 return this.invcrField;
             }
-            set {
+            set
+            {
                 this.invcrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PartyIdentification32 Invcee {
-            get {
+        public PartyIdentification32 Invcee
+        {
+            get
+            {
                 return this.invceeField;
             }
-            set {
+            set
+            {
                 this.invceeField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("AddtlRmtInf")]
-        public string[] AddtlRmtInf {
-            get {
+        public string[] AddtlRmtInf
+        {
+            get
+            {
                 return this.addtlRmtInfField;
             }
-            set {
+            set
+            {
                 this.addtlRmtInfField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class PartyIdentification32 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class PartyIdentification32
+    {
+
         private string nmField;
-        
+
         private PostalAddress6 pstlAdrField;
-        
+
         private Party6Choice idField;
-        
+
         private string ctryOfResField;
-        
+
         private ContactDetails2 ctctDtlsField;
-        
+
         /// <remarks/>
-        public string Nm {
-            get {
+        public string Nm
+        {
+            get
+            {
                 return this.nmField;
             }
-            set {
+            set
+            {
                 this.nmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PostalAddress6 PstlAdr {
-            get {
+        public PostalAddress6 PstlAdr
+        {
+            get
+            {
                 return this.pstlAdrField;
             }
-            set {
+            set
+            {
                 this.pstlAdrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public Party6Choice Id {
-            get {
+        public Party6Choice Id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string CtryOfRes {
-            get {
+        public string CtryOfRes
+        {
+            get
+            {
                 return this.ctryOfResField;
             }
-            set {
+            set
+            {
                 this.ctryOfResField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ContactDetails2 CtctDtls {
-            get {
+        public ContactDetails2 CtctDtls
+        {
+            get
+            {
                 return this.ctctDtlsField;
             }
-            set {
+            set
+            {
                 this.ctctDtlsField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class PostalAddress6 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class PostalAddress6
+    {
+
         private AddressType2Code adrTpField;
-        
+
         private bool adrTpFieldSpecified;
-        
+
         private string deptField;
-        
+
         private string subDeptField;
-        
+
         private string strtNmField;
-        
+
         private string bldgNbField;
-        
+
         private string pstCdField;
-        
+
         private string twnNmField;
-        
+
         private string ctrySubDvsnField;
-        
+
         private string ctryField;
-        
+
         private string[] adrLineField;
-        
+
         /// <remarks/>
-        public AddressType2Code AdrTp {
-            get {
+        public AddressType2Code AdrTp
+        {
+            get
+            {
                 return this.adrTpField;
             }
-            set {
+            set
+            {
                 this.adrTpField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AdrTpSpecified {
-            get {
+        public bool AdrTpSpecified
+        {
+            get
+            {
                 return this.adrTpFieldSpecified;
             }
-            set {
+            set
+            {
                 this.adrTpFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Dept {
-            get {
+        public string Dept
+        {
+            get
+            {
                 return this.deptField;
             }
-            set {
+            set
+            {
                 this.deptField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string SubDept {
-            get {
+        public string SubDept
+        {
+            get
+            {
                 return this.subDeptField;
             }
-            set {
+            set
+            {
                 this.subDeptField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string StrtNm {
-            get {
+        public string StrtNm
+        {
+            get
+            {
                 return this.strtNmField;
             }
-            set {
+            set
+            {
                 this.strtNmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string BldgNb {
-            get {
+        public string BldgNb
+        {
+            get
+            {
                 return this.bldgNbField;
             }
-            set {
+            set
+            {
                 this.bldgNbField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string PstCd {
-            get {
+        public string PstCd
+        {
+            get
+            {
                 return this.pstCdField;
             }
-            set {
+            set
+            {
                 this.pstCdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string TwnNm {
-            get {
+        public string TwnNm
+        {
+            get
+            {
                 return this.twnNmField;
             }
-            set {
+            set
+            {
                 this.twnNmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string CtrySubDvsn {
-            get {
+        public string CtrySubDvsn
+        {
+            get
+            {
                 return this.ctrySubDvsnField;
             }
-            set {
+            set
+            {
                 this.ctrySubDvsnField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Ctry {
-            get {
+        public string Ctry
+        {
+            get
+            {
                 return this.ctryField;
             }
-            set {
+            set
+            {
                 this.ctryField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("AdrLine")]
-        public string[] AdrLine {
-            get {
+        public string[] AdrLine
+        {
+            get
+            {
                 return this.adrLineField;
             }
-            set {
+            set
+            {
                 this.adrLineField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum AddressType2Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum AddressType2Code
+    {
+
         /// <remarks/>
         ADDR,
-        
+
         /// <remarks/>
         PBOX,
-        
+
         /// <remarks/>
         HOME,
-        
+
         /// <remarks/>
         BIZZ,
-        
+
         /// <remarks/>
         MLTO,
-        
+
         /// <remarks/>
         DLVY,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class Party6Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class Party6Choice
+    {
+
         private object itemField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("OrgId", typeof(OrganisationIdentification4))]
         [System.Xml.Serialization.XmlElementAttribute("PrvtId", typeof(PersonIdentification5))]
-        public object Item {
-            get {
+        public object Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class OrganisationIdentification4 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class OrganisationIdentification4
+    {
+
         private string bICOrBEIField;
-        
+
         private GenericOrganisationIdentification1[] othrField;
-        
+
         /// <remarks/>
-        public string BICOrBEI {
-            get {
+        public string BICOrBEI
+        {
+            get
+            {
                 return this.bICOrBEIField;
             }
-            set {
+            set
+            {
                 this.bICOrBEIField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Othr")]
-        public GenericOrganisationIdentification1[] Othr {
-            get {
+        public GenericOrganisationIdentification1[] Othr
+        {
+            get
+            {
                 return this.othrField;
             }
-            set {
+            set
+            {
                 this.othrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class GenericOrganisationIdentification1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class GenericOrganisationIdentification1
+    {
+
         private string idField;
-        
+
         private OrganisationIdentificationSchemeName1Choice schmeNmField;
-        
+
         private string issrField;
-        
+
         /// <remarks/>
-        public string Id {
-            get {
+        public string Id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
             }
         }
-        
+
         /// <remarks/>
-        public OrganisationIdentificationSchemeName1Choice SchmeNm {
-            get {
+        public OrganisationIdentificationSchemeName1Choice SchmeNm
+        {
+            get
+            {
                 return this.schmeNmField;
             }
-            set {
+            set
+            {
                 this.schmeNmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Issr {
-            get {
+        public string Issr
+        {
+            get
+            {
                 return this.issrField;
             }
-            set {
+            set
+            {
                 this.issrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class OrganisationIdentificationSchemeName1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class OrganisationIdentificationSchemeName1Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType ItemElementName {
-            get {
+        public ItemChoiceType ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class PersonIdentification5 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class PersonIdentification5
+    {
+
         private DateAndPlaceOfBirth dtAndPlcOfBirthField;
-        
+
         private GenericPersonIdentification1[] othrField;
-        
+
         /// <remarks/>
-        public DateAndPlaceOfBirth DtAndPlcOfBirth {
-            get {
+        public DateAndPlaceOfBirth DtAndPlcOfBirth
+        {
+            get
+            {
                 return this.dtAndPlcOfBirthField;
             }
-            set {
+            set
+            {
                 this.dtAndPlcOfBirthField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Othr")]
-        public GenericPersonIdentification1[] Othr {
-            get {
+        public GenericPersonIdentification1[] Othr
+        {
+            get
+            {
                 return this.othrField;
             }
-            set {
+            set
+            {
                 this.othrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class DateAndPlaceOfBirth {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class DateAndPlaceOfBirth
+    {
+
         private System.DateTime birthDtField;
-        
+
         private string prvcOfBirthField;
-        
+
         private string cityOfBirthField;
-        
+
         private string ctryOfBirthField;
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime BirthDt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime BirthDt
+        {
+            get
+            {
                 return this.birthDtField;
             }
-            set {
+            set
+            {
                 this.birthDtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string PrvcOfBirth {
-            get {
+        public string PrvcOfBirth
+        {
+            get
+            {
                 return this.prvcOfBirthField;
             }
-            set {
+            set
+            {
                 this.prvcOfBirthField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string CityOfBirth {
-            get {
+        public string CityOfBirth
+        {
+            get
+            {
                 return this.cityOfBirthField;
             }
-            set {
+            set
+            {
                 this.cityOfBirthField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string CtryOfBirth {
-            get {
+        public string CtryOfBirth
+        {
+            get
+            {
                 return this.ctryOfBirthField;
             }
-            set {
+            set
+            {
                 this.ctryOfBirthField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class GenericPersonIdentification1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class GenericPersonIdentification1
+    {
+
         private string idField;
-        
+
         private PersonIdentificationSchemeName1Choice schmeNmField;
-        
+
         private string issrField;
-        
+
         /// <remarks/>
-        public string Id {
-            get {
+        public string Id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PersonIdentificationSchemeName1Choice SchmeNm {
-            get {
+        public PersonIdentificationSchemeName1Choice SchmeNm
+        {
+            get
+            {
                 return this.schmeNmField;
             }
-            set {
+            set
+            {
                 this.schmeNmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Issr {
-            get {
+        public string Issr
+        {
+            get
+            {
                 return this.issrField;
             }
-            set {
+            set
+            {
                 this.issrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class PersonIdentificationSchemeName1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class PersonIdentificationSchemeName1Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType1 itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType1 ItemElementName {
-            get {
+        public ItemChoiceType1 ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType1
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ContactDetails2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ContactDetails2
+    {
+
         private NamePrefix1Code nmPrfxField;
-        
+
         private bool nmPrfxFieldSpecified;
-        
+
         private string nmField;
-        
+
         private string phneNbField;
-        
+
         private string mobNbField;
-        
+
         private string faxNbField;
-        
+
         private string emailAdrField;
-        
+
         private string othrField;
-        
+
         /// <remarks/>
-        public NamePrefix1Code NmPrfx {
-            get {
+        public NamePrefix1Code NmPrfx
+        {
+            get
+            {
                 return this.nmPrfxField;
             }
-            set {
+            set
+            {
                 this.nmPrfxField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool NmPrfxSpecified {
-            get {
+        public bool NmPrfxSpecified
+        {
+            get
+            {
                 return this.nmPrfxFieldSpecified;
             }
-            set {
+            set
+            {
                 this.nmPrfxFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Nm {
-            get {
+        public string Nm
+        {
+            get
+            {
                 return this.nmField;
             }
-            set {
+            set
+            {
                 this.nmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string PhneNb {
-            get {
+        public string PhneNb
+        {
+            get
+            {
                 return this.phneNbField;
             }
-            set {
+            set
+            {
                 this.phneNbField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string MobNb {
-            get {
+        public string MobNb
+        {
+            get
+            {
                 return this.mobNbField;
             }
-            set {
+            set
+            {
                 this.mobNbField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string FaxNb {
-            get {
+        public string FaxNb
+        {
+            get
+            {
                 return this.faxNbField;
             }
-            set {
+            set
+            {
                 this.faxNbField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string EmailAdr {
-            get {
+        public string EmailAdr
+        {
+            get
+            {
                 return this.emailAdrField;
             }
-            set {
+            set
+            {
                 this.emailAdrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Othr {
-            get {
+        public string Othr
+        {
+            get
+            {
                 return this.othrField;
             }
-            set {
+            set
+            {
                 this.othrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum NamePrefix1Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum NamePrefix1Code
+    {
+
         /// <remarks/>
         DOCT,
-        
+
         /// <remarks/>
         MIST,
-        
+
         /// <remarks/>
         MISS,
-        
+
         /// <remarks/>
         MADM,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class RemittanceInformation5 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class RemittanceInformation5
+    {
+
         private string[] ustrdField;
-        
+
         private StructuredRemittanceInformation7[] strdField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Ustrd")]
-        public string[] Ustrd {
-            get {
+        public string[] Ustrd
+        {
+            get
+            {
                 return this.ustrdField;
             }
-            set {
+            set
+            {
                 this.ustrdField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Strd")]
-        public StructuredRemittanceInformation7[] Strd {
-            get {
+        public StructuredRemittanceInformation7[] Strd
+        {
+            get
+            {
                 return this.strdField;
             }
-            set {
+            set
+            {
                 this.strdField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class RemittanceLocation2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class RemittanceLocation2
+    {
+
         private string rmtIdField;
-        
+
         private RemittanceLocationMethod2Code rmtLctnMtdField;
-        
+
         private bool rmtLctnMtdFieldSpecified;
-        
+
         private string rmtLctnElctrncAdrField;
-        
+
         private NameAndAddress10 rmtLctnPstlAdrField;
-        
+
         /// <remarks/>
-        public string RmtId {
-            get {
+        public string RmtId
+        {
+            get
+            {
                 return this.rmtIdField;
             }
-            set {
+            set
+            {
                 this.rmtIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public RemittanceLocationMethod2Code RmtLctnMtd {
-            get {
+        public RemittanceLocationMethod2Code RmtLctnMtd
+        {
+            get
+            {
                 return this.rmtLctnMtdField;
             }
-            set {
+            set
+            {
                 this.rmtLctnMtdField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool RmtLctnMtdSpecified {
-            get {
+        public bool RmtLctnMtdSpecified
+        {
+            get
+            {
                 return this.rmtLctnMtdFieldSpecified;
             }
-            set {
+            set
+            {
                 this.rmtLctnMtdFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string RmtLctnElctrncAdr {
-            get {
+        public string RmtLctnElctrncAdr
+        {
+            get
+            {
                 return this.rmtLctnElctrncAdrField;
             }
-            set {
+            set
+            {
                 this.rmtLctnElctrncAdrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public NameAndAddress10 RmtLctnPstlAdr {
-            get {
+        public NameAndAddress10 RmtLctnPstlAdr
+        {
+            get
+            {
                 return this.rmtLctnPstlAdrField;
             }
-            set {
+            set
+            {
                 this.rmtLctnPstlAdrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum RemittanceLocationMethod2Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum RemittanceLocationMethod2Code
+    {
+
         /// <remarks/>
         FAXI,
-        
+
         /// <remarks/>
         EDIC,
-        
+
         /// <remarks/>
         URID,
-        
+
         /// <remarks/>
         EMAL,
-        
+
         /// <remarks/>
         POST,
-        
+
         /// <remarks/>
         SMSM,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class NameAndAddress10 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class NameAndAddress10
+    {
+
         private string nmField;
-        
+
         private PostalAddress6 adrField;
-        
+
         /// <remarks/>
-        public string Nm {
-            get {
+        public string Nm
+        {
+            get
+            {
                 return this.nmField;
             }
-            set {
+            set
+            {
                 this.nmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PostalAddress6 Adr {
-            get {
+        public PostalAddress6 Adr
+        {
+            get
+            {
                 return this.adrField;
             }
-            set {
+            set
+            {
                 this.adrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class TaxRecordDetails1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class TaxRecordDetails1
+    {
+
         private TaxPeriod1 prdField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount amtField;
-        
+
         /// <remarks/>
-        public TaxPeriod1 Prd {
-            get {
+        public TaxPeriod1 Prd
+        {
+            get
+            {
                 return this.prdField;
             }
-            set {
+            set
+            {
                 this.prdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount Amt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount Amt
+        {
+            get
+            {
                 return this.amtField;
             }
-            set {
+            set
+            {
                 this.amtField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class TaxPeriod1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class TaxPeriod1
+    {
+
         private System.DateTime yrField;
-        
+
         private bool yrFieldSpecified;
-        
+
         private TaxRecordPeriod1Code tpField;
-        
+
         private bool tpFieldSpecified;
-        
+
         private DatePeriodDetails frToDtField;
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime Yr {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime Yr
+        {
+            get
+            {
                 return this.yrField;
             }
-            set {
+            set
+            {
                 this.yrField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool YrSpecified {
-            get {
+        public bool YrSpecified
+        {
+            get
+            {
                 return this.yrFieldSpecified;
             }
-            set {
+            set
+            {
                 this.yrFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public TaxRecordPeriod1Code Tp {
-            get {
+        public TaxRecordPeriod1Code Tp
+        {
+            get
+            {
                 return this.tpField;
             }
-            set {
+            set
+            {
                 this.tpField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool TpSpecified {
-            get {
+        public bool TpSpecified
+        {
+            get
+            {
                 return this.tpFieldSpecified;
             }
-            set {
+            set
+            {
                 this.tpFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public DatePeriodDetails FrToDt {
-            get {
+        public DatePeriodDetails FrToDt
+        {
+            get
+            {
                 return this.frToDtField;
             }
-            set {
+            set
+            {
                 this.frToDtField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum TaxRecordPeriod1Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum TaxRecordPeriod1Code
+    {
+
         /// <remarks/>
         MM01,
-        
+
         /// <remarks/>
         MM02,
-        
+
         /// <remarks/>
         MM03,
-        
+
         /// <remarks/>
         MM04,
-        
+
         /// <remarks/>
         MM05,
-        
+
         /// <remarks/>
         MM06,
-        
+
         /// <remarks/>
         MM07,
-        
+
         /// <remarks/>
         MM08,
-        
+
         /// <remarks/>
         MM09,
-        
+
         /// <remarks/>
         MM10,
-        
+
         /// <remarks/>
         MM11,
-        
+
         /// <remarks/>
         MM12,
-        
+
         /// <remarks/>
         QTR1,
-        
+
         /// <remarks/>
         QTR2,
-        
+
         /// <remarks/>
         QTR3,
-        
+
         /// <remarks/>
         QTR4,
-        
+
         /// <remarks/>
         HLF1,
-        
+
         /// <remarks/>
         HLF2,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class DatePeriodDetails {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class DatePeriodDetails
+    {
+
         private System.DateTime frDtField;
-        
+
         private System.DateTime toDtField;
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime FrDt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime FrDt
+        {
+            get
+            {
                 return this.frDtField;
             }
-            set {
+            set
+            {
                 this.frDtField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime ToDt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime ToDt
+        {
+            get
+            {
                 return this.toDtField;
             }
-            set {
+            set
+            {
                 this.toDtField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class TaxAmount1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class TaxAmount1
+    {
+
         private decimal rateField;
-        
+
         private bool rateFieldSpecified;
-        
+
         private ActiveOrHistoricCurrencyAndAmount taxblBaseAmtField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount ttlAmtField;
-        
+
         private TaxRecordDetails1[] dtlsField;
-        
+
         /// <remarks/>
-        public decimal Rate {
-            get {
+        public decimal Rate
+        {
+            get
+            {
                 return this.rateField;
             }
-            set {
+            set
+            {
                 this.rateField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool RateSpecified {
-            get {
+        public bool RateSpecified
+        {
+            get
+            {
                 return this.rateFieldSpecified;
             }
-            set {
+            set
+            {
                 this.rateFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount TaxblBaseAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount TaxblBaseAmt
+        {
+            get
+            {
                 return this.taxblBaseAmtField;
             }
-            set {
+            set
+            {
                 this.taxblBaseAmtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount TtlAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount TtlAmt
+        {
+            get
+            {
                 return this.ttlAmtField;
             }
-            set {
+            set
+            {
                 this.ttlAmtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Dtls")]
-        public TaxRecordDetails1[] Dtls {
-            get {
+        public TaxRecordDetails1[] Dtls
+        {
+            get
+            {
                 return this.dtlsField;
             }
-            set {
+            set
+            {
                 this.dtlsField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class TaxRecord1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class TaxRecord1
+    {
+
         private string tpField;
-        
+
         private string ctgyField;
-        
+
         private string ctgyDtlsField;
-        
+
         private string dbtrStsField;
-        
+
         private string certIdField;
-        
+
         private string frmsCdField;
-        
+
         private TaxPeriod1 prdField;
-        
+
         private TaxAmount1 taxAmtField;
-        
+
         private string addtlInfField;
-        
+
         /// <remarks/>
-        public string Tp {
-            get {
+        public string Tp
+        {
+            get
+            {
                 return this.tpField;
             }
-            set {
+            set
+            {
                 this.tpField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Ctgy {
-            get {
+        public string Ctgy
+        {
+            get
+            {
                 return this.ctgyField;
             }
-            set {
+            set
+            {
                 this.ctgyField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string CtgyDtls {
-            get {
+        public string CtgyDtls
+        {
+            get
+            {
                 return this.ctgyDtlsField;
             }
-            set {
+            set
+            {
                 this.ctgyDtlsField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string DbtrSts {
-            get {
+        public string DbtrSts
+        {
+            get
+            {
                 return this.dbtrStsField;
             }
-            set {
+            set
+            {
                 this.dbtrStsField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string CertId {
-            get {
+        public string CertId
+        {
+            get
+            {
                 return this.certIdField;
             }
-            set {
+            set
+            {
                 this.certIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string FrmsCd {
-            get {
+        public string FrmsCd
+        {
+            get
+            {
                 return this.frmsCdField;
             }
-            set {
+            set
+            {
                 this.frmsCdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public TaxPeriod1 Prd {
-            get {
+        public TaxPeriod1 Prd
+        {
+            get
+            {
                 return this.prdField;
             }
-            set {
+            set
+            {
                 this.prdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public TaxAmount1 TaxAmt {
-            get {
+        public TaxAmount1 TaxAmt
+        {
+            get
+            {
                 return this.taxAmtField;
             }
-            set {
+            set
+            {
                 this.taxAmtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string AddtlInf {
-            get {
+        public string AddtlInf
+        {
+            get
+            {
                 return this.addtlInfField;
             }
-            set {
+            set
+            {
                 this.addtlInfField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class TaxAuthorisation1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class TaxAuthorisation1
+    {
+
         private string titlField;
-        
+
         private string nmField;
-        
+
         /// <remarks/>
-        public string Titl {
-            get {
+        public string Titl
+        {
+            get
+            {
                 return this.titlField;
             }
-            set {
+            set
+            {
                 this.titlField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Nm {
-            get {
+        public string Nm
+        {
+            get
+            {
                 return this.nmField;
             }
-            set {
+            set
+            {
                 this.nmField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class TaxParty2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class TaxParty2
+    {
+
         private string taxIdField;
-        
+
         private string regnIdField;
-        
+
         private string taxTpField;
-        
+
         private TaxAuthorisation1 authstnField;
-        
+
         /// <remarks/>
-        public string TaxId {
-            get {
+        public string TaxId
+        {
+            get
+            {
                 return this.taxIdField;
             }
-            set {
+            set
+            {
                 this.taxIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string RegnId {
-            get {
+        public string RegnId
+        {
+            get
+            {
                 return this.regnIdField;
             }
-            set {
+            set
+            {
                 this.regnIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string TaxTp {
-            get {
+        public string TaxTp
+        {
+            get
+            {
                 return this.taxTpField;
             }
-            set {
+            set
+            {
                 this.taxTpField = value;
             }
         }
-        
+
         /// <remarks/>
-        public TaxAuthorisation1 Authstn {
-            get {
+        public TaxAuthorisation1 Authstn
+        {
+            get
+            {
                 return this.authstnField;
             }
-            set {
+            set
+            {
                 this.authstnField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class TaxParty1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class TaxParty1
+    {
+
         private string taxIdField;
-        
+
         private string regnIdField;
-        
+
         private string taxTpField;
-        
+
         /// <remarks/>
-        public string TaxId {
-            get {
+        public string TaxId
+        {
+            get
+            {
                 return this.taxIdField;
             }
-            set {
+            set
+            {
                 this.taxIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string RegnId {
-            get {
+        public string RegnId
+        {
+            get
+            {
                 return this.regnIdField;
             }
-            set {
+            set
+            {
                 this.regnIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string TaxTp {
-            get {
+        public string TaxTp
+        {
+            get
+            {
                 return this.taxTpField;
             }
-            set {
+            set
+            {
                 this.taxTpField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class TaxInformation3 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class TaxInformation3
+    {
+
         private TaxParty1 cdtrField;
-        
+
         private TaxParty2 dbtrField;
-        
+
         private string admstnZnField;
-        
+
         private string refNbField;
-        
+
         private string mtdField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount ttlTaxblBaseAmtField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount ttlTaxAmtField;
-        
+
         private System.DateTime dtField;
-        
+
         private bool dtFieldSpecified;
-        
+
         private decimal seqNbField;
-        
+
         private bool seqNbFieldSpecified;
-        
+
         private TaxRecord1[] rcrdField;
-        
+
         /// <remarks/>
-        public TaxParty1 Cdtr {
-            get {
+        public TaxParty1 Cdtr
+        {
+            get
+            {
                 return this.cdtrField;
             }
-            set {
+            set
+            {
                 this.cdtrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public TaxParty2 Dbtr {
-            get {
+        public TaxParty2 Dbtr
+        {
+            get
+            {
                 return this.dbtrField;
             }
-            set {
+            set
+            {
                 this.dbtrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string AdmstnZn {
-            get {
+        public string AdmstnZn
+        {
+            get
+            {
                 return this.admstnZnField;
             }
-            set {
+            set
+            {
                 this.admstnZnField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string RefNb {
-            get {
+        public string RefNb
+        {
+            get
+            {
                 return this.refNbField;
             }
-            set {
+            set
+            {
                 this.refNbField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Mtd {
-            get {
+        public string Mtd
+        {
+            get
+            {
                 return this.mtdField;
             }
-            set {
+            set
+            {
                 this.mtdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount TtlTaxblBaseAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount TtlTaxblBaseAmt
+        {
+            get
+            {
                 return this.ttlTaxblBaseAmtField;
             }
-            set {
+            set
+            {
                 this.ttlTaxblBaseAmtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount TtlTaxAmt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount TtlTaxAmt
+        {
+            get
+            {
                 return this.ttlTaxAmtField;
             }
-            set {
+            set
+            {
                 this.ttlTaxAmtField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime Dt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime Dt
+        {
+            get
+            {
                 return this.dtField;
             }
-            set {
+            set
+            {
                 this.dtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool DtSpecified {
-            get {
+        public bool DtSpecified
+        {
+            get
+            {
                 return this.dtFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dtFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public decimal SeqNb {
-            get {
+        public decimal SeqNb
+        {
+            get
+            {
                 return this.seqNbField;
             }
-            set {
+            set
+            {
                 this.seqNbField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool SeqNbSpecified {
-            get {
+        public bool SeqNbSpecified
+        {
+            get
+            {
                 return this.seqNbFieldSpecified;
             }
-            set {
+            set
+            {
                 this.seqNbFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Rcrd")]
-        public TaxRecord1[] Rcrd {
-            get {
+        public TaxRecord1[] Rcrd
+        {
+            get
+            {
                 return this.rcrdField;
             }
-            set {
+            set
+            {
                 this.rcrdField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class StructuredRegulatoryReporting3 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class StructuredRegulatoryReporting3
+    {
+
         private string tpField;
-        
+
         private System.DateTime dtField;
-        
+
         private bool dtFieldSpecified;
-        
+
         private string ctryField;
-        
+
         private string cdField;
-        
+
         private ActiveOrHistoricCurrencyAndAmount amtField;
-        
+
         private string[] infField;
-        
+
         /// <remarks/>
-        public string Tp {
-            get {
+        public string Tp
+        {
+            get
+            {
                 return this.tpField;
             }
-            set {
+            set
+            {
                 this.tpField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime Dt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime Dt
+        {
+            get
+            {
                 return this.dtField;
             }
-            set {
+            set
+            {
                 this.dtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool DtSpecified {
-            get {
+        public bool DtSpecified
+        {
+            get
+            {
                 return this.dtFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dtFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Ctry {
-            get {
+        public string Ctry
+        {
+            get
+            {
                 return this.ctryField;
             }
-            set {
+            set
+            {
                 this.ctryField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Cd {
-            get {
+        public string Cd
+        {
+            get
+            {
                 return this.cdField;
             }
-            set {
+            set
+            {
                 this.cdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount Amt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount Amt
+        {
+            get
+            {
                 return this.amtField;
             }
-            set {
+            set
+            {
                 this.amtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Inf")]
-        public string[] Inf {
-            get {
+        public string[] Inf
+        {
+            get
+            {
                 return this.infField;
             }
-            set {
+            set
+            {
                 this.infField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class RegulatoryAuthority2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class RegulatoryAuthority2
+    {
+
         private string nmField;
-        
+
         private string ctryField;
-        
+
         /// <remarks/>
-        public string Nm {
-            get {
+        public string Nm
+        {
+            get
+            {
                 return this.nmField;
             }
-            set {
+            set
+            {
                 this.nmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Ctry {
-            get {
+        public string Ctry
+        {
+            get
+            {
                 return this.ctryField;
             }
-            set {
+            set
+            {
                 this.ctryField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class RegulatoryReporting3 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class RegulatoryReporting3
+    {
+
         private RegulatoryReportingType1Code dbtCdtRptgIndField;
-        
+
         private bool dbtCdtRptgIndFieldSpecified;
-        
+
         private RegulatoryAuthority2 authrtyField;
-        
+
         private StructuredRegulatoryReporting3[] dtlsField;
-        
+
         /// <remarks/>
-        public RegulatoryReportingType1Code DbtCdtRptgInd {
-            get {
+        public RegulatoryReportingType1Code DbtCdtRptgInd
+        {
+            get
+            {
                 return this.dbtCdtRptgIndField;
             }
-            set {
+            set
+            {
                 this.dbtCdtRptgIndField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool DbtCdtRptgIndSpecified {
-            get {
+        public bool DbtCdtRptgIndSpecified
+        {
+            get
+            {
                 return this.dbtCdtRptgIndFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dbtCdtRptgIndFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public RegulatoryAuthority2 Authrty {
-            get {
+        public RegulatoryAuthority2 Authrty
+        {
+            get
+            {
                 return this.authrtyField;
             }
-            set {
+            set
+            {
                 this.authrtyField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Dtls")]
-        public StructuredRegulatoryReporting3[] Dtls {
-            get {
+        public StructuredRegulatoryReporting3[] Dtls
+        {
+            get
+            {
                 return this.dtlsField;
             }
-            set {
+            set
+            {
                 this.dtlsField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum RegulatoryReportingType1Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum RegulatoryReportingType1Code
+    {
+
         /// <remarks/>
         CRED,
-        
+
         /// <remarks/>
         DEBT,
-        
+
         /// <remarks/>
         BOTH,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class Purpose2Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class Purpose2Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType8 itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType8 ItemElementName {
-            get {
+        public ItemChoiceType8 ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType8 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType8
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class InstructionForCreditorAgent1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class InstructionForCreditorAgent1
+    {
+
         private Instruction3Code cdField;
-        
+
         private bool cdFieldSpecified;
-        
+
         private string instrInfField;
-        
+
         /// <remarks/>
-        public Instruction3Code Cd {
-            get {
+        public Instruction3Code Cd
+        {
+            get
+            {
                 return this.cdField;
             }
-            set {
+            set
+            {
                 this.cdField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CdSpecified {
-            get {
+        public bool CdSpecified
+        {
+            get
+            {
                 return this.cdFieldSpecified;
             }
-            set {
+            set
+            {
                 this.cdFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string InstrInf {
-            get {
+        public string InstrInf
+        {
+            get
+            {
                 return this.instrInfField;
             }
-            set {
+            set
+            {
                 this.instrInfField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum Instruction3Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum Instruction3Code
+    {
+
         /// <remarks/>
         CHQB,
-        
+
         /// <remarks/>
         HOLD,
-        
+
         /// <remarks/>
         PHOB,
-        
+
         /// <remarks/>
         TELB,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ChequeDeliveryMethod1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ChequeDeliveryMethod1Choice
+    {
+
         private object itemField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(ChequeDelivery1Code))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
-        public object Item {
-            get {
+        public object Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum ChequeDelivery1Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum ChequeDelivery1Code
+    {
+
         /// <remarks/>
         MLDB,
-        
+
         /// <remarks/>
         MLCD,
-        
+
         /// <remarks/>
         MLFA,
-        
+
         /// <remarks/>
         CRDB,
-        
+
         /// <remarks/>
         CRCD,
-        
+
         /// <remarks/>
         CRFA,
-        
+
         /// <remarks/>
         PUDB,
-        
+
         /// <remarks/>
         PUCD,
-        
+
         /// <remarks/>
         PUFA,
-        
+
         /// <remarks/>
         RGDB,
-        
+
         /// <remarks/>
         RGCD,
-        
+
         /// <remarks/>
         RGFA,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class Cheque6 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class Cheque6
+    {
+
         private ChequeType2Code chqTpField;
-        
+
         private bool chqTpFieldSpecified;
-        
+
         private string chqNbField;
-        
+
         private NameAndAddress10 chqFrField;
-        
+
         private ChequeDeliveryMethod1Choice dlvryMtdField;
-        
+
         private NameAndAddress10 dlvrToField;
-        
+
         private Priority2Code instrPrtyField;
-        
+
         private bool instrPrtyFieldSpecified;
-        
+
         private System.DateTime chqMtrtyDtField;
-        
+
         private bool chqMtrtyDtFieldSpecified;
-        
+
         private string frmsCdField;
-        
+
         private string[] memoFldField;
-        
+
         private string rgnlClrZoneField;
-        
+
         private string prtLctnField;
-        
+
         /// <remarks/>
-        public ChequeType2Code ChqTp {
-            get {
+        public ChequeType2Code ChqTp
+        {
+            get
+            {
                 return this.chqTpField;
             }
-            set {
+            set
+            {
                 this.chqTpField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ChqTpSpecified {
-            get {
+        public bool ChqTpSpecified
+        {
+            get
+            {
                 return this.chqTpFieldSpecified;
             }
-            set {
+            set
+            {
                 this.chqTpFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string ChqNb {
-            get {
+        public string ChqNb
+        {
+            get
+            {
                 return this.chqNbField;
             }
-            set {
+            set
+            {
                 this.chqNbField = value;
             }
         }
-        
+
         /// <remarks/>
-        public NameAndAddress10 ChqFr {
-            get {
+        public NameAndAddress10 ChqFr
+        {
+            get
+            {
                 return this.chqFrField;
             }
-            set {
+            set
+            {
                 this.chqFrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ChequeDeliveryMethod1Choice DlvryMtd {
-            get {
+        public ChequeDeliveryMethod1Choice DlvryMtd
+        {
+            get
+            {
                 return this.dlvryMtdField;
             }
-            set {
+            set
+            {
                 this.dlvryMtdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public NameAndAddress10 DlvrTo {
-            get {
+        public NameAndAddress10 DlvrTo
+        {
+            get
+            {
                 return this.dlvrToField;
             }
-            set {
+            set
+            {
                 this.dlvrToField = value;
             }
         }
-        
+
         /// <remarks/>
-        public Priority2Code InstrPrty {
-            get {
+        public Priority2Code InstrPrty
+        {
+            get
+            {
                 return this.instrPrtyField;
             }
-            set {
+            set
+            {
                 this.instrPrtyField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool InstrPrtySpecified {
-            get {
+        public bool InstrPrtySpecified
+        {
+            get
+            {
                 return this.instrPrtyFieldSpecified;
             }
-            set {
+            set
+            {
                 this.instrPrtyFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime ChqMtrtyDt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime ChqMtrtyDt
+        {
+            get
+            {
                 return this.chqMtrtyDtField;
             }
-            set {
+            set
+            {
                 this.chqMtrtyDtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ChqMtrtyDtSpecified {
-            get {
+        public bool ChqMtrtyDtSpecified
+        {
+            get
+            {
                 return this.chqMtrtyDtFieldSpecified;
             }
-            set {
+            set
+            {
                 this.chqMtrtyDtFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string FrmsCd {
-            get {
+        public string FrmsCd
+        {
+            get
+            {
                 return this.frmsCdField;
             }
-            set {
+            set
+            {
                 this.frmsCdField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("MemoFld")]
-        public string[] MemoFld {
-            get {
+        public string[] MemoFld
+        {
+            get
+            {
                 return this.memoFldField;
             }
-            set {
+            set
+            {
                 this.memoFldField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string RgnlClrZone {
-            get {
+        public string RgnlClrZone
+        {
+            get
+            {
                 return this.rgnlClrZoneField;
             }
-            set {
+            set
+            {
                 this.rgnlClrZoneField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string PrtLctn {
-            get {
+        public string PrtLctn
+        {
+            get
+            {
                 return this.prtLctnField;
             }
-            set {
+            set
+            {
                 this.prtLctnField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum ChequeType2Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum ChequeType2Code
+    {
+
         /// <remarks/>
         CCHQ,
-        
+
         /// <remarks/>
         CCCH,
-        
+
         /// <remarks/>
         BCHQ,
-        
+
         /// <remarks/>
         DRFT,
-        
+
         /// <remarks/>
         ELDR,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum Priority2Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum Priority2Code
+    {
+
         /// <remarks/>
         HIGH,
-        
+
         /// <remarks/>
         NORM,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ExchangeRateInformation1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ExchangeRateInformation1
+    {
+
         private decimal xchgRateField;
-        
+
         private bool xchgRateFieldSpecified;
-        
+
         private ExchangeRateType1Code rateTpField;
-        
+
         private bool rateTpFieldSpecified;
-        
+
         private string ctrctIdField;
-        
+
         /// <remarks/>
-        public decimal XchgRate {
-            get {
+        public decimal XchgRate
+        {
+            get
+            {
                 return this.xchgRateField;
             }
-            set {
+            set
+            {
                 this.xchgRateField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool XchgRateSpecified {
-            get {
+        public bool XchgRateSpecified
+        {
+            get
+            {
                 return this.xchgRateFieldSpecified;
             }
-            set {
+            set
+            {
                 this.xchgRateFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public ExchangeRateType1Code RateTp {
-            get {
+        public ExchangeRateType1Code RateTp
+        {
+            get
+            {
                 return this.rateTpField;
             }
-            set {
+            set
+            {
                 this.rateTpField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool RateTpSpecified {
-            get {
+        public bool RateTpSpecified
+        {
+            get
+            {
                 return this.rateTpFieldSpecified;
             }
-            set {
+            set
+            {
                 this.rateTpFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string CtrctId {
-            get {
+        public string CtrctId
+        {
+            get
+            {
                 return this.ctrctIdField;
             }
-            set {
+            set
+            {
                 this.ctrctIdField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum ExchangeRateType1Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum ExchangeRateType1Code
+    {
+
         /// <remarks/>
         SPOT,
-        
+
         /// <remarks/>
         SALE,
-        
+
         /// <remarks/>
         AGRD,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class EquivalentAmount2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class EquivalentAmount2
+    {
+
         private ActiveOrHistoricCurrencyAndAmount amtField;
-        
+
         private string ccyOfTrfField;
-        
+
         /// <remarks/>
-        public ActiveOrHistoricCurrencyAndAmount Amt {
-            get {
+        public ActiveOrHistoricCurrencyAndAmount Amt
+        {
+            get
+            {
                 return this.amtField;
             }
-            set {
+            set
+            {
                 this.amtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string CcyOfTrf {
-            get {
+        public string CcyOfTrf
+        {
+            get
+            {
                 return this.ccyOfTrfField;
             }
-            set {
+            set
+            {
                 this.ccyOfTrfField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class AmountType3Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class AmountType3Choice
+    {
+
         private object itemField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("EqvtAmt", typeof(EquivalentAmount2))]
         [System.Xml.Serialization.XmlElementAttribute("InstdAmt", typeof(ActiveOrHistoricCurrencyAndAmount))]
-        public object Item {
-            get {
+        public object Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class PaymentIdentification1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class PaymentIdentification1
+    {
+
         private string instrIdField;
-        
+
         private string endToEndIdField;
-        
+
         /// <remarks/>
-        public string InstrId {
-            get {
+        public string InstrId
+        {
+            get
+            {
                 return this.instrIdField;
             }
-            set {
+            set
+            {
                 this.instrIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string EndToEndId {
-            get {
+        public string EndToEndId
+        {
+            get
+            {
                 return this.endToEndIdField;
             }
-            set {
+            set
+            {
                 this.endToEndIdField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class CreditTransferTransactionInformation10 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class CreditTransferTransactionInformation10
+    {
+
         private PaymentIdentification1 pmtIdField;
-        
+
         private PaymentTypeInformation19 pmtTpInfField;
-        
+
         private AmountType3Choice amtField;
-        
+
         private ExchangeRateInformation1 xchgRateInfField;
-        
+
         private ChargeBearerType1Code chrgBrField;
-        
+
         private bool chrgBrFieldSpecified;
-        
+
         private Cheque6 chqInstrField;
-        
+
         private PartyIdentification32 ultmtDbtrField;
-        
+
         private BranchAndFinancialInstitutionIdentification4 intrmyAgt1Field;
-        
+
         private CashAccount16 intrmyAgt1AcctField;
-        
+
         private BranchAndFinancialInstitutionIdentification4 intrmyAgt2Field;
-        
+
         private CashAccount16 intrmyAgt2AcctField;
-        
+
         private BranchAndFinancialInstitutionIdentification4 intrmyAgt3Field;
-        
+
         private CashAccount16 intrmyAgt3AcctField;
-        
+
         private BranchAndFinancialInstitutionIdentification4 cdtrAgtField;
-        
+
         private CashAccount16 cdtrAgtAcctField;
-        
+
         private PartyIdentification32 cdtrField;
-        
+
         private CashAccount16 cdtrAcctField;
-        
+
         private PartyIdentification32 ultmtCdtrField;
-        
+
         private InstructionForCreditorAgent1[] instrForCdtrAgtField;
-        
+
         private string instrForDbtrAgtField;
-        
+
         private Purpose2Choice purpField;
-        
+
         private RegulatoryReporting3[] rgltryRptgField;
-        
+
         private TaxInformation3 taxField;
-        
+
         private RemittanceLocation2[] rltdRmtInfField;
-        
+
         private RemittanceInformation5 rmtInfField;
-        
+
         /// <remarks/>
-        public PaymentIdentification1 PmtId {
-            get {
+        public PaymentIdentification1 PmtId
+        {
+            get
+            {
                 return this.pmtIdField;
             }
-            set {
+            set
+            {
                 this.pmtIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PaymentTypeInformation19 PmtTpInf {
-            get {
+        public PaymentTypeInformation19 PmtTpInf
+        {
+            get
+            {
                 return this.pmtTpInfField;
             }
-            set {
+            set
+            {
                 this.pmtTpInfField = value;
             }
         }
-        
+
         /// <remarks/>
-        public AmountType3Choice Amt {
-            get {
+        public AmountType3Choice Amt
+        {
+            get
+            {
                 return this.amtField;
             }
-            set {
+            set
+            {
                 this.amtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ExchangeRateInformation1 XchgRateInf {
-            get {
+        public ExchangeRateInformation1 XchgRateInf
+        {
+            get
+            {
                 return this.xchgRateInfField;
             }
-            set {
+            set
+            {
                 this.xchgRateInfField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ChargeBearerType1Code ChrgBr {
-            get {
+        public ChargeBearerType1Code ChrgBr
+        {
+            get
+            {
                 return this.chrgBrField;
             }
-            set {
+            set
+            {
                 this.chrgBrField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ChrgBrSpecified {
-            get {
+        public bool ChrgBrSpecified
+        {
+            get
+            {
                 return this.chrgBrFieldSpecified;
             }
-            set {
+            set
+            {
                 this.chrgBrFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public Cheque6 ChqInstr {
-            get {
+        public Cheque6 ChqInstr
+        {
+            get
+            {
                 return this.chqInstrField;
             }
-            set {
+            set
+            {
                 this.chqInstrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PartyIdentification32 UltmtDbtr {
-            get {
+        public PartyIdentification32 UltmtDbtr
+        {
+            get
+            {
                 return this.ultmtDbtrField;
             }
-            set {
+            set
+            {
                 this.ultmtDbtrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public BranchAndFinancialInstitutionIdentification4 IntrmyAgt1 {
-            get {
+        public BranchAndFinancialInstitutionIdentification4 IntrmyAgt1
+        {
+            get
+            {
                 return this.intrmyAgt1Field;
             }
-            set {
+            set
+            {
                 this.intrmyAgt1Field = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccount16 IntrmyAgt1Acct {
-            get {
+        public CashAccount16 IntrmyAgt1Acct
+        {
+            get
+            {
                 return this.intrmyAgt1AcctField;
             }
-            set {
+            set
+            {
                 this.intrmyAgt1AcctField = value;
             }
         }
-        
+
         /// <remarks/>
-        public BranchAndFinancialInstitutionIdentification4 IntrmyAgt2 {
-            get {
+        public BranchAndFinancialInstitutionIdentification4 IntrmyAgt2
+        {
+            get
+            {
                 return this.intrmyAgt2Field;
             }
-            set {
+            set
+            {
                 this.intrmyAgt2Field = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccount16 IntrmyAgt2Acct {
-            get {
+        public CashAccount16 IntrmyAgt2Acct
+        {
+            get
+            {
                 return this.intrmyAgt2AcctField;
             }
-            set {
+            set
+            {
                 this.intrmyAgt2AcctField = value;
             }
         }
-        
+
         /// <remarks/>
-        public BranchAndFinancialInstitutionIdentification4 IntrmyAgt3 {
-            get {
+        public BranchAndFinancialInstitutionIdentification4 IntrmyAgt3
+        {
+            get
+            {
                 return this.intrmyAgt3Field;
             }
-            set {
+            set
+            {
                 this.intrmyAgt3Field = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccount16 IntrmyAgt3Acct {
-            get {
+        public CashAccount16 IntrmyAgt3Acct
+        {
+            get
+            {
                 return this.intrmyAgt3AcctField;
             }
-            set {
+            set
+            {
                 this.intrmyAgt3AcctField = value;
             }
         }
-        
+
         /// <remarks/>
-        public BranchAndFinancialInstitutionIdentification4 CdtrAgt {
-            get {
+        public BranchAndFinancialInstitutionIdentification4 CdtrAgt
+        {
+            get
+            {
                 return this.cdtrAgtField;
             }
-            set {
+            set
+            {
                 this.cdtrAgtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccount16 CdtrAgtAcct {
-            get {
+        public CashAccount16 CdtrAgtAcct
+        {
+            get
+            {
                 return this.cdtrAgtAcctField;
             }
-            set {
+            set
+            {
                 this.cdtrAgtAcctField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PartyIdentification32 Cdtr {
-            get {
+        public PartyIdentification32 Cdtr
+        {
+            get
+            {
                 return this.cdtrField;
             }
-            set {
+            set
+            {
                 this.cdtrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccount16 CdtrAcct {
-            get {
+        public CashAccount16 CdtrAcct
+        {
+            get
+            {
                 return this.cdtrAcctField;
             }
-            set {
+            set
+            {
                 this.cdtrAcctField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PartyIdentification32 UltmtCdtr {
-            get {
+        public PartyIdentification32 UltmtCdtr
+        {
+            get
+            {
                 return this.ultmtCdtrField;
             }
-            set {
+            set
+            {
                 this.ultmtCdtrField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("InstrForCdtrAgt")]
-        public InstructionForCreditorAgent1[] InstrForCdtrAgt {
-            get {
+        public InstructionForCreditorAgent1[] InstrForCdtrAgt
+        {
+            get
+            {
                 return this.instrForCdtrAgtField;
             }
-            set {
+            set
+            {
                 this.instrForCdtrAgtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string InstrForDbtrAgt {
-            get {
+        public string InstrForDbtrAgt
+        {
+            get
+            {
                 return this.instrForDbtrAgtField;
             }
-            set {
+            set
+            {
                 this.instrForDbtrAgtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public Purpose2Choice Purp {
-            get {
+        public Purpose2Choice Purp
+        {
+            get
+            {
                 return this.purpField;
             }
-            set {
+            set
+            {
                 this.purpField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("RgltryRptg")]
-        public RegulatoryReporting3[] RgltryRptg {
-            get {
+        public RegulatoryReporting3[] RgltryRptg
+        {
+            get
+            {
                 return this.rgltryRptgField;
             }
-            set {
+            set
+            {
                 this.rgltryRptgField = value;
             }
         }
-        
+
         /// <remarks/>
-        public TaxInformation3 Tax {
-            get {
+        public TaxInformation3 Tax
+        {
+            get
+            {
                 return this.taxField;
             }
-            set {
+            set
+            {
                 this.taxField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("RltdRmtInf")]
-        public RemittanceLocation2[] RltdRmtInf {
-            get {
+        public RemittanceLocation2[] RltdRmtInf
+        {
+            get
+            {
                 return this.rltdRmtInfField;
             }
-            set {
+            set
+            {
                 this.rltdRmtInfField = value;
             }
         }
-        
+
         /// <remarks/>
-        public RemittanceInformation5 RmtInf {
-            get {
+        public RemittanceInformation5 RmtInf
+        {
+            get
+            {
                 return this.rmtInfField;
             }
-            set {
+            set
+            {
                 this.rmtInfField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class PaymentTypeInformation19 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class PaymentTypeInformation19
+    {
+
         private Priority2Code instrPrtyField;
-        
+
         private bool instrPrtyFieldSpecified;
-        
+
         private ServiceLevel8Choice svcLvlField;
-        
+
         private LocalInstrument2Choice lclInstrmField;
-        
+
         private CategoryPurpose1Choice ctgyPurpField;
-        
+
         /// <remarks/>
-        public Priority2Code InstrPrty {
-            get {
+        public Priority2Code InstrPrty
+        {
+            get
+            {
                 return this.instrPrtyField;
             }
-            set {
+            set
+            {
                 this.instrPrtyField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool InstrPrtySpecified {
-            get {
+        public bool InstrPrtySpecified
+        {
+            get
+            {
                 return this.instrPrtyFieldSpecified;
             }
-            set {
+            set
+            {
                 this.instrPrtyFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public ServiceLevel8Choice SvcLvl {
-            get {
+        public ServiceLevel8Choice SvcLvl
+        {
+            get
+            {
                 return this.svcLvlField;
             }
-            set {
+            set
+            {
                 this.svcLvlField = value;
             }
         }
-        
+
         /// <remarks/>
-        public LocalInstrument2Choice LclInstrm {
-            get {
+        public LocalInstrument2Choice LclInstrm
+        {
+            get
+            {
                 return this.lclInstrmField;
             }
-            set {
+            set
+            {
                 this.lclInstrmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public CategoryPurpose1Choice CtgyPurp {
-            get {
+        public CategoryPurpose1Choice CtgyPurp
+        {
+            get
+            {
                 return this.ctgyPurpField;
             }
-            set {
+            set
+            {
                 this.ctgyPurpField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ServiceLevel8Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ServiceLevel8Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType4 itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType4 ItemElementName {
-            get {
+        public ItemChoiceType4 ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType4 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType4
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class LocalInstrument2Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class LocalInstrument2Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType5 itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType5 ItemElementName {
-            get {
+        public ItemChoiceType5 ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType5 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType5
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class CategoryPurpose1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class CategoryPurpose1Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType6 itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType6 ItemElementName {
-            get {
+        public ItemChoiceType6 ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType6 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType6
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum ChargeBearerType1Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum ChargeBearerType1Code
+    {
+
         /// <remarks/>
         DEBT,
-        
+
         /// <remarks/>
         CRED,
-        
+
         /// <remarks/>
         SHAR,
-        
+
         /// <remarks/>
         SLEV,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class BranchAndFinancialInstitutionIdentification4 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class BranchAndFinancialInstitutionIdentification4
+    {
+
         private FinancialInstitutionIdentification7 finInstnIdField;
-        
+
         private BranchData2 brnchIdField;
-        
+
         /// <remarks/>
-        public FinancialInstitutionIdentification7 FinInstnId {
-            get {
+        public FinancialInstitutionIdentification7 FinInstnId
+        {
+            get
+            {
                 return this.finInstnIdField;
             }
-            set {
+            set
+            {
                 this.finInstnIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public BranchData2 BrnchId {
-            get {
+        public BranchData2 BrnchId
+        {
+            get
+            {
                 return this.brnchIdField;
             }
-            set {
+            set
+            {
                 this.brnchIdField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class FinancialInstitutionIdentification7 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class FinancialInstitutionIdentification7
+    {
+
         private string bICField;
-        
+
         private ClearingSystemMemberIdentification2 clrSysMmbIdField;
-        
+
         private string nmField;
-        
+
         private PostalAddress6 pstlAdrField;
-        
+
         private GenericFinancialIdentification1 othrField;
-        
+
         /// <remarks/>
-        public string BIC {
-            get {
+        public string BIC
+        {
+            get
+            {
                 return this.bICField;
             }
-            set {
+            set
+            {
                 this.bICField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ClearingSystemMemberIdentification2 ClrSysMmbId {
-            get {
+        public ClearingSystemMemberIdentification2 ClrSysMmbId
+        {
+            get
+            {
                 return this.clrSysMmbIdField;
             }
-            set {
+            set
+            {
                 this.clrSysMmbIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Nm {
-            get {
+        public string Nm
+        {
+            get
+            {
                 return this.nmField;
             }
-            set {
+            set
+            {
                 this.nmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PostalAddress6 PstlAdr {
-            get {
+        public PostalAddress6 PstlAdr
+        {
+            get
+            {
                 return this.pstlAdrField;
             }
-            set {
+            set
+            {
                 this.pstlAdrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public GenericFinancialIdentification1 Othr {
-            get {
+        public GenericFinancialIdentification1 Othr
+        {
+            get
+            {
                 return this.othrField;
             }
-            set {
+            set
+            {
                 this.othrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ClearingSystemMemberIdentification2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ClearingSystemMemberIdentification2
+    {
+
         private ClearingSystemIdentification2Choice clrSysIdField;
-        
+
         private string mmbIdField;
-        
+
         /// <remarks/>
-        public ClearingSystemIdentification2Choice ClrSysId {
-            get {
+        public ClearingSystemIdentification2Choice ClrSysId
+        {
+            get
+            {
                 return this.clrSysIdField;
             }
-            set {
+            set
+            {
                 this.clrSysIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string MmbId {
-            get {
+        public string MmbId
+        {
+            get
+            {
                 return this.mmbIdField;
             }
-            set {
+            set
+            {
                 this.mmbIdField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class ClearingSystemIdentification2Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class ClearingSystemIdentification2Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType2 itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType2 ItemElementName {
-            get {
+        public ItemChoiceType2 ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType2
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class GenericFinancialIdentification1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class GenericFinancialIdentification1
+    {
+
         private string idField;
-        
+
         private FinancialIdentificationSchemeName1Choice schmeNmField;
-        
+
         private string issrField;
-        
+
         /// <remarks/>
-        public string Id {
-            get {
+        public string Id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
             }
         }
-        
+
         /// <remarks/>
-        public FinancialIdentificationSchemeName1Choice SchmeNm {
-            get {
+        public FinancialIdentificationSchemeName1Choice SchmeNm
+        {
+            get
+            {
                 return this.schmeNmField;
             }
-            set {
+            set
+            {
                 this.schmeNmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Issr {
-            get {
+        public string Issr
+        {
+            get
+            {
                 return this.issrField;
             }
-            set {
+            set
+            {
                 this.issrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class FinancialIdentificationSchemeName1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class FinancialIdentificationSchemeName1Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType3 itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType3 ItemElementName {
-            get {
+        public ItemChoiceType3 ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType3 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType3
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class BranchData2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class BranchData2
+    {
+
         private string idField;
-        
+
         private string nmField;
-        
+
         private PostalAddress6 pstlAdrField;
-        
+
         /// <remarks/>
-        public string Id {
-            get {
+        public string Id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Nm {
-            get {
+        public string Nm
+        {
+            get
+            {
                 return this.nmField;
             }
-            set {
+            set
+            {
                 this.nmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PostalAddress6 PstlAdr {
-            get {
+        public PostalAddress6 PstlAdr
+        {
+            get
+            {
                 return this.pstlAdrField;
             }
-            set {
+            set
+            {
                 this.pstlAdrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class CashAccount16 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class CashAccount16
+    {
+
         private AccountIdentification4Choice idField;
-        
+
         private CashAccountType2 tpField;
-        
+
         private string ccyField;
-        
+
         private string nmField;
-        
+
         /// <remarks/>
-        public AccountIdentification4Choice Id {
-            get {
+        public AccountIdentification4Choice Id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccountType2 Tp {
-            get {
+        public CashAccountType2 Tp
+        {
+            get
+            {
                 return this.tpField;
             }
-            set {
+            set
+            {
                 this.tpField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Ccy {
-            get {
+        public string Ccy
+        {
+            get
+            {
                 return this.ccyField;
             }
-            set {
+            set
+            {
                 this.ccyField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Nm {
-            get {
+        public string Nm
+        {
+            get
+            {
                 return this.nmField;
             }
-            set {
+            set
+            {
                 this.nmField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class AccountIdentification4Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class AccountIdentification4Choice
+    {
+
         private object itemField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("IBAN", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Othr", typeof(GenericAccountIdentification1))]
-        public object Item {
-            get {
+        public object Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class GenericAccountIdentification1 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class GenericAccountIdentification1
+    {
+
         private string idField;
-        
+
         private AccountSchemeName1Choice schmeNmField;
-        
+
         private string issrField;
-        
+
         /// <remarks/>
-        public string Id {
-            get {
+        public string Id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
             }
         }
-        
+
         /// <remarks/>
-        public AccountSchemeName1Choice SchmeNm {
-            get {
+        public AccountSchemeName1Choice SchmeNm
+        {
+            get
+            {
                 return this.schmeNmField;
             }
-            set {
+            set
+            {
                 this.schmeNmField = value;
             }
         }
-        
+
         /// <remarks/>
-        public string Issr {
-            get {
+        public string Issr
+        {
+            get
+            {
                 return this.issrField;
             }
-            set {
+            set
+            {
                 this.issrField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class AccountSchemeName1Choice {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class AccountSchemeName1Choice
+    {
+
         private string itemField;
-        
+
         private ItemChoiceType7 itemElementNameField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item {
-            get {
+        public string Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType7 ItemElementName {
-            get {
+        public ItemChoiceType7 ItemElementName
+        {
+            get
+            {
                 return this.itemElementNameField;
             }
-            set {
+            set
+            {
                 this.itemElementNameField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema=false)]
-    public enum ItemChoiceType7 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03", IncludeInSchema = false)]
+    public enum ItemChoiceType7
+    {
+
         /// <remarks/>
         Cd,
-        
+
         /// <remarks/>
         Prtry,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class CashAccountType2 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class CashAccountType2
+    {
+
         private object itemField;
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Cd", typeof(CashAccountType4Code))]
         [System.Xml.Serialization.XmlElementAttribute("Prtry", typeof(string))]
-        public object Item {
-            get {
+        public object Item
+        {
+            get
+            {
                 return this.itemField;
             }
-            set {
+            set
+            {
                 this.itemField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum CashAccountType4Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum CashAccountType4Code
+    {
+
         /// <remarks/>
         CASH,
-        
+
         /// <remarks/>
         CHAR,
-        
+
         /// <remarks/>
         COMM,
-        
+
         /// <remarks/>
         TAXE,
-        
+
         /// <remarks/>
         CISH,
-        
+
         /// <remarks/>
         TRAS,
-        
+
         /// <remarks/>
         SACC,
-        
+
         /// <remarks/>
         CACC,
-        
+
         /// <remarks/>
         SVGS,
-        
+
         /// <remarks/>
         ONDP,
-        
+
         /// <remarks/>
         MGLD,
-        
+
         /// <remarks/>
         NREX,
-        
+
         /// <remarks/>
         MOMA,
-        
+
         /// <remarks/>
         LOAN,
-        
+
         /// <remarks/>
         SLRY,
-        
+
         /// <remarks/>
         ODFT,
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public partial class PaymentInstructionInformation3 {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public partial class PaymentInstructionInformation3
+    {
+
         private string pmtInfIdField;
-        
+
         private PaymentMethod3Code pmtMtdField;
-        
+
         private bool btchBookgField;
-        
+
         private bool btchBookgFieldSpecified;
-        
+
         private string nbOfTxsField;
-        
+
         private decimal ctrlSumField;
-        
+
         private bool ctrlSumFieldSpecified;
-        
+
         private PaymentTypeInformation19 pmtTpInfField;
-        
+
         private System.DateTime reqdExctnDtField;
-        
+
         private System.DateTime poolgAdjstmntDtField;
-        
+
         private bool poolgAdjstmntDtFieldSpecified;
-        
+
         private PartyIdentification32 dbtrField;
-        
+
         private CashAccount16 dbtrAcctField;
-        
+
         private BranchAndFinancialInstitutionIdentification4 dbtrAgtField;
-        
+
         private CashAccount16 dbtrAgtAcctField;
-        
+
         private PartyIdentification32 ultmtDbtrField;
-        
+
         private ChargeBearerType1Code chrgBrField;
-        
+
         private bool chrgBrFieldSpecified;
-        
+
         private CashAccount16 chrgsAcctField;
-        
+
         private BranchAndFinancialInstitutionIdentification4 chrgsAcctAgtField;
-        
+
         private CreditTransferTransactionInformation10[] cdtTrfTxInfField;
-        
+
         /// <remarks/>
-        public string PmtInfId {
-            get {
+        public string PmtInfId
+        {
+            get
+            {
                 return this.pmtInfIdField;
             }
-            set {
+            set
+            {
                 this.pmtInfIdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PaymentMethod3Code PmtMtd {
-            get {
+        public PaymentMethod3Code PmtMtd
+        {
+            get
+            {
                 return this.pmtMtdField;
             }
-            set {
+            set
+            {
                 this.pmtMtdField = value;
             }
         }
-        
+
         /// <remarks/>
-        public bool BtchBookg {
-            get {
+        public bool BtchBookg
+        {
+            get
+            {
                 return this.btchBookgField;
             }
-            set {
+            set
+            {
                 this.btchBookgField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool BtchBookgSpecified {
-            get {
+        public bool BtchBookgSpecified
+        {
+            get
+            {
                 return this.btchBookgFieldSpecified;
             }
-            set {
+            set
+            {
                 this.btchBookgFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public string NbOfTxs {
-            get {
+        public string NbOfTxs
+        {
+            get
+            {
                 return this.nbOfTxsField;
             }
-            set {
+            set
+            {
                 this.nbOfTxsField = value;
             }
         }
-        
+
         /// <remarks/>
-        public decimal CtrlSum {
-            get {
+        public decimal CtrlSum
+        {
+            get
+            {
                 return this.ctrlSumField;
             }
-            set {
+            set
+            {
                 this.ctrlSumField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CtrlSumSpecified {
-            get {
+        public bool CtrlSumSpecified
+        {
+            get
+            {
                 return this.ctrlSumFieldSpecified;
             }
-            set {
+            set
+            {
                 this.ctrlSumFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public PaymentTypeInformation19 PmtTpInf {
-            get {
+        public PaymentTypeInformation19 PmtTpInf
+        {
+            get
+            {
                 return this.pmtTpInfField;
             }
-            set {
+            set
+            {
                 this.pmtTpInfField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime ReqdExctnDt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime ReqdExctnDt
+        {
+            get
+            {
                 return this.reqdExctnDtField;
             }
-            set {
+            set
+            {
                 this.reqdExctnDtField = value;
             }
         }
-        
+
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
-        public System.DateTime PoolgAdjstmntDt {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
+        public System.DateTime PoolgAdjstmntDt
+        {
+            get
+            {
                 return this.poolgAdjstmntDtField;
             }
-            set {
+            set
+            {
                 this.poolgAdjstmntDtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool PoolgAdjstmntDtSpecified {
-            get {
+        public bool PoolgAdjstmntDtSpecified
+        {
+            get
+            {
                 return this.poolgAdjstmntDtFieldSpecified;
             }
-            set {
+            set
+            {
                 this.poolgAdjstmntDtFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public PartyIdentification32 Dbtr {
-            get {
+        public PartyIdentification32 Dbtr
+        {
+            get
+            {
                 return this.dbtrField;
             }
-            set {
+            set
+            {
                 this.dbtrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccount16 DbtrAcct {
-            get {
+        public CashAccount16 DbtrAcct
+        {
+            get
+            {
                 return this.dbtrAcctField;
             }
-            set {
+            set
+            {
                 this.dbtrAcctField = value;
             }
         }
-        
+
         /// <remarks/>
-        public BranchAndFinancialInstitutionIdentification4 DbtrAgt {
-            get {
+        public BranchAndFinancialInstitutionIdentification4 DbtrAgt
+        {
+            get
+            {
                 return this.dbtrAgtField;
             }
-            set {
+            set
+            {
                 this.dbtrAgtField = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccount16 DbtrAgtAcct {
-            get {
+        public CashAccount16 DbtrAgtAcct
+        {
+            get
+            {
                 return this.dbtrAgtAcctField;
             }
-            set {
+            set
+            {
                 this.dbtrAgtAcctField = value;
             }
         }
-        
+
         /// <remarks/>
-        public PartyIdentification32 UltmtDbtr {
-            get {
+        public PartyIdentification32 UltmtDbtr
+        {
+            get
+            {
                 return this.ultmtDbtrField;
             }
-            set {
+            set
+            {
                 this.ultmtDbtrField = value;
             }
         }
-        
+
         /// <remarks/>
-        public ChargeBearerType1Code ChrgBr {
-            get {
+        public ChargeBearerType1Code ChrgBr
+        {
+            get
+            {
                 return this.chrgBrField;
             }
-            set {
+            set
+            {
                 this.chrgBrField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ChrgBrSpecified {
-            get {
+        public bool ChrgBrSpecified
+        {
+            get
+            {
                 return this.chrgBrFieldSpecified;
             }
-            set {
+            set
+            {
                 this.chrgBrFieldSpecified = value;
             }
         }
-        
+
         /// <remarks/>
-        public CashAccount16 ChrgsAcct {
-            get {
+        public CashAccount16 ChrgsAcct
+        {
+            get
+            {
                 return this.chrgsAcctField;
             }
-            set {
+            set
+            {
                 this.chrgsAcctField = value;
             }
         }
-        
+
         /// <remarks/>
-        public BranchAndFinancialInstitutionIdentification4 ChrgsAcctAgt {
-            get {
+        public BranchAndFinancialInstitutionIdentification4 ChrgsAcctAgt
+        {
+            get
+            {
                 return this.chrgsAcctAgtField;
             }
-            set {
+            set
+            {
                 this.chrgsAcctAgtField = value;
             }
         }
-        
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("CdtTrfTxInf")]
-        public CreditTransferTransactionInformation10[] CdtTrfTxInf {
-            get {
+        public CreditTransferTransactionInformation10[] CdtTrfTxInf
+        {
+            get
+            {
                 return this.cdtTrfTxInfField;
             }
-            set {
+            set
+            {
                 this.cdtTrfTxInfField = value;
             }
         }
     }
-    
+
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
-    public enum PaymentMethod3Code {
-        
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03")]
+    public enum PaymentMethod3Code
+    {
+
         /// <remarks/>
         CHK,
-        
+
         /// <remarks/>
         TRF,
-        
+
         /// <remarks/>
         TRA,
     }
