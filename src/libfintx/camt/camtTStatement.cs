@@ -42,6 +42,9 @@ namespace libfintx
         public string id;
 
         /// todoComment
+        public string elctrncSeqNb;
+
+        /// todoComment
         public string bankCode;
 
         /// todoComment

@@ -71,9 +71,9 @@ namespace libfintx
         public string endToEndId;
 
         public string mndtId;
-
+        
         /// <summary>
-        /// Unique Identifier
+        /// Unique Identifier (if available)
         /// </summary>
         public string id;
 

@@ -51,17 +51,12 @@ namespace libfintx
         /// <param name="filename"></param>
         public void ProcessFile(string filename)
         {
-            if (File.ReadAllText(filename).Contains("5.79"))
-            {
-                int x = 5;
-            }
-
             Log.Write("Read file " + filename);
             statements = new List<TStatement>();
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Document));
-                FileStream stream = new FileStream(filename, FileMode.Open);
+                FileStream stream = new FileStream(filename, FileMode.Open); 
                 Document document = (Document)serializer.Deserialize(stream);
 
                 var stmts = document.BkToCstmrAcctRpt.Rpt;
@@ -70,13 +65,12 @@ namespace libfintx
                 {
                     TStatement stmt = new TStatement();
 
-                    stmt.id = accReport.ElctrncSeqNb.ToString();
+                    stmt.id = accReport.Id;
+                    stmt.elctrncSeqNb = accReport.ElctrncSeqNb.ToString();
+
                     stmt.accountCode = accReport.Acct?.Id?.Item?.ToString();
                     stmt.bankCode = accReport.Acct?.Svcr?.FinInstnId?.BIC;
                     stmt.currency = accReport.Acct?.Ccy;
-
-                    //int DiffElctrncSeqNb = Convert.ToInt32(stmt.bankCode) / Convert.ToInt32(stmt.accountCode);
-                    //stmt.id = (accReport.ElctrncSeqNb + DiffElctrncSeqNb).ToString();
 
                     stmt.severalYears = false;
                     string nm = accReport.Acct?.Ownr?.Nm;
@@ -185,12 +179,12 @@ namespace libfintx
                                 txDetails?.RltdAgts?.CdtrAgt?.FinInstnId?.BIC :
                                 txDetails?.RltdAgts?.DbtrAgt?.FinInstnId?.BIC;
 
-                            tr.partnerName = debit ?
-                                txDetails?.RltdPties?.Cdtr?.Nm :
+                            tr.partnerName = debit ? 
+                                txDetails?.RltdPties?.Cdtr?.Nm : 
                                 txDetails?.RltdPties?.Dbtr?.Nm;
 
-                            tr.accountCode = debit ?
-                                txDetails?.RltdPties?.CdtrAcct?.Id?.Item?.ToString() :
+                            tr.accountCode = debit ? 
+                                txDetails?.RltdPties?.CdtrAcct?.Id?.Item?.ToString() : 
                                 txDetails?.RltdPties?.DbtrAcct?.Id?.Item?.ToString();
 
                             string CrdtName = txDetails?.RltdPties?.Cdtr?.Nm;
@@ -220,7 +214,7 @@ namespace libfintx
                             {
                                 // eg NSTO+152+00900. look for SEPA Geschäftsvorfallcodes
                                 // see the codes: https://www.wgzbank.de/export/sites/wgzbank/de/wgzbank/downloads/produkte_leistungen/firmenkunden/zv_aktuelles/Uebersicht-GVC-und-Buchungstexte-WGZ-BANK_V062015.pdf
-                                string[] GVCCode = txDetails?.BkTxCd.Prtry.Cd?.Split(new char[] { '+' });
+                                string[] GVCCode = txDetails?.BkTxCd?.Prtry?.Cd?.Split(new char[] { '+' });
                                 if (GVCCode.Length > 0)
                                     tr.typecode = GVCCode[1];
                             }
