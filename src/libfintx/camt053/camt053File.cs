@@ -52,11 +52,9 @@ namespace libfintx
             {
                 using (File.Create(filename))
                 { };
-
-                File.AppendAllText(filename, UMS);
             }
-            else
-                File.AppendAllText(filename, UMS);
+            
+            File.AppendAllText(filename, UMS);
 
             return filename;
         }
