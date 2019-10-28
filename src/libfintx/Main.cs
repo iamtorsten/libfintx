@@ -25,12 +25,8 @@ using libfintx.Data;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Serialization;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using static libfintx.HKCDE;
 
 namespace libfintx
@@ -285,7 +281,7 @@ namespace libfintx
                         {
                             // Save camt052 statement to file
                             var camt052f = camt052File.Save(connectionDetails.Account, camt, encoding);
-                            
+
                             // Process the camt052 file
                             CAMT052Parser.ProcessFile(camt052f);
                         }

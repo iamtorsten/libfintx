@@ -23,11 +23,11 @@
 
 // #define WINDOWS
 
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.IO;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace libfintx
 {
@@ -58,14 +58,14 @@ namespace libfintx
                 Array.Copy(data, offset, b, 0, mimeTypeLen);
                 ImageMimeType = Encoding.Default.GetString(b);
                 offset += mimeTypeLen;
-            
+
                 //Read image data            
                 offset += 2;
                 int len = data.Length - offset;
                 b = new byte[len];
                 Array.Copy(data, offset, b, 0, len);
                 MemoryStream ms = new MemoryStream(b);
-                CodeImage = Image.Load(ms);                
+                CodeImage = Image.Load(ms);
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace libfintx
                 Log.Write(errMsg);
                 throw new Exception(errMsg, ex);
             }
-            
+
         }
 
         /// <summary>

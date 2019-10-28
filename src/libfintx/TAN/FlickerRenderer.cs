@@ -30,13 +30,12 @@
 
 //#define WINDOWS
 
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.PixelFormats;
 using CoreRectangle = SixLabors.Primitives.Rectangle;
 
 namespace libfintx
@@ -115,7 +114,7 @@ namespace libfintx
         }
 
         public Image<Rgba32> RenderAsGif(int width = 320, int height = 120)
-        {   
+        {
             using (var image = new Image<Rgba32>(width, height))
             {
                 int margin = 7, barwidth = width / 5;
@@ -125,17 +124,17 @@ namespace libfintx
                     {
                         int[] bits = this.bitarray[i];
                         bits[0] = cl;
-                        using(var frame = new Image<Rgba32>(width, height))
+                        using (var frame = new Image<Rgba32>(width, height))
                         {
                             for (int b = 0; b < 5; b++)
                             {
                                 var color = bitarray[i][b] == 1 ? Rgba32.White : Rgba32.Black;
-                                var bounds = new CoreRectangle(b * barwidth + margin, margin,barwidth - 2 * margin, height - 2 * margin);
-                                frame.Mutate(x => x.Fill(color,bounds));                      
+                                var bounds = new CoreRectangle(b * barwidth + margin, margin, barwidth - 2 * margin, height - 2 * margin);
+                                frame.Mutate(x => x.Fill(color, bounds));
                             }
                             image.Frames.AddFrame(frame.Frames[0]);
                         }
-                    }                    
+                    }
                 }
 
                 return image;
@@ -174,84 +173,84 @@ namespace libfintx
 
         public virtual void Run()
         {
-//             // First semi byte
-//             this.halfbyteid = 0;
+            //             // First semi byte
+            //             this.halfbyteid = 0;
 
-//             // Clock
-//             this.clock = 1;
+            //             // Clock
+            //             this.clock = 1;
 
-// #if WINDOWS
-//             // Flicker code form
-//             var pictureBox = this.pictureBox;
+            // #if WINDOWS
+            //             // Flicker code form
+            //             var pictureBox = this.pictureBox;
 
 
-//             // Flicker graphic
-//             Graphics graphic = Graphics.FromImage(pictureBox.Image);
-// #endif
+            //             // Flicker graphic
+            //             Graphics graphic = Graphics.FromImage(pictureBox.Image);
+            // #endif
 
-//             // Change between black and white
-//             Brush brush;
-			
-//             try
-//             {
-//                 // Transmission
-//                 while (true)
-//                 {
-//                     int[] bits = this.bitarray[this.halfbyteid];
+            //             // Change between black and white
+            //             Brush brush;
 
-//                     bits[0] = this.clock;
+            //             try
+            //             {
+            //                 // Transmission
+            //                 while (true)
+            //                 {
+            //                     int[] bits = this.bitarray[this.halfbyteid];
 
-//  #if WINDOWS
-// 					int margin = 7;
-// 					int barwidth = pictureBox.Width / 5;
-// #endif
+            //                     bits[0] = this.clock;
 
-//                     for (int i = 0; i < 5; i++)
-//                     {
-//                         if (bitarray[halfbyteid][i] == 1)
-//                         {
-//                             brush = Brushes.White;
-//                         }
-//                         else
-//                         {
-//                             brush = Brushes.Black;
-//                         }
+            //  #if WINDOWS
+            // 					int margin = 7;
+            // 					int barwidth = pictureBox.Width / 5;
+            // #endif
 
-// #if WINDOWS
-//                         graphic.FillRectangle(brush, i * barwidth + margin, margin, barwidth - 2 * margin, pictureBox.Height - 2 * margin);
+            //                     for (int i = 0; i < 5; i++)
+            //                     {
+            //                         if (bitarray[halfbyteid][i] == 1)
+            //                         {
+            //                             brush = Brushes.White;
+            //                         }
+            //                         else
+            //                         {
+            //                             brush = Brushes.Black;
+            //                         }
 
-//                         // Refresh flicker code
-//                         pictureBox.Invoke(new MethodInvoker (delegate() { pictureBox.Refresh(); }));
-// #endif
-//                     }
+            // #if WINDOWS
+            //                         graphic.FillRectangle(brush, i * barwidth + margin, margin, barwidth - 2 * margin, pictureBox.Height - 2 * margin);
 
-//                     this.clock--;
-                    
-// 					if (this.clock < 0)
-//                     {
-//                         this.clock = 1;
+            //                         // Refresh flicker code
+            //                         pictureBox.Invoke(new MethodInvoker (delegate() { pictureBox.Refresh(); }));
+            // #endif
+            //                     }
 
-//                         // Each character must be duplicated
-//                         // Once with clock 0 and once with clock 1
-//                         this.halfbyteid++;
-//                         if (this.halfbyteid >= this.bitarray.Count)
-//                         {
-//                             this.halfbyteid = 0;
+            //                     this.clock--;
 
-//                             // Flicker code was shown one period
-//                             this.iterations++;
-//                         }
-//                     }
+            // 					if (this.clock < 0)
+            //                     {
+            //                         this.clock = 1;
 
-//                     // Waiting period
-//                     long sleep = 1000L / this.freq;
-//                     Thread.Sleep(Convert.ToInt32(sleep));
-//                 }
-//             }
-//             catch
-//             {
-//                 // End of display flicker code
-//             }
+            //                         // Each character must be duplicated
+            //                         // Once with clock 0 and once with clock 1
+            //                         this.halfbyteid++;
+            //                         if (this.halfbyteid >= this.bitarray.Count)
+            //                         {
+            //                             this.halfbyteid = 0;
+
+            //                             // Flicker code was shown one period
+            //                             this.iterations++;
+            //                         }
+            //                     }
+
+            //                     // Waiting period
+            //                     long sleep = 1000L / this.freq;
+            //                     Thread.Sleep(Convert.ToInt32(sleep));
+            //                 }
+            //             }
+            //             catch
+            //             {
+            //                 // End of display flicker code
+            //             }
         }
 
         /// <summary>

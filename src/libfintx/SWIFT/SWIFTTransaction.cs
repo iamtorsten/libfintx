@@ -79,33 +79,33 @@ namespace libfintx
 
         public string partnerName;
 
-		//Ende-zu-Ende Referenz
-		public string EREF;
-		//Kundenreferenz
-		public string KREF;
-		//Mandatsreferenz
-		public string MREF;
-		//Bankreferenz
-		public string BREF;
-		//Retourenreferenz
-		public string RREF;
-		//Creditor-ID
-		public string CRED;
-		//Debitor-ID
-		public string DEBT;
-		//Zinskompensationsbetrag
-		public string COAM;
-		//Ursprünglicher Umsatzbetrag
-		public string OAMT;
-		//Verwendungszweck
-		public string SVWZ;
-		//Abweichender Auftraggeber
-		public string ABWA;
-		//Abweichender Empfänger
-		public string ABWE;
-		//IBAN des Auftraggebers
-		public string IBAN;
-		//BIC des Auftraggebers
-		public string BIC;
-	}
+        //Ende-zu-Ende Referenz
+        public string EREF;
+        //Kundenreferenz
+        public string KREF;
+        //Mandatsreferenz
+        public string MREF;
+        //Bankreferenz
+        public string BREF;
+        //Retourenreferenz
+        public string RREF;
+        //Creditor-ID
+        public string CRED;
+        //Debitor-ID
+        public string DEBT;
+        //Zinskompensationsbetrag
+        public string COAM;
+        //Ursprünglicher Umsatzbetrag
+        public string OAMT;
+        //Verwendungszweck
+        public string SVWZ;
+        //Abweichender Auftraggeber
+        public string ABWA;
+        //Abweichender Empfänger
+        public string ABWE;
+        //IBAN des Auftraggebers
+        public string IBAN;
+        //BIC des Auftraggebers
+        public string BIC;
+    }
 }

@@ -101,17 +101,21 @@ namespace libfintx
         {
             var connectionDetails = new ConnectionDetails()
             {
-                // ...
+                Blz = 76050101,
+                Url = "https://banking-by1.s-fints-pt-by.de/fints30",
+                HBCIVersion = 300,
+                UserId = "xxx",
+                Pin = "xxx"
             };
             Anonymous = false;
 
             /* Sync */
 
-            libfintx.Main.Assembly("libfintx", "0.1");
+            HBCI.Assembly("libfintx", "0.1");
 
-            libfintx.Main.Tracing(true);
+            HBCI.Tracing(true);
 
-            var accounts = libfintx.Main.Accounts(connectionDetails, new TANDialog(WaitForTAN), Anonymous);
+            var accounts = HBCI.Accounts(connectionDetails, new TANDialog(WaitForTAN), Anonymous);
             foreach (var acc in accounts.Data)
             {
                 output.WriteLine(acc.ToString());
@@ -200,7 +204,7 @@ namespace libfintx
             {
                 Segment.HIRMS = "921"; // -> pushTAN
 
-                var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
+                var tanmediumname = HBCI.RequestTANMediumName(connectionDetails);
                 Segment.HITAB = tanmediumname.Data.FirstOrDefault();
 
                 System.Threading.Thread.Sleep(5000);

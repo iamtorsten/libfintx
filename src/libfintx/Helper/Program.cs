@@ -21,9 +21,6 @@
  * 	
  */
 
-using System;
-using System.IO;
-
 namespace libfintx
 {
     public static class Program

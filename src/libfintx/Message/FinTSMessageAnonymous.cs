@@ -41,7 +41,7 @@ namespace libfintx
         /// <param name="TAN"></param>
         /// <param name="SegmentNum"></param>
         /// <returns></returns>
-        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN, 
+        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN,
             string SystemID, string Segments, string TAN, int SegmentNum)
         {
             if (String.IsNullOrEmpty(MsgNum))

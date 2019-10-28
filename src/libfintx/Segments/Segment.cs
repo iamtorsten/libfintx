@@ -21,11 +21,10 @@
  * 	
  */
 
-using System.Reflection;
-using System.Linq;
-using System;
-using System.Text;
 using libfintx.Util;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace libfintx
 {

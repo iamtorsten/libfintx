@@ -23,7 +23,6 @@
 
 using libfintx.Data;
 using System;
-using System.Collections.Generic;
 
 namespace libfintx
 {
@@ -111,7 +110,7 @@ namespace libfintx
 
                     if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments_ = 
+                        string segments_ =
                             "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
                             "HKVVB:" + SEGNUM.SETVal(3) + ":3+0+0+1+" + Program.ProductId + "+" + Program.Version + "'";
 
@@ -149,7 +148,7 @@ namespace libfintx
                     /// </summary>
                     if (connectionDetails.HBCIVersion == 300)
                     {
-                        string segments__ = 
+                        string segments__ =
                             "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
                             "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";

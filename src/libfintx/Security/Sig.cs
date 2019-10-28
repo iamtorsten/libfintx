@@ -21,10 +21,6 @@
  * 	
  */
 
-using System;
-using System.Security.Cryptography;
-using System.Text;
-
 namespace libfintx
 {
     public class Sig

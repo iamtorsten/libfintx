@@ -67,7 +67,7 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(3);
                     break;
-                    
+
                 case camtVersion.camt053:
                     Log.Write("Starting job HKCAZ: Request transactions in camt053 format");
 

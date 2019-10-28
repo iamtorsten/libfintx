@@ -22,7 +22,6 @@
  */
 
 using libfintx.Data;
-using System;
 
 namespace libfintx
 {

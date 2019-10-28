@@ -39,7 +39,7 @@ namespace libfintx
         /// <summary>
         /// Bankcode of the owner's bankaccount
         /// </summary>
-        public string OwnerBankcode{ get; set; }
+        public string OwnerBankcode { get; set; }
 
         /// <summary>
         /// IBAN of the transaction partner

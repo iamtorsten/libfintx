@@ -44,7 +44,7 @@ namespace libfintx
         /// <param name="HIRMS_TAN"></param>
         /// <param name="SegmentNum"></param>
         /// <returns></returns>
-        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN, 
+        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN,
             string SystemID, string Segments, string HIRMS_TAN, int SegmentNum)
         {
             if (String.IsNullOrEmpty(MsgNum))
@@ -250,7 +250,7 @@ namespace libfintx
                     {
                         using (StreamReader streamReader = new StreamReader(resStream, Encoding.UTF8))
                         {
-                            FinTSMessage = Helper.DecodeFrom64EncodingDefault(streamReader.ReadToEnd());                            
+                            FinTSMessage = Helper.DecodeFrom64EncodingDefault(streamReader.ReadToEnd());
                         }
                     }
                 }

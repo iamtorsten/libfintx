@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using libfintx;
 using libfintx.Data;
 
 namespace libfintx.Sample

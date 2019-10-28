@@ -22,16 +22,13 @@
  */
 
 
+using libfintx.camt_052_001_02;
 using System;
-using System.Linq;
-using System.IO;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Xml;
-using System.Threading;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using libfintx.camt_052_001_02;
 
 namespace libfintx
 {
@@ -175,7 +172,7 @@ namespace libfintx
                     foreach (ReportEntry2 entry in entries)
                     {
                         TTransaction tr = new TTransaction();
-                        
+
                         tr.pending = entry.Sts == EntryStatus2Code.PDNG;
 
                         if (entry.BookgDt != null)

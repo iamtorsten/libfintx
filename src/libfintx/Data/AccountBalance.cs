@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace libfintx
+﻿namespace libfintx
 {
     /// <summary>
     /// Returns an account's balance including currency and status information
@@ -15,7 +10,7 @@ namespace libfintx
         /// Type of the requested account
         /// </summary>
         public AccountInformations AccountType { get; set; }
-        
+
         /// <summary>
         /// Balance as decimal value
         /// </summary>
