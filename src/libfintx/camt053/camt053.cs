@@ -245,6 +245,11 @@ namespace libfintx
 
                         tr.endToEndId = txDetails?.Refs?.EndToEndId;
 
+                        tr.msgId = txDetails?.Refs?.MsgId;
+                        tr.pmtInfId = txDetails?.Refs?.PmtInfId;
+                        tr.mndtId = txDetails?.Refs?.MndtId;
+                        tr.id = txDetails?.Refs?.Prtry?.Ref;
+
                         if (txDetails?.BkTxCd.Prtry.Cd != null)
                         {
                             // eg NSTO+152+00900. look for SEPA Geschäftsvorfallcodes

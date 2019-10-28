@@ -238,7 +238,7 @@ namespace libfintx
 
                         tr.msgId = txDetails?.Refs?.MsgId;
                         tr.pmtInfId = txDetails?.Refs?.PmtInfId;
-                        tr.pmtInfId = txDetails?.Refs?.MndtId;
+                        tr.mndtId = txDetails?.Refs?.MndtId;
                         tr.id = txDetails?.Refs?.Prtry?.Ref;
 
                         if (txDetails?.BkTxCd.Prtry.Cd != null)
