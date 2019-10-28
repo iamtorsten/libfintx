@@ -155,7 +155,7 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static HBCIDialogResult<List<SWIFTStatement>> Transactions(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        public static HBCIDialogResult<List<SWIFTStatement>> Transactions(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
         {
             HBCIDialogResult result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -187,7 +187,7 @@ namespace libfintx
             else // -> Postbank finishes with HNHBS
                 Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNHBS");
 
-            swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account));
+            swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account, saveMt940File));
 
             string BankCode_ = BankCode;
             while (BankCode_.Contains("+3040::"))
@@ -230,7 +230,7 @@ namespace libfintx
         /// Transactions
         /// </returns>
         public static HBCIDialogResult<List<TStatement>> Transactions_camt(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, camtVersion camtVers,
-            DateTime? startDate = null, DateTime? endDate = null)
+            DateTime? startDate = null, DateTime? endDate = null, bool saveCamtFile = false)
         {
             HBCIDialogResult result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -261,6 +261,7 @@ namespace libfintx
 
             TCAM052TParser CAMT052Parser = null;
             TCAM053TParser CAMT053Parser = null;
+            Encoding encoding = Encoding.GetEncoding("ISO-8859-1");
 
             string BankCode_ = BankCode;
 
@@ -277,26 +278,42 @@ namespace libfintx
                 switch (camtVers)
                 {
                     case camtVersion.camt052:
-                        // Save camt052 statement to file
-                        var camt052f = camt052File.Save(connectionDetails.Account, camt);
-
-                        // Process the camt053 file
                         if (CAMT052Parser == null)
                             CAMT052Parser = new TCAM052TParser();
-                        CAMT052Parser.ProcessFile(camt052f);
+
+                        if (saveCamtFile)
+                        {
+                            // Save camt052 statement to file
+                            var camt052f = camt052File.Save(connectionDetails.Account, camt, encoding);
+                            
+                            // Process the camt052 file
+                            CAMT052Parser.ProcessFile(camt052f);
+                        }
+                        else
+                        {
+                            CAMT052Parser.ProcessDocument(camt, encoding);
+                        }
 
                         statements.AddRange(CAMT052Parser.statements);
                         break;
                     case camtVersion.camt053:
-                        // Save camt053 statement to file
-                        var camt053f = camt053File.Save(connectionDetails.Account, camt);
-
-                        // Process the camt053 file
                         if (CAMT053Parser == null)
                             CAMT053Parser = new TCAM053TParser();
-                        CAMT053Parser.ProcessFile(camt053f);
 
-                        statements.AddRange(CAMT052Parser.statements);
+                        if (saveCamtFile)
+                        {
+                            // Save camt053 statement to file
+                            var camt053f = camt053File.Save(connectionDetails.Account, camt, encoding);
+
+                            // Process the camt053 file
+                            CAMT053Parser.ProcessFile(camt053f);
+                        }
+                        else
+                        {
+                            CAMT053Parser.ProcessDocument(camt, encoding);
+                        }
+
+                        statements.AddRange(CAMT053Parser.statements);
                         break;
                 }
 

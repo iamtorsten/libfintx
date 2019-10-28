@@ -34,8 +34,10 @@ namespace libfintx
         /// <summary>
         /// Save xml string as camt052 file
         /// </summary>
-        public static string Save(string Account, string UMS)
+        public static string Save(string Account, string UMS, Encoding encoding = null)
         {
+            encoding = encoding ?? Encoding.UTF8;
+
             string dir = Helper.GetProgramBaseDir();
 
             dir = Path.Combine(dir, "camt052");
@@ -54,7 +56,7 @@ namespace libfintx
                 { };
             }
 
-            File.AppendAllText(filename, UMS);
+            File.AppendAllText(filename, UMS, encoding);
 
             return filename;
         }
