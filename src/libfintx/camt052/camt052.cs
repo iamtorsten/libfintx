@@ -123,7 +123,7 @@ namespace libfintx
                                 stmt.startBalance *= -1.0m;
                             }
 
-                            stmt.date = balance.Dt.Item;
+                            stmt.startDate = balance.Dt.Item;
                         }
                         // CLBD: ClosingBooked
                         else if (balance.Tp?.CdOrPrtry?.Item?.ToString() == "CLBD")
@@ -136,7 +136,7 @@ namespace libfintx
                                 stmt.endBalance *= -1.0m;
                             }
 
-                            stmt.date = balance.Dt.Item;
+                            stmt.endDate = balance.Dt.Item;
                         }
 
                         // ITBD: InterimBooked
@@ -174,39 +174,45 @@ namespace libfintx
                 {
                     foreach (ReportEntry2 entry in entries)
                     {
-                        TTransaction tr = new TTransaction();
-                        
-                        tr.pending = entry.Sts == EntryStatus2Code.PDNG;
-
-                        if (entry.BookgDt != null)
-                            tr.inputDate = entry.BookgDt.Item;
-                        if (entry.ValDt != null)
-                            tr.valueDate = entry.ValDt.Item;
-
-                        if (tr.valueDate.Year != stmt.date.Year)
-                        {
-                            stmt.severalYears = true;
-                        }
-
-                        tr.amount = entry.Amt.Value;
-
                         if (entry.Amt.Ccy != stmt.currency)
                         {
                             throw new Exception("transaction currency " + entry.Amt.Ccy + " does not match the bank statement currency");
                         }
 
+                        TTransaction tr = new TTransaction();
+                        
+                        tr.pending = entry.Sts == EntryStatus2Code.PDNG;
+
+                        if (entry.BookgDt != null)
+                        {
+                            tr.inputDate = entry.BookgDt.Item;
+                        }
+                        if (entry.ValDt != null)
+                        {
+                            tr.valueDate = entry.ValDt.Item;
+                            if (tr.valueDate.Year != stmt.startDate.Year)
+                            {
+                                stmt.severalYears = true;
+                            }
+                        }
+
+                        // Betrag/Soll/Haben
+                        tr.amount = entry.Amt.Value;
                         bool debit = entry.CdtDbtInd == CreditDebitCode.DBIT;
                         if (debit)
                         {
                             tr.amount *= -1.0m;
                         }
 
+                        tr.storno = entry.RvslInd;
+
                         EntryDetails1 entryDetails = entry.NtryDtls?.FirstOrDefault();
                         EntryTransaction2 txDetails = entryDetails?.TxDtls?.FirstOrDefault();
 
+                        // Verwendungszweck
                         if (txDetails?.RmtInf?.Ustrd != null)
                         {
-                            tr.description = string.Join(string.Empty, txDetails.RmtInf.Ustrd);
+                            tr.description = string.Join(string.Empty, txDetails.RmtInf.Ustrd.Select(s => s?.Trim()));
                         }
 
                         tr.text = entry.AddtlNtryInf;

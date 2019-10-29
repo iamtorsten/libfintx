@@ -85,5 +85,7 @@ namespace libfintx
         public string pmtInfId;
 
         public string msgId;
+
+        public bool storno;
     }
 }

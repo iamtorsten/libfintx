@@ -59,8 +59,10 @@ namespace libfintx
         /// todoComment
         public decimal endBalance;
 
+        public DateTime startDate;
+
         /// todoComment
-        public DateTime date;
+        public DateTime endDate;
 
         /// across several years
         public bool severalYears;
