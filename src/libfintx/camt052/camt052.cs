@@ -251,6 +251,8 @@ namespace libfintx
                         tr.pmtInfId = txDetails?.Refs?.PmtInfId;
                         tr.mndtId = txDetails?.Refs?.MndtId;
                         tr.id = txDetails?.Refs?.Prtry?.Ref;
+                        
+                        tr.customerRef = entry.AcctSvcrRef;
 
                         if (txDetails?.BkTxCd.Prtry.Cd != null)
                         {

@@ -82,6 +82,8 @@ namespace libfintx
         /// </summary>
         public string id;
 
+        public string customerRef;
+
         public string pmtInfId;
 
         public string msgId;
