@@ -52,7 +52,14 @@ namespace libfintx
         /// todoComment
         public string text;
 
-        /// todoComment
+        /// <summary>
+        /// Buchungsschlüssel
+        /// </summary>
+        public string transactionTypeId;
+
+        /// <summary>
+        /// Geschäftsvorfallcode
+        /// </summary>
         public string typecode;
 
         /// todoComment

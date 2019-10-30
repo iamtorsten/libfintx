@@ -180,7 +180,7 @@ namespace libfintx
                         }
 
                         TTransaction tr = new TTransaction();
-                        
+
                         tr.pending = entry.Sts == EntryStatus2Code.PDNG;
 
                         if (entry.BookgDt != null)
@@ -215,7 +215,7 @@ namespace libfintx
                             tr.description = string.Join(string.Empty, txDetails.RmtInf.Ustrd.Select(s => s?.Trim()));
                         }
 
-                        tr.text = entry.AddtlNtryInf;
+                        tr.text = entry.AddtlNtryInf?.Trim();
 
                         tr.bankCode = debit ?
                             txDetails?.RltdAgts?.CdtrAgt?.FinInstnId?.BIC :
@@ -251,15 +251,17 @@ namespace libfintx
                         tr.pmtInfId = txDetails?.Refs?.PmtInfId;
                         tr.mndtId = txDetails?.Refs?.MndtId;
                         tr.id = txDetails?.Refs?.Prtry?.Ref;
-                        
+
                         tr.customerRef = entry.AcctSvcrRef;
 
                         if (txDetails?.BkTxCd.Prtry.Cd != null)
                         {
                             // eg NSTO+152+00900. look for SEPA Geschäftsvorfallcodes
-                            // see the codes: https://www.wgzbank.de/export/sites/wgzbank/de/wgzbank/downloads/produkte_leistungen/firmenkunden/zv_aktuelles/Uebersicht-GVC-und-Buchungstexte-WGZ-BANK_V062015.pdf
+                            // see the codes: https://www.hettwer-beratung.de/business-portfolio/zahlungsverkehr/elektr-kontoinformationen-swift-mt-940/
                             string[] GVCCode = txDetails?.BkTxCd?.Prtry?.Cd?.Split(new char[] { '+' });
                             if (GVCCode.Length > 0)
+                                tr.transactionTypeId = GVCCode[0];
+                            if (GVCCode.Length > 1)
                                 tr.typecode = GVCCode[1];
                         }
 
