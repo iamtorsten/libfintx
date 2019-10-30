@@ -165,8 +165,6 @@ namespace libfintx
             if (!result.IsSuccess)
                 return result.TypedResult<List<SWIFTStatement>>();
 
-            var swiftStatements = new List<SWIFTStatement>();
-
             var startDateStr = startDate?.ToString("yyyyMMdd");
             var endDateStr = endDate?.ToString("yyyyMMdd");
 
@@ -181,13 +179,12 @@ namespace libfintx
                 return result.TypedResult<List<SWIFTStatement>>();
 
             BankCode = result.RawData;
-            string Transactions;
-            if (BankCode.Contains("HNSHA"))
-                Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNSHA");
-            else // -> Postbank finishes with HNHBS
-                Transactions = ":20:" + Helper.Parse_String(BankCode, ":20:", "'HNHBS");
+            StringBuilder Transactions = new StringBuilder();
 
-            swiftStatements.AddRange(MT940.Serialize(Transactions, connectionDetails.Account, saveMt940File));
+            var regex = new Regex(@"HIKAZ:.+?@\d+@(\n|\r|\r\n)*(?<payload>.+?)('HNSHA|''HNHBS)", RegexOptions.Singleline);
+            var match = regex.Match(BankCode);
+            if (match.Success)
+                Transactions.Append(match.Groups["payload"].Value);
 
             string BankCode_ = BankCode;
             while (BankCode_.Contains("+3040::"))
@@ -206,15 +203,14 @@ namespace libfintx
                     return result.TypedResult<List<SWIFTStatement>>();
 
                 BankCode_ = result.RawData;
-                // Subsequent transactions can also begin with :61: (e.g. Berliner Sparkasse)
-                var startToken = ":20:";
-                if (BankCode_.Contains(":61:") && BankCode_.IndexOf(":61:") < BankCode_.IndexOf(":20:"))
-                    startToken = ":61:";
-
-                var Transactions_ = startToken + Helper.Parse_String(BankCode_, startToken, "'HNSHA");
-
-                swiftStatements.AddRange(MT940.Serialize(Transactions_, connectionDetails.Account));
+                match = regex.Match(BankCode_);
+                if (match.Success)
+                    Transactions.Append(match.Groups["payload"].Value);
             }
+
+            var swiftStatements = new List<SWIFTStatement>();
+
+            swiftStatements.AddRange(MT940.Serialize(Transactions.ToString(), connectionDetails.Account, saveMt940File));
 
             return result.TypedResult(swiftStatements);
         }
