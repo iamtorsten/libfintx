@@ -40,9 +40,11 @@ namespace libfintx
 
         public decimal startBalance;
 
+        public DateTime startDate;
+
         public decimal endBalance;
 
-        public DateTime date;
+        public DateTime endDate;
 
         public List<SWIFTTransaction> SWIFTTransactions = new List<SWIFTTransaction>();
 

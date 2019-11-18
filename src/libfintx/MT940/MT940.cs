@@ -90,7 +90,7 @@ namespace libfintx
                         SWIFTStatement.accountCode = LTrim(swiftData.Substring(posSlash + 1));
                 }
             }
-            else if (swiftTag.StartsWith("60"))
+            else if (swiftTag.StartsWith("60")) // Anfangssaldo
             {
                 // 60M is the start balance on each page of the SWIFTStatement.
                 // 60F is the start balance of the whole SWIFTStatement.
@@ -99,9 +99,16 @@ namespace libfintx
                 int DebitCreditIndicator = (swiftData[0] == 'D' ? -1 : +1);
 
                 // Next 6 characters: YYMMDD
+                swiftData = swiftData.Substring(1);
+
+                // Start date YYMMDD
+                DateTime postingDate = new DateTime(2000 + Convert.ToInt32(swiftData.Substring(0, 2)),
+                    Convert.ToInt32(swiftData.Substring(2, 2)),
+                    Convert.ToInt32(swiftData.Substring(4, 2)));
+
                 // Next 3 characters: Currency
                 // Last characters: Balance with comma for decimal point
-                SWIFTStatement.currency = swiftData.Substring(7, 3);
+                SWIFTStatement.currency = swiftData.Substring(6, 3);
                 try
                 {
                     decimal balance = DebitCreditIndicator * Convert.ToDecimal(swiftData.Substring(10).Replace(",",
@@ -117,6 +124,11 @@ namespace libfintx
                 catch (FormatException)
                 {
                     Log.Write($"Invalid balance: {swiftData}");
+                }
+
+                if (swiftTag == "60F" || swiftTag == "60M")
+                {
+                    SWIFTStatement.startDate = postingDate;
                 }
             }
             else if (swiftTag == "28C")
@@ -342,7 +354,7 @@ namespace libfintx
                     }
                 }
             }
-            else if (swiftTag.StartsWith("62"))
+            else if (swiftTag.StartsWith("62")) // Schlusssaldo
             {
                 // 62M: Finish page
                 // 62F: Finish SWIFTStatement
@@ -375,7 +387,7 @@ namespace libfintx
 
                 if (swiftTag == "62F" || swiftTag == "62M")
                 {
-                    SWIFTStatement.date = postingDate;
+                    SWIFTStatement.endDate = postingDate;
                     SWIFTStatements.Add(SWIFTStatement);
 
                     // Process missing input dates
@@ -383,7 +395,7 @@ namespace libfintx
                     {
                         if (tx.inputDate == default)
                         {
-                            tx.inputDate = SWIFTStatement.date;
+                            tx.inputDate = SWIFTStatement.endDate;
                         }
                     }
 
@@ -466,8 +478,8 @@ namespace libfintx
             {
                 counter++;
             }
-        
-        while ((counter < Content.Length) && (Content[counter] == '@'))
+
+            while ((counter < Content.Length) && (Content[counter] == '@'))
             {
                 counter++;
             }
@@ -590,7 +602,7 @@ namespace libfintx
                 {
                     if (tx.inputDate == default)
                     {
-                        tx.inputDate = SWIFTStatement.date;
+                        tx.inputDate = SWIFTStatement.endDate;
                     }
                 }
 
@@ -635,11 +647,12 @@ namespace libfintx
                 foreach (SWIFTStatement statement in SWIFTStatements)
                 {
                     var ID = statement.id;
-                    var Date = statement.date.ToShortDateString();
                     var AccountCode = statement.accountCode;
                     var BanksortCode = statement.bankCode;
                     var Currency = statement.currency;
+                    var StartDate = $"{statement.startDate:d}";
                     var StartBalance = statement.startBalance.ToString();
+                    var EndDate = $"{statement.endDate:d}";
                     var EndBalance = statement.endBalance.ToString();
 
                     foreach (SWIFTTransaction transaction in statement.SWIFTTransactions)
@@ -653,11 +666,12 @@ namespace libfintx
                         var Amount = transaction.amount.ToString();
 
                         var UMS = "++STARTUMS++" + "ID: " + ID + " ' " +
-                            "Date: " + Date + " ' " +
                             "AccountCode: " + AccountCode + " ' " +
                             "BanksortCode: " + BanksortCode + " ' " +
                             "Currency: " + Currency + " ' " +
+                            "StartDate: " + StartDate + " ' " +
                             "StartBalance: " + StartBalance + " ' " +
+                            "EndDate: " + EndDate + " ' " +
                             "EndBalance: " + EndBalance + " ' " +
                             "PartnerName: " + PartnerName + " ' " +
                             "BankCode: " + BankCode + " ' " +
