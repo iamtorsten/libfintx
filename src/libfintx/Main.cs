@@ -181,7 +181,7 @@ namespace libfintx
             BankCode = result.RawData;
             StringBuilder Transactions = new StringBuilder();
 
-            var regex = new Regex(@"HIKAZ:.+?@\d+@(\n|\r|\r\n)*(?<payload>.+?)('HNSHA|''HNHBS)", RegexOptions.Singleline);
+            var regex = new Regex(@"HIKAZ:.+?@\d+@(?<payload>.+?)('HNSHA|''HNHBS)", RegexOptions.Singleline);
             var match = regex.Match(BankCode);
             if (match.Success)
                 Transactions.Append(match.Groups["payload"].Value);
