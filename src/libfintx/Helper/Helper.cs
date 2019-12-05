@@ -521,25 +521,18 @@ namespace libfintx
         public static List<string> Parse_TANMedium(string BankCode)
         {
             List<string> result = new List<string>();
-            if (BankCode.Contains("+A:1"))
-            {
-                var tanMedium = Parse_String(BankCode + "'", "+A:1", "'").Replace(":", "");
-                if (!string.IsNullOrWhiteSpace(tanMedium))
-                    result.Add(tanMedium);
-            }
-            else
-            {
-                // HITAB:4:4:3+0+M:1:::::::::::mT?:MFN1:********0340'
-                // HITAB:5:4:3+0+M:2:::::::::::Unregistriert 1::01514/654321::::::+M:1:::::::::::Handy:*********4321:::::::
-                // HITAB:4:4:3+0+M:1:::::::::::mT?:MFN1:********0340+G:1:SO?:iPhone:00:::::::::SO?:iPhone''
 
-                // For easier matching, replace '?:' by some special character
-                BankCode = BankCode.Replace("?:", @"\");
+            // HITAB:5:4:3+0+A:1:::::::::::Handy::::::::+A:2:::::::::::iPhone Abid::::::::
+            // HITAB:4:4:3+0+M:1:::::::::::mT?:MFN1:********0340'
+            // HITAB:5:4:3+0+M:2:::::::::::Unregistriert 1::01514/654321::::::+M:1:::::::::::Handy:*********4321:::::::
+            // HITAB:4:4:3+0+M:1:::::::::::mT?:MFN1:********0340+G:1:SO?:iPhone:00:::::::::SO?:iPhone''
 
-                foreach (Match match in Regex.Matches(BankCode, @"\+[MG]:1:(?<Kartennummer>[^:]*):(?<Kartenfolgenummer>[^:]*):+(?<Bezeichnung>[^+:]+)"))
-                {
-                    result.Add(match.Groups["Bezeichnung"].Value.Replace(@"\", "?:"));
-                }
+            // For easier matching, replace '?:' by some special character
+            BankCode = BankCode.Replace("?:", @"\");
+
+            foreach (Match match in Regex.Matches(BankCode, @"\+[AGMS]:[012]:(?<Kartennummer>[^:]*):(?<Kartenfolgenummer>[^:]*):+(?<Bezeichnung>[^+:]+)"))
+            {
+                result.Add(match.Groups["Bezeichnung"].Value.Replace(@"\", "?:"));
             }
 
             return result;
