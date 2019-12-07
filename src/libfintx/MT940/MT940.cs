@@ -111,7 +111,7 @@ namespace libfintx
                 SWIFTStatement.currency = swiftData.Substring(6, 3);
                 try
                 {
-                    decimal balance = DebitCreditIndicator * Convert.ToDecimal(swiftData.Substring(10).Replace(",",
+                    decimal balance = DebitCreditIndicator * Convert.ToDecimal(swiftData.Substring(9).Replace(",",
                             Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
 
                     // Use first start balance. If missing, use intermediate balance.
@@ -159,6 +159,7 @@ namespace libfintx
                 }
 
                 SWIFTTransaction SWIFTTransaction = new SWIFTTransaction();
+                SWIFTStatement.SWIFTTransactions.Add(SWIFTTransaction);
 
                 // Valuta date (YYMMDD)
                 try
@@ -181,7 +182,7 @@ namespace libfintx
 
                 swiftData = swiftData.Substring(6);
 
-                // Posting date (MMDD)
+                // Optional: Posting date (MMDD)
                 if (Regex.IsMatch(swiftData, @"^\d{4}"))
                 {
                     int year = SWIFTTransaction.valueDate.Year;
@@ -205,7 +206,7 @@ namespace libfintx
                 }
 
                 // Amount - some characters followed by an 'N'
-                if (Regex.IsMatch(swiftData, @"^.+N.*"))
+                if (Regex.IsMatch(swiftData, @"^.+N"))
                 {
                     // Debit or credit, or storno debit or credit
                     int debitCreditIndicator = 0;
@@ -234,42 +235,73 @@ namespace libfintx
                                 Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator));
 
                     SWIFTStatement.endBalance += SWIFTTransaction.amount;
-                    swiftData = swiftData.Substring(swiftData.IndexOf("N"));
 
-                    // Buchungsschlüssel
-                    if (swiftData.Length >= 4)
-                        SWIFTTransaction.transactionTypeId = swiftData.Substring(0, 4);
+                    var constIdx = swiftData.IndexOf("N");
+                    swiftData = swiftData.Length > constIdx + 1 ? swiftData.Substring(constIdx + 1) : string.Empty;
+                }
+                else
+                {
+                    return;
+                }
 
-                    // Optional: customer reference; ends with //
-                    swiftData = swiftData.Length > 4 ? swiftData.Substring(4) : string.Empty;
-                    if (swiftData.Length > 0)
+                // Buchungsschlüssel
+                if (Regex.IsMatch(swiftData, @"^[A-Z0-9]{3}"))
+                {
+                    SWIFTTransaction.transactionTypeId = swiftData.Substring(0, 3);
+
+                    swiftData = swiftData.Length > 3 ? swiftData.Substring(3) : string.Empty;
+                }
+                else
+                {
+                    return;
+                }
+
+                // customer reference
+                if (Regex.IsMatch(swiftData, @"^.+"))
+                {
+                    int idxDelimiter = swiftData.IndexOf("//");
+                    if (idxDelimiter > 0)
+                        SWIFTTransaction.customerReference = swiftData.Substring(0, idxDelimiter);
+                    else
+                        SWIFTTransaction.customerReference = swiftData;
+
+                    if (idxDelimiter > 0)
+                        swiftData = swiftData.Length > idxDelimiter + 2 ? swiftData.Substring(idxDelimiter + 2) : string.Empty;
+                    else
+                        swiftData = string.Empty;
+                }
+                else
+                {
+                    return;
+                }
+
+                // Optional: bank reference; ends with CR/LF if followed by other data
+                if (Regex.IsMatch(swiftData, @"^.+?\r\n", RegexOptions.Singleline))
+                {
+                    int lineBreakIdx = swiftData.IndexOf("\r\n");
+                    if (lineBreakIdx > 0)
                     {
-                        int idxDelimiter = swiftData.IndexOf("//");
-                        if (idxDelimiter > 0)
-                            SWIFTTransaction.customerReference = swiftData.Substring(0, idxDelimiter);
-                        else
-                            SWIFTTransaction.customerReference = swiftData;
-
-                        if (idxDelimiter > 0)
-                            swiftData = swiftData.Length > idxDelimiter + 2 ? swiftData.Substring(idxDelimiter + 2) : string.Empty;
-                        else
-                            swiftData = string.Empty;
+                        SWIFTTransaction.bankReference = swiftData.Substring(0, lineBreakIdx);
+                        swiftData = swiftData.Substring(lineBreakIdx + 2);
                     }
-
-                    // Optional: bank reference; ends with CR/LF
-                    if (swiftData.Length > 0)
+                    else
                     {
-                        if (swiftData.IndexOf(@"\r\n") > 0)
-                            SWIFTTransaction.bankReference = swiftData.Substring(0, swiftData.IndexOf(@"\r\n"));
-                        else
-                            SWIFTTransaction.bankReference = swiftData;
+                        SWIFTTransaction.bankReference = swiftData;
+                        swiftData = string.Empty;
                     }
                 }
 
-                SWIFTStatement.SWIFTTransactions.Add(SWIFTTransaction);
+                // Optional: other data
+                if (!string.IsNullOrWhiteSpace(swiftData))
+                {
+                    SWIFTTransaction.otherInformation = swiftData;
+                }
             }
             else if (swiftTag == "86")
             {
+                // Remove line breaks
+                swiftData = swiftData.Replace("\r\n", string.Empty);
+
                 SWIFTTransaction SWIFTTransaction = SWIFTStatement.SWIFTTransactions[SWIFTStatement.SWIFTTransactions.Count - 1];
 
                 // Geschaeftsvorfallcode
@@ -309,6 +341,7 @@ namespace libfintx
                     else if (key == 10)
                     {
                         // Primanotennummer
+                        SWIFTTransaction.primanota = value;
                     }
                     else if ((key >= 11) && (key <= 19))
                     {
@@ -336,6 +369,7 @@ namespace libfintx
                     else if (key == 34)
                     {
                         // Textschlüsselergänzung
+                        SWIFTTransaction.textKeyAddition = value;
                     }
                     else if ((key == 35) || (key == 36))
                     {
@@ -441,6 +475,7 @@ namespace libfintx
             }
             return true;
         }
+
         private static void AssignDescriptionSubField(SWIFTTransaction transaction, string value, ref string lastSubfield)
         {
             string pattern = $@"^((?<designator>EREF|KREF|MREF|BREF|RREF|CRED|DEBT|COAM|OAMT|SVWZ|ABWA|ABWE|IBAN|BIC)\+)(?<content>.+)";
@@ -455,6 +490,7 @@ namespace libfintx
             else if (!string.IsNullOrEmpty(lastSubfield))
                 SetDescriptionSubField(lastSubfield, transaction, value);
         }
+
         private static string Read(ref string Content)
         {
             Int32 counter;
@@ -582,7 +618,7 @@ namespace libfintx
                     else
                     {
                         // The swift chunk is spread over several lines
-                        swiftData = swiftData + line;
+                        swiftData = swiftData + "\r\n" + line;
                     }
                 }
             }
