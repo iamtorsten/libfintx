@@ -265,13 +265,18 @@ namespace libfintx
 
                         if (txDetails?.BkTxCd.Prtry.Cd != null)
                         {
-                            // eg NSTO+152+00900. look for SEPA Geschäftsvorfallcodes
+                            // NTRF+177+9310+997
+                            // NSTO+152+00900. look for SEPA Geschäftsvorfallcodes
                             // see the codes: https://www.hettwer-beratung.de/business-portfolio/zahlungsverkehr/elektr-kontoinformationen-swift-mt-940/
                             string[] GVCCode = txDetails?.BkTxCd?.Prtry?.Cd?.Split(new char[] { '+' });
                             if (GVCCode.Length > 0)
                                 tr.transactionTypeId = GVCCode[0];
                             if (GVCCode.Length > 1)
                                 tr.typecode = GVCCode[1];
+                            if (GVCCode.Length > 2)
+                                tr.primanota = GVCCode[2];
+                            if (GVCCode.Length > 3)
+                                tr.textKeyAddition = GVCCode[3];
                         }
 
                         // for SEPA direct debit batches, there are multiple TxDtls records

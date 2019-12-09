@@ -62,6 +62,10 @@ namespace libfintx
         /// </summary>
         public string typecode;
 
+        public string primanota;
+
+        public string textKeyAddition;
+
         /// todoComment
         public string description;
 
