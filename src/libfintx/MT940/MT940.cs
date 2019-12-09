@@ -238,7 +238,7 @@ namespace libfintx
                     SWIFTStatement.endBalance += SWIFTTransaction.amount;
 
                     var constIdx = swiftData.IndexOf("N");
-                    swiftData = swiftData.Length > constIdx + 1 ? swiftData.Substring(constIdx + 1) : string.Empty;
+                    swiftData = swiftData.Length > constIdx ? swiftData.Substring(constIdx) : string.Empty;
                 }
                 else
                 {
@@ -246,11 +246,11 @@ namespace libfintx
                 }
 
                 // Buchungsschlüssel
-                if (Regex.IsMatch(swiftData, @"^[A-Z0-9]{3}"))
+                if (Regex.IsMatch(swiftData, @"^N[A-Z0-9]{3}"))
                 {
-                    SWIFTTransaction.transactionTypeId = swiftData.Substring(0, 3);
+                    SWIFTTransaction.transactionTypeId = swiftData.Substring(0, 4);
 
-                    swiftData = swiftData.Length > 3 ? swiftData.Substring(3) : string.Empty;
+                    swiftData = swiftData.Length > 4 ? swiftData.Substring(4) : string.Empty;
                 }
                 else
                 {

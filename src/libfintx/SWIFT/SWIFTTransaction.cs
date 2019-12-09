@@ -59,6 +59,9 @@ namespace libfintx
 
         public decimal amount;
 
+        /// <summary>
+        /// Buchungsschlüssel, siehe https://www.hettwer-beratung.de/business-portfolio/zahlungsverkehr/elektr-kontoinformationen-swift-mt-940/
+        /// </summary>
         public string transactionTypeId;
 
         public string customerReference;
