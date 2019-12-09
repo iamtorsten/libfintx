@@ -179,12 +179,16 @@ namespace libfintx
                 return result.TypedResult<List<SWIFTStatement>>();
 
             BankCode = result.RawData;
-            StringBuilder Transactions = new StringBuilder();
+            StringBuilder TransactionsMt940 = new StringBuilder();
+            StringBuilder TransactionsMt942 = new StringBuilder();
 
-            var regex = new Regex(@"HIKAZ:.+?@\d+@(?<payload>.+?)('HNSHA|''HNHBS)", RegexOptions.Singleline);
+            var regex = new Regex(@"HIKAZ:.+?@\d+@(?<mt940>.+?)(\+@\d+@(?<mt942>.+?))?('{1,2}H[A-Z]{4}:\d+:\d+)", RegexOptions.Singleline);
             var match = regex.Match(BankCode);
             if (match.Success)
-                Transactions.Append(match.Groups["payload"].Value);
+            {
+                TransactionsMt940.Append(match.Groups["mt940"].Value);
+                TransactionsMt942.Append(match.Groups["mt942"].Value);
+            }
 
             string BankCode_ = BankCode;
             while (BankCode_.Contains("+3040::"))
@@ -205,12 +209,16 @@ namespace libfintx
                 BankCode_ = result.RawData;
                 match = regex.Match(BankCode_);
                 if (match.Success)
-                    Transactions.Append(match.Groups["payload"].Value);
+                {
+                    TransactionsMt940.Append(match.Groups["mt940"].Value);
+                    TransactionsMt942.Append(match.Groups["mt942"].Value);
+                }
             }
 
             var swiftStatements = new List<SWIFTStatement>();
 
-            swiftStatements.AddRange(MT940.Serialize(Transactions.ToString(), connectionDetails.Account, saveMt940File));
+            swiftStatements.AddRange(MT940.Serialize(TransactionsMt940.ToString(), connectionDetails.Account, saveMt940File));
+            swiftStatements.AddRange(MT940.Serialize(TransactionsMt942.ToString(), connectionDetails.Account, saveMt940File, true));
 
             return result.TypedResult(swiftStatements);
         }

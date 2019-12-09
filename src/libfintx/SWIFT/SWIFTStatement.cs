@@ -46,6 +46,26 @@ namespace libfintx
 
         public DateTime endDate;
 
+        // Begin MT942
+
+        public bool pending;
+
+        public decimal smallestAmount;
+
+        public decimal smallestCreditAmount;
+
+        public DateTime creationDate;
+
+        public int countDebit;
+
+        public decimal amountDebit;
+
+        public int countCredit;
+
+        public decimal amountCredit;
+
+        // End MT942
+
         public List<SWIFTTransaction> SWIFTTransactions = new List<SWIFTTransaction>();
 
         public List<SWIFTLine> lines = new List<SWIFTLine>();

@@ -34,6 +34,7 @@ using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Globalization;
 
 namespace libfintx
 {
@@ -444,6 +445,125 @@ namespace libfintx
             {
                 // Future valutensaldo
             }
+
+            // Begin MT942
+            else if (swiftTag == "34F")
+            {
+                if (swiftData.Length >= 3)
+                {
+                    SWIFTStatement.currency = swiftData.Substring(0, 3);
+                    swiftData = swiftData.Length > 3 ? swiftData.Substring(3) : string.Empty;
+                }
+
+                // Kleinster Betrag der gemeldeten Umsätze
+                if (Regex.IsMatch(swiftData, @"D?\d+,\d*"))
+                {
+                    bool debit = swiftData.Substring(0, 1) == "D";
+                    decimal amount = 0;
+                    if (debit)
+                    {
+                        decimal.TryParse(swiftData.Substring(1), out amount);
+                        amount = amount * -1;
+                    }
+                    else
+                    {
+                        decimal.TryParse(swiftData, out amount);
+                    }
+
+                    SWIFTStatement.smallestAmount = amount;
+                }
+                // Kleinster Betrag der gemeldeten Haben-Umsätze
+                else if (Regex.IsMatch(swiftData, @"C\d+,\d*"))
+                {
+                    decimal amount = 0;
+                    decimal.TryParse(swiftData.Substring(1), out amount);
+                    
+                    SWIFTStatement.smallestCreditAmount = amount;
+                }
+
+            }
+            else if (swiftTag == "13") // Deutsche Bank
+            {
+                if (Regex.IsMatch(swiftData, @"\d{10}"))
+                {
+                    DateTime creationDate;
+                    DateTime.TryParseExact(swiftData, "yyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out creationDate);
+
+                    SWIFTStatement.creationDate = creationDate;
+                }
+            }
+            else if (swiftTag == "13D")
+            {
+                if (Regex.IsMatch(swiftData, @"\d{10}(\+|-)\d{4}"))
+                {
+                    // Easier parsing
+                    // 1912090901+0100 -> 1912090901+01:00
+                    var dateStr = swiftData.Substring(0, 13) + ":" + swiftData.Substring(13, 2);
+                    DateTimeOffset dateTimeOffset;
+                    DateTimeOffset.TryParseExact(dateStr, "yyMMddHHmmzzz", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTimeOffset);
+
+                    SWIFTStatement.creationDate = dateTimeOffset.DateTime;
+                }
+                else
+                {
+                    DateTime creationDate;
+                    DateTime.TryParseExact(swiftData, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out creationDate);
+
+                    SWIFTStatement.creationDate = creationDate;
+                }
+            }
+            else if (swiftTag == "90D" || swiftTag == "90C")
+            {
+                bool debit = swiftTag == "90D";
+                bool previousTag90d = !debit && SWIFTStatement == null; // Previous tag has been 90D
+
+                if (previousTag90d) 
+                    SWIFTStatement = SWIFTStatements.LastOrDefault();
+
+                if (SWIFTStatement == null)
+                    return;
+
+                int count = 0;
+                decimal amount = 0;
+                string currency = null;
+                var match = Regex.Match(swiftData, @"(\d+)([A-Z]{3})(\d+(,\d+)?)");
+                if (match.Success)
+                {
+                    int.TryParse(match.Groups[1].Value, out count);
+
+                    currency = match.Groups[2].Value;
+
+                    decimal.TryParse(match.Groups[3].Value, NumberStyles.Number | NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("de-DE"), out amount);
+                }
+
+                if (SWIFTStatement.currency == null)
+                    SWIFTStatement.currency = currency;
+
+                if (debit)
+                {
+                    SWIFTStatement.countDebit = count;
+                    SWIFTStatement.amountDebit = amount * -1;
+                }
+                else
+                {
+                    SWIFTStatement.countCredit = count;
+                    SWIFTStatement.amountCredit = amount;
+                }
+
+                if (debit)
+                {
+                    SWIFTStatements.Add(SWIFTStatement);
+                    SWIFTStatement = null;
+                }
+                else
+                {
+                    if (!previousTag90d)
+                        SWIFTStatements.Add(SWIFTStatement);
+                    SWIFTStatement = null;
+                }
+            }
+            // End MT942
+
             else
             {
                 // Unknown tag
@@ -541,7 +661,7 @@ namespace libfintx
             return line;
         }
 
-        public static List<SWIFTStatement> Serialize(string STA, string Account, bool writeToFile = false)
+        public static List<SWIFTStatement> Serialize(string STA, string Account, bool writeToFile = false, bool pending = false)
         {
             int LineCounter = 0;
 
@@ -643,6 +763,15 @@ namespace libfintx
                 }
 
                 SWIFTStatement = null;
+            }
+
+            // Set pending
+            if (pending)
+            {
+                foreach (var stmt in SWIFTStatements)
+                {
+                    stmt.pending = true;
+                }
             }
 
             // Parse SEPA purposes
