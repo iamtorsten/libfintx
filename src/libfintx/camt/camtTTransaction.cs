@@ -86,18 +86,18 @@ namespace libfintx
 
         public string endToEndId;
 
-        public string mndtId;
+        public string mandateId;
         
         /// <summary>
         /// Unique Identifier (if available)
         /// </summary>
-        public string id;
+        public string proprietaryRef;
 
         public string customerRef;
 
-        public string pmtInfId;
+        public string paymentInformationId;
 
-        public string msgId;
+        public string messageId;
 
         public bool storno;
     }
