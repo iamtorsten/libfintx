@@ -39,13 +39,13 @@ XX?31DE12100500000123456789?32Mustermann, Max
             Assert.Equal(88.45m, stmt.endBalance);
 
             Assert.Single(stmt.SWIFTTransactions);
-            
+
             var tx = stmt.SWIFTTransactions[0];
-            
+
             Assert.Equal(new DateTime(2019, 12, 4), tx.valueDate);
             Assert.Equal(new DateTime(2019, 12, 4), tx.inputDate);
             Assert.Equal(-1m, tx.amount);
-            Assert.Equal("MSC", tx.transactionTypeId);
+            Assert.Equal("NMSC", tx.transactionTypeId);
             Assert.Equal("NONREF", tx.customerReference);
             Assert.Null(tx.bankReference);
 
@@ -59,6 +59,60 @@ XX?31DE12100500000123456789?32Mustermann, Max
             Assert.Equal("BELADEBEXXX", tx.bankCode);
             Assert.Equal("DE12100500000123456789", tx.accountCode);
             Assert.Equal("Mustermann, Max", tx.partnerName);
+        }
+
+        /// <summary>
+        /// Deutsche Bank
+        /// </summary>
+        [Fact]
+        public void Test_10070848()
+        {
+            string mt940 =
+@"
+:20:DEUTDEFFXXXX
+:25:10070848/123456789
+:28C:00000/000
+:60F:C191129EUR3930,41
+:61:191129C66,20NMSCNONREF
+:86:166?20EREF+0041961450206?21SVWZ+65-489042-01 /00419614?2250206 65
+-48904201 RENTE?30WELADEDDXXX?31DE90300500000072000003?32GOTHAER 
+LEBENSVERSICHERUNG
+:62F:C191129EUR3996,61
+";
+            var result = MT940.Serialize(mt940, "123456789");
+
+            Assert.Single(result);
+
+            var stmt = result[0];
+            Assert.Equal("DEUTDEFFXXXX", stmt.type);
+            Assert.Equal("10070848", stmt.bankCode);
+            Assert.Equal("123456789", stmt.accountCode);
+            Assert.Equal(new DateTime(2019, 11, 29), stmt.startDate);
+            Assert.Equal(3930.41m, stmt.startBalance);
+
+            Assert.Equal(new DateTime(2019, 11, 29), stmt.endDate);
+            Assert.Equal(3996.61m, stmt.endBalance);
+
+            Assert.Single(stmt.SWIFTTransactions);
+
+            var tx = stmt.SWIFTTransactions[0];
+
+            Assert.Equal(new DateTime(2019, 11, 29), tx.valueDate);
+            Assert.Equal(new DateTime(2019, 11, 29), tx.inputDate);
+            Assert.Equal(66.20m, tx.amount);
+            Assert.Equal("NMSC", tx.transactionTypeId);
+            Assert.Equal("NONREF", tx.customerReference);
+            Assert.Null(tx.bankReference);
+
+            Assert.Equal("166", tx.typecode);
+            Assert.Null(tx.text);
+            Assert.Null(tx.primanota);
+            Assert.Equal("EREF+0041961450206SVWZ+65-489042-01 /0041961450206 65-48904201 RENTE", tx.description);
+            Assert.Equal("0041961450206", tx.EREF);
+            Assert.Equal("65-489042-01 /0041961450206 65-48904201 RENTE", tx.SVWZ);
+            Assert.Equal("WELADEDDXXX", tx.bankCode);
+            Assert.Equal("DE90300500000072000003", tx.accountCode);
+            Assert.Equal("GOTHAER LEBENSVERSICHERUNG", tx.partnerName);
         }
 
         /// <summary>
@@ -100,7 +154,7 @@ NOLADE21HAM?31DE71207500000060017852?32FAX.de GmbH?34992
             Assert.Equal(new DateTime(2019, 12, 6), tx.valueDate);
             Assert.Equal(new DateTime(2019, 12, 6), tx.inputDate);
             Assert.Equal(-5.95m, tx.amount);
-            Assert.Equal("DDT", tx.transactionTypeId);
+            Assert.Equal("NDDT", tx.transactionTypeId);
             Assert.Equal("NONREF", tx.customerReference);
             Assert.Null(tx.bankReference);
 
@@ -160,7 +214,7 @@ Folgenr. 03 Verfalld. 2312?30WELADEDDXXX?31DE38300500000001107713
             Assert.Equal(new DateTime(2019, 12, 3), tx.valueDate);
             Assert.Equal(new DateTime(2019, 12, 3), tx.inputDate);
             Assert.Equal(-149.99m, tx.amount);
-            Assert.Equal("005", tx.transactionTypeId);
+            Assert.Equal("N005", tx.transactionTypeId);
             Assert.Equal("NONREF", tx.customerReference);
             Assert.Null(tx.bankReference);
 
@@ -213,7 +267,7 @@ DEMM488?31DE16100208900001234567?32MUSTERMANN MAX
             Assert.Equal(new DateTime(2019, 11, 1), tx.valueDate);
             Assert.Equal(new DateTime(2019, 11, 1), tx.inputDate);
             Assert.Equal(25m, tx.amount);
-            Assert.Equal("STO", tx.transactionTypeId);
+            Assert.Equal("NSTO", tx.transactionTypeId);
             Assert.Equal("NONREF", tx.customerReference);
             Assert.Equal("00900280012998", tx.bankReference);
             Assert.Equal("BANKREFCTC191101IST000002400296725", tx.otherInformation);

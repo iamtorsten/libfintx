@@ -706,7 +706,7 @@ namespace libfintx
 
                 LineCounter++;
 
-                if (line.StartsWith("-")) // end of block
+                if (line.Trim() == "-") // end of block
                 {
                     // Process previously read swift chunk
                     if (swiftTag.Length > 0)
