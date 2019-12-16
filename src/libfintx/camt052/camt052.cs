@@ -99,7 +99,12 @@ namespace libfintx
                 stmt.id = accReport.Id;
                 stmt.elctrncSeqNb = accReport.ElctrncSeqNb.ToString();
 
-                stmt.accountCode = accReport.Acct?.Id?.Item?.ToString();
+                object accReportAccount = accReport.Acct?.Id?.Item;
+                if (accReportAccount is string)
+                    stmt.accountCode = (string)accReportAccount;
+                else if (accReportAccount is GenericAccountIdentification1)
+                    stmt.accountCode = ((GenericAccountIdentification1)accReportAccount).Id;
+
                 stmt.bankCode = accReport.Acct?.Svcr?.FinInstnId?.BIC;
                 stmt.currency = accReport.Acct?.Ccy;
 
@@ -225,9 +230,13 @@ namespace libfintx
                             txDetails?.RltdPties?.Cdtr?.Nm :
                             txDetails?.RltdPties?.Dbtr?.Nm;
 
-                        tr.accountCode = debit ?
-                            txDetails?.RltdPties?.CdtrAcct?.Id?.Item?.ToString() :
-                            txDetails?.RltdPties?.DbtrAcct?.Id?.Item?.ToString();
+                        object account = debit ?
+                            txDetails?.RltdPties?.CdtrAcct?.Id?.Item :
+                            txDetails?.RltdPties?.DbtrAcct?.Id?.Item;
+                        if (account is string)
+                            tr.accountCode = (string)account;
+                        else if (account is GenericAccountIdentification1)
+                            tr.accountCode = ((GenericAccountIdentification1)account).Id;
 
                         string CrdtName = txDetails?.RltdPties?.Cdtr?.Nm;
                         string DbtrName = txDetails?.RltdPties?.Dbtr?.Nm;
