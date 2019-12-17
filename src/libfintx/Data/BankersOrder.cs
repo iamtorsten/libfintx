@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using static libfintx.HKCDE;
+
 namespace libfintx.Data
 {
     public class BankersOrder
@@ -13,7 +14,9 @@ namespace libfintx.Data
         public TimeUnit TimeUnit { get; set; }
         public string Rota { get; set; }
         public int ExecutionDay { get; set; }
-        public BankersOrder(string orderId, pain00100103_ct_data sepaData, DateTime firstExecutionDate, TimeUnit timeUnit, string rota, int executionDay)
+        public DateTime? LastExecutionDate { get; set; }
+
+        public BankersOrder(string orderId, pain00100103_ct_data sepaData, DateTime firstExecutionDate, TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDate)
         {
             OrderId = orderId;
             SepaData = sepaData;
@@ -21,14 +24,17 @@ namespace libfintx.Data
             TimeUnit = timeUnit;
             Rota = rota;
             ExecutionDay = executionDay;
+            LastExecutionDate = lastExecutionDate;
         }
-        public BankersOrder(pain00100103_ct_data sepaData, DateTime firstExecutionDate, TimeUnit timeUnit, string rota, int executionDay)
+        
+        public BankersOrder(pain00100103_ct_data sepaData, DateTime firstExecutionDate, TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDate)
         {
             SepaData = sepaData;
             FirstExecutionDate = firstExecutionDate;
             TimeUnit = timeUnit;
             Rota = rota;
             ExecutionDay = executionDay;
+            LastExecutionDate = lastExecutionDate;
         }
         public override bool Equals(object obj)
         {
@@ -39,7 +45,8 @@ namespace libfintx.Data
                    FirstExecutionDate == order.FirstExecutionDate &&
                    TimeUnit == order.TimeUnit &&
                    Rota == order.Rota &&
-                   ExecutionDay == order.ExecutionDay;
+                   ExecutionDay == order.ExecutionDay &&
+                   LastExecutionDate == order.LastExecutionDate;
         }
         public override int GetHashCode()
         {
@@ -50,6 +57,7 @@ namespace libfintx.Data
             hashCode = hashCode * -1521134295 + TimeUnit.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Rota);
             hashCode = hashCode * -1521134295 + ExecutionDay.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(LastExecutionDate);
             return hashCode;
         }
     }

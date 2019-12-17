@@ -815,7 +815,7 @@ namespace libfintx
 
         public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
-           int executionDay, string HIRMS, bool anonymous)
+           int executionDay, DateTime? lastExecutionDay, string HIRMS, bool anonymous)
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -830,7 +830,7 @@ namespace libfintx
             if (!String.IsNullOrEmpty(HIRMS))
                 Segment.HIRMS = HIRMS;
 
-            var BankCode = Transaction.HKCDE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var BankCode = Transaction.HKCDE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -842,7 +842,7 @@ namespace libfintx
 
         public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string OrderId, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
-           int executionDay, string HIRMS, bool anonymous)
+           int executionDay, DateTime? lastExecutionDay, string HIRMS, bool anonymous)
         {
             var result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
@@ -857,7 +857,7 @@ namespace libfintx
             if (!String.IsNullOrEmpty(HIRMS))
                 Segment.HIRMS = HIRMS;
 
-            var BankCode = Transaction.HKCDN(connectionDetails, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var BankCode = Transaction.HKCDN(connectionDetails, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -868,7 +868,7 @@ namespace libfintx
         }
 
         public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string orderId, string receiverName, string receiverIBAN,
-            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, string HIRMS,
+            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDay, string HIRMS,
             bool anonymous)
         {
             var result = Init(connectionDetails, anonymous);
@@ -884,7 +884,7 @@ namespace libfintx
             if (!String.IsNullOrEmpty(HIRMS))
                 Segment.HIRMS = HIRMS;
 
-            var BankCode = Transaction.HKCDL(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay);
+            var BankCode = Transaction.HKCDL(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -932,31 +932,34 @@ namespace libfintx
             var BankCode_ = BankCode.Substring(startIdx);
             for (; ; )
             {
-                var match = Regex.Match(BankCode_, @"HICDB.+?(<\?xml.+?</Document>)\+(.*?)\+(\d*):([MW]):(\d+):(\d+)", RegexOptions.Singleline);
+                var match = Regex.Match(BankCode_, @"HICDB.+?(?<xml><\?xml.+?</Document>)\+(?<orderid>.*?)\+(?<firstdate>\d*):(?<turnus>[MW]):(?<rota>\d+):(?<execday>\d+)(:(?<lastdate>\d+))?", RegexOptions.Singleline);
                 if (match.Success)
                 {
-                    var xml = match.Groups[1].Value;
+                    var xml = match.Groups["xml"].Value;
                     // xml ist UTF-8
                     xml = Converter.ConvertEncoding(xml, Encoding.GetEncoding("ISO-8859-1"), Encoding.UTF8);
 
-                    var orderId = match.Groups[2].Value;
+                    var orderId = match.Groups["orderid"].Value;
 
-                    var firstExecutionDateStr = match.Groups[3].Value;
+                    var firstExecutionDateStr = match.Groups["firstdate"].Value;
                     DateTime? firstExecutionDate = !string.IsNullOrWhiteSpace(firstExecutionDateStr) ? DateTime.ParseExact(firstExecutionDateStr, "yyyyMMdd", CultureInfo.InvariantCulture) : default(DateTime?);
 
-                    var timeUnitStr = match.Groups[4].Value;
+                    var timeUnitStr = match.Groups["turnus"].Value;
                     TimeUnit timeUnit = timeUnitStr == "M" ? TimeUnit.Monthly : TimeUnit.Weekly;
 
-                    var rota = match.Groups[5].Value;
+                    var rota = match.Groups["rota"].Value;
 
-                    var executionDayStr = match.Groups[6].Value;
+                    var executionDayStr = match.Groups["execday"].Value;
                     int executionDay = Convert.ToInt32(executionDayStr);
+
+                    var lastExecutionDateStr = match.Groups["lastdate"].Value;
+                    DateTime? lastExecutionDate = !string.IsNullOrWhiteSpace(lastExecutionDateStr) ? DateTime.ParseExact(lastExecutionDateStr, "yyyyMMdd", CultureInfo.InvariantCulture) : default(DateTime?);
 
                     var painData = pain00100103_ct_data.Create(xml);
 
                     if (firstExecutionDate.HasValue && executionDay > 0)
                     {
-                        var item = new BankersOrder(orderId, painData, firstExecutionDate.Value, timeUnit, rota, executionDay);
+                        var item = new BankersOrder(orderId, painData, firstExecutionDate.Value, timeUnit, rota, executionDay, lastExecutionDate);
                         data.Add(item);
                     }
                 }

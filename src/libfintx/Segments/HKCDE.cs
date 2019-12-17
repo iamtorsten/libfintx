@@ -31,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// Submit bankers order
         /// </summary>
-        public static string Init_HKCDE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit, string Rota, int ExecutionDay)
+        public static string Init_HKCDE(ConnectionDetails connectionDetails, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit, string Rota, int ExecutionDay, DateTime? LastExecutionDay)
         {
             Log.Write("Starting job HKCDE: Submit bankers order");
 
@@ -42,7 +42,11 @@ namespace libfintx
             var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.IBAN, connectionDetails.BIC, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1)).Replace("'", "");
             segments = segments.Replace("@@", "@" + sepaMessage.Length + "@") + sepaMessage;
 
-            segments += "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char)timeUnit + ":" + Rota + ":" + ExecutionDay + "'";
+            segments += "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char)timeUnit + ":" + Rota + ":" + ExecutionDay;
+            if (LastExecutionDay != null)
+                segments += ":" + LastExecutionDay.Value.ToString("yyyyMMdd");
+
+            segments += "'";
 
             if (Helper.IsTANRequired("HKCDE"))
             {
