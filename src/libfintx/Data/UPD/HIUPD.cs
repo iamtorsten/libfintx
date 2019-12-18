@@ -75,7 +75,7 @@ namespace libfintx
                         Accountowner = $"{match.Groups[6]} {match.Groups[7]}";
                         Accounttype = match.Groups[8].Value;
 
-                        if (Accountiban?.Length > 2)
+                        if (Accountnumber?.Length > 2 || Accountiban?.Length > 2)
                         {
                             // Account permissions
                             string pat = "\\+.*?:1";
@@ -100,7 +100,7 @@ namespace libfintx
                         Accountowner = Helper.Parse_String(result[ctr].Value, "EUR+", "+");
                         Accounttype = Helper.Parse_String(result[ctr].Value.Replace("++EUR+", ""), "++", "++");
 
-                        if (Accountiban?.Length > 2)
+                        if (Accountnumber?.Length > 2 || Accountiban?.Length > 2)
                         {
                             // Account permissions
                             string pat = "\\+.*?:1";
