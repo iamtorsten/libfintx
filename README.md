@@ -24,7 +24,9 @@ There are many reasons why you need to use a banking library which can exchange 
 
 # Sample
 
-Look at the demo project https://github.com/mrklintscher/libfintx_test
+Look at the demo project
+- https://github.com/mrklintscher/libfintx_test
+- https://github.com/abid76/libfintx_test
 
 # Features
 
