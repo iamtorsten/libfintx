@@ -21,6 +21,10 @@
  * 	
  */
 
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -54,5 +58,139 @@ namespace libfintx
         public static string SIGMODE_PKCS1 = "18";
         public static string SIGMODE_PSS = "19";
         public static string SIGMODE_RETAIL_MAC = "999";
+
+        // TODO: Fix RDH sig -> Creating signature
+
+        public static byte[] SignDataSHA256(string Message)
+        {
+            var message = Encoding.GetEncoding("iso8859-1").GetBytes(Message);
+
+            SHA256Managed hashString = new SHA256Managed();
+
+            var hashValue = hashString.ComputeHash(message);
+
+            if (DEBUG.Enabled)
+                DEBUG.Write("Hashed message: " + Converter.ByteArrayToString(hashValue));
+
+            return hashValue;
+        }
+
+        private static RsaKeyParameters MakeKey(bool isPrivateKey)
+        {
+            byte[] key = null;
+
+            if (isPrivateKey)
+                key = Encoding.UTF8.GetBytes(Helper.Parse_String(RDH_KEYSTORE.KEY_SIGNING_PRIVATE_XML, "<Modulus>", "</Modulus"));
+            else
+                key = Encoding.GetEncoding("iso8859-1").GetBytes(RDH_KEYSTORE.KEY_SIGNING_PRIVATE);
+
+            var Exponent = new byte[] { 1, 0, 1 };
+
+            var modulus = new Org.BouncyCastle.Math.BigInteger(1, key);
+            var exponent = new Org.BouncyCastle.Math.BigInteger(Exponent);
+
+            return new RsaKeyParameters(isPrivateKey, modulus, exponent);
+        }
+
+        public static byte[] hash(String data)
+        {
+            Sha256Digest dig = new Sha256Digest();
+
+            byte[] msgBytes = Encoding.GetEncoding("iso8859-1").GetBytes(data);
+
+            dig.BlockUpdate(msgBytes, 0, msgBytes.Length);
+
+            byte[] result = new byte[dig.GetDigestSize()];
+
+            dig.DoFinal(result, 0);
+
+            return result;
+        }
+
+        public static String Sign(String data)
+        {
+            // hashed data
+            //var hData = hash(data);
+
+            var hData = Encoding.UTF8.GetBytes(data);
+
+
+            /* Make the key */
+            RsaKeyParameters key = MakeKey(true);
+
+            /* Init alg */
+            ISigner sig = SignerUtilities.GetSigner("SHA1withRSA");
+
+            /* Populate key */
+            sig.Init(true, key);
+
+            /* Get the bytes to be signed from the string */
+            var bytes = hData;
+
+            /* Calc the signature */
+            sig.BlockUpdate(bytes, 0, bytes.Length);
+
+            byte[] signature = sig.GenerateSignature();
+
+            ///* Base 64 encode the sig so its 8-bit clean */
+            //var signedString = Convert.ToBase64String(signature);
+
+            var signedString = Convert.ToBase64String(signature);
+
+            return signedString;
+        }
+
+
+        public static bool Verify(String data, String expectedSignature)
+        {
+            /* Make the key */
+            RsaKeyParameters key = MakeKey(false);
+
+            /* Init alg */
+            ISigner signer = SignerUtilities.GetSigner("SHA1withRSA");
+
+            /* Populate key */
+            signer.Init(false, key);
+
+            /* Get the signature into bytes */
+            var expectedSig = Convert.FromBase64String(expectedSignature);
+
+            /* Get the bytes to be signed from the string */
+            var msgBytes = Encoding.UTF8.GetBytes(data);
+
+
+            /* Calculate the signature and see if it matches */
+            signer.BlockUpdate(msgBytes, 0, msgBytes.Length);
+
+            return signer.VerifySignature(expectedSig);
+        }
+
+        public static byte[] SignMessage(byte[] hash)
+        {
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.FromXmlString(RDH_KEYSTORE.KEY_SIGNING_PRIVATE_XML);
+
+                var signedMessage = rsa.SignHash(hash, CryptoConfig.MapNameToOID("SHA1withRSA"));
+
+                if (DEBUG.Enabled)
+                    DEBUG.Write("Signed message: " + Converter.ByteArrayToString(signedMessage));
+
+                return signedMessage;
+            }
+        }
+
+        //public static bool Verify(byte[] hash, byte[] signature)
+        //{
+        //    using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+        //    {
+        //        rsa.FromXmlString(RDH_KEYSTORE.KEY_SIGNING_PRIVATE_XML);
+
+        //        if (!rsa.VerifyHash(hash, CryptoConfig.MapNameToOID("SHA256"), signature))
+        //            throw new CryptographicException();
+        //        else
+        //            return true;
+        //    }
+        //}
     }
 }

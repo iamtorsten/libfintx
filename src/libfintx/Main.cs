@@ -1194,5 +1194,26 @@ namespace libfintx
 
             return result;
         }
+
+        /// <summary>
+        /// Synchronize bank connection RDH
+        /// </summary>
+        /// <param name="BLZ"></param>
+        /// <param name="URL"></param>
+        /// <param name="Port"></param>
+        /// <param name="HBCIVersion"></param>
+        /// <param name="UserID"></param>
+        /// <returns>
+        /// Success or failure
+        /// </returns>
+        public static bool Synchronization_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
+        {
+            if (Transaction.INI_RDH(BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password) == true)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }

@@ -8,13 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BouncyCastle" Version="1.8.5" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0006" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="camt053\camt_053_001_02\" />
+    <Folder Include="Message\RDH\" />
     <Folder Include="Pain\pain_001_001_02\" />
+    <Folder Include="Security\RDH\" />
   </ItemGroup>
 
 </Project>

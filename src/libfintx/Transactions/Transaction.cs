@@ -48,6 +48,9 @@ using static libfintx.HKCAZ;
 using libfintx.Data;
 using System;
 
+/* RDH */
+using static libfintx.INI_RDH;
+
 namespace libfintx
 {
     public static class Transaction
@@ -161,6 +164,13 @@ namespace libfintx
         public static string HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint, camtVersion camtVers)
         {
             return Init_HKCAZ(connectionDetails, FromDate, ToDate, Startpoint, camtVers);
+        }
+
+        /* RDH */
+
+        public static bool INI_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
+        {
+            return Init_INI_RDH(BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password);
         }
     }
 }
