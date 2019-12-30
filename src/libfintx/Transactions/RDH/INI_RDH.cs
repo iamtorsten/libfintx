@@ -42,7 +42,7 @@ namespace libfintx
                 if (HBCIVersion == 300)
                 {
                     string segments_ = "HKIDN:" + SEGNUM.SETVal(2) + ":2+" + SEG_Country.Germany + ":" + BLZ + "+" + "9999999999" + "+0+0'" +
-                        "HKVVB:" + SEGNUM.SETVal(3) + ":3+11+0+1+" + Program.Buildname + "+" + Program.Version + "'";
+                        "HKVVB:" + SEGNUM.SETVal(3) + ":3+11+0+1+" + Program.ProductId + "+" + Program.Version + "'";
 
                     segments = segments_;
 
