@@ -281,5 +281,62 @@ DEMM488?31DE16100208900001234567?32MUSTERMANN MAX
             Assert.Equal("DE16100208900001234567", tx.accountCode);
             Assert.Equal("MUSTERMANN MAX", tx.partnerName);
         }
+
+        /// <summary>
+        /// Sparkasse Freising
+        /// </summary>
+        [Fact]
+        public void Test_70051003()
+        {
+            string mt940 =
+@"
+:20:STARTUMSE
+:25:10050000/0123456789
+:28C:00000/001
+:60F:C190930EUR11565,61
+:61:1910011001DR3393,40N029NONREF
+:86:116?00EINZELUEBERWEISUNG?109301?20EREF+4927411196-0000001?21K
+REF+4927411196?22SVWZ+RNr. 20190930001 RDat.?23 30.09.2019 KNr. C
+-20170100?241?30BYLADEM1FSI?31DE49700510030025617937?32GEILER KAF
+FEE GmbH?34997
+:62F:C190930EUR8172,21
+";
+            var result = MT940.Serialize(mt940, "123456789");
+
+            Assert.Single(result);
+
+            var stmt = result[0];
+            Assert.Equal("STARTUMSE", stmt.type);
+            Assert.Equal("10050000", stmt.bankCode);
+            Assert.Equal("123456789", stmt.accountCode);
+            Assert.Equal(new DateTime(2019, 09, 30), stmt.startDate);
+            Assert.Equal(11565.61m, stmt.startBalance);
+
+            Assert.Equal(new DateTime(2019, 09, 30), stmt.endDate);
+            Assert.Equal(8172.21m, stmt.endBalance);
+
+            Assert.Single(stmt.SWIFTTransactions);
+
+            var tx = stmt.SWIFTTransactions[0];
+
+            Assert.Equal(new DateTime(2019, 09, 30), tx.valueDate);
+            Assert.Equal(new DateTime(2019, 09, 30), tx.inputDate);
+            Assert.Equal(-3393.40m, tx.amount);
+            Assert.Equal("N029", tx.transactionTypeId);
+            Assert.Equal("NONREF", tx.customerReference);
+            Assert.Null(tx.bankReference);
+
+            Assert.Equal("116", tx.typecode);
+            Assert.Equal("EINZELUEBERWEISUNG", tx.text);
+            Assert.Equal("9301", tx.primanota);
+            Assert.Equal("EREF+4927411196-0000001KREF+4927411196SVWZ+RNr. 20190930001 RDat. 30.09.2019 KNr.C- 201701001", tx.description);
+            Assert.Equal("4927411196-0000001", tx.EREF);
+            Assert.Equal("4927411196", tx.KREF);
+            Assert.Equal("RNr. 20190930001 RDat. 30.09.2019 KNr.C - 201701001", tx.SVWZ);
+            Assert.Equal("BYLADEM1FSI", tx.bankCode);
+            Assert.Equal("DE49700510030025617937", tx.accountCode);
+            Assert.Equal("GEILER KAFFEE GmbH", tx.partnerName);
+            Assert.Equal("997", tx.textKeyAddition);
+        }
     }
 }
