@@ -54,4 +54,4 @@ The verification process is done by using the default [**WebRequest**](https://m
 
 Copyright (c) 2016 - 2020 **Torsten Klinger**
 
-Licensed under GNU General Public License. Please read the LICENSE file.
+Licensed under GNU Lesser General Public License. Please read the LICENSE file.
