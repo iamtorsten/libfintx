@@ -19,10 +19,10 @@ namespace libfintx.Test_PSD2
 			{
 				Account = "xxx",
 				Blz = 76061482,
-				BIC = "GENODEF1HSB",
-				IBAN = "xxx",
+				Bic = "GENODEF1HSB",
+				Iban = "xxx",
 				Url = "https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-				HBCIVersion = 300,
+				HbciVersion = 300,
 				UserId = "xxx",
 				Pin = "xxx"
 			};

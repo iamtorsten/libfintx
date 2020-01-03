@@ -39,29 +39,27 @@ namespace libfintx
         /// <summary>
         /// Bankcode of the owner's bankaccount
         /// </summary>
-        public string OwnerBankcode{ get; set; }
+        public string OwnerBankCode { get; set; }
 
         /// <summary>
         /// IBAN of the transaction partner
         /// </summary>
-        public string PartnerIBAN { get; set; }
+        public string PartnerIban { get; set; }
 
-        /// <summary>        
+        /// <summary>
         /// Name of the transaction partner
         /// </summary>
         public string PartnerName { get; set; }
 
-
         /// <summary>
         /// BIC of the transaction partner
         /// </summary>
-        public string PartnerBIC { get; set; }
+        public string PartnerBic { get; set; }
 
         /// <summary>
         /// Text/description of the transaction
         /// </summary>
         public string RemittanceText { get; set; }
-
 
         /// <summary>
         /// Type of the transaction (e.g. FOLGELASTSCHRIFT, AUSZAHLUNG, etc.)

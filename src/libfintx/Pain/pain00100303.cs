@@ -110,7 +110,7 @@ namespace libfintx
         /// <param name="TotalAmount"></param>
         /// <param name="ExecutionDay"></param>
         /// <returns></returns>
-        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
+        public static string Create(string Accountholder, string AccountholderIBAN, string AccountholderBIC, List<Pain00100203CtData> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
         {
             var RndNr = Guid.NewGuid().ToString();
 
@@ -174,7 +174,7 @@ namespace libfintx
                     "</Amt>" +
                     "<CdtrAgt>" +
                     "<FinInstnId>" +
-                    "<BIC>" + transaction.ReceiverBIC + "</BIC>" +
+                    "<BIC>" + transaction.ReceiverBic + "</BIC>" +
                     "</FinInstnId>" +
                     "</CdtrAgt>" +
                     "<Cdtr>" +
@@ -182,7 +182,7 @@ namespace libfintx
                     "</Cdtr>" +
                     "<CdtrAcct>" +
                     "<Id>" +
-                    "<IBAN>" + transaction.ReceiverIBAN + "</IBAN>" +
+                    "<IBAN>" + transaction.ReceiverIban + "</IBAN>" +
                     "</Id>" + "</CdtrAcct>" +
                     "<RmtInf>" +
                     "<Ustrd>" + transaction.Usage + "</Ustrd>" +

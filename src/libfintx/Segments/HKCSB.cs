@@ -36,7 +36,7 @@ namespace libfintx
 
             SEG.NUM = SEGNUM.SETInt(3);
 
-            string segments = "HKCSB:" + SEG.NUM + ":1+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + "+sepade?:xsd?:pain.001.001.03.xsd'";
+            string segments = "HKCSB:" + SEG.NUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
             if (Helper.IsTANRequired("HKCSB"))
             {
@@ -44,7 +44,7 @@ namespace libfintx
                 segments = HKTAN.Init_HKTAN(segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");

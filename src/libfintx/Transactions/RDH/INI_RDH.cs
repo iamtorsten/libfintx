@@ -49,27 +49,27 @@ namespace libfintx
                     if (DEBUG.Enabled)
                         DEBUG.Write("INI message: " + segments);
 
-                    if (Helper.Parse_Segment_RDH_Key(RDHMessage.Send(URL, Port, RDHMessageAnonymous.Create(HBCIVersion, "1", "0", BLZ, segments)), BLZ, UserID))
+                    if (Helper.Parse_Segment_RDH_Key(RdhMessage.Send(URL, Port, RdhMessageAnonymous.Create(HBCIVersion, "1", "0", BLZ, segments)), BLZ, UserID))
                     {
                         // Sync OK
                         Log.Write("Synchronisation ok");
 
-                        if (RDHKEY.OpenFromFile(FilePath, Password))
+                        if (RdhKey.OpenFromFile(FilePath, Password))
                         {
                             segments_ = "HKIDN:" + SEGNUM.SETVal(3) + ":2+" + SEG_Country.Germany + ":" + BLZ + "+" + UserID + "+0+1'" +
-                            "HKSAK:" + SEGNUM.SETVal(4) + ":3+2+112+" + RDH_Profile.RDHPROFILE + "+" + SEG_Country.Germany +
-                            ":" + BLZ + ":" + UserID + ":" + Keytype.Enc + ":" + RDH_Profile.Version + ":1+5:2:10:@" + RDH_KEYSTORE.KEY_ENCRYPTION_PRIVATE.Length + "@" +
-                            RDH_KEYSTORE.KEY_ENCRYPTION_PRIVATE + ":12:@3@" + Converter.FromHexString("01 00 01") + ":13'" +
-                            "HKSAK:" + SEGNUM.SETVal(5) + ":3+2+112+" + RDH_Profile.RDHPROFILE + "+" + SEG_Country.Germany +
-                            ":" + BLZ + ":" + UserID + ":" + Keytype.Sig + ":" + RDH_Profile.Version + ":1+6:19:10:@" + RDH_KEYSTORE.KEY_SIGNING_PRIVATE.Length + "@" +
-                            RDH_KEYSTORE.KEY_SIGNING_PRIVATE + ":12:@3@" + Converter.FromHexString("01 00 01") + ":13'";
+                            "HKSAK:" + SEGNUM.SETVal(4) + ":3+2+112+" + RdhProfile.RDHPROFILE + "+" + SEG_Country.Germany +
+                            ":" + BLZ + ":" + UserID + ":" + KeyType.Enc + ":" + RdhProfile.Version + ":1+5:2:10:@" + RdhKeyStore.KEY_ENCRYPTION_PRIVATE.Length + "@" +
+                            RdhKeyStore.KEY_ENCRYPTION_PRIVATE + ":12:@3@" + Converter.FromHexString("01 00 01") + ":13'" +
+                            "HKSAK:" + SEGNUM.SETVal(5) + ":3+2+112+" + RdhProfile.RDHPROFILE + "+" + SEG_Country.Germany +
+                            ":" + BLZ + ":" + UserID + ":" + KeyType.Sig + ":" + RdhProfile.Version + ":1+6:19:10:@" + RdhKeyStore.KEY_SIGNING_PRIVATE.Length + "@" +
+                            RdhKeyStore.KEY_SIGNING_PRIVATE + ":12:@3@" + Converter.FromHexString("01 00 01") + ":13'";
 
                             segments = segments_;
 
                             if (DEBUG.Enabled)
                                 DEBUG.Write("Key exchange message: " + segments);
 
-                            RDHMessage.Send(URL, Port, RDHMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, "0", segments, SEGNUM.SETInt(5)));
+                            RdhMessage.Send(URL, Port, RdhMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, "0", segments, SEGNUM.SETInt(5)));
 
                             // INI OK
                             Log.Write("INI ok");
@@ -89,14 +89,14 @@ namespace libfintx
 
                         Log.Write("Initialisation failed");
 
-                        throw new Exception(HBCI_Exception.INI());
+                        throw new Exception(HbciException.INI());
                     }
                 }
                 else
                 {
                     Log.Write("HBCI version not supported");
 
-                    throw new Exception(HBCI_Exception.HBCIVERSIONNOTSUPPORTED());
+                    throw new Exception(HbciException.HBCI_VERSION_NOT_SUPPORTED());
                 }
             }
             catch (Exception ex)
@@ -110,7 +110,7 @@ namespace libfintx
 
                 // Exception
                 if (!DEBUG.Enabled)
-                    throw new Exception(HBCI_Exception.SOFTWARE() + ex.ToString());
+                    throw new Exception(HbciException.SOFTWARE() + ex.ToString());
                 else
                     return false;
             }

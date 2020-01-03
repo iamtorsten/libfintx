@@ -47,8 +47,8 @@ using static libfintx.HKTAB;
 using static libfintx.INI;
 /* RDH */
 using static libfintx.INI_RDH;
-using static libfintx.TAN;
-using static libfintx.TAN4;
+using static libfintx.Tan;
+using static libfintx.Tan4;
 
 namespace libfintx
 {
@@ -89,12 +89,12 @@ namespace libfintx
             return Init_HKCSE(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
         }
 
-        public static string HKCCM(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount)
+        public static string HKCCM(ConnectionDetails connectionDetails, List<Pain00100203CtData> PainData, string NumberofTransactions, decimal TotalAmount)
         {
             return Init_HKCCM(connectionDetails, PainData, NumberofTransactions, TotalAmount);
         }
 
-        public static string HKCME(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
+        public static string HKCME(ConnectionDetails connectionDetails, List<Pain00100203CtData> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
         {
             return Init_HKCME(connectionDetails, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
         }
@@ -110,7 +110,7 @@ namespace libfintx
             return Init_HKDSE(connectionDetails, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber);
         }
 
-        public static string HKDME(ConnectionDetails connectionDetails, DateTime SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount)
+        public static string HKDME(ConnectionDetails connectionDetails, DateTime SettlementDate, List<Pain00800202CcData> PainData, string NumberofTransactions, decimal TotalAmount)
         {
             return Init_HKDME(connectionDetails, SettlementDate, PainData, NumberofTransactions, TotalAmount);
         }

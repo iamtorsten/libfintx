@@ -35,11 +35,11 @@ namespace libfintx.Test_RDH
             HBCI.Debugging(true);
 
             // create rdh-10 key file
-            hbci.RDHKEY.Create(FilePath, Pwd, BLZ, UserID, Country, ProfileVersion);
+            hbci.RdhKey.Create(FilePath, Pwd, BLZ, UserID, Country, ProfileVersion);
 
             // hbci key
-            hbci.RDHKEY.RDHKEYFILE = FilePath;
-            hbci.RDHKEY.RDHKEYFILEPWD = Pwd;
+            hbci.RdhKey.RDHKEYFILE = FilePath;
+            hbci.RdhKey.RDHKEYFILEPWD = Pwd;
 
             if (!HBCI.Synchronization_RDH(BLZ, Url, Port, HBCIVersion, UserID, FilePath, Pwd))
             {

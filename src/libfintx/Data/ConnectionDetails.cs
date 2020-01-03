@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace libfintx.Data
+﻿namespace libfintx.Data
 {
     public class ConnectionDetails
     {
@@ -15,7 +10,7 @@ namespace libfintx.Data
         /// <summary>
         /// HBCI version number. E.g. '300' for FinTS 3.0
         /// </summary>
-        public int HBCIVersion { get; set; }
+        public int HbciVersion { get; set; }
 
         /// <summary>
         /// Logon ID/username for the bank account
@@ -26,7 +21,6 @@ namespace libfintx.Data
         /// Logon-Pin for the bank account
         /// </summary>
         public string Pin { get; set; }
-
 
         /// <summary>
         /// Name of the Accountholder
@@ -56,12 +50,12 @@ namespace libfintx.Data
         /// <summary>
         /// IBAN of the bank account
         /// </summary>
-        public string IBAN { get; set; }
+        public string Iban { get; set; }
 
         /// <summary>
         /// BIC of the bank account
         /// </summary>
-        public string BIC { get; set; }
+        public string Bic { get; set; }
 
         /// <summary>
         /// System ID (Kundensystem-ID)

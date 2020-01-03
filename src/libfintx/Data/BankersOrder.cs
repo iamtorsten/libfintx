@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using static libfintx.HKCDE;
 
 namespace libfintx.Data
@@ -9,14 +7,14 @@ namespace libfintx.Data
     public class BankersOrder
     {
         public string OrderId { get; set; }
-        public pain00100103_ct_data SepaData { get; set; }
+        public Pain00100103CtData SepaData { get; set; }
         public DateTime FirstExecutionDate { get; set; }
         public TimeUnit TimeUnit { get; set; }
         public string Rota { get; set; }
         public int ExecutionDay { get; set; }
         public DateTime? LastExecutionDate { get; set; }
 
-        public BankersOrder(string orderId, pain00100103_ct_data sepaData, DateTime firstExecutionDate, TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDate)
+        public BankersOrder(string orderId, Pain00100103CtData sepaData, DateTime firstExecutionDate, TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDate)
         {
             OrderId = orderId;
             SepaData = sepaData;
@@ -26,8 +24,8 @@ namespace libfintx.Data
             ExecutionDay = executionDay;
             LastExecutionDate = lastExecutionDate;
         }
-        
-        public BankersOrder(pain00100103_ct_data sepaData, DateTime firstExecutionDate, TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDate)
+
+        public BankersOrder(Pain00100103CtData sepaData, DateTime firstExecutionDate, TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDate)
         {
             SepaData = sepaData;
             FirstExecutionDate = firstExecutionDate;
@@ -41,7 +39,7 @@ namespace libfintx.Data
             var order = obj as BankersOrder;
             return order != null &&
                    OrderId == order.OrderId &&
-                   EqualityComparer<pain00100103_ct_data>.Default.Equals(SepaData, order.SepaData) &&
+                   EqualityComparer<Pain00100103CtData>.Default.Equals(SepaData, order.SepaData) &&
                    FirstExecutionDate == order.FirstExecutionDate &&
                    TimeUnit == order.TimeUnit &&
                    Rota == order.Rota &&
@@ -51,13 +49,13 @@ namespace libfintx.Data
         public override int GetHashCode()
         {
             var hashCode = 434083080;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(OrderId);
-            hashCode = hashCode * -1521134295 + EqualityComparer<pain00100103_ct_data>.Default.GetHashCode(SepaData);
-            hashCode = hashCode * -1521134295 + FirstExecutionDate.GetHashCode();
-            hashCode = hashCode * -1521134295 + TimeUnit.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Rota);
-            hashCode = hashCode * -1521134295 + ExecutionDay.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(LastExecutionDate);
+            hashCode *= -1521134295 + EqualityComparer<string>.Default.GetHashCode(OrderId);
+            hashCode *= -1521134295 + EqualityComparer<Pain00100103CtData>.Default.GetHashCode(SepaData);
+            hashCode *= -1521134295 + FirstExecutionDate.GetHashCode();
+            hashCode *= -1521134295 + TimeUnit.GetHashCode();
+            hashCode *= -1521134295 + EqualityComparer<string>.Default.GetHashCode(Rota);
+            hashCode *= -1521134295 + ExecutionDay.GetHashCode();
+            hashCode *= -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(LastExecutionDate);
             return hashCode;
         }
     }

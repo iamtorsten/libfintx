@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="camt053\camt_053_001_02\" />
     <Folder Include="Message\RDH\" />
     <Folder Include="Security\RDH\" />
   </ItemGroup>

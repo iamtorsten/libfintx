@@ -22,6 +22,8 @@
  */
 
 using libfintx.Camt;
+using libfintx.Camt.Camt052;
+using libfintx.Camt.Camt053;
 using libfintx.Data;
 using libfintx.Swift;
 using System;
@@ -130,17 +132,17 @@ namespace libfintx
             return result.TypedResult(balance);
         }
 
-        public static HBCIDialogResult<List<AccountInformations>> Accounts(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous)
+        public static HBCIDialogResult<List<AccountInformation>> Accounts(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous)
         {
             HBCIDialogResult result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
-                return result.TypedResult<List<AccountInformations>>();
+                return result.TypedResult<List<AccountInformation>>();
 
             result = ProcessSCA(connectionDetails, result, tanDialog);
             if (!result.IsSuccess)
-                return result.TypedResult<List<AccountInformations>>();
+                return result.TypedResult<List<AccountInformation>>();
 
-            return new HBCIDialogResult<List<AccountInformations>>(result.Messages, UPD.Value, UPD.HIUPD.AccountList);
+            return new HBCIDialogResult<List<AccountInformation>>(result.Messages, UPD.Value, UPD.HIUPD.AccountList);
         }
 
         /// <summary>
@@ -261,8 +263,8 @@ namespace libfintx
             BankCode = result.RawData;
             List<CamtStatement> statements = new List<CamtStatement>();
 
-            TCAM052TParser CAMT052Parser = null;
-            TCAM053TParser CAMT053Parser = null;
+            Camt052Parser camt052Parser = null;
+            Camt053Parser camt053Parser = null;
             Encoding encoding = Encoding.GetEncoding("ISO-8859-1");
 
             string BankCode_ = BankCode;
@@ -280,42 +282,42 @@ namespace libfintx
                 switch (camtVers)
                 {
                     case CamtVersion.Camt052:
-                        if (CAMT052Parser == null)
-                            CAMT052Parser = new TCAM052TParser();
+                        if (camt052Parser == null)
+                            camt052Parser = new Camt052Parser();
 
                         if (saveCamtFile)
                         {
                             // Save camt052 statement to file
-                            var camt052f = camt052File.Save(connectionDetails.Account, camt, encoding);
+                            var camt052f = Camt052File.Save(connectionDetails.Account, camt, encoding);
 
                             // Process the camt052 file
-                            CAMT052Parser.ProcessFile(camt052f);
+                            camt052Parser.ProcessFile(camt052f);
                         }
                         else
                         {
-                            CAMT052Parser.ProcessDocument(camt, encoding);
+                            camt052Parser.ProcessDocument(camt, encoding);
                         }
 
-                        statements.AddRange(CAMT052Parser.statements);
+                        statements.AddRange(camt052Parser.statements);
                         break;
                     case CamtVersion.Camt053:
-                        if (CAMT053Parser == null)
-                            CAMT053Parser = new TCAM053TParser();
+                        if (camt053Parser == null)
+                            camt053Parser = new Camt053Parser();
 
                         if (saveCamtFile)
                         {
                             // Save camt053 statement to file
-                            var camt053f = camt053File.Save(connectionDetails.Account, camt, encoding);
+                            var camt053f = Camt053File.Save(connectionDetails.Account, camt, encoding);
 
                             // Process the camt053 file
-                            CAMT053Parser.ProcessFile(camt053f);
+                            camt053Parser.ProcessFile(camt053f);
                         }
                         else
                         {
-                            CAMT053Parser.ProcessDocument(camt, encoding);
+                            camt053Parser.ProcessDocument(camt, encoding);
                         }
 
-                        statements.AddRange(CAMT053Parser.statements);
+                        statements.AddRange(camt053Parser.statements);
                         break;
                 }
 
@@ -351,23 +353,23 @@ namespace libfintx
                     {
                         case CamtVersion.Camt052:
                             // Save camt052 statement to file
-                            var camt052f_ = camt052File.Save(connectionDetails.Account, camt);
+                            var camt052f_ = Camt052File.Save(connectionDetails.Account, camt);
 
                             // Process the camt052 file
-                            CAMT052Parser.ProcessFile(camt052f_);
+                            camt052Parser.ProcessFile(camt052f_);
 
                             // Add all items
-                            statements.AddRange(CAMT052Parser.statements);
+                            statements.AddRange(camt052Parser.statements);
                             break;
                         case CamtVersion.Camt053:
                             // Save camt053 statement to file
-                            var camt053f_ = camt053File.Save(connectionDetails.Account, camt);
+                            var camt053f_ = Camt053File.Save(connectionDetails.Account, camt);
 
                             // Process the camt053 file
-                            CAMT053Parser.ProcessFile(camt053f_);
+                            camt053Parser.ProcessFile(camt053f_);
 
                             // Add all items to existing statement
-                            statements.AddRange(CAMT053Parser.statements);
+                            statements.AddRange(camt053Parser.statements);
                             break;
                     }
 
@@ -404,9 +406,9 @@ namespace libfintx
                     transactionList.Add(new AccountTransaction()
                     {
                         OwnerAccount = swiftStatement.AccountCode,
-                        OwnerBankcode = swiftStatement.BankCode,
-                        PartnerBIC = swiftTransaction.BankCode,
-                        PartnerIBAN = swiftTransaction.AccountCode,
+                        OwnerBankCode = swiftStatement.BankCode,
+                        PartnerBic = swiftTransaction.BankCode,
+                        PartnerIban = swiftTransaction.AccountCode,
                         PartnerName = swiftTransaction.PartnerName,
                         RemittanceText = swiftTransaction.Description,
                         TransactionType = swiftTransaction.Text,
@@ -530,7 +532,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-        public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, TANDialog tanDialog, List<pain00100203_ct_data> painData,
+        public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, TANDialog tanDialog, List<Pain00100203CtData> painData,
             string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous)
         {
             var result = Init(connectionDetails, anonymous);
@@ -575,7 +577,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-        public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, TANDialog tanDialog, List<pain00100203_ct_data> painData,
+        public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, TANDialog tanDialog, List<Pain00100203CtData> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous)
         {
             var result = Init(connectionDetails, anonymous);
@@ -717,7 +719,7 @@ namespace libfintx
         /// Bank return codes
         /// </returns>
 
-        public static HBCIDialogResult CollectiveCollect(ConnectionDetails connectionDetails, TANDialog tanDialog, DateTime settlementDate, List<pain00800202_cc_data> painData,
+        public static HBCIDialogResult CollectiveCollect(ConnectionDetails connectionDetails, TANDialog tanDialog, DateTime settlementDate, List<Pain00800202CcData> painData,
            string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous)
         {
             var result = Init(connectionDetails, anonymous);
@@ -953,7 +955,7 @@ namespace libfintx
                     var lastExecutionDateStr = match.Groups["lastdate"].Value;
                     DateTime? lastExecutionDate = !string.IsNullOrWhiteSpace(lastExecutionDateStr) ? DateTime.ParseExact(lastExecutionDateStr, "yyyyMMdd", CultureInfo.InvariantCulture) : default(DateTime?);
 
-                    var painData = pain00100103_ct_data.Create(xml);
+                    var painData = Pain00100103CtData.Create(xml);
 
                     if (firstExecutionDate.HasValue && executionDay > 0)
                     {

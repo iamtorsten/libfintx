@@ -174,11 +174,11 @@ namespace libfintx
 
                 // BPD
                 SaveBPD(BLZ, bpd);
-                BPD.Parse_BPD(bpd);
+                BPD.ParseBpd(bpd);
 
                 // UPD
                 SaveUPD(BLZ, UserID, upd);
-                UPD.Parse_UPD(upd);
+                UPD.ParseUpd(upd);
 
                 foreach (var item in values)
                 {
@@ -408,21 +408,21 @@ namespace libfintx
                 var hisalAccountParts = hisalParts[1].Split(':');
                 if (hisalAccountParts.Length == 4)
                 {
-                    balance.AccountType = new AccountInformations()
+                    balance.AccountType = new AccountInformation()
                     {
-                        Accountnumber = hisalAccountParts[0],
-                        Accountbankcode = hisalAccountParts.Length > 3 ? hisalAccountParts[3] : null,
-                        Accounttype = hisalParts[2],
-                        Accountcurrency = hisalParts[3],
-                        Accountbic = !string.IsNullOrEmpty(hisalAccountParts[1]) ? hisalAccountParts[1] : null
+                        AccountNumber = hisalAccountParts[0],
+                        AccountBankCode = hisalAccountParts.Length > 3 ? hisalAccountParts[3] : null,
+                        AccountType = hisalParts[2],
+                        AccountCurrency = hisalParts[3],
+                        AccountBic = !string.IsNullOrEmpty(hisalAccountParts[1]) ? hisalAccountParts[1] : null
                     };
                 }
                 else if (hisalAccountParts.Length == 2)
                 {
-                    balance.AccountType = new AccountInformations()
+                    balance.AccountType = new AccountInformation()
                     {
-                        Accountiban = hisalAccountParts[0],
-                        Accountbic = hisalAccountParts[1]
+                        AccountIban = hisalAccountParts[0],
+                        AccountBic = hisalAccountParts[1]
                     };
                 }
 
@@ -481,7 +481,7 @@ namespace libfintx
         {
             try
             {
-                List<TANprocess> list = new List<TANprocess>();
+                List<TanProcess> list = new List<TanProcess>();
 
                 string[] processes = Segment.HIRMSf.Split(';');
 
@@ -504,14 +504,14 @@ namespace libfintx
                         if (!process.Equals("999")) // -> PIN/TAN step 1
                         {
                             if (int.TryParse(match.Groups["name2"].Value, out i))
-                                list.Add(new TANprocess { ProcessNumber = process, ProcessName = match.Groups["name"].Value });
+                                list.Add(new TanProcess { ProcessNumber = process, ProcessName = match.Groups["name"].Value });
                             else
-                                list.Add(new TANprocess { ProcessNumber = process, ProcessName = match.Groups["name2"].Value });
+                                list.Add(new TanProcess { ProcessNumber = process, ProcessName = match.Groups["name2"].Value });
                         }
                     }
                 }
 
-                TANProcesses.items = list;
+                TanProcesses.Items = list;
 
                 return true;
             }
@@ -563,7 +563,7 @@ namespace libfintx
 
             string HITANFlicker = string.Empty;
 
-            var processes = TANProcesses.items;
+            var processes = TanProcesses.Items;
 
             var processname = string.Empty;
 
@@ -860,7 +860,7 @@ namespace libfintx
         public static bool IsTANRequired(string gvName)
         {
             var HIPINS = BPD.HIPINS;
-            return HIPINS != null && HIPINS.IsTANRequired(gvName);
+            return HIPINS != null && HIPINS.IsTanRequired(gvName);
         }
 
         /* RDH */
@@ -946,7 +946,7 @@ namespace libfintx
                     {
                         var item_ = item.ToString().Replace("||?", "'?");
 
-                        RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK = Parse_String(item_, "@248@", ":12:");
+                        RdhKeyStore.KEY_ENCRYPTION_PUBLIC_BANK = Parse_String(item_, "@248@", ":12:");
                     }
                 }
 
@@ -956,20 +956,20 @@ namespace libfintx
                     {
                         var item_ = item.ToString().Replace("||?", "'?");
 
-                        RDH_KEYSTORE.KEY_SIGNING_PUBLIC_BANK = Parse_String(item_, "@248@", ":12:");
+                        RdhKeyStore.KEY_SIGNING_PUBLIC_BANK = Parse_String(item_, "@248@", ":12:");
                     }
                 }
             }
 
-            if (!String.IsNullOrEmpty(RDH_KEYSTORE.KEY_ENCRYPTION_PUBLIC_BANK) &&
-                !String.IsNullOrEmpty(RDH_KEYSTORE.KEY_SIGNING_PUBLIC_BANK))
+            if (!String.IsNullOrEmpty(RdhKeyStore.KEY_ENCRYPTION_PUBLIC_BANK) &&
+                !String.IsNullOrEmpty(RdhKeyStore.KEY_SIGNING_PUBLIC_BANK))
             {
                 // Update hbci key
-                RDHKEY.Update(RDHKEY.RDHKEYFILE, RDHKEY.RDHKEYFILEPWD);
+                RdhKey.Update(RdhKey.RDHKEYFILE, RdhKey.RDHKEYFILEPWD);
 
                 // Release rdhkey credentials
-                RDHKEY.RDHKEYFILE = string.Empty;
-                RDHKEY.RDHKEYFILEPWD = string.Empty;
+                RdhKey.RDHKEYFILE = string.Empty;
+                RdhKey.RDHKEYFILEPWD = string.Empty;
 
                 return true;
             }

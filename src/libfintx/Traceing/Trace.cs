@@ -27,7 +27,7 @@ using System.Text.RegularExpressions;
 
 namespace libfintx
 {
-    class Trace
+    public static class Trace
     {
         /// <summary>
         /// Enable tracecing
@@ -48,8 +48,8 @@ namespace libfintx
         /// <summary>
         /// Trace
         /// </summary>
-        /// <param name="Message"></param>
-        public static void Write(string Message)
+        /// <param name="message"></param>
+        public static void Write(string message)
         {
             if (Enabled)
             {
@@ -86,7 +86,7 @@ namespace libfintx
                 if (Formatted)
                 {
                     var formatted = string.Empty;
-                    var matches = Regex.Matches(Message, "[A-Z]{5}[^']*'+");
+                    var matches = Regex.Matches(message, "[A-Z]{5}[^']*'+");
                     foreach (Match match in matches)
                     {
                         formatted += match.Value + Environment.NewLine;
@@ -96,7 +96,7 @@ namespace libfintx
                 }
                 else
                 {
-                    File.AppendAllText(file, "[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
+                    File.AppendAllText(file, "[" + DateTime.Now + "]" + " " + message + Environment.NewLine);
                 }
             }
         }

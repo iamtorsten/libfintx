@@ -32,12 +32,12 @@ namespace libfintx
         /// <summary>
         /// Debug
         /// </summary>
-        /// <param name="Message"></param>
-        public static void Write(string Message)
+        /// <param name="message"></param>
+        public static void Write(string message)
         {
             if (Enabled)
             {
-                Console.WriteLine("[" + DateTime.Now + "]" + " " + Message + Environment.NewLine);
+                Console.WriteLine("[" + DateTime.Now + "]" + " " + message + Environment.NewLine);
             }
         }
     }
