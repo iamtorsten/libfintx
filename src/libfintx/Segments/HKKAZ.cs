@@ -46,14 +46,14 @@ namespace libfintx
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
                         segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
                     else
-                        segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
+                        segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
                 }
                 else
                 {
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
                         segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N++++" + Startpoint + "'";
                     else
-                        segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N++++" + Startpoint + "'";
+                        segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N++++" + Startpoint + "'";
                 }
             }
             else
@@ -63,14 +63,14 @@ namespace libfintx
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
                         segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "'";
                     else
-                        segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "'";
+                        segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "'";
                 }
                 else
                 {
                     if (Convert.ToInt16(Segment.HKKAZ) < 7)
                         segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                     else
-                        segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.IBAN + ":" + connectionDetails.BIC + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                        segments = "HKKAZ:" + SEG.NUM + ":" + Segment.HKKAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                 }
             }
 
@@ -80,7 +80,7 @@ namespace libfintx
                 segments = HKTAN.Init_HKTAN(segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HBCIVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
             Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");

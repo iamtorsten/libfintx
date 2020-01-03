@@ -28,11 +28,11 @@ namespace libfintx
         /// <summary>
         /// Convert string to UTF-8
         /// </summary>
-        /// <param name="Message"></param>
+        /// <param name="message"></param>
         /// <returns></returns>
-        public static string ConvertToUTF8(string Message)
+        public static string ConvertToUtf8(string message)
         {
-            return Message.Replace("?b", "üb")
+            return message.Replace("?b", "üb")
                 .Replace("m?@", "ma@")
                 .Replace("f?h", "füh")
                 .Replace("r?", "rü")

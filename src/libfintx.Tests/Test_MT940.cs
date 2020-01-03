@@ -29,18 +29,18 @@ XX?31DE12100500000123456789?32Mustermann, Max
             Assert.Single(result);
 
             var stmt = result[0];
-            Assert.Equal("DEUTDEFFXXXX", stmt.type);
-            Assert.Equal("10070124", stmt.bankCode);
-            Assert.Equal("123456789", stmt.accountCode);
-            Assert.Equal(new DateTime(2019, 12, 4), stmt.startDate);
-            Assert.Equal(89.45m, stmt.startBalance);
+            Assert.Equal("DEUTDEFFXXXX", stmt.Type);
+            Assert.Equal("10070124", stmt.BankCode);
+            Assert.Equal("123456789", stmt.AccountCode);
+            Assert.Equal(new DateTime(2019, 12, 4), stmt.StartDate);
+            Assert.Equal(89.45m, stmt.StartBalance);
 
-            Assert.Equal(new DateTime(2019, 12, 4), stmt.endDate);
-            Assert.Equal(88.45m, stmt.endBalance);
+            Assert.Equal(new DateTime(2019, 12, 4), stmt.EndDate);
+            Assert.Equal(88.45m, stmt.EndBalance);
 
-            Assert.Single(stmt.SWIFTTransactions);
+            Assert.Single(stmt.SwiftTransactions);
 
-            var tx = stmt.SWIFTTransactions[0];
+            var tx = stmt.SwiftTransactions[0];
 
             Assert.Equal(new DateTime(2019, 12, 4), tx.valueDate);
             Assert.Equal(new DateTime(2019, 12, 4), tx.inputDate);
@@ -84,18 +84,18 @@ LEBENSVERSICHERUNG
             Assert.Single(result);
 
             var stmt = result[0];
-            Assert.Equal("DEUTDEFFXXXX", stmt.type);
-            Assert.Equal("10070848", stmt.bankCode);
-            Assert.Equal("123456789", stmt.accountCode);
-            Assert.Equal(new DateTime(2019, 11, 29), stmt.startDate);
-            Assert.Equal(3930.41m, stmt.startBalance);
+            Assert.Equal("DEUTDEFFXXXX", stmt.Type);
+            Assert.Equal("10070848", stmt.BankCode);
+            Assert.Equal("123456789", stmt.AccountCode);
+            Assert.Equal(new DateTime(2019, 11, 29), stmt.StartDate);
+            Assert.Equal(3930.41m, stmt.StartBalance);
 
-            Assert.Equal(new DateTime(2019, 11, 29), stmt.endDate);
-            Assert.Equal(3996.61m, stmt.endBalance);
+            Assert.Equal(new DateTime(2019, 11, 29), stmt.EndDate);
+            Assert.Equal(3996.61m, stmt.EndBalance);
 
-            Assert.Single(stmt.SWIFTTransactions);
+            Assert.Single(stmt.SwiftTransactions);
 
-            var tx = stmt.SWIFTTransactions[0];
+            var tx = stmt.SwiftTransactions[0];
 
             Assert.Equal(new DateTime(2019, 11, 29), tx.valueDate);
             Assert.Equal(new DateTime(2019, 11, 29), tx.inputDate);
@@ -138,18 +138,18 @@ NOLADE21HAM?31DE71207500000060017852?32FAX.de GmbH?34992
             Assert.Single(result);
 
             var stmt = result[0];
-            Assert.Equal("STARTUMSE", stmt.type);
-            Assert.Equal("10050000", stmt.bankCode);
-            Assert.Equal("123456789", stmt.accountCode);
-            Assert.Equal(new DateTime(2019, 12, 5), stmt.startDate);
-            Assert.Equal(11565.61m, stmt.startBalance);
+            Assert.Equal("STARTUMSE", stmt.Type);
+            Assert.Equal("10050000", stmt.BankCode);
+            Assert.Equal("123456789", stmt.AccountCode);
+            Assert.Equal(new DateTime(2019, 12, 5), stmt.StartDate);
+            Assert.Equal(11565.61m, stmt.StartBalance);
 
-            Assert.Equal(new DateTime(2019, 12, 6), stmt.endDate);
-            Assert.Equal(11559.66m, stmt.endBalance);
+            Assert.Equal(new DateTime(2019, 12, 6), stmt.EndDate);
+            Assert.Equal(11559.66m, stmt.EndBalance);
 
-            Assert.Single(stmt.SWIFTTransactions);
+            Assert.Single(stmt.SwiftTransactions);
 
-            var tx = stmt.SWIFTTransactions[0];
+            var tx = stmt.SwiftTransactions[0];
 
             Assert.Equal(new DateTime(2019, 12, 6), tx.valueDate);
             Assert.Equal(new DateTime(2019, 12, 6), tx.inputDate);
@@ -198,18 +198,18 @@ Folgenr. 03 Verfalld. 2312?30WELADEDDXXX?31DE38300500000001107713
             Assert.Single(result);
 
             var stmt = result[0];
-            Assert.Equal("STARTUMS", stmt.type);
-            Assert.Equal("44010046", stmt.bankCode);
-            Assert.Equal("123456789", stmt.accountCode);
-            Assert.Equal(new DateTime(2019, 12, 3), stmt.startDate);
-            Assert.Equal(2696.19m, stmt.startBalance);
+            Assert.Equal("STARTUMS", stmt.Type);
+            Assert.Equal("44010046", stmt.BankCode);
+            Assert.Equal("123456789", stmt.AccountCode);
+            Assert.Equal(new DateTime(2019, 12, 3), stmt.StartDate);
+            Assert.Equal(2696.19m, stmt.StartBalance);
 
-            Assert.Equal(new DateTime(2019, 12, 9), stmt.endDate);
-            Assert.Equal(2546.20m, stmt.endBalance);
+            Assert.Equal(new DateTime(2019, 12, 9), stmt.EndDate);
+            Assert.Equal(2546.20m, stmt.EndBalance);
 
-            Assert.Single(stmt.SWIFTTransactions);
+            Assert.Single(stmt.SwiftTransactions);
 
-            var tx = stmt.SWIFTTransactions[0];
+            var tx = stmt.SwiftTransactions[0];
 
             Assert.Equal(new DateTime(2019, 12, 3), tx.valueDate);
             Assert.Equal(new DateTime(2019, 12, 3), tx.inputDate);
@@ -251,18 +251,18 @@ DEMM488?31DE16100208900001234567?32MUSTERMANN MAX
             Assert.Single(result);
 
             var stmt = result[0];
-            Assert.Equal("191101", stmt.type);
-            Assert.Equal("10020890", stmt.bankCode);
-            Assert.Equal("123456789", stmt.accountCode);
-            Assert.Equal(new DateTime(2019, 10, 1), stmt.startDate);
-            Assert.Equal(22077.20m, stmt.startBalance);
+            Assert.Equal("191101", stmt.Type);
+            Assert.Equal("10020890", stmt.BankCode);
+            Assert.Equal("123456789", stmt.AccountCode);
+            Assert.Equal(new DateTime(2019, 10, 1), stmt.StartDate);
+            Assert.Equal(22077.20m, stmt.StartBalance);
 
-            Assert.Equal(new DateTime(2019, 11, 1), stmt.endDate);
-            Assert.Equal(22102.20m, stmt.endBalance);
+            Assert.Equal(new DateTime(2019, 11, 1), stmt.EndDate);
+            Assert.Equal(22102.20m, stmt.EndBalance);
 
-            Assert.Single(stmt.SWIFTTransactions);
+            Assert.Single(stmt.SwiftTransactions);
 
-            var tx = stmt.SWIFTTransactions[0];
+            var tx = stmt.SwiftTransactions[0];
 
             Assert.Equal(new DateTime(2019, 11, 1), tx.valueDate);
             Assert.Equal(new DateTime(2019, 11, 1), tx.inputDate);
@@ -306,18 +306,18 @@ FEE GmbH?34997
             Assert.Single(result);
 
             var stmt = result[0];
-            Assert.Equal("STARTUMSE", stmt.type);
-            Assert.Equal("10050000", stmt.bankCode);
-            Assert.Equal("123456789", stmt.accountCode);
-            Assert.Equal(new DateTime(2019, 09, 30), stmt.startDate);
-            Assert.Equal(11565.61m, stmt.startBalance);
+            Assert.Equal("STARTUMSE", stmt.Type);
+            Assert.Equal("10050000", stmt.BankCode);
+            Assert.Equal("123456789", stmt.AccountCode);
+            Assert.Equal(new DateTime(2019, 09, 30), stmt.StartDate);
+            Assert.Equal(11565.61m, stmt.StartBalance);
 
-            Assert.Equal(new DateTime(2019, 09, 30), stmt.endDate);
-            Assert.Equal(8172.21m, stmt.endBalance);
+            Assert.Equal(new DateTime(2019, 09, 30), stmt.EndDate);
+            Assert.Equal(8172.21m, stmt.EndBalance);
 
-            Assert.Single(stmt.SWIFTTransactions);
+            Assert.Single(stmt.SwiftTransactions);
 
-            var tx = stmt.SWIFTTransactions[0];
+            var tx = stmt.SwiftTransactions[0];
 
             Assert.Equal(new DateTime(2019, 09, 30), tx.valueDate);
             Assert.Equal(new DateTime(2019, 09, 30), tx.inputDate);

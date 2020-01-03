@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace libfintx
 {
     public class HIUPD
     {
-        public List<AccountInformations> AccountList { get; set; }
+        public List<AccountInformation> AccountList { get; set; }
 
         public HIUPD()
         {
-            AccountList = new List<AccountInformations>();
+            AccountList = new List<AccountInformation>();
         }
 
-        public AccountInformations GetAccountInformations(string accountnumber, string bankcode)
+        public AccountInformation GetAccountInformations(string accountnumber, string bankcode)
         {
-            return AccountList.FirstOrDefault(a => a.Accountnumber == accountnumber && a.Accountbankcode == bankcode);
+            return AccountList.FirstOrDefault(a => a.AccountNumber == accountnumber && a.AccountBankCode == bankcode);
         }
 
         public static HIUPD Parse_HIPUPD(string upd)
@@ -27,7 +26,7 @@ namespace libfintx
             if (upd == null)
                 return null;
 
-            Parse_Accounts(upd, result.AccountList);
+            ParseAccounts(upd, result.AccountList);
 
             return result;
         }
@@ -35,15 +34,15 @@ namespace libfintx
         /// <summary>
         /// Parse accounts and store informations
         /// </summary>
-        /// <param name="Message"></param>
-        /// <param name="Items"></param>
+        /// <param name="message"></param>
+        /// <param name="items"></param>
         /// <returns></returns>
-        public static bool Parse_Accounts(string Message, List<AccountInformations> Items)
+        public static bool ParseAccounts(string message, List<AccountInformation> items)
         {
             try
             {
                 string pattern = $@"HIUPD.*?$";
-                MatchCollection result = Regex.Matches(Message, pattern, RegexOptions.Multiline);
+                MatchCollection result = Regex.Matches(message, pattern, RegexOptions.Multiline);
 
                 for (int ctr = 0; ctr <= result.Count - 1; ctr++)
                 {
@@ -54,7 +53,7 @@ namespace libfintx
                     string Accounttype = null;
                     string Accountcurrency = null;
                     string Accountowner = null;
-                    List<AccountPermissions> Accountpermissions = new List<AccountPermissions>();
+                    List<AccountPermission> Accountpermissions = new List<AccountPermission>();
 
                     // HIUPD:165:6:4+0123456789::280:10050000+DE22100500000123456789+5985932562+10+EUR+Meier+Peter+Sparkassenbuch Gold
                     var match = Regex.Match(result[ctr].Value, @"HIUPD.*?\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+(.*?)\+");
@@ -85,10 +84,10 @@ namespace libfintx
                             {
                                 if (res[c].Value.Length < 10)
                                 {
-                                    Accountpermissions.Add(new AccountPermissions
+                                    Accountpermissions.Add(new AccountPermission
                                     {
                                         Segment = res[c].Value.Replace("+", "").Replace(":1", ""),
-                                        Description = AccountPermissions.Permission(res[c].Value.Replace("+", "").Replace(":1", ""))
+                                        Description = AccountPermission.Permission(res[c].Value.Replace("+", "").Replace(":1", ""))
                                     });
                                 }
                             }
@@ -110,10 +109,10 @@ namespace libfintx
                             {
                                 if (res[c].Value.Length < 10)
                                 {
-                                    Accountpermissions.Add(new AccountPermissions
+                                    Accountpermissions.Add(new AccountPermission
                                     {
                                         Segment = res[c].Value.Replace("+", "").Replace(":1", ""),
-                                        Description = AccountPermissions.Permission(res[c].Value.Replace("+", "").Replace(":1", ""))
+                                        Description = AccountPermission.Permission(res[c].Value.Replace("+", "").Replace(":1", ""))
                                     });
                                 }
                             }
@@ -121,20 +120,20 @@ namespace libfintx
                     }
 
                     if (Accountnumber?.Length > 2 || Accountiban?.Length > 2)
-                        Items.Add(new AccountInformations()
+                        items.Add(new AccountInformation()
                         {
-                            Accountnumber = Accountnumber,
-                            Accountbankcode = Accountbankcode,
-                            Accountiban = Accountiban,
-                            Accountuserid = Accountuserid,
-                            Accounttype = Accounttype,
-                            Accountcurrency = Accountcurrency,
-                            Accountowner = Accountowner,
-                            Accountpermissions = Accountpermissions
+                            AccountNumber = Accountnumber,
+                            AccountBankCode = Accountbankcode,
+                            AccountIban = Accountiban,
+                            AccountUserId = Accountuserid,
+                            AccountType = Accounttype,
+                            AccountCurrency = Accountcurrency,
+                            AccountOwner = Accountowner,
+                            AccountPermissions = Accountpermissions
                         });
                 }
 
-                if (Items.Count > 0)
+                if (items.Count > 0)
                     return true;
                 else
                     return false;

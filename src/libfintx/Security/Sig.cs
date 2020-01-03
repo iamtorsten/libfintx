@@ -33,31 +33,31 @@ namespace libfintx
 {
     public class Sig
     {
-        public static string SECFUNC_HBCI_SIG_RDH = "1";
-        public static string SECFUNC_HBCI_SIG_DDV = "2";
+        public const string SECFUNC_HBCI_SIG_RDH = "1";
+        public const string SECFUNC_HBCI_SIG_DDV = "2";
 
-        public static string SECFUNC_FINTS_SIG_DIG = "1";
-        public static string SECFUNC_FINTS_SIG_SIG = "2";
+        public const string SECFUNC_FINTS_SIG_DIG = "1";
+        public const string SECFUNC_FINTS_SIG_SIG = "2";
 
-        public static string SECFUNC_SIG_PT_1STEP = "999";
-        public static string SECFUNC_SIG_PT_2STEP_MIN = "900";
-        public static string SECFUNC_SIG_PT_2STEP_MAX = "997";
+        public const string SECFUNC_SIG_PT_1STEP = "999";
+        public const string SECFUNC_SIG_PT_2STEP_MIN = "900";
+        public const string SECFUNC_SIG_PT_2STEP_MAX = "997";
 
-        public static string HASHALG_SHA1 = "1";
-        public static string HASHALG_SHA256 = "3";
-        public static string HASHALG_SHA384 = "4";
-        public static string HASHALG_SHA512 = "5";
-        public static string HASHALG_SHA256_SHA256 = "6";
-        public static string HASHALG_RIPEMD160 = "999";
+        public const string HASHALG_SHA1 = "1";
+        public const string HASHALG_SHA256 = "3";
+        public const string HASHALG_SHA384 = "4";
+        public const string HASHALG_SHA512 = "5";
+        public const string HASHALG_SHA256_SHA256 = "6";
+        public const string HASHALG_RIPEMD160 = "999";
 
-        public static string SIGALG_DES = "1";
-        public static string SIGALG_RSA = "10";
+        public const string SIGALG_DES = "1";
+        public const string SIGALG_RSA = "10";
 
-        public static string SIGMODE_ISO9796_1 = "16";
-        public static string SIGMODE_ISO9796_2 = "17";
-        public static string SIGMODE_PKCS1 = "18";
-        public static string SIGMODE_PSS = "19";
-        public static string SIGMODE_RETAIL_MAC = "999";
+        public const string SIGMODE_ISO9796_1 = "16";
+        public const string SIGMODE_ISO9796_2 = "17";
+        public const string SIGMODE_PKCS1 = "18";
+        public const string SIGMODE_PSS = "19";
+        public const string SIGMODE_RETAIL_MAC = "999";
 
         // TODO: Fix RDH sig -> Creating signature
 
@@ -80,9 +80,9 @@ namespace libfintx
             byte[] key = null;
 
             if (isPrivateKey)
-                key = Encoding.UTF8.GetBytes(Helper.Parse_String(RDH_KEYSTORE.KEY_SIGNING_PRIVATE_XML, "<Modulus>", "</Modulus"));
+                key = Encoding.UTF8.GetBytes(Helper.Parse_String(RdhKeyStore.KEY_SIGNING_PRIVATE_XML, "<Modulus>", "</Modulus"));
             else
-                key = Encoding.GetEncoding("iso8859-1").GetBytes(RDH_KEYSTORE.KEY_SIGNING_PRIVATE);
+                key = Encoding.GetEncoding("iso8859-1").GetBytes(RdhKeyStore.KEY_SIGNING_PRIVATE);
 
             var Exponent = new byte[] { 1, 0, 1 };
 
@@ -169,7 +169,7 @@ namespace libfintx
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
-                rsa.FromXmlString(RDH_KEYSTORE.KEY_SIGNING_PRIVATE_XML);
+                rsa.FromXmlString(RdhKeyStore.KEY_SIGNING_PRIVATE_XML);
 
                 var signedMessage = rsa.SignHash(hash, CryptoConfig.MapNameToOID("SHA1withRSA"));
 

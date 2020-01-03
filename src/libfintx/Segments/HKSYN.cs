@@ -34,18 +34,18 @@ namespace libfintx
 
             string segments;
 
-            if (connectionDetails.HBCIVersion == 220)
+            if (connectionDetails.HbciVersion == 220)
             {
-                string segments_ = 
+                string segments_ =
                     "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
                     "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
                     "HKSYN:" + SEGNUM.SETVal(5) + ":2+0'";
 
                 segments = segments_;
             }
-            else if (connectionDetails.HBCIVersion == 300)
+            else if (connectionDetails.HbciVersion == 300)
             {
-                string segments_ = 
+                string segments_ =
                     "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
                     "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
                     "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
@@ -65,10 +65,10 @@ namespace libfintx
 
             SEG.NUM = SEGNUM.SETInt(5);
 
-            string message = FinTSMessage.Create(connectionDetails.HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, SYS.SETVal(0), segments, null, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HBCIVersion, response);
+            Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HbciVersion, response);
 
             return response;
         }

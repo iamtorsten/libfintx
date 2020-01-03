@@ -23,8 +23,8 @@
 
 namespace libfintx
 {
-	public static class TransactionConsole
-	{
-		public static string Output { get; set; }
-	}
+    public static class TransactionConsole
+    {
+        public static string Output { get; set; }
+    }
 }

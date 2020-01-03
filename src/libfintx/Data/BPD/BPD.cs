@@ -43,7 +43,7 @@ namespace libfintx
             ReflectionUtil.ResetStaticFields(typeof(BPD));
         }
 
-        public static void Parse_BPD(string bpd)
+        public static void ParseBpd(string bpd)
         {
             Value = bpd;
 

@@ -18,7 +18,7 @@ namespace libfintx_mt940
 
             var statemtents = MT940.Serialize(mt940, null);
 
-            var transactions = statemtents.SelectMany(s => s.SWIFTTransactions);
+            var transactions = statemtents.SelectMany(s => s.SwiftTransactions);
 
             foreach (var tx in transactions)
             {

@@ -45,7 +45,7 @@ namespace libfintx
             {
                 // Convert the number expressed in base-16 to an integer.
                 int value = Convert.ToInt32(hex, 16);
-                
+
                 // Get the character corresponding to the integral value.
                 string stringValue = Char.ConvertFromUtf32(value);
                 charValue = charValue + (char)value;

@@ -62,10 +62,10 @@ namespace libfintx
             {
                 Account = "xxx",
                 Blz = 76061482,
-                BIC = "GENODEF1HSB",
-                IBAN = "xxx",
+                Bic = "GENODEF1HSB",
+                Iban = "xxx",
                 Url = "https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-                HBCIVersion = 300,
+                HbciVersion = 300,
                 UserId = "xxx",
                 Pin = "xxx"
             };
@@ -125,7 +125,7 @@ namespace libfintx
             {
                 Blz = 76050101,
                 Url = "https://banking-by1.s-fints-pt-by.de/fints30",
-                HBCIVersion = 300,
+                HbciVersion = 300,
                 UserId = "xxx",
                 Pin = "xxx"
             };
@@ -179,10 +179,10 @@ namespace libfintx
             {
                 AccountHolder = "Torsten Klinger",
                 Blz = 76050101,
-                BIC = "SSKNDE77XXX",
-                IBAN = "xxx",
+                Bic = "SSKNDE77XXX",
+                Iban = "xxx",
                 Url = "https://banking-by1.s-fints-pt-by.de/fints30",
-                HBCIVersion = 300,
+                HbciVersion = 300,
                 UserId = "xxx",
                 Pin = "xxx"
             };

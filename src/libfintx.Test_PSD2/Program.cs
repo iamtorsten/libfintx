@@ -19,10 +19,10 @@ namespace libfintx.Test_PSD2
 			{
 				Account = "xxx",
 				Blz = 76061482,
-				BIC = "GENODEF1HSB",
-				IBAN = "xxx",
+				Bic = "GENODEF1HSB",
+				Iban = "xxx",
 				Url = "https://hbci11.fiducia.de/cgi-bin/hbciservlet",
-				HBCIVersion = 300,
+				HbciVersion = 300,
 				UserId = "xxx",
 				Pin = "xxx"
 			};
@@ -41,9 +41,9 @@ namespace libfintx.Test_PSD2
 			{
 				foreach (var swift in trx.Data) // SWIFT
 				{
-					if (swift.SWIFTTransactions.Count != 0)
+					if (swift.SwiftTransactions.Count != 0)
 					{
-						foreach (var swifttrx in swift.SWIFTTransactions) // SWIFT Transaktionen
+						foreach (var swifttrx in swift.SwiftTransactions) // SWIFT Transaktionen
 						{
 							// Einzelne Transaktion
 							Console.WriteLine(swifttrx.partnerName);

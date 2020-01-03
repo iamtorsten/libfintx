@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace libfintx
 {
     public class HIPINS
     {
-        public Dictionary<string, bool> GV_PIN_TAN { get; set; }
+        public Dictionary<string, bool> GvPinTan { get; set; }
 
         public HIPINS()
         {
-            GV_PIN_TAN = new Dictionary<string, bool>();
+            GvPinTan = new Dictionary<string, bool>();
         }
 
-        public bool IsTANRequired(string gvName)
+        public bool IsTanRequired(string gvName)
         {
-            return GV_PIN_TAN.ContainsKey(gvName) ? GV_PIN_TAN[gvName] : false;
+            return GvPinTan.ContainsKey(gvName) ? GvPinTan[gvName] : false;
         }
 
         public static HIPINS Parse_HIPINS(string hipins)
@@ -38,7 +35,7 @@ namespace libfintx
                     var gv = gvMatch.Groups["gv"].Value;
                     var tanRequired = gvMatch.Groups["tanrequired"].Value;
 
-                    result.GV_PIN_TAN[gv] = (tanRequired == "J");
+                    result.GvPinTan[gv] = (tanRequired == "J");
                 }
             }
 

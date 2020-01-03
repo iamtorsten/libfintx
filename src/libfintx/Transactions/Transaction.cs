@@ -21,35 +21,34 @@
  * 	
  */
 
-using System.Collections.Generic;
-
-using static libfintx.INI;
-using static libfintx.HKEND;
-using static libfintx.HKSAL;
-using static libfintx.HKKAZ;
-using static libfintx.HKCCS;
-using static libfintx.HKCSE;
-using static libfintx.HKCCM;
-using static libfintx.HKCME;
-using static libfintx.HKCUM;
-using static libfintx.HKDSE;
-using static libfintx.HKDME;
-using static libfintx.HKPPD;
-using static libfintx.HKCDE;
-using static libfintx.HKCDN;
-using static libfintx.HKCDL;
-using static libfintx.HKCSB;
-using static libfintx.HKCDB;
-using static libfintx.HKSYN;
-using static libfintx.TAN;
-using static libfintx.TAN4;
-using static libfintx.HKTAB;
-using static libfintx.HKCAZ;
+using libfintx.Camt;
 using libfintx.Data;
 using System;
-
+using System.Collections.Generic;
+using static libfintx.HKCAZ;
+using static libfintx.HKCCM;
+using static libfintx.HKCCS;
+using static libfintx.HKCDB;
+using static libfintx.HKCDE;
+using static libfintx.HKCDL;
+using static libfintx.HKCDN;
+using static libfintx.HKCME;
+using static libfintx.HKCSB;
+using static libfintx.HKCSE;
+using static libfintx.HKCUM;
+using static libfintx.HKDME;
+using static libfintx.HKDSE;
+using static libfintx.HKEND;
+using static libfintx.HKKAZ;
+using static libfintx.HKPPD;
+using static libfintx.HKSAL;
+using static libfintx.HKSYN;
+using static libfintx.HKTAB;
+using static libfintx.INI;
 /* RDH */
 using static libfintx.INI_RDH;
+using static libfintx.Tan;
+using static libfintx.Tan4;
 
 namespace libfintx
 {
@@ -90,12 +89,12 @@ namespace libfintx
             return Init_HKCSE(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
         }
 
-        public static string HKCCM(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount)
+        public static string HKCCM(ConnectionDetails connectionDetails, List<Pain00100203CtData> PainData, string NumberofTransactions, decimal TotalAmount)
         {
             return Init_HKCCM(connectionDetails, PainData, NumberofTransactions, TotalAmount);
         }
 
-        public static string HKCME(ConnectionDetails connectionDetails, List<pain00100203_ct_data> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
+        public static string HKCME(ConnectionDetails connectionDetails, List<Pain00100203CtData> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
         {
             return Init_HKCME(connectionDetails, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
         }
@@ -105,13 +104,13 @@ namespace libfintx
             return Init_HKCUM(connectionDetails, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage);
         }
 
-        public static string HKDSE(ConnectionDetails connectionDetails, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, 
+        public static string HKDSE(ConnectionDetails connectionDetails, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage,
             DateTime SettlementDate, string MandateNumber, DateTime MandateDate, string CeditorIDNumber)
         {
             return Init_HKDSE(connectionDetails, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CeditorIDNumber);
         }
 
-        public static string HKDME(ConnectionDetails connectionDetails, DateTime SettlementDate, List<pain00800202_cc_data> PainData, string NumberofTransactions, decimal TotalAmount)
+        public static string HKDME(ConnectionDetails connectionDetails, DateTime SettlementDate, List<Pain00800202CcData> PainData, string NumberofTransactions, decimal TotalAmount)
         {
             return Init_HKDME(connectionDetails, SettlementDate, PainData, NumberofTransactions, TotalAmount);
         }
@@ -161,7 +160,7 @@ namespace libfintx
             return Init_HKTAB(connectionDetails);
         }
 
-        public static string HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint, camtVersion camtVers)
+        public static string HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint, CamtVersion camtVers)
         {
             return Init_HKCAZ(connectionDetails, FromDate, ToDate, Startpoint, camtVers);
         }

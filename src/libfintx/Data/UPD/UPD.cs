@@ -29,7 +29,7 @@ namespace libfintx
 
         public static HIUPD HIUPD { get; set; }
 
-        public static void Parse_UPD(string upd)
+        public static void ParseUpd(string upd)
         {
             Value = upd;
             HIUPD = HIUPD.Parse_HIPUPD(upd);
