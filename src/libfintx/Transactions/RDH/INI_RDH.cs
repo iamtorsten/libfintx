@@ -49,8 +49,7 @@ namespace libfintx
                     if (DEBUG.Enabled)
                         DEBUG.Write("INI message: " + segments);
 
-                    if (Helper.Parse_Segment_RDH_Key(RDHMessage.Send(URL, Port, RDHMessageAnonymous.Create(HBCIVersion,
-                        MSG.SETVal(1), DLG.SETVal(0), BLZ, segments)), BLZ, UserID))
+                    if (Helper.Parse_Segment_RDH_Key(RDHMessage.Send(URL, Port, RDHMessageAnonymous.Create(HBCIVersion, "1", "0", BLZ, segments)), BLZ, UserID))
                     {
                         // Sync OK
                         Log.Write("Synchronisation ok");
@@ -70,8 +69,7 @@ namespace libfintx
                             if (DEBUG.Enabled)
                                 DEBUG.Write("Key exchange message: " + segments);
 
-                            RDHMessage.Send(URL, Port, RDHMessage.Create(HBCIVersion, MSG.SETVal(1), DLG.SETVal(0), BLZ, UserID, SYS.SETVal(0),
-                                segments, SEGNUM.SETInt(5)));
+                            RDHMessage.Send(URL, Port, RDHMessage.Create(HBCIVersion, "1", "0", BLZ, UserID, "0", segments, SEGNUM.SETInt(5)));
 
                             // INI OK
                             Log.Write("INI ok");
