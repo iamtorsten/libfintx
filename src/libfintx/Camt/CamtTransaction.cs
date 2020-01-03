@@ -30,75 +30,69 @@
 
 using System;
 
-namespace libfintx
+namespace libfintx.Camt
 {
-    /// todoComment
-    public class TTransaction
+    public class CamtTransaction
     {
         /// <summary>
         /// Pending (Vorgemerkt)
         /// </summary>
-        public bool pending;
+        public bool Pending { get; set; }
 
-        /// todoComment
-        public DateTime valueDate;
+        public DateTime ValueDate { get; set; }
 
-        /// todoComment
-        public DateTime inputDate;
+        public DateTime InputDate { get; set; }
 
-        /// todoComment
-        public decimal amount;
+        public decimal Amount { get; set; }
 
-        /// todoComment
-        public string text;
+        public string Text { get; set; }
 
         /// <summary>
         /// Buchungsschlüssel
         /// </summary>
-        public string transactionTypeId;
+        public string TransactionTypeId { get; set; }
 
         /// <summary>
         /// Geschäftsvorfallcode
         /// </summary>
-        public string typecode;
+        public string TypeCode { get; set; }
 
-        public string primanota;
+        public string Primanota { get; set; }
 
-        public string textKeyAddition;
+        public string TextKeyAddition { get; set; }
 
-        /// todoComment
-        public string description;
+        public string Description { get; set; }
 
         /// <summary>
         /// BIC of the counterpart
         /// </summary>
-        public string bankCode;
+        public string BankCode { get; set; }
 
         /// <summary>
         /// IBAN of the counterpart
         /// </summary>
-        public string accountCode;
+        public string AccountCode { get; set; }
 
         /// <summary>
         /// Name of the counterpart
         /// </summary>
-        public string partnerName;
+        public string PartnerName { get; set; }
 
-        public string endToEndId;
+        public string EndToEndId { get; set; }
 
-        public string mandateId;
-        
+        public string MandateId { get; set; }
+
         /// <summary>
         /// Unique Identifier (if available)
         /// </summary>
-        public string proprietaryRef;
+        public string ProprietaryRef { get; set; }
 
-        public string customerRef;
+        public string CustomerRef { get; set; }
 
-        public string paymentInformationId;
+        public string PaymentInformationId { get; set; }
 
-        public string messageId;
+        public string MessageId { get; set; }
 
-        public bool storno;
+        public bool Storno { get; set; }
     }
 }

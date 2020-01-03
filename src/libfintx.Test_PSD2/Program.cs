@@ -41,9 +41,9 @@ namespace libfintx.Test_PSD2
 			{
 				foreach (var swift in trx.Data) // SWIFT
 				{
-					if (swift.SWIFTTransactions.Count != 0)
+					if (swift.SwiftTransactions.Count != 0)
 					{
-						foreach (var swifttrx in swift.SWIFTTransactions) // SWIFT Transaktionen
+						foreach (var swifttrx in swift.SwiftTransactions) // SWIFT Transaktionen
 						{
 							// Einzelne Transaktion
 							Console.WriteLine(swifttrx.partnerName);

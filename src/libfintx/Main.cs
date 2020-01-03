@@ -21,16 +21,14 @@
  * 	
  */
 
+using libfintx.Camt;
 using libfintx.Data;
+using libfintx.Swift;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Serialization;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using static libfintx.HKCDE;
 
 namespace libfintx
@@ -155,15 +153,15 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static HBCIDialogResult<List<SWIFTStatement>> Transactions(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
+        public static HBCIDialogResult<List<SwiftStatement>> Transactions(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
         {
             HBCIDialogResult result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
-                return result.TypedResult<List<SWIFTStatement>>();
+                return result.TypedResult<List<SwiftStatement>>();
 
             result = ProcessSCA(connectionDetails, result, tanDialog);
             if (!result.IsSuccess)
-                return result.TypedResult<List<SWIFTStatement>>();
+                return result.TypedResult<List<SwiftStatement>>();
 
             var startDateStr = startDate?.ToString("yyyyMMdd");
             var endDateStr = endDate?.ToString("yyyyMMdd");
@@ -172,11 +170,11 @@ namespace libfintx
             var BankCode = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, null);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
-                return result.TypedResult<List<SWIFTStatement>>();
+                return result.TypedResult<List<SwiftStatement>>();
 
             result = ProcessSCA(connectionDetails, result, tanDialog);
             if (!result.IsSuccess)
-                return result.TypedResult<List<SWIFTStatement>>();
+                return result.TypedResult<List<SwiftStatement>>();
 
             BankCode = result.RawData;
             StringBuilder TransactionsMt940 = new StringBuilder();
@@ -200,11 +198,11 @@ namespace libfintx
                 BankCode_ = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
                 result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode_), BankCode_);
                 if (!result.IsSuccess)
-                    return result.TypedResult<List<SWIFTStatement>>();
+                    return result.TypedResult<List<SwiftStatement>>();
 
                 result = ProcessSCA(connectionDetails, result, tanDialog);
                 if (!result.IsSuccess)
-                    return result.TypedResult<List<SWIFTStatement>>();
+                    return result.TypedResult<List<SwiftStatement>>();
 
                 BankCode_ = result.RawData;
                 match = regex.Match(BankCode_);
@@ -215,7 +213,7 @@ namespace libfintx
                 }
             }
 
-            var swiftStatements = new List<SWIFTStatement>();
+            var swiftStatements = new List<SwiftStatement>();
 
             swiftStatements.AddRange(MT940.Serialize(TransactionsMt940.ToString(), connectionDetails.Account, saveMt940File));
             swiftStatements.AddRange(MT940.Serialize(TransactionsMt942.ToString(), connectionDetails.Account, saveMt940File, true));
@@ -233,16 +231,16 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static HBCIDialogResult<List<TStatement>> Transactions_camt(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, camtVersion camtVers,
+        public static HBCIDialogResult<List<CamtStatement>> Transactions_camt(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, CamtVersion camtVers,
             DateTime? startDate = null, DateTime? endDate = null, bool saveCamtFile = false)
         {
             HBCIDialogResult result = Init(connectionDetails, anonymous);
             if (!result.IsSuccess)
-                return result.TypedResult<List<TStatement>>();
+                return result.TypedResult<List<CamtStatement>>();
 
             result = ProcessSCA(connectionDetails, result, tanDialog);
             if (!result.IsSuccess)
-                return result.TypedResult<List<TStatement>>();
+                return result.TypedResult<List<CamtStatement>>();
 
             // Plain camt message
             var camt = string.Empty;
@@ -252,16 +250,16 @@ namespace libfintx
 
             // Success
             var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null, camtVers);
-            result = new HBCIDialogResult<List<TStatement>>(Helper.Parse_BankCode(BankCode), BankCode);
+            result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
-                return result.TypedResult<List<TStatement>>();
+                return result.TypedResult<List<CamtStatement>>();
 
             result = ProcessSCA(connectionDetails, result, tanDialog);
             if (!result.IsSuccess)
-                return result.TypedResult<List<TStatement>>();
+                return result.TypedResult<List<CamtStatement>>();
 
             BankCode = result.RawData;
-            List<TStatement> statements = new List<TStatement>();
+            List<CamtStatement> statements = new List<CamtStatement>();
 
             TCAM052TParser CAMT052Parser = null;
             TCAM053TParser CAMT053Parser = null;
@@ -281,7 +279,7 @@ namespace libfintx
 
                 switch (camtVers)
                 {
-                    case camtVersion.camt052:
+                    case CamtVersion.Camt052:
                         if (CAMT052Parser == null)
                             CAMT052Parser = new TCAM052TParser();
 
@@ -289,7 +287,7 @@ namespace libfintx
                         {
                             // Save camt052 statement to file
                             var camt052f = camt052File.Save(connectionDetails.Account, camt, encoding);
-                            
+
                             // Process the camt052 file
                             CAMT052Parser.ProcessFile(camt052f);
                         }
@@ -300,7 +298,7 @@ namespace libfintx
 
                         statements.AddRange(CAMT052Parser.statements);
                         break;
-                    case camtVersion.camt053:
+                    case CamtVersion.Camt053:
                         if (CAMT053Parser == null)
                             CAMT053Parser = new TCAM053TParser();
 
@@ -332,9 +330,9 @@ namespace libfintx
             {
                 string Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
                 BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
-                result = new HBCIDialogResult<List<TStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
+                result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
                 if (!result.IsSuccess)
-                    return result.TypedResult<List<TStatement>>();
+                    return result.TypedResult<List<CamtStatement>>();
 
                 BankCode_ = result.RawData;
 
@@ -351,7 +349,7 @@ namespace libfintx
 
                     switch (camtVers)
                     {
-                        case camtVersion.camt052:
+                        case CamtVersion.Camt052:
                             // Save camt052 statement to file
                             var camt052f_ = camt052File.Save(connectionDetails.Account, camt);
 
@@ -361,7 +359,7 @@ namespace libfintx
                             // Add all items
                             statements.AddRange(CAMT052Parser.statements);
                             break;
-                        case camtVersion.camt053:
+                        case CamtVersion.Camt053:
                             // Save camt053 statement to file
                             var camt053f_ = camt053File.Save(connectionDetails.Account, camt);
 
@@ -401,19 +399,19 @@ namespace libfintx
             var transactionList = new List<AccountTransaction>();
             foreach (var swiftStatement in result.Data)
             {
-                foreach (var swiftTransaction in swiftStatement.SWIFTTransactions)
+                foreach (var swiftTransaction in swiftStatement.SwiftTransactions)
                 {
                     transactionList.Add(new AccountTransaction()
                     {
-                        OwnerAccount = swiftStatement.accountCode,
-                        OwnerBankcode = swiftStatement.bankCode,
-                        PartnerBIC = swiftTransaction.bankCode,
-                        PartnerIBAN = swiftTransaction.accountCode,
-                        PartnerName = swiftTransaction.partnerName,
-                        RemittanceText = swiftTransaction.description,
-                        TransactionType = swiftTransaction.text,
-                        TransactionDate = swiftTransaction.inputDate,
-                        ValueDate = swiftTransaction.valueDate
+                        OwnerAccount = swiftStatement.AccountCode,
+                        OwnerBankcode = swiftStatement.BankCode,
+                        PartnerBIC = swiftTransaction.BankCode,
+                        PartnerIBAN = swiftTransaction.AccountCode,
+                        PartnerName = swiftTransaction.PartnerName,
+                        RemittanceText = swiftTransaction.Description,
+                        TransactionType = swiftTransaction.Text,
+                        TransactionDate = swiftTransaction.InputDate,
+                        ValueDate = swiftTransaction.ValueDate
                     });
                 }
             }

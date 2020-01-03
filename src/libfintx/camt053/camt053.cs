@@ -28,16 +28,14 @@
  *
  */
 
+using libfintx.Camt;
+using libfintx.camt_053_001_02;
 using System;
-using System.Linq;
-using System.IO;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Xml;
-using System.Threading;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using libfintx.camt_053_001_02;
 
 namespace libfintx
 {
@@ -53,7 +51,7 @@ namespace libfintx
         /// <summary>
         /// the parsed bank statements
         /// </summary>
-        public List<TStatement> statements;
+        public List<CamtStatement> statements;
 
         public void ProcessDocument(string xmlDocument, Encoding encoding = null)
         {
@@ -98,29 +96,29 @@ namespace libfintx
 
         private void ProcessDocument(Document document)
         {
-            statements = new List<TStatement>();
+            statements = new List<CamtStatement>();
 
             AccountStatement2[] stmts = document.BkToCstmrStmt.Stmt;
 
             foreach (AccountStatement2 accStatement in stmts)
             {
-                TStatement stmt = new TStatement();
+                CamtStatement stmt = new CamtStatement();
 
-                stmt.id = accStatement.Id;
-                stmt.elctrncSeqNb = accStatement.ElctrncSeqNb.ToString();
+                stmt.Id = accStatement.Id;
+                stmt.ElctrncSeqNb = accStatement.ElctrncSeqNb.ToString();
 
                 object accReportAccount = accStatement.Acct?.Id?.Item;
                 if (accReportAccount is string)
-                    stmt.accountCode = (string)accReportAccount;
+                    stmt.AccountCode = (string)accReportAccount;
                 else if (accReportAccount is GenericAccountIdentification1)
-                    stmt.accountCode = ((GenericAccountIdentification1)accReportAccount).Id;
+                    stmt.AccountCode = ((GenericAccountIdentification1)accReportAccount).Id;
 
-                stmt.bankCode = accStatement.Acct?.Svcr?.FinInstnId?.BIC;
-                stmt.currency = accStatement.Acct?.Ccy;
+                stmt.BankCode = accStatement.Acct?.Svcr?.FinInstnId?.BIC;
+                stmt.Currency = accStatement.Acct?.Ccy;
 
-                stmt.severalYears = false;
+                stmt.SeveralYears = false;
                 string nm = accStatement.Acct?.Ownr?.Nm;
-                string ownName = nm ?? "AccountNameFor" + stmt.bankCode + "/" + stmt.accountCode;
+                string ownName = nm ?? "AccountNameFor" + stmt.BankCode + "/" + stmt.AccountCode;
 
                 CashBalance3[] balances = accStatement.Bal;
                 if (balances != null)
@@ -130,28 +128,28 @@ namespace libfintx
                         // PRCD: PreviouslyClosedBooked
                         if (balance.Tp?.CdOrPrtry?.Item?.ToString() == "PRCD")
                         {
-                            stmt.startBalance = balance.Amt.Value;
+                            stmt.StartBalance = balance.Amt.Value;
 
                             // CreditDebitIndicator: CRDT or DBIT for credit or debit
                             if (balance.CdtDbtInd == CreditDebitCode.DBIT)
                             {
-                                stmt.startBalance *= -1.0m;
+                                stmt.StartBalance *= -1.0m;
                             }
 
-                            stmt.startDate = balance.Dt.Item;
+                            stmt.StartDate = balance.Dt.Item;
                         }
                         // CLBD: ClosingBooked
                         else if (balance.Tp?.CdOrPrtry?.Item?.ToString() == "CLBD")
                         {
-                            stmt.endBalance = balance.Amt.Value;
+                            stmt.EndBalance = balance.Amt.Value;
 
                             // CreditDebitIndicator: CRDT or DBIT for credit or debit
                             if (balance.CdtDbtInd == CreditDebitCode.DBIT)
                             {
-                                stmt.endBalance *= -1.0m;
+                                stmt.EndBalance *= -1.0m;
                             }
 
-                            stmt.endDate = balance.Dt.Item;
+                            stmt.EndDate = balance.Dt.Item;
                         }
 
                         // ITBD: InterimBooked
@@ -188,37 +186,37 @@ namespace libfintx
                 {
                     foreach (ReportEntry2 entry in entries)
                     {
-                        if (entry.Amt.Ccy != stmt.currency)
+                        if (entry.Amt.Ccy != stmt.Currency)
                         {
                             throw new Exception("transaction currency " + entry.Amt.Ccy + " does not match the bank statement currency");
                         }
 
-                        TTransaction tr = new TTransaction();
+                        CamtTransaction tr = new CamtTransaction();
 
-                        tr.pending = entry.Sts == EntryStatus2Code.PDNG;
+                        tr.Pending = entry.Sts == EntryStatus2Code.PDNG;
 
                         if (entry.BookgDt != null)
                         {
-                            tr.inputDate = entry.BookgDt.Item;
+                            tr.InputDate = entry.BookgDt.Item;
                         }
                         if (entry.ValDt != null)
                         {
-                            tr.valueDate = entry.ValDt.Item;
-                            if (tr.valueDate.Year != stmt.startDate.Year)
+                            tr.ValueDate = entry.ValDt.Item;
+                            if (tr.ValueDate.Year != stmt.StartDate.Year)
                             {
-                                stmt.severalYears = true;
+                                stmt.SeveralYears = true;
                             }
                         }
 
                         // Soll/Haben
-                        tr.amount = entry.Amt.Value;
+                        tr.Amount = entry.Amt.Value;
                         bool debit = entry.CdtDbtInd == CreditDebitCode.DBIT;
                         if (debit)
                         {
-                            tr.amount *= -1.0m;
+                            tr.Amount *= -1.0m;
                         }
 
-                        tr.storno = entry.RvslInd;
+                        tr.Storno = entry.RvslInd;
 
                         EntryDetails1 entryDetails = entry.NtryDtls?.FirstOrDefault();
                         EntryTransaction2 txDetails = entryDetails?.TxDtls?.FirstOrDefault();
@@ -226,16 +224,16 @@ namespace libfintx
                         // Verwendungszweck
                         if (txDetails?.RmtInf?.Ustrd != null)
                         {
-                            tr.description = string.Join(string.Empty, txDetails.RmtInf.Ustrd.Select(s => s?.Trim()));
+                            tr.Description = string.Join(string.Empty, txDetails.RmtInf.Ustrd.Select(s => s?.Trim()));
                         }
 
-                        tr.text = entry.AddtlNtryInf?.Trim();
+                        tr.Text = entry.AddtlNtryInf?.Trim();
 
-                        tr.bankCode = debit ?
+                        tr.BankCode = debit ?
                             txDetails?.RltdAgts?.CdtrAgt?.FinInstnId?.BIC :
                             txDetails?.RltdAgts?.DbtrAgt?.FinInstnId?.BIC;
 
-                        tr.partnerName = debit ?
+                        tr.PartnerName = debit ?
                             txDetails?.RltdPties?.Cdtr?.Nm :
                             txDetails?.RltdPties?.Dbtr?.Nm;
 
@@ -243,9 +241,9 @@ namespace libfintx
                             txDetails?.RltdPties?.CdtrAcct?.Id?.Item :
                             txDetails?.RltdPties?.DbtrAcct?.Id?.Item;
                         if (account is string)
-                            tr.accountCode = (string)account;
+                            tr.AccountCode = (string)account;
                         else if (account is GenericAccountIdentification1)
-                            tr.accountCode = ((GenericAccountIdentification1)account).Id;
+                            tr.AccountCode = ((GenericAccountIdentification1)account).Id;
 
                         string CrdtName = txDetails?.RltdPties?.Cdtr?.Nm;
                         string DbtrName = txDetails?.RltdPties?.Dbtr?.Nm;
@@ -259,18 +257,18 @@ namespace libfintx
                             else if (ownName != string.Empty)
                             {
                                 // sometimes donors write the project or recipient in the field where the organisation is supposed to be
-                                Log.Write("CrdtName is not like expected: " + tr.description + " --- " + CrdtName);
+                                Log.Write("CrdtName is not like expected: " + tr.Description + " --- " + CrdtName);
                             }
                         }
 
-                        tr.endToEndId = txDetails?.Refs?.EndToEndId;
+                        tr.EndToEndId = txDetails?.Refs?.EndToEndId;
 
-                        tr.messageId = txDetails?.Refs?.MsgId;
-                        tr.paymentInformationId = txDetails?.Refs?.PmtInfId;
-                        tr.mandateId = txDetails?.Refs?.MndtId;
-                        tr.proprietaryRef = txDetails?.Refs?.Prtry?.Ref;
+                        tr.MessageId = txDetails?.Refs?.MsgId;
+                        tr.PaymentInformationId = txDetails?.Refs?.PmtInfId;
+                        tr.MandateId = txDetails?.Refs?.MndtId;
+                        tr.ProprietaryRef = txDetails?.Refs?.Prtry?.Ref;
 
-                        tr.customerRef = entry.AcctSvcrRef;
+                        tr.CustomerRef = entry.AcctSvcrRef;
 
                         if (txDetails?.BkTxCd.Prtry.Cd != null)
                         {
@@ -279,25 +277,25 @@ namespace libfintx
                             // see the codes: https://www.hettwer-beratung.de/business-portfolio/zahlungsverkehr/elektr-kontoinformationen-swift-mt-940/
                             string[] GVCCode = txDetails?.BkTxCd?.Prtry?.Cd?.Split(new char[] { '+' });
                             if (GVCCode.Length > 0)
-                                tr.transactionTypeId = GVCCode[0];
+                                tr.TransactionTypeId = GVCCode[0];
                             if (GVCCode.Length > 1)
-                                tr.typecode = GVCCode[1];
+                                tr.TypeCode = GVCCode[1];
                             if (GVCCode.Length > 2)
-                                tr.primanota = GVCCode[2];
+                                tr.Primanota = GVCCode[2];
                             if (GVCCode.Length > 3)
-                                tr.textKeyAddition = GVCCode[3];
+                                tr.TextKeyAddition = GVCCode[3];
                         }
 
                         // for SEPA direct debit batches, there are multiple TxDtls records
                         if (entryDetails?.TxDtls?.Count() > 1)
                         {
-                            tr.partnerName = string.Empty;
-                            tr.description = string.Format("SEPA Sammel-Basislastschrift mit {0} Lastschriften", entryDetails?.TxDtls?.Count());
+                            tr.PartnerName = string.Empty;
+                            tr.Description = string.Format("SEPA Sammel-Basislastschrift mit {0} Lastschriften", entryDetails?.TxDtls?.Count());
                         }
 
-                        stmt.transactions.Add(tr);
+                        stmt.Transactions.Add(tr);
 
-                        Log.Write("count : " + stmt.transactions.Count.ToString());
+                        Log.Write("count : " + stmt.Transactions.Count.ToString());
                     }
                 }
 

@@ -31,44 +31,40 @@
 using libfintx.Util;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace libfintx
+namespace libfintx.Camt
 {
-    /// todoComment
-    public class TStatement
+    public class CamtStatement
     {
-        /// todoComment
-        public string id;
+        public string Id { get; set; }
 
-        /// todoComment
-        public string elctrncSeqNb;
+        public string ElctrncSeqNb { get; set; }
 
-        /// todoComment
-        public string bankCode;
+        public string BankCode { get; set; }
 
-        /// todoComment
-        public string accountCode;
+        public string AccountCode { get; set; }
 
-        /// todoComment
-        public string currency;
+        public string Currency { get; set; }
 
-        /// todoComment
-        public decimal startBalance;
+        public decimal StartBalance { get; set; }
 
-        /// todoComment
-        public decimal endBalance;
+        public decimal EndBalance { get; set; }
 
-        public DateTime startDate;
+        public DateTime StartDate { get; set; }
 
-        /// todoComment
-        public DateTime endDate;
+        public DateTime EndDate { get; set; }
 
-        /// across several years
-        public bool severalYears;
+        /// <summary>
+        /// Across several years
+        /// </summary>
+        public bool SeveralYears { get; set; }
 
-        /// todoComment
-        public List<TTransaction> transactions = new List<TTransaction>();
+        public List<CamtTransaction> Transactions { get; set; }
+
+        public CamtStatement()
+        {
+            Transactions = new List<CamtTransaction>();
+        }
 
         public override string ToString()
         {

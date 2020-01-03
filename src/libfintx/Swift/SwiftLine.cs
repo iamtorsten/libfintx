@@ -21,53 +21,18 @@
  * 	
  */
 
-using System;
-using System.Collections.Generic;
-
-namespace libfintx
+namespace libfintx.Swift
 {
-    public class SWIFTStatement
+    public class SwiftLine
     {
-        public string type;
+        public string SwiftTag { get; set; }
 
-        public string id;
+        public string SwiftData { get; set; }
 
-        public string bankCode;
-
-        public string accountCode;
-
-        public string currency;
-
-        public decimal startBalance;
-
-        public DateTime startDate;
-
-        public decimal endBalance;
-
-        public DateTime endDate;
-
-        // Begin MT942
-
-        public bool pending;
-
-        public decimal smallestAmount;
-
-        public decimal smallestCreditAmount;
-
-        public DateTime creationDate;
-
-        public int countDebit;
-
-        public decimal amountDebit;
-
-        public int countCredit;
-
-        public decimal amountCredit;
-
-        // End MT942
-
-        public List<SWIFTTransaction> SWIFTTransactions = new List<SWIFTTransaction>();
-
-        public List<SWIFTLine> lines = new List<SWIFTLine>();
+        public SwiftLine(string swiftTag, string swiftData)
+        {
+            SwiftTag = swiftTag;
+            SwiftData = swiftData;
+        }
     }
 }
