@@ -89,14 +89,14 @@ namespace libfintx
 
                         Log.Write("Initialisation failed");
 
-                        throw new Exception(HbciException.INI());
+                        throw new Exception(HbciException.INI);
                     }
                 }
                 else
                 {
                     Log.Write("HBCI version not supported");
 
-                    throw new Exception(HbciException.HBCI_VERSION_NOT_SUPPORTED());
+                    throw new Exception(HbciException.HBCI_VERSION_NOT_SUPPORTED);
                 }
             }
             catch (Exception ex)
@@ -110,7 +110,7 @@ namespace libfintx
 
                 // Exception
                 if (!DEBUG.Enabled)
-                    throw new Exception(HbciException.SOFTWARE() + ex.ToString());
+                    throw new Exception(HbciException.SOFTWARE + ex.ToString());
                 else
                     return false;
             }

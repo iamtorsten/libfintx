@@ -113,7 +113,7 @@ namespace libfintx
 
             // Throw exception when size is not valid
             if (!cryptLength)
-                throw new Exception(HbciException.CRYPTED_LENGTH());
+                throw new Exception(HbciException.CRYPTED_LENGTH);
 
             return result;
         }
