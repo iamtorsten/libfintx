@@ -53,7 +53,7 @@ namespace libfintx
         /// &lt;param name=&quot;salt&quot;&gt;This is the salt used to provide extra security to the algorythim.&lt;/param&gt;
         /// &lt;param name=&quot;iterationsMd5&quot;&gt;Fill out iterationsMd5 later.&lt;/param&gt;
         /// &lt;param name=&quot;segments&quot;&gt;Fill out segments later.&lt;/param&gt;
-        public PkcsKeyGenerator(string keyString, byte[] salt, int iterationsMd5, int segments)
+        public PkcsKeyGenerator(string keyString, byte[] salt, int iterationsMd5, int segments) : this()
         {
             Generate(keyString, salt, iterationsMd5, segments);
         }
