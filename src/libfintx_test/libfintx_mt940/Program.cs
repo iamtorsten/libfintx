@@ -22,7 +22,7 @@ namespace libfintx_mt940
 
             foreach (var tx in transactions)
             {
-                Console.WriteLine($"{tx.inputDate};{tx.valueDate};{tx.amount};{tx.description};{tx.text}");
+                Console.WriteLine($"{tx.InputDate};{tx.ValueDate};{tx.Amount};{tx.Description};{tx.Text}");
             }
 
             Console.ReadLine();

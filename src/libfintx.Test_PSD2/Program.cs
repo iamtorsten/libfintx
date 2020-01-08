@@ -46,7 +46,7 @@ namespace libfintx.Test_PSD2
 						foreach (var swifttrx in swift.SwiftTransactions) // SWIFT Transaktionen
 						{
 							// Einzelne Transaktion
-							Console.WriteLine(swifttrx.partnerName);
+							Console.WriteLine(swifttrx.PartnerName);
 						}
 					}
 				}
