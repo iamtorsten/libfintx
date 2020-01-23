@@ -10,14 +10,17 @@ namespace libfintx.Util
     {
         public static void ResetStaticFields(Type type)
         {
-            var propList = type
-                .GetProperties(BindingFlags.Public | BindingFlags.Static)
-                .Where(f => f.PropertyType == typeof(string));
+            var propList = type.GetProperties(BindingFlags.Public | BindingFlags.Static);
 
             foreach (var prop in propList)
             {
                 if (prop.CanWrite)
-                    prop.SetValue(null, null, null);
+                {
+                    if (prop.PropertyType.IsValueType)
+                        prop.SetValue(null, Activator.CreateInstance(prop.PropertyType), null);
+                    else
+                        prop.SetValue(null, null, null);
+                }
             }
         }
 
