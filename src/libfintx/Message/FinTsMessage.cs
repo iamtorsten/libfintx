@@ -50,7 +50,6 @@ namespace libfintx
             if (String.IsNullOrEmpty(MsgNum))
                 MsgNum = "1";
 
-            MsgNum += "";
             DialogID += "";
 
             var HEAD_LEN = 29;
