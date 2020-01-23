@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "libfintx.Sample", "libfintx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx.Test_RDH", "libfintx.Test_RDH\libfintx.Test_RDH.csproj", "{4EAC9D23-3DEA-437D-929D-915B43D17640}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx_test", "libfintx_test\libfintx_test\libfintx_test.csproj", "{8C0B1658-3195-44D3-AB86-48EF6B66DB81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx_test", "libfintx_test\libfintx_test.csproj", "{8C0B1658-3195-44D3-AB86-48EF6B66DB81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx_mt940", "libfintx_test\libfintx_mt940\libfintx_mt940.csproj", "{C1A0775D-C0F1-400E-AEA8-2CACACCE33B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx_mt940", "libfintx_mt940\libfintx_mt940.csproj", "{C1A0775D-C0F1-400E-AEA8-2CACACCE33B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libfintx.Test_PSD2", "libfintx.Test_PSD2\libfintx.Test_PSD2.csproj", "{2721ED12-D0B2-4F8D-BD48-903908B7EC7C}"
 EndProject

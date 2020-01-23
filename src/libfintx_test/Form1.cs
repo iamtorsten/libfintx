@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using libfintx;
+using libfintx.Camt;
 using libfintx.Data;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -238,9 +239,9 @@ namespace libfintx_test
                 {
                     foreach (var acc in accounts.Data)
                     {
-                        SimpleOutput("Inhaber: " + acc.Accountowner + " | " + "IBAN: " + acc.Accountiban + " | " + "Typ: " + acc.Accounttype);
+                        SimpleOutput("Inhaber: " + acc.AccountOwner + " | " + "IBAN: " + acc.AccountIban + " | " + "Typ: " + acc.AccountType);
 
-                        foreach (var p in acc.Accountpermissions)
+                        foreach (var p in acc.AccountPermissions)
                         {
                             SimpleOutput("Segment: " + p.Segment + " | " + "Beschreibung: " + p.Description);
                         }
@@ -267,7 +268,7 @@ namespace libfintx_test
 
             if (sync.IsSuccess)
             {
-                foreach (var process in TANProcesses.items)
+                foreach (var process in TanProcesses.Items)
                 {
                     SimpleOutput("Name: " + process.ProcessName + " | " + "Nummer: " + process.ProcessNumber);
                 }
@@ -309,15 +310,15 @@ namespace libfintx_test
                 {
                     foreach (var item in transactions.Data)
                     {
-                        foreach (var i in item.SWIFTTransactions)
+                        foreach (var i in item.SwiftTransactions)
                         {
                             SimpleOutput(
-                                "Datum: " + i.inputDate + " | " +
-                                "Buchungsschlüssel: " + i.transactionTypeId + " | " +
-                                "GV-Code: " + i.typecode + " | " +
-                                "Empfänger / Auftraggeber: " + i.partnerName + " | " +
-                                "Verwendungszweck: " + i.description + " | "
-                                + "Betrag: " + i.amount);
+                                "Datum: " + i.InputDate + " | " +
+                                "Buchungsschlüssel: " + i.TransactionTypeId + " | " +
+                                "GV-Code: " + i.TypeCode + " | " +
+                                "Empfänger / Auftraggeber: " + i.PartnerName + " | " +
+                                "Verwendungszweck: " + i.Description + " | "
+                                + "Betrag: " + i.Amount);
                         }
                     }
                 }
@@ -350,7 +351,7 @@ namespace libfintx_test
 
                 DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
 
-                var transactions = Main.Transactions_camt(connectionDetails, _tanDialog, false, camtVersion.camt052, startDate);
+                var transactions = Main.Transactions_camt(connectionDetails, _tanDialog, false, CamtVersion.Camt052, startDate);
 
                 HBCIOutput(transactions.Messages);
 
@@ -358,15 +359,15 @@ namespace libfintx_test
                 {
                     foreach (var item in transactions.Data)
                     {
-                        foreach (var i in item.transactions)
+                        foreach (var i in item.Transactions)
                         {
                             SimpleOutput(
-                                "Datum: " + i.inputDate + " | " +
-                                "Buchungsschlüssel: " + i.transactionTypeId + " | " +
-                                "GV-Code: " + i.typecode + " | " +
-                                "Empfänger / Auftraggeber: " + i.partnerName + " | " +
-                                "Verwendungszweck: " + i.description + " | "
-                                + "Betrag: " + String.Format("{0:0.00}", i.amount));
+                                "Datum: " + i.InputDate + " | " +
+                                "Buchungsschlüssel: " + i.TransactionTypeId + " | " +
+                                "GV-Code: " + i.TypeCode + " | " +
+                                "Empfänger / Auftraggeber: " + i.PartnerName + " | " +
+                                "Verwendungszweck: " + i.Description + " | "
+                                + "Betrag: " + String.Format("{0:0.00}", i.Amount));
                         }
                     }
                 }
@@ -399,7 +400,7 @@ namespace libfintx_test
 
                 DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
 
-                var transactions = Main.Transactions_camt(connectionDetails, _tanDialog, false, camtVersion.camt053, startDate);
+                var transactions = Main.Transactions_camt(connectionDetails, _tanDialog, false, CamtVersion.Camt053, startDate);
 
                 HBCIOutput(transactions.Messages);
 
@@ -407,12 +408,12 @@ namespace libfintx_test
                 {
                     foreach (var item in transactions.Data)
                     {
-                        foreach (var i in item.transactions)
+                        foreach (var i in item.Transactions)
                         {
-                            SimpleOutput("Datum: " + i.inputDate + " | " +
-                                "Empfänger / Auftraggeber: " + i.partnerName + " | " +
-                                "Verwendungszweck: " + i.text + " | "
-                                + "Betrag: " + i.amount);
+                            SimpleOutput("Datum: " + i.InputDate + " | " +
+                                "Empfänger / Auftraggeber: " + i.PartnerName + " | " +
+                                "Verwendungszweck: " + i.Text + " | "
+                                + "Betrag: " + i.Amount);
                         }
                     }
                 }
@@ -446,7 +447,7 @@ namespace libfintx_test
                 {
                     foreach (var item in bankersOrders.Data)
                     {
-                        pain00100103_ct_data.PaymentInfo paymentData = item.SepaData.Payments.FirstOrDefault();
+                        Pain00100103CtData.PaymentInfo paymentData = item.SepaData.Payments.FirstOrDefault();
                         var txInfo = paymentData.CreditTxInfos.FirstOrDefault();
 
                         SimpleOutput("Auftrags-Id: " + item.OrderId + " | " +
@@ -568,10 +569,10 @@ namespace libfintx_test
                 Account = txt_kontonummer.Text,
                 Blz = Convert.ToInt32(txt_bankleitzahl.Text),
                 BlzHeadquarter = string.IsNullOrWhiteSpace(txt_bankleitzahl_zentrale.Text) ? (int?)null : Convert.ToInt32(txt_bankleitzahl_zentrale.Text),
-                BIC = txt_bic.Text,
-                IBAN = Regex.Replace(txt_iban.Text, @"\s+", ""),
+                Bic = txt_bic.Text,
+                Iban = Regex.Replace(txt_iban.Text, @"\s+", ""),
                 Url = txt_url.Text,
-                HBCIVersion = Convert.ToInt32(txt_hbci_version.Text),
+                HbciVersion = Convert.ToInt32(txt_hbci_version.Text),
                 UserId = txt_userid.Text,
                 Pin = txt_pin.Text
             };
@@ -673,7 +674,7 @@ namespace libfintx_test
                 HBCIOutput(accounts.Messages);
                 return false;
             }
-            AccountInformations accountInfo = UPD.HIUPD?.GetAccountInformations(conn.Account, conn.Blz.ToString());
+            AccountInformation accountInfo = UPD.HIUPD?.GetAccountInformations(conn.Account, conn.Blz.ToString());
             if (accountInfo != null && accountInfo.IsSegmentPermitted("HKTAB"))
             {
                 Segment.HITAB = txt_tan_medium.Text;
