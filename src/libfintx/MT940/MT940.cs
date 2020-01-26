@@ -191,12 +191,12 @@ namespace libfintx
                     int month = Convert.ToInt32(swiftData.Substring(0, 2));
                     int day = Convert.ToInt32(swiftData.Substring(2, 2));
 
-                    // Posting date 30 Dec 2017, Valuta date 1 Jan 2020
+                    // Posting date 30 Dec 2020, Valuta date 1 Jan 2020
                     if (month > SWIFTTransaction.ValueDate.Month && month == SWIFTTransaction.ValueDate.AddMonths(-1).Month)
                     {
                         year--;
                     }
-                    // Posting date 1 Jan 2020, Valuta date 30 Dec 2017
+                    // Posting date 1 Jan 2020, Valuta date 30 Dec 2020
                     else if (month < SWIFTTransaction.ValueDate.Month && month == SWIFTTransaction.ValueDate.AddMonths(1).Month)
                     {
                         year++;
