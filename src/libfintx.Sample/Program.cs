@@ -7,6 +7,14 @@ namespace libfintx.Sample
 {
     class Program
     {
+        static string WaitForTAN(TANDialog tanDialog)
+        {
+            foreach (var msg in tanDialog.DialogResult.Messages)
+                Console.WriteLine(msg);
+
+            return Console.ReadLine();
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Please enter your banking credentials!");
@@ -23,8 +31,10 @@ namespace libfintx.Sample
             details.UserId = Console.ReadLine();
             Console.WriteLine("PIN:");
             details.Pin = Console.ReadLine();
-            details.HbciVersion = 300;
-            HBCIOutput(libfintx.Main.Synchronization(details).Messages);
+
+            var client = new FinTsClient(details);
+            HBCIOutput(client.Synchronization().Messages);
+            HBCIOutput(client.Accounts(new TANDialog(WaitForTAN)).Messages);
         }
 
         /// <summary>

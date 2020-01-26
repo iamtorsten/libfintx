@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
 using System;
 using System.Collections.Generic;
 
@@ -32,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// Collective transfer terminated
         /// </summary>
-        public static string Init_HKCME(ConnectionDetails connectionDetails, List<Pain00100203CtData> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
+        public static string Init_HKCME(FinTsClient client, List<Pain00100203CtData> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
         {
             Log.Write("Starting job HKCME: Collective transfer money terminated");
 
@@ -40,6 +39,7 @@ namespace libfintx
 
             SEG.NUM = SEGNUM.SETInt(3);
 
+            var connectionDetails = client.ConnectionDetails;
             string segments = "HKCME:" + SEG.NUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
             var painMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
@@ -49,15 +49,15 @@ namespace libfintx
             if (Helper.IsTANRequired("HKCME"))
             {
                 SEG.NUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(segments);
+                segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
             var response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+            client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
-            Helper.Parse_Message(response);
+            Helper.Parse_Message(client, response);
 
             return response;
         }

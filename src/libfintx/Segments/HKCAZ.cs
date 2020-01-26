@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -22,8 +22,6 @@
  */
 
 using libfintx.Camt;
-using libfintx.Data;
-using System;
 
 namespace libfintx
 {
@@ -32,9 +30,10 @@ namespace libfintx
         /// <summary>
         /// Transactions in camt053 format
         /// </summary>
-        public static string Init_HKCAZ(ConnectionDetails connectionDetails, string FromDate, string ToDate, string Startpoint, CamtVersion camtVers)
+        public static string Init_HKCAZ(FinTsClient client, string FromDate, string ToDate, string Startpoint, CamtVersion camtVers)
         {
             string segments = string.Empty;
+            var connectionDetails = client.ConnectionDetails;
 
             SEG.NUM = SEGNUM.SETInt(3);
 
@@ -43,26 +42,26 @@ namespace libfintx
                 case CamtVersion.Camt052:
                     Log.Write("Starting job HKCAZ: Request transactions in camt052 format");
 
-                    if (String.IsNullOrEmpty(FromDate))
+                    if (string.IsNullOrEmpty(FromDate))
                     {
-                        if (String.IsNullOrEmpty(Startpoint))
+                        if (string.IsNullOrEmpty(Startpoint))
                         {
-                            segments = "HKCAZ:" + SEG.NUM + ":" + Segment.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N'";
+                            segments = "HKCAZ:" + SEG.NUM + ":" + client.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N'";
                         }
                         else
                         {
-                            segments = "HKCAZ:" + SEG.NUM + ":" + Segment.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N++++" + Startpoint + "'";
+                            segments = "HKCAZ:" + SEG.NUM + ":" + client.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N++++" + Startpoint + "'";
                         }
                     }
                     else
                     {
-                        if (String.IsNullOrEmpty(Startpoint))
+                        if (string.IsNullOrEmpty(Startpoint))
                         {
-                            segments = "HKCAZ:" + SEG.NUM + ":" + Segment.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N+" + FromDate + "+" + ToDate + "'";
+                            segments = "HKCAZ:" + SEG.NUM + ":" + client.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N+" + FromDate + "+" + ToDate + "'";
                         }
                         else
                         {
-                            segments = "HKCAZ:" + SEG.NUM + ":" + Segment.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                            segments = "HKCAZ:" + SEG.NUM + ":" + client.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                         }
                     }
 
@@ -72,26 +71,26 @@ namespace libfintx
                 case CamtVersion.Camt053:
                     Log.Write("Starting job HKCAZ: Request transactions in camt053 format");
 
-                    if (String.IsNullOrEmpty(FromDate))
+                    if (string.IsNullOrEmpty(FromDate))
                     {
-                        if (String.IsNullOrEmpty(Startpoint))
+                        if (string.IsNullOrEmpty(Startpoint))
                         {
-                            segments = "HKCAZ:" + SEG.NUM + ":" + Segment.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt053 + "+N'";
+                            segments = "HKCAZ:" + SEG.NUM + ":" + client.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt053 + "+N'";
                         }
                         else
                         {
-                            segments = "HKCAZ:" + SEG.NUM + ":" + Segment.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt053 + "+N++++" + Startpoint + "'";
+                            segments = "HKCAZ:" + SEG.NUM + ":" + client.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt053 + "+N++++" + Startpoint + "'";
                         }
                     }
                     else
                     {
-                        if (String.IsNullOrEmpty(Startpoint))
+                        if (string.IsNullOrEmpty(Startpoint))
                         {
-                            segments = "HKCAZ:" + SEG.NUM + ":" + Segment.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt053 + "+N+" + FromDate + "+" + ToDate + "'";
+                            segments = "HKCAZ:" + SEG.NUM + ":" + client.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt053 + "+N+" + FromDate + "+" + ToDate + "'";
                         }
                         else
                         {
-                            segments = "HKCAZ:" + SEG.NUM + ":" + Segment.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt053 + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                            segments = "HKCAZ:" + SEG.NUM + ":" + client.HKCAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt053 + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                         }
                     }
 
@@ -104,15 +103,15 @@ namespace libfintx
             if (Helper.IsTANRequired("HKCAZ"))
             {
                 SEG.NUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(segments);
+                segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+            client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
-            Helper.Parse_Message(response);
+            Helper.Parse_Message(client, response);
 
             return response;
         }

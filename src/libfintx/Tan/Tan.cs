@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,9 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
-using System;
-
 namespace libfintx
 {
     public static class Tan
@@ -31,61 +28,61 @@ namespace libfintx
         /// <summary>
         /// TAN
         /// </summary>
-        public static string Send_TAN(ConnectionDetails connectionDetails, string TAN)
+        public static string Send_TAN(FinTsClient client, string TAN)
         {
             Log.Write("Starting TAN process");
-
+            var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
-            var HITANS = !String.IsNullOrEmpty(Segment.HITANS.Substring(0, 1)) ? Int32.Parse(Segment.HITANS.Substring(0, 1)) : 0;
+            var HITANS = !string.IsNullOrEmpty(client.HITANS.Substring(0, 1)) ? int.Parse(client.HITANS.Substring(0, 1)) : 0;
 
-            if (String.IsNullOrEmpty(Segment.HITAB)) // TAN Medium Name not set
+            if (string.IsNullOrEmpty(client.HITAB)) // TAN Medium Name not set
             {
                 // Version 2
                 if (HITANS == 2)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N'";
                 // Version 3
                 else if (HITANS == 3)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N'";
                 // Version 4
                 else if (HITANS == 4)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N'";
                 // Version 5
                 else if (HITANS == 5)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "++N'";
                 // Version 6
                 else if (HITANS == 6)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "+N'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "+N'";
                 else // default
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "++N'";
             }
             else
             {
                 // Version 2
                 if (HITANS == 2)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 3
                 else if (HITANS == 3)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 4
                 else if (HITANS == 4)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 5
                 else if (HITANS == 5)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 6
                 else if (HITANS == 6)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++++" + Segment.HITAN + "+N++++" + Segment.HITAB + "'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "+N++++" + client.HITAB + "'";
                 else // default
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+2++" + Segment.HITAN + "++N++++" + Segment.HITAB + "'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
             }
 
             SEG.NUM = SEGNUM.SETInt(3);
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS + ":" + TAN, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Helper.Parse_Message(response);
+            Helper.Parse_Message(client, response);
 
             return response;
         }

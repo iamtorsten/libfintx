@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -78,7 +78,7 @@ namespace libfintx
 
                 if (MaxFileSize > 0)
                 {
-                    var sizeMB = (double)new FileInfo(file).Length / (double)1000000;
+                    var sizeMB = new FileInfo(file).Length / (double)1000000;
                     if (sizeMB > MaxFileSize)
                         File.WriteAllText(file, string.Empty);
                 }

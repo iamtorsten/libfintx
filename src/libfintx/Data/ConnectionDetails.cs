@@ -61,5 +61,10 @@
         /// System ID (Kundensystem-ID)
         /// </summary>
         public string CustomerSystemId { get; set; }
+
+        public ConnectionDetails()
+        {
+            HbciVersion = 300;
+        }
     }
 }

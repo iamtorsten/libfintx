@@ -1,27 +1,4 @@
-﻿/*	
- * 	
- *  This file is part of libfintx.
- *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
- * 	E-Mail: torsten.klinger@googlemail.com
- * 	
- * 	libfintx is free software; you can redistribute it and/or
- *	modify it under the terms of the GNU Lesser General Public
- * 	License as published by the Free Software Foundation; either
- * 	version 2.1 of the License, or (at your option) any later version.
- *	
- * 	libfintx is distributed in the hope that it will be useful,
- * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
- * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * 	Lesser General Public License for more details.
- *	
- * 	You should have received a copy of the GNU Lesser General Public
- * 	License along with libfintx; if not, write to the Free Software
- * 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- * 	
- */
-
-using libfintx.Camt;
+﻿using libfintx.Camt;
 using libfintx.Camt.Camt052;
 using libfintx.Camt.Camt053;
 using libfintx.Data;
@@ -35,45 +12,48 @@ using static libfintx.HKCDE;
 
 namespace libfintx
 {
-    public class Main
+    public class FinTsClient
     {
-        /// <summary>
-        /// Resets all temporary values. Should be used when switching to another bank connection.
-        /// </summary>
-        public static void Reset()
+        private readonly bool m_anonymous;
+
+        public ConnectionDetails ConnectionDetails { get; }
+        public string SystemId { get; internal set; }
+        public string HITAB { get; set; }
+
+        internal string HIRMS { get; set; }
+        internal string HIRMSf { get; set; }
+        internal string HNHBK { get; set; }
+        internal string HNHBS { get; set; }
+        internal string HISALS { get; set; }
+        internal string HISALSf { get; set; }
+        internal string HITANS { get; set; }
+        internal string HKKAZ { get; set; }
+        internal string HKCAZ { get; set; }
+        internal string HITAN { get; set; }
+        internal int HISPAS { get; set; }
+
+        public FinTsClient()
         {
-            Segment.Reset();
-            TransactionConsole.Output = null;
+
         }
 
-        /// <summary>
-        /// Synchronize bank connection
-        /// </summary>
-        /// <param name="conn">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
-        /// <returns>
-        /// Customer System ID
-        /// </returns>
-        public static HBCIDialogResult<string> Synchronization(ConnectionDetails conn)
+        public FinTsClient(ConnectionDetails conn, bool anon = false)
         {
-            string BankCode = Transaction.HKSYN(conn);
-
-            var messages = Helper.Parse_BankCode(BankCode);
-
-            return new HBCIDialogResult<string>(messages, BankCode, Segment.HISYN);
+            ConnectionDetails = conn;
+            m_anonymous = anon;
+            InitializeConnection();
         }
 
-        private static HBCIDialogResult Init(ConnectionDetails conn, bool anonymous)
+        internal HBCIDialogResult InitializeConnection()
         {
-            if (HKTAN.SegmentId == null)
-                HKTAN.SegmentId = "HKIDN";
-
             HBCIDialogResult result;
             string BankCode;
             try
             {
-                if (conn.CustomerSystemId == null)
+                // Check if the user provided a SystemID
+                if (ConnectionDetails.CustomerSystemId == null)
                 {
-                    result = Synchronization(conn);
+                    result = Synchronization();
                     if (!result.IsSuccess)
                     {
                         Log.Write("Synchronisation failed.");
@@ -82,9 +62,9 @@ namespace libfintx
                 }
                 else
                 {
-                    Segment.HISYN = conn.CustomerSystemId;
+                    SystemId = ConnectionDetails.CustomerSystemId;
                 }
-                BankCode = Transaction.INI(conn, anonymous);
+                BankCode = Transaction.INI(this, m_anonymous);
             }
             finally
             {
@@ -100,30 +80,61 @@ namespace libfintx
         }
 
         /// <summary>
+        /// Synchronize bank connection
+        /// </summary>
+        /// <param name="conn">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
+        /// <returns>
+        /// Customer System ID
+        /// </returns>
+        public HBCIDialogResult<string> Synchronization()
+        {
+            string BankCode = Transaction.HKSYN(this);
+
+            var messages = Helper.Parse_BankCode(BankCode);
+
+            return new HBCIDialogResult<string>(messages, BankCode, SystemId);
+        }
+
+        /// <summary>
+        /// Retrieves the accounts for this client
+        /// </summary>
+        /// <param name="tanDialog">The TAN Dialog</param>
+        /// <returns>Gets informations about the accounts</returns>
+        public HBCIDialogResult<List<AccountInformation>> Accounts(TANDialog tanDialog)
+        {
+            var result = InitializeConnection();
+            if (!result.IsSuccess)
+                return result.TypedResult<List<AccountInformation>>();
+
+            result = ProcessSCA(result, tanDialog);
+            if (!result.IsSuccess)
+                return result.TypedResult<List<AccountInformation>>();
+
+            return new HBCIDialogResult<List<AccountInformation>>(result.Messages, UPD.Value, UPD.HIUPD.AccountList);
+        }
+
+        /// <summary>
         /// Account balance
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, Account, IBAN, BIC</param>
-        /// <param name="Anonymous"></param>
-        /// <returns>
-        /// Structured information about balance, creditline and used currency
-        /// </returns>
-        public static HBCIDialogResult<AccountBalance> Balance(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous)
+        /// <param name="tanDialog">The TAN Dialog</param>
+        /// <returns>The balance for this account</returns>
+        public HBCIDialogResult<AccountBalance> Balance(TANDialog tanDialog)
         {
-            HBCIDialogResult result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<AccountBalance>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<AccountBalance>();
 
             // Success
-            var BankCode = Transaction.HKSAL(connectionDetails);
+            var BankCode = Transaction.HKSAL(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<AccountBalance>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<AccountBalance>();
 
@@ -132,17 +143,40 @@ namespace libfintx
             return result.TypedResult(balance);
         }
 
-        public static HBCIDialogResult<List<AccountInformation>> Accounts(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous)
+        private HBCIDialogResult ProcessSCA(HBCIDialogResult result, TANDialog tanDialog)
         {
-            HBCIDialogResult result = Init(connectionDetails, anonymous);
-            if (!result.IsSuccess)
-                return result.TypedResult<List<AccountInformation>>();
+            tanDialog.DialogResult = result;
+            if (result.IsSCARequired)
+            {
+                var tan = Helper.WaitForTAN(this, result, tanDialog);
+                if (tan == null)
+                {
+                    var BankCode = Transaction.HKEND(this, HNHBK);
+                    result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+                }
+                else
+                {
+                    result = TAN(tan);
+                }
+            }
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
-            if (!result.IsSuccess)
-                return result.TypedResult<List<AccountInformation>>();
+            return result;
+        }
 
-            return new HBCIDialogResult<List<AccountInformation>>(result.Messages, UPD.Value, UPD.HIUPD.AccountList);
+        /// <summary>
+        /// Confirm order with TAN
+        /// </summary>
+        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
+        /// <param name="TAN"></param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public HBCIDialogResult TAN(string TAN)
+        {
+            var BankCode = Transaction.TAN(this, TAN);
+            var result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+
+            return result;
         }
 
         /// <summary>
@@ -155,13 +189,13 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static HBCIDialogResult<List<SwiftStatement>> Transactions(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
+        public HBCIDialogResult<List<SwiftStatement>> Transactions(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
         {
-            HBCIDialogResult result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
@@ -169,12 +203,12 @@ namespace libfintx
             var endDateStr = endDate?.ToString("yyyyMMdd");
 
             // Success
-            var BankCode = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, null);
+            var BankCode = Transaction.HKKAZ(this, startDateStr, endDateStr, null);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
@@ -193,16 +227,16 @@ namespace libfintx
             string BankCode_ = BankCode;
             while (BankCode_.Contains("+3040::"))
             {
-                Helper.Parse_Message(BankCode_);
+                Helper.Parse_Message(this, BankCode_);
 
                 var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
-                BankCode_ = Transaction.HKKAZ(connectionDetails, startDateStr, endDateStr, Startpoint);
+                BankCode_ = Transaction.HKKAZ(this, startDateStr, endDateStr, Startpoint);
                 result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode_), BankCode_);
                 if (!result.IsSuccess)
                     return result.TypedResult<List<SwiftStatement>>();
 
-                result = ProcessSCA(connectionDetails, result, tanDialog);
+                result = ProcessSCA(result, tanDialog);
                 if (!result.IsSuccess)
                     return result.TypedResult<List<SwiftStatement>>();
 
@@ -217,8 +251,8 @@ namespace libfintx
 
             var swiftStatements = new List<SwiftStatement>();
 
-            swiftStatements.AddRange(MT940.Serialize(TransactionsMt940.ToString(), connectionDetails.Account, saveMt940File));
-            swiftStatements.AddRange(MT940.Serialize(TransactionsMt942.ToString(), connectionDetails.Account, saveMt940File, true));
+            swiftStatements.AddRange(MT940.Serialize(TransactionsMt940.ToString(), ConnectionDetails.Account, saveMt940File));
+            swiftStatements.AddRange(MT940.Serialize(TransactionsMt942.ToString(), ConnectionDetails.Account, saveMt940File, true));
 
             return result.TypedResult(swiftStatements);
         }
@@ -226,21 +260,19 @@ namespace libfintx
         /// <summary>
         /// Account transactions in camt format
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, Account, IBAN, BIC</param>  
-        /// <param name="anonymous"></param>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns>
         /// Transactions
         /// </returns>
-        public static HBCIDialogResult<List<CamtStatement>> Transactions_camt(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, CamtVersion camtVers,
+        public HBCIDialogResult<List<CamtStatement>> Transactions_camt(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, CamtVersion camtVers,
             DateTime? startDate = null, DateTime? endDate = null, bool saveCamtFile = false)
         {
-            HBCIDialogResult result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
@@ -251,12 +283,12 @@ namespace libfintx
             var endDateStr = endDate?.ToString("yyyyMMdd");
 
             // Success
-            var BankCode = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, null, camtVers);
+            var BankCode = Transaction.HKCAZ(this, startDateStr, endDateStr, null, camtVers);
             result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
@@ -331,7 +363,7 @@ namespace libfintx
             while (BankCode_.Contains("+3040::"))
             {
                 string Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
-                BankCode_ = Transaction.HKCAZ(connectionDetails, startDateStr, endDateStr, Startpoint, camtVers);
+                BankCode_ = Transaction.HKCAZ(this, startDateStr, endDateStr, Startpoint, camtVers);
                 result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
                 if (!result.IsSuccess)
                     return result.TypedResult<List<CamtStatement>>();
@@ -392,9 +424,9 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public static HBCIDialogResult<List<AccountTransaction>> TransactionsSimple(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, DateTime? startDate = null, DateTime? endDate = null)
+        public HBCIDialogResult<List<AccountTransaction>> TransactionsSimple(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var result = Transactions(connectionDetails, tanDialog, anonymous, startDate, endDate);
+            var result = Transactions(tanDialog, startDate, endDate);
             if (!result.IsSuccess)
                 return result.TypedResult<List<AccountTransaction>>();
 
@@ -421,16 +453,56 @@ namespace libfintx
             return result.TypedResult(transactionList);
         }
 
+
         /// <summary>
         /// Transfer money - General method
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="receiverName">Name of the recipient</param>
         /// <param name="receiverIBAN">IBAN of the recipient</param>
         /// <param name="receiverBIC">BIC of the recipient</param>
         /// <param name="amount">Amount to transfer</param>
         /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
         /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public HBCIDialogResult Transfer(TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string hirms)
+        {
+            var result = InitializeConnection();
+            if (!result.IsSuccess)
+                return result;
+
+            result = ProcessSCA(result, tanDialog);
+            if (!result.IsSuccess)
+                return result;
+
+            TransactionConsole.Output = string.Empty;
+
+            if (!string.IsNullOrEmpty(HIRMS))
+                HIRMS = hirms;
+
+            var BankCode = Transaction.HKCCS(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+            result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+            if (!result.IsSuccess)
+                return result;
+
+            result = ProcessSCA(result, tanDialog);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Collective transfer money - General method
+        /// </summary>
+        /// <param name="painData"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <param name="totalAmount"></param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
         /// <param name="anonymous"></param>
         /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
@@ -440,29 +512,70 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-
-        public static HBCIDialogResult Transfer(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, bool anonymous)
+        public HBCIDialogResult CollectiveTransfer(TANDialog tanDialog, List<Pain00100203CtData> painData,
+            string numberOfTransactions, decimal totalAmount, string hirms)
         {
-            HBCIDialogResult result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKCCS(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+            var BankCode = Transaction.HKCCM(this, painData, numberOfTransactions, totalAmount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Collective transfer money terminated - General method
+        /// </summary>
+        /// <param name="painData"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <param name="totalAmount"></param>
+        /// <param name="ExecutionDay"></param>
+        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
+        /// <param name="pictureBox">Picturebox which shows the TAN</param>
+        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
+        /// <param name="flickerWidth">Width of the flicker code</param>
+        /// <param name="flickerHeight">Height of the flicker code</param>
+        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param> 
+        /// <returns>
+        /// Bank return codes
+        /// </returns>
+        public HBCIDialogResult CollectiveTransfer_Terminated(TANDialog tanDialog, List<Pain00100203CtData> painData,
+            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string hirms)
+        {
+            var result = InitializeConnection();
+            if (!result.IsSuccess)
+                return result;
+
+            result = ProcessSCA(result, tanDialog);
+            if (!result.IsSuccess)
+                return result;
+
+            TransactionConsole.Output = string.Empty;
+
+            if (!string.IsNullOrEmpty(HIRMS))
+                HIRMS = HIRMS;
+
+            var BankCode = Transaction.HKCME(this, painData, numberOfTransactions, totalAmount, executionDay);
+            result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+            if (!result.IsSuccess)
+                return result;
+
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
@@ -470,7 +583,6 @@ namespace libfintx
         /// <summary>
         /// Transfer money at a certain time - General method
         /// </summary>       
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="receiverName">Name of the recipient</param>
         /// <param name="receiverIBAN">IBAN of the recipient</param>
         /// <param name="receiverBIC">BIC of the recipient</param>
@@ -479,7 +591,6 @@ namespace libfintx
         /// <param name="executionDay"></param>
         /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
-        /// <param name="anonymous"></param>
         /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
         /// <param name="flickerWidth">Width of the flicker code</param>
         /// <param name="flickerHeight">Height of the flicker code</param>
@@ -487,118 +598,28 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-
-        public static HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, DateTime executionDay, string HIRMS, bool anonymous)
+        public HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, DateTime executionDay, string hirms, bool anonymous)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKCSE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
+            var BankCode = Transaction.HKCSE(this, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Collective transfer money - General method
-        /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
-        /// <param name="painData"></param>
-        /// <param name="numberOfTransactions"></param>
-        /// <param name="totalAmount"></param>
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
-        /// <param name="pictureBox">Picturebox which shows the TAN</param>
-        /// <param name="anonymous"></param>
-        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
-        /// <param name="flickerWidth">Width of the flicker code</param>
-        /// <param name="flickerHeight">Height of the flicker code</param>
-        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param>
-        /// <returns>
-        /// Bank return codes
-        /// </returns>
-
-        public static HBCIDialogResult CollectiveTransfer(ConnectionDetails connectionDetails, TANDialog tanDialog, List<Pain00100203CtData> painData,
-            string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous)
-        {
-            var result = Init(connectionDetails, anonymous);
-            if (!result.IsSuccess)
-                return result;
-
-            result = ProcessSCA(connectionDetails, result, tanDialog);
-            if (!result.IsSuccess)
-                return result;
-
-            TransactionConsole.Output = string.Empty;
-
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
-
-            var BankCode = Transaction.HKCCM(connectionDetails, painData, numberOfTransactions, totalAmount);
-            result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
-                return result;
-
-            result = ProcessSCA(connectionDetails, result, tanDialog);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Collective transfer money terminated - General method
-        /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
-        /// <param name="painData"></param>
-        /// <param name="numberOfTransactions"></param>
-        /// <param name="totalAmount"></param>
-        /// <param name="ExecutionDay"></param>
-        /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
-        /// <param name="pictureBox">Picturebox which shows the TAN</param>
-        /// <param name="anonymous"></param>
-        /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
-        /// <param name="flickerWidth">Width of the flicker code</param>
-        /// <param name="flickerHeight">Height of the flicker code</param>
-        /// <param name="renderFlickerCodeAsGif">Renders flicker code as GIF, if 'true'</param> 
-        /// <returns>
-        /// Bank return codes
-        /// </returns>
-
-        public static HBCIDialogResult CollectiveTransfer_Terminated(ConnectionDetails connectionDetails, TANDialog tanDialog, List<Pain00100203CtData> painData,
-            string numberOfTransactions, decimal totalAmount, DateTime executionDay, string HIRMS, bool anonymous)
-        {
-            var result = Init(connectionDetails, anonymous);
-            if (!result.IsSuccess)
-                return result;
-
-            result = ProcessSCA(connectionDetails, result, tanDialog);
-            if (!result.IsSuccess)
-                return result;
-
-            TransactionConsole.Output = string.Empty;
-
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
-
-            var BankCode = Transaction.HKCME(connectionDetails, painData, numberOfTransactions, totalAmount, executionDay);
-            result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
-                return result;
-
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
@@ -606,11 +627,9 @@ namespace libfintx
         /// <summary>
         /// Rebook money from one to another account - General method
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="receiverName">Name of the recipient</param>
         /// <param name="receiverIBAN">IBAN of the recipient</param>
         /// <param name="receiverBIC">BIC of the recipient</param>
-        /// <param name="amount">Amount to transfer</param>
         /// <param name="purpose">Short description of the transfer (dt. Verwendungszweck)</param>      
         /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
@@ -622,29 +641,28 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-
-        public static HBCIDialogResult Rebooking(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
-            decimal amount, string purpose, string HIRMS, bool anonymous)
+        public HBCIDialogResult Rebooking(TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
+            decimal amount, string purpose, string hirms)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKCUM(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+            var BankCode = Transaction.HKCUM(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
@@ -652,7 +670,6 @@ namespace libfintx
         /// <summary>
         /// Collect money from another account - General method
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="payerName">Name of the payer</param>
         /// <param name="payerIBAN">IBAN of the payer</param>
         /// <param name="payerBIC">BIC of the payer</param>         
@@ -664,7 +681,6 @@ namespace libfintx
         /// <param name="creditorIdNumber"></param>
         /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
-        /// <param name="anonymous"></param>
         /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
         /// <param name="flickerWidth">Width of the flicker code</param>
         /// <param name="flickerHeight">Height of the flicker code</param>
@@ -672,30 +688,29 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-
-        public static HBCIDialogResult Collect(ConnectionDetails connectionDetails, TANDialog tanDialog, string payerName, string payerIBAN, string payerBIC,
+        public HBCIDialogResult Collect(TANDialog tanDialog, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
-            string HIRMS, bool anonymous)
+            string hirms)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKDSE(connectionDetails, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
+            var BankCode = Transaction.HKDSE(this, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
@@ -703,14 +718,12 @@ namespace libfintx
         /// <summary>
         /// Collective collect money from other accounts - General method
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>  
         /// <param name="settlementDate"></param>
         /// <param name="painData"></param>
         /// <param name="numberOfTransactions"></param>
         /// <param name="totalAmount"></param>        
         /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
-        /// <param name="anonymous"></param>
         /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
         /// <param name="flickerWidth">Width of the flicker code</param>
         /// <param name="flickerHeight">Height of the flicker code</param>
@@ -718,29 +731,28 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-
-        public static HBCIDialogResult CollectiveCollect(ConnectionDetails connectionDetails, TANDialog tanDialog, DateTime settlementDate, List<Pain00800202CcData> painData,
-           string numberOfTransactions, decimal totalAmount, string HIRMS, bool anonymous)
+        public HBCIDialogResult CollectiveCollect(TANDialog tanDialog, DateTime settlementDate, List<Pain00800202CcData> painData,
+           string numberOfTransactions, decimal totalAmount, string hirms)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKDME(connectionDetails, settlementDate, painData, numberOfTransactions, totalAmount);
+            var BankCode = Transaction.HKDME(this, settlementDate, painData, numberOfTransactions, totalAmount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
@@ -748,13 +760,11 @@ namespace libfintx
         /// <summary>
         /// Load mobile phone prepaid card - General method
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>  
         /// <param name="mobileServiceProvider"></param>
         /// <param name="phoneNumber"></param>
         /// <param name="amount">Amount to transfer</param>            
         /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
-        /// <param name="anonymous"></param>
         /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
         /// <param name="flickerWidth">Width of the flicker code</param>
         /// <param name="flickerHeight">Height of the flicker code</param>
@@ -762,29 +772,28 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-
-        public static HBCIDialogResult Prepaid(ConnectionDetails connectionDetails, TANDialog tanDialog, int mobileServiceProvider, string phoneNumber,
-            int amount, string HIRMS, bool anonymous)
+        public HBCIDialogResult Prepaid(TANDialog tanDialog, int mobileServiceProvider, string phoneNumber,
+            int amount, string hirms)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKPPD(connectionDetails, mobileServiceProvider, phoneNumber, amount);
+            var BankCode = Transaction.HKPPD(this, mobileServiceProvider, phoneNumber, amount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
@@ -792,7 +801,6 @@ namespace libfintx
         /// <summary>
         /// Submit bankers order - General method
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC, AccountHolder</param>       
         /// <param name="receiverName"></param>
         /// <param name="receiverIBAN"></param>
         /// <param name="receiverBIC"></param>
@@ -804,7 +812,6 @@ namespace libfintx
         /// <param name="executionDay"></param>
         /// <param name="HIRMS">Numerical SecurityMode; e.g. 911 for "Sparkasse chipTan optisch"</param>
         /// <param name="pictureBox">Picturebox which shows the TAN</param>
-        /// <param name="anonymous"></param>
         /// <param name="flickerImage">(Out) reference to an image object that shall receive the FlickerCode as GIF image</param>
         /// <param name="flickerWidth">Width of the flicker code</param>
         /// <param name="flickerHeight">Height of the flicker code</param>
@@ -812,84 +819,82 @@ namespace libfintx
         /// <returns>
         /// Bank return codes
         /// </returns>
-
-        public static HBCIDialogResult SubmitBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN,
+        public HBCIDialogResult SubmitBankersOrder(TANDialog tanDialog, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
-           int executionDay, DateTime? lastExecutionDay, string HIRMS, bool anonymous)
+           int executionDay, DateTime? lastExecutionDay, string hirms)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKCDE(connectionDetails, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
+            var BankCode = Transaction.HKCDE(this, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
 
-        public static HBCIDialogResult ModifyBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string OrderId, string receiverName, string receiverIBAN,
+        public HBCIDialogResult ModifyBankersOrder(TANDialog tanDialog, string OrderId, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
-           int executionDay, DateTime? lastExecutionDay, string HIRMS, bool anonymous)
+           int executionDay, DateTime? lastExecutionDay, string hirms)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKCDN(connectionDetails, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
+            var BankCode = Transaction.HKCDN(this, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
 
-        public static HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string orderId, string receiverName, string receiverIBAN,
-            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDay, string HIRMS,
-            bool anonymous)
+        public HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string orderId, string receiverName, string receiverIBAN,
+            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDay, string hirms)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             TransactionConsole.Output = string.Empty;
 
-            if (!String.IsNullOrEmpty(HIRMS))
-                Segment.HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
-            var BankCode = Transaction.HKCDL(connectionDetails, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
+            var BankCode = Transaction.HKCDL(this, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
@@ -902,23 +907,23 @@ namespace libfintx
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public static HBCIDialogResult<List<BankersOrder>> GetBankersOrders(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous)
+        public HBCIDialogResult<List<BankersOrder>> GetBankersOrders(ConnectionDetails connectionDetails, TANDialog tanDialog)
         {
-            var result = Init(connectionDetails, anonymous);
+            var result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<BankersOrder>>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<BankersOrder>>();
 
             // Success
-            var BankCode = Transaction.HKCDB(connectionDetails);
+            var BankCode = Transaction.HKCDB(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<BankersOrder>>();
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<BankersOrder>>();
 
@@ -981,28 +986,26 @@ namespace libfintx
         /// <summary>
         /// Get terminated transfers
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz, IBAN, BIC</param>         
-        /// <param name="anonymous"></param>
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public static HBCIDialogResult GetTerminatedTransfers(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous)
+        public HBCIDialogResult GetTerminatedTransfers(TANDialog tanDialog)
         {
-            HBCIDialogResult result = Init(connectionDetails, anonymous);
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result;
 
             // Success
-            var BankCode = Transaction.HKCSB(connectionDetails);
+            var BankCode = Transaction.HKCSB(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
 
-            result = ProcessSCA(connectionDetails, result, tanDialog);
+            result = ProcessSCA(result, tanDialog);
 
             return result;
         }
@@ -1010,31 +1013,14 @@ namespace libfintx
         /// <summary>
         /// Confirm order with TAN
         /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
-        /// <param name="TAN"></param>
-        /// <returns>
-        /// Bank return codes
-        /// </returns>
-        public static HBCIDialogResult TAN(ConnectionDetails connectionDetails, string TAN)
-        {
-            var BankCode = Transaction.TAN(connectionDetails, TAN);
-            var result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Confirm order with TAN
-        /// </summary>
-        /// <param name="connectionDetails">ConnectionDetails object must atleast contain the fields: Url, HBCIVersion, UserId, Pin, Blz</param>
         /// <param name="TAN"></param>
         /// <param name="MediumName"></param>
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public static HBCIDialogResult TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
+        public HBCIDialogResult TAN4(string TAN, string MediumName)
         {
-            var BankCode = Transaction.TAN4(connectionDetails, TAN, MediumName);
+            var BankCode = Transaction.TAN4(this, TAN, MediumName);
             var result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
 
             return result;
@@ -1047,11 +1033,11 @@ namespace libfintx
         /// <returns>
         /// TAN Medium Name
         /// </returns>
-        public static HBCIDialogResult<List<string>> RequestTANMediumName(ConnectionDetails connectionDetails)
+        public HBCIDialogResult<List<string>> RequestTANMediumName()
         {
             HKTAN.SegmentId = "HKTAB";
 
-            HBCIDialogResult result = Init(connectionDetails, false);
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<string>>();
 
@@ -1060,7 +1046,7 @@ namespace libfintx
             //if (!result.IsSuccess)
             //    return result.TypedResult<List<string>>();
 
-            var BankCode = Transaction.HKTAB(connectionDetails);
+            var BankCode = Transaction.HKTAB(this);
             result = new HBCIDialogResult<List<string>>(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<string>>();
@@ -1076,126 +1062,6 @@ namespace libfintx
         }
 
         /// <summary>
-        /// TAN scheme
-        /// </summary>
-        /// <returns>
-        /// TAN mechanism
-        /// </returns>
-        public static string TAN_Scheme()
-        {
-            return Segment.HIRMSf;
-        }
-
-        /// <summary>
-        /// Set assembly information
-        /// </summary>
-        /// <param name="Buildname"></param>
-        /// <param name="Version"></param>
-        public static void Assembly(string Buildname, string Version)
-        {
-            Program.Buildname = Buildname;
-            Program.Version = Version;
-
-            Log.Write(Buildname);
-            Log.Write(Version);
-        }
-
-
-        /// <summary>
-        /// Set assembly information automatically
-        /// </summary>
-        public static void Assembly()
-        {
-            var assemInfo = System.Reflection.Assembly.GetExecutingAssembly().GetName();
-            Program.Buildname = assemInfo.Name;
-            Program.Version = $"{assemInfo.Version.Major}.{assemInfo.Version.Minor}";
-
-            Log.Write(Program.Buildname);
-            Log.Write(Program.Version);
-        }
-
-
-        /// <summary>
-        /// Get assembly buildname
-        /// </summary>
-        /// <returns>
-        /// Buildname
-        /// </returns>
-        public static string Buildname()
-        {
-            return Program.Buildname;
-        }
-
-        /// <summary>
-        /// Get assembly version
-        /// </summary>
-        /// <returns>
-        /// Version
-        /// </returns>
-        public static string Version()
-        {
-            return Program.Version;
-        }
-
-        /// <summary>
-        /// Transactions output console
-        /// </summary>
-        /// <returns>
-        /// Bank return codes
-        /// </returns>
-        public static string Transaction_Output()
-        {
-            return TransactionConsole.Output;
-        }
-
-        /// <summary>
-        /// Enable / Disable Tracing
-        /// </summary>
-        public static void Tracing(bool Enabled, bool Formatted = false, int maxFileSizeMB = 10)
-        {
-            Trace.Enabled = Enabled;
-            Trace.Formatted = Formatted;
-            Trace.MaxFileSize = maxFileSizeMB;
-        }
-
-        /// <summary>
-        /// Enable / Disable Debugging
-        /// </summary>
-        public static void Debugging(bool Enabled)
-        {
-            DEBUG.Enabled = Enabled;
-        }
-
-        /// <summary>
-        /// Enable / Disable Logging
-        /// </summary>
-        public static void Logging(bool Enabled, int maxFileSizeMB = 10)
-        {
-            Log.Enabled = Enabled;
-            Log.MaxFileSize = maxFileSizeMB;
-        }
-
-        private static HBCIDialogResult ProcessSCA(ConnectionDetails conn, HBCIDialogResult result, TANDialog tanDialog)
-        {
-            tanDialog.DialogResult = result;
-            if (result.IsSCARequired)
-            {
-                var tan = Helper.WaitForTAN(result, tanDialog);
-                if (tan == null)
-                {
-                    var BankCode = Transaction.HKEND(conn, Segment.HNHBK);
-                    result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-                }
-                else
-                {
-                    result = TAN(conn, tan);
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Synchronize bank connection RDH
         /// </summary>
         /// <param name="BLZ"></param>
@@ -1206,9 +1072,9 @@ namespace libfintx
         /// <returns>
         /// Success or failure
         /// </returns>
-        public static bool Synchronization_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
+        private bool Synchronization_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
         {
-            if (Transaction.INI_RDH(BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password) == true)
+            if (Transaction.INI_RDH(this, BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password) == true)
             {
                 return true;
             }

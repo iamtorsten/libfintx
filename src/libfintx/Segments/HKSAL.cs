@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
 using System;
 
 namespace libfintx
@@ -31,31 +30,32 @@ namespace libfintx
         /// <summary>
         /// Balance
         /// </summary>
-        public static string Init_HKSAL(ConnectionDetails connectionDetails)
+        public static string Init_HKSAL(FinTsClient client)
         {
             Log.Write("Starting job HKSAL: Request balance");
 
+            var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
             SEG.NUM = SEGNUM.SETInt(3);
 
-            if (Convert.ToInt16(Segment.HISALS) >= 7)
-                segments = "HKSAL:" + SEG.NUM + ":" + Segment.HISALS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+N'";
+            if (Convert.ToInt16(client.HISALS) >= 7)
+                segments = "HKSAL:" + SEG.NUM + ":" + client.HISALS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+N'";
             else
-                segments = "HKSAL:" + SEG.NUM + ":" + Segment.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
+                segments = "HKSAL:" + SEG.NUM + ":" + client.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
 
             if (Helper.IsTANRequired("HKSAL"))
             {
                 SEG.NUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(segments);
+                segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+            client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
-            Helper.Parse_Message(response);
+            Helper.Parse_Message(client, response);
 
             return response;
         }

@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
 using System;
 using System.Collections.Generic;
 
@@ -32,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// Collective collect
         /// </summary>
-        public static string Init_HKDME(ConnectionDetails connectionDetails, DateTime SettlementDate, List<Pain00800202CcData> PainData, string NumberofTransactions, decimal TotalAmount)
+        public static string Init_HKDME(FinTsClient client, DateTime SettlementDate, List<Pain00800202CcData> PainData, string NumberofTransactions, decimal TotalAmount)
         {
             Log.Write("Starting job HKDME: Collective collect money");
 
@@ -40,6 +39,7 @@ namespace libfintx
 
             var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
+            var connectionDetails = client.ConnectionDetails;
             string segments = "HKDME:" + SEG.NUM + ":2+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+" + TotalAmount_ + ":EUR++" + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
 
             var message = pain00800202.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, SettlementDate, PainData, NumberofTransactions, TotalAmount);
@@ -49,14 +49,14 @@ namespace libfintx
             if (Helper.IsTANRequired("HKDME"))
             {
                 SEG.NUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(segments);
+                segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM));
+            var TAN = FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM));
 
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+            client.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
-            Helper.Parse_Message(TAN);
+            Helper.Parse_Message(client, TAN);
 
             return TAN;
         }

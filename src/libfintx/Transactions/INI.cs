@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
 using System;
 
 namespace libfintx
@@ -31,8 +30,9 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static string Init_INI(ConnectionDetails connectionDetails, bool anonymous)
+        public static string Init_INI(FinTsClient client, bool anonymous)
         {
+            var connectionDetails = client.ConnectionDetails;
             if (!anonymous)
             {
                 /// <summary>
@@ -50,7 +50,7 @@ namespace libfintx
                     if (connectionDetails.HbciVersion == 220)
                     {
                         string segments_ =
-                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.ProductId + "+" + Program.Version + "'";
 
                         segments = segments_;
@@ -58,11 +58,11 @@ namespace libfintx
                     else if (connectionDetails.HbciVersion == 300)
                     {
                         string segments_ =
-                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.ProductId + "+" + Program.Version + "'";
 
-                        if (Segment.HITANS != null && Segment.HITANS.Substring(0, 3).Equals("6+4"))
-                            segments_ = HKTAN.Init_HKTAN(segments_);
+                        if (client.HITANS != null && client.HITANS.Substring(0, 3).Equals("6+4"))
+                            segments_ = HKTAN.Init_HKTAN(client, segments_);
 
                         segments = segments_;
                     }
@@ -77,12 +77,12 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    var message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+                    var message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
                     var response = FinTSMessage.Send(connectionDetails.Url, message);
 
-                    Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HbciVersion, response);
+                    Helper.Parse_Segment(client, response);
 
-                    Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN:", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+                    client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN:", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
                     return response;
                 }
@@ -132,7 +132,7 @@ namespace libfintx
                     string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, SEG.NUM);
                     string response = FinTSMessage.Send(connectionDetails.Url, message);
 
-                    var messages = Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HbciVersion, response);
+                    var messages = Helper.Parse_Segment(client, response);
                     var result = new HBCIDialogResult(messages, response);
                     if (!result.IsSuccess)
                     {
@@ -149,7 +149,7 @@ namespace libfintx
                     if (connectionDetails.HbciVersion == 300)
                     {
                         string segments__ =
-                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + Segment.HISYN + "+1'" +
+                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
                             "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
 
@@ -164,12 +164,12 @@ namespace libfintx
 
                     SEG.NUM = SEGNUM.SETInt(5);
 
-                    message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+                    message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
                     response = FinTSMessage.Send(connectionDetails.Url, message);
 
-                    Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HbciVersion, response);
+                    Helper.Parse_Segment(client, response);
 
-                    Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN:", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+                    client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN:", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
                     return response;
                 }

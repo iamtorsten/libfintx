@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,18 +21,18 @@
  * 	
  */
 
-using libfintx.Data;
 using System;
 
 namespace libfintx
 {
     public static class HKSYN
     {
-        public static string Init_HKSYN(ConnectionDetails connectionDetails)
+        public static string Init_HKSYN(FinTsClient client)
         {
             Log.Write("Starting Synchronisation");
 
             string segments;
+            var connectionDetails = client.ConnectionDetails;
 
             if (connectionDetails.HbciVersion == 220)
             {
@@ -68,7 +68,7 @@ namespace libfintx
             string message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, SEG.NUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HbciVersion, response);
+            Helper.Parse_Segment(client, response);
 
             return response;
         }

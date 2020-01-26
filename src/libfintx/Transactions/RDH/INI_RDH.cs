@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ namespace libfintx
         /// <summary>
         /// INI RDH
         /// </summary>
-        public static bool Init_INI_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
+        public static bool Init_INI_RDH(FinTsClient client, int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
         {
             Log.Write("Starting Synchronisation");
 
@@ -49,7 +49,7 @@ namespace libfintx
                     if (DEBUG.Enabled)
                         DEBUG.Write("INI message: " + segments);
 
-                    if (Helper.Parse_Segment_RDH_Key(RdhMessage.Send(URL, Port, RdhMessageAnonymous.Create(HBCIVersion, "1", "0", BLZ, segments)), BLZ, UserID))
+                    if (Helper.Parse_Segment_RDH_Key(client, RdhMessage.Send(URL, Port, RdhMessageAnonymous.Create(HBCIVersion, "1", "0", BLZ, segments)), BLZ, UserID))
                     {
                         // Sync OK
                         Log.Write("Synchronisation ok");

@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -23,8 +23,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -37,22 +37,6 @@ namespace libfintx
         /// Regex pattern for HIRMG/HIRMS messages.
         /// </summary>
         private const string PatternResultMessage = @"(\d{4}):.*?:(.+)";
-
-        /// <summary>
-        /// Pad zeros
-        /// </summary>
-        /// <returns></returns>
-        private static byte[] PadZero()
-        {
-            var buffer = new byte[16];
-
-            for (int i = 0; i < buffer.Length; i++)
-            {
-                buffer[i] = 0;
-            }
-
-            return buffer;
-        }
 
         /// <summary>
         /// Combine byte arrays
@@ -151,10 +135,11 @@ namespace libfintx
         /// <param name="HBCIVersion"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static List<HBCIBankMessage> Parse_Segment(string UserID, int BLZ, int HBCIVersion, string Message)
+        public static List<HBCIBankMessage> Parse_Segment(FinTsClient client, string Message)
         {
             try
             {
+                var connDetails = client.ConnectionDetails;
                 List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
                 string[] values = Message.Split('\'');
@@ -173,11 +158,11 @@ namespace libfintx
                     upd = upaMatch.Groups[1].Value;
 
                 // BPD
-                SaveBPD(BLZ, bpd);
+                SaveBPD(connDetails.Blz, bpd);
                 BPD.ParseBpd(bpd);
 
                 // UPD
-                SaveUPD(BLZ, UserID, upd);
+                SaveUPD(connDetails.Blz, connDetails.UserId, upd);
                 UPD.ParseUpd(upd);
 
                 foreach (var item in values)
@@ -224,30 +209,30 @@ namespace libfintx
                                 {
                                     if (Convert.ToString(i).StartsWith("9"))
                                     {
-                                        if (String.IsNullOrEmpty(TAN))
+                                        if (string.IsNullOrEmpty(TAN))
                                             TAN = i.ToString();
 
-                                        if (String.IsNullOrEmpty(TANf))
+                                        if (string.IsNullOrEmpty(TANf))
                                             TANf = i.ToString();
                                         else
                                             TANf += $";{i}";
                                     }
                                 }
                             }
-                            if (string.IsNullOrEmpty(Segment.HIRMS))
+                            if (string.IsNullOrEmpty(client.HIRMS))
                             {
-                                Segment.HIRMS = TAN;
+                                client.HIRMS = TAN;
                             }
                             else
                             {
-                                if (!TANf.Contains(Segment.HIRMS))
-                                    throw new Exception($"Invalid HIRMS/Tan-Mode {Segment.HIRMS} detected. Please choose one of the allowed modes: {TANf}");
+                                if (!TANf.Contains(client.HIRMS))
+                                    throw new Exception($"Invalid HIRMS/Tan-Mode {client.HIRMS} detected. Please choose one of the allowed modes: {TANf}");
                             }
-                            Segment.HIRMSf = TANf;
+                            client.HIRMSf = TANf;
 
                             // Parsing TAN processes
-                            if (!String.IsNullOrEmpty(Segment.HIRMS))
-                                Parse_TANProcesses(bpd);
+                            if (!string.IsNullOrEmpty(client.HIRMS))
+                                Parse_TANProcesses(client, bpd);
 
                         }
                     }
@@ -255,13 +240,13 @@ namespace libfintx
                     if (item.Contains("HNHBK"))
                     {
                         var ID = Parse_String(item.ToString(), "+1+", ":1");
-                        Segment.HNHBK = ID;
+                        client.HNHBK = ID;
                     }
 
                     if (item.Contains("HISYN"))
                     {
                         var ID = item.Substring(item.IndexOf("+") + 1);
-                        Segment.HISYN = ID;
+                        client.SystemId = ID;
 
                         Log.Write("Customer System ID: " + ID);
                     }
@@ -273,25 +258,25 @@ namespace libfintx
                         var MSG = Parse_String(item_.Replace("HNHBS:", ""), "+", "'");
 
                         if (MSG.Equals("0") || MSG == null)
-                            Segment.HNHBS = "2";
+                            client.HNHBS = "2";
                         else
-                            Segment.HNHBS = Convert.ToString(Convert.ToInt16(MSG) + 1);
+                            client.HNHBS = Convert.ToString(Convert.ToInt16(MSG) + 1);
                     }
 
                     if (item.Contains("HISALS"))
                     {
                         var SEG = Parse_String(item.Replace("HISALS:", ""), ":", ":");
 
-                        Segment.HISALS = SEG;
+                        client.HISALS = SEG;
 
-                        Segment.HISALSf = item;
+                        client.HISALSf = item;
                     }
 
                     if (item.Contains("HITANS"))
                     {
                         var TAN = Parse_String(item.Replace("HITANS:", ""), ":", "+").Replace(":", "+");
 
-                        Segment.HITANS = TAN;
+                        client.HITANS = TAN;
                     }
 
                     if (item.Contains("HKKAZ"))
@@ -304,13 +289,13 @@ namespace libfintx
                         {
                             var VER = Parse_String(match.Value, "HKKAZ;", ";");
 
-                            if (String.IsNullOrEmpty(Segment.HKKAZ))
-                                Segment.HKKAZ = VER;
+                            if (string.IsNullOrEmpty(client.HKKAZ))
+                                client.HKKAZ = VER;
                             else
                             {
-                                if (int.Parse(VER) > int.Parse(Segment.HKKAZ))
+                                if (int.Parse(VER) > int.Parse(client.HKKAZ))
                                 {
-                                    Segment.HKKAZ = VER;
+                                    client.HKKAZ = VER;
                                 }
                             }
                         }
@@ -319,20 +304,20 @@ namespace libfintx
                     if (item.Contains("HISPAS"))
                     {
                         if (item.Contains("pain.001.001.03"))
-                            Segment.HISPAS = 1;
+                            client.HISPAS = 1;
                         else if (item.Contains("pain.001.002.03"))
-                            Segment.HISPAS = 2;
+                            client.HISPAS = 2;
                         else if (item.Contains("pain.001.003.03"))
-                            Segment.HISPAS = 3;
+                            client.HISPAS = 3;
 
-                        if (Segment.HISPAS == 0)
-                            Segment.HISPAS = 3; // -> Fallback. Most banks accept the newest pain version
+                        if (client.HISPAS == 0)
+                            client.HISPAS = 3; // -> Fallback. Most banks accept the newest pain version
                     }
                 }
 
                 // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
-                if (String.IsNullOrEmpty(Segment.HKKAZ))
-                    Segment.HKKAZ = "5";
+                if (string.IsNullOrEmpty(client.HKKAZ))
+                    client.HKKAZ = "5";
 
                 return result;
             }
@@ -349,11 +334,11 @@ namespace libfintx
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static bool Parse_Message(string Message)
+        public static bool Parse_Message(FinTsClient client, string Message)
         {
             try
             {
-                String[] values = Message.Split('\'');
+                var values = Message.Split('\'');
 
                 foreach (var item in values)
                 {
@@ -364,13 +349,13 @@ namespace libfintx
                         var MSG = Parse_String(item_.Replace("HNHBS:", ""), "+", "'");
 
                         if (MSG.Equals("0") || MSG == null)
-                            Segment.HNHBS = "2";
+                            client.HNHBS = "2";
                         else
-                            Segment.HNHBS = Convert.ToString(Convert.ToInt16(MSG) + 1);
+                            client.HNHBS = Convert.ToString(Convert.ToInt16(MSG) + 1);
                     }
                 }
 
-                if (!String.IsNullOrEmpty(Segment.HNHBS))
+                if (!string.IsNullOrEmpty(client.HNHBS))
                     return true;
                 else
                     return false;
@@ -477,13 +462,13 @@ namespace libfintx
         /// Parse tan processes
         /// </summary>
         /// <returns></returns>
-        private static bool Parse_TANProcesses(string bpd)
+        private static bool Parse_TANProcesses(FinTsClient client, string bpd)
         {
             try
             {
                 List<TanProcess> list = new List<TanProcess>();
 
-                string[] processes = Segment.HIRMSf.Split(';');
+                string[] processes = client.HIRMSf.Split(';');
 
                 // Examples from bpd
 
@@ -549,9 +534,9 @@ namespace libfintx
         /// <param name="flickerWidth"></param>
         /// <param name="flickerHeight"></param>
         /// <param name="renderFlickerCodeAsGif"></param>
-        public static string WaitForTAN(HBCIDialogResult dialogResult, TANDialog tanDialog)
+        public static string WaitForTAN(FinTsClient client, HBCIDialogResult dialogResult, TANDialog tanDialog)
         {
-            var BankCode_ = "HIRMS" + Helper.Parse_String(dialogResult.RawData, "'HIRMS", "'");
+            var BankCode_ = "HIRMS" + Parse_String(dialogResult.RawData, "'HIRMS", "'");
             String[] values = BankCode_.Split('+');
             foreach (var item in values)
             {
@@ -559,7 +544,7 @@ namespace libfintx
                     TransactionConsole.Output = item.Replace("::", ": ");
             }
 
-            var HITAN = "HITAN" + Helper.Parse_String(dialogResult.RawData.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
+            var HITAN = "HITAN" + Parse_String(dialogResult.RawData.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
 
             string HITANFlicker = string.Empty;
 
@@ -569,7 +554,7 @@ namespace libfintx
 
             foreach (var item in processes)
             {
-                if (item.ProcessNumber.Equals(Segment.HIRMS))
+                if (item.ProcessNumber.Equals(client.HIRMS))
                     processname = item.ProcessName;
             }
 
@@ -868,16 +853,16 @@ namespace libfintx
         // TODO: Parsing RDH unstable
 
         /* Parse message and extract public bank keys -> Encryption, Signing */
-        public static bool Parse_Segment_RDH_Key(string Message, int BLZ, string UserID)
+        public static bool Parse_Segment_RDH_Key(FinTsClient client, string Message, int BLZ, string UserID)
         {
             var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             var dir = Path.Combine(documents, Program.Buildname);
 
             Message = Message.Replace("'?", "||?");
 
-            String[] values = Message.Split('\'');
+            var values = Message.Split('\'');
 
-            List<string> msg = new List<string>();
+            var msg = new List<string>();
 
             foreach (var item in values)
             {
@@ -931,13 +916,13 @@ namespace libfintx
                 if (item.Contains("HNHBK"))
                 {
                     var ID = Parse_String(item.ToString(), "+1+", ":1");
-                    Segment.HNHBK = ID;
+                    client.HNHBK = ID;
                 }
 
                 if (item.Contains("HISYN"))
                 {
                     var ID = item.Substring(13, item.Length - 13);
-                    Segment.HISYN = ID;
+                    client.SystemId = ID;
                 }
 
                 if (item.Contains("HIISA"))
@@ -961,8 +946,8 @@ namespace libfintx
                 }
             }
 
-            if (!String.IsNullOrEmpty(RdhKeyStore.KEY_ENCRYPTION_PUBLIC_BANK) &&
-                !String.IsNullOrEmpty(RdhKeyStore.KEY_SIGNING_PUBLIC_BANK))
+            if (!string.IsNullOrEmpty(RdhKeyStore.KEY_ENCRYPTION_PUBLIC_BANK) &&
+                !string.IsNullOrEmpty(RdhKeyStore.KEY_SIGNING_PUBLIC_BANK))
             {
                 // Update hbci key
                 RdhKey.Update(RdhKey.RDHKEYFILE, RdhKey.RDHKEYFILEPWD);

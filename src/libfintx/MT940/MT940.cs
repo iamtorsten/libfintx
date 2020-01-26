@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -191,12 +191,12 @@ namespace libfintx
                     int month = Convert.ToInt32(swiftData.Substring(0, 2));
                     int day = Convert.ToInt32(swiftData.Substring(2, 2));
 
-                    // Posting date 30 Dec 2017, Valuta date 1 Jan 2018
+                    // Posting date 30 Dec 2017, Valuta date 1 Jan 2020
                     if (month > SWIFTTransaction.ValueDate.Month && month == SWIFTTransaction.ValueDate.AddMonths(-1).Month)
                     {
                         year--;
                     }
-                    // Posting date 1 Jan 2018, Valuta date 30 Dec 2017
+                    // Posting date 1 Jan 2020, Valuta date 30 Dec 2017
                     else if (month < SWIFTTransaction.ValueDate.Month && month == SWIFTTransaction.ValueDate.AddMonths(1).Month)
                     {
                         year++;
