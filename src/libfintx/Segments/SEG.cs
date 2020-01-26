@@ -23,7 +23,7 @@
 
 namespace libfintx
 {
-    class SEG
+    internal class SEG
     {
         public static int NUM { get; set; }
     }

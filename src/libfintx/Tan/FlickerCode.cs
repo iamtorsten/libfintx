@@ -36,7 +36,7 @@ namespace libfintx
 {
     public class FlickerCode
     {
-        private bool InstanceFieldsInitialized = false;
+        private readonly bool InstanceFieldsInitialized = false;
 
         private void InitializeInstanceFields()
         {

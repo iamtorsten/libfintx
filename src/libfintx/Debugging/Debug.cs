@@ -25,7 +25,7 @@ using System;
 
 namespace libfintx
 {
-    class DEBUG
+    internal class DEBUG
     {
         public static bool Enabled { get; set; }
 

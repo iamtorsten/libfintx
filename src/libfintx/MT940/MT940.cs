@@ -476,8 +476,7 @@ namespace libfintx
                 // Kleinster Betrag der gemeldeten Haben-Umsätze
                 else if (Regex.IsMatch(swiftData, @"C\d+,\d*"))
                 {
-                    decimal amount = 0;
-                    decimal.TryParse(swiftData.Substring(1), out amount);
+                    decimal.TryParse(swiftData.Substring(1), out decimal amount);
 
                     SWIFTStatement.SmallestCreditAmount = amount;
                 }
@@ -487,8 +486,7 @@ namespace libfintx
             {
                 if (Regex.IsMatch(swiftData, @"\d{10}"))
                 {
-                    DateTime creationDate;
-                    DateTime.TryParseExact(swiftData, "yyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out creationDate);
+                    DateTime.TryParseExact(swiftData, "yyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime creationDate);
 
                     SWIFTStatement.CreationDate = creationDate;
                 }
@@ -500,15 +498,13 @@ namespace libfintx
                     // Easier parsing
                     // 1912090901+0100 -> 1912090901+01:00
                     var dateStr = swiftData.Substring(0, 13) + ":" + swiftData.Substring(13, 2);
-                    DateTimeOffset dateTimeOffset;
-                    DateTimeOffset.TryParseExact(dateStr, "yyMMddHHmmzzz", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTimeOffset);
+                    DateTimeOffset.TryParseExact(dateStr, "yyMMddHHmmzzz", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateTimeOffset);
 
                     SWIFTStatement.CreationDate = dateTimeOffset.DateTime;
                 }
                 else
                 {
-                    DateTime creationDate;
-                    DateTime.TryParseExact(swiftData, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out creationDate);
+                    DateTime.TryParseExact(swiftData, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime creationDate);
 
                     SWIFTStatement.CreationDate = creationDate;
                 }

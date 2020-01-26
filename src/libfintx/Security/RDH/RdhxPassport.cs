@@ -29,7 +29,7 @@ using System.Text;
 
 namespace libfintx
 {
-    static class RdhxPassport
+    internal static class RdhxPassport
     {
         // KEYS
 

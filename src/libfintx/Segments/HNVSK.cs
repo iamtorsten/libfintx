@@ -23,7 +23,7 @@
 
 namespace libfintx
 {
-    class HNVSK
+    internal class HNVSK
     {
     }
 

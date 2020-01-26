@@ -23,7 +23,7 @@
 
 namespace libfintx
 {
-    class HNSHK
+    internal class HNSHK
     {
     }
 

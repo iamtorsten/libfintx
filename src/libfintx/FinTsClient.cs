@@ -28,14 +28,9 @@ namespace libfintx
         internal string HISALSf { get; set; }
         internal string HITANS { get; set; }
         internal string HKKAZ { get; set; }
-        internal string HKCAZ { get; set; }
+        internal string HKCAZ { get { return "1"; } }
         internal string HITAN { get; set; }
         internal int HISPAS { get; set; }
-
-        public FinTsClient()
-        {
-
-        }
 
         public FinTsClient(ConnectionDetails conn, bool anon = false)
         {
@@ -71,7 +66,7 @@ namespace libfintx
                 HKTAN.SegmentId = null;
             }
 
-            var bankMessages = Helper.Parse_BankCode(BankCode);
+            List<HBCIBankMessage> bankMessages = Helper.Parse_BankCode(BankCode);
             result = new HBCIDialogResult(bankMessages, BankCode);
             if (!result.IsSuccess)
                 Log.Write("Initialisation failed: " + result);
@@ -90,7 +85,7 @@ namespace libfintx
         {
             string BankCode = Transaction.HKSYN(this);
 
-            var messages = Helper.Parse_BankCode(BankCode);
+            List<HBCIBankMessage> messages = Helper.Parse_BankCode(BankCode);
 
             return new HBCIDialogResult<string>(messages, BankCode, SystemId);
         }
@@ -102,7 +97,7 @@ namespace libfintx
         /// <returns>Gets informations about the accounts</returns>
         public HBCIDialogResult<List<AccountInformation>> Accounts(TANDialog tanDialog)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<AccountInformation>>();
 
@@ -120,7 +115,7 @@ namespace libfintx
         /// <returns>The balance for this account</returns>
         public HBCIDialogResult<AccountBalance> Balance(TANDialog tanDialog)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<AccountBalance>();
 
@@ -129,7 +124,7 @@ namespace libfintx
                 return result.TypedResult<AccountBalance>();
 
             // Success
-            var BankCode = Transaction.HKSAL(this);
+            string BankCode = Transaction.HKSAL(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<AccountBalance>();
@@ -139,7 +134,7 @@ namespace libfintx
                 return result.TypedResult<AccountBalance>();
 
             BankCode = result.RawData;
-            var balance = Helper.Parse_Balance(BankCode);
+            AccountBalance balance = Helper.Parse_Balance(BankCode);
             return result.TypedResult(balance);
         }
 
@@ -148,10 +143,10 @@ namespace libfintx
             tanDialog.DialogResult = result;
             if (result.IsSCARequired)
             {
-                var tan = Helper.WaitForTAN(this, result, tanDialog);
+                string tan = Helper.WaitForTAN(this, result, tanDialog);
                 if (tan == null)
                 {
-                    var BankCode = Transaction.HKEND(this, HNHBK);
+                    string BankCode = Transaction.HKEND(this, HNHBK);
                     result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
                 }
                 else
@@ -173,8 +168,8 @@ namespace libfintx
         /// </returns>
         public HBCIDialogResult TAN(string TAN)
         {
-            var BankCode = Transaction.TAN(this, TAN);
-            var result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+            string BankCode = Transaction.TAN(this, TAN);
+            HBCIDialogResult result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
 
             return result;
         }
@@ -191,7 +186,7 @@ namespace libfintx
         /// </returns>
         public HBCIDialogResult<List<SwiftStatement>> Transactions(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
@@ -199,11 +194,11 @@ namespace libfintx
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
-            var startDateStr = startDate?.ToString("yyyyMMdd");
-            var endDateStr = endDate?.ToString("yyyyMMdd");
+            string startDateStr = startDate?.ToString("yyyyMMdd");
+            string endDateStr = endDate?.ToString("yyyyMMdd");
 
             // Success
-            var BankCode = Transaction.HKKAZ(this, startDateStr, endDateStr, null);
+            string BankCode = Transaction.HKKAZ(this, startDateStr, endDateStr, null);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
@@ -216,8 +211,8 @@ namespace libfintx
             StringBuilder TransactionsMt940 = new StringBuilder();
             StringBuilder TransactionsMt942 = new StringBuilder();
 
-            var regex = new Regex(@"HIKAZ:.+?@\d+@(?<mt940>.+?)(\+@\d+@(?<mt942>.+?))?('{1,2}H[A-Z]{4}:\d+:\d+)", RegexOptions.Singleline);
-            var match = regex.Match(BankCode);
+            Regex regex = new Regex(@"HIKAZ:.+?@\d+@(?<mt940>.+?)(\+@\d+@(?<mt942>.+?))?('{1,2}H[A-Z]{4}:\d+:\d+)", RegexOptions.Singleline);
+            Match match = regex.Match(BankCode);
             if (match.Success)
             {
                 TransactionsMt940.Append(match.Groups["mt940"].Value);
@@ -229,7 +224,7 @@ namespace libfintx
             {
                 Helper.Parse_Message(this, BankCode_);
 
-                var Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+                string Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
                 BankCode_ = Transaction.HKKAZ(this, startDateStr, endDateStr, Startpoint);
                 result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode_), BankCode_);
@@ -249,7 +244,7 @@ namespace libfintx
                 }
             }
 
-            var swiftStatements = new List<SwiftStatement>();
+            List<SwiftStatement> swiftStatements = new List<SwiftStatement>();
 
             swiftStatements.AddRange(MT940.Serialize(TransactionsMt940.ToString(), ConnectionDetails.Account, saveMt940File));
             swiftStatements.AddRange(MT940.Serialize(TransactionsMt942.ToString(), ConnectionDetails.Account, saveMt940File, true));
@@ -268,7 +263,7 @@ namespace libfintx
         public HBCIDialogResult<List<CamtStatement>> Transactions_camt(ConnectionDetails connectionDetails, TANDialog tanDialog, bool anonymous, CamtVersion camtVers,
             DateTime? startDate = null, DateTime? endDate = null, bool saveCamtFile = false)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
@@ -277,13 +272,13 @@ namespace libfintx
                 return result.TypedResult<List<CamtStatement>>();
 
             // Plain camt message
-            var camt = string.Empty;
+            string camt = string.Empty;
 
-            var startDateStr = startDate?.ToString("yyyyMMdd");
-            var endDateStr = endDate?.ToString("yyyyMMdd");
+            string startDateStr = startDate?.ToString("yyyyMMdd");
+            string endDateStr = endDate?.ToString("yyyyMMdd");
 
             // Success
-            var BankCode = Transaction.HKCAZ(this, startDateStr, endDateStr, null, camtVers);
+            string BankCode = Transaction.HKCAZ(this, startDateStr, endDateStr, null, camtVers);
             result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
@@ -302,8 +297,8 @@ namespace libfintx
             string BankCode_ = BankCode;
 
             // Es kann sein, dass in der payload mehrere Dokumente enthalten sind
-            var xmlStartIdx = BankCode_.IndexOf("<?xml version=");
-            var xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
+            int xmlStartIdx = BankCode_.IndexOf("<?xml version=");
+            int xmlEndIdx = BankCode_.IndexOf("</Document>") + "</Document>".Length;
             while (xmlStartIdx >= 0)
             {
                 if (xmlStartIdx > xmlEndIdx)
@@ -320,7 +315,7 @@ namespace libfintx
                         if (saveCamtFile)
                         {
                             // Save camt052 statement to file
-                            var camt052f = Camt052File.Save(connectionDetails.Account, camt, encoding);
+                            string camt052f = Camt052File.Save(connectionDetails.Account, camt, encoding);
 
                             // Process the camt052 file
                             camt052Parser.ProcessFile(camt052f);
@@ -339,7 +334,7 @@ namespace libfintx
                         if (saveCamtFile)
                         {
                             // Save camt053 statement to file
-                            var camt053f = Camt053File.Save(connectionDetails.Account, camt, encoding);
+                            string camt053f = Camt053File.Save(connectionDetails.Account, camt, encoding);
 
                             // Process the camt053 file
                             camt053Parser.ProcessFile(camt053f);
@@ -385,7 +380,7 @@ namespace libfintx
                     {
                         case CamtVersion.Camt052:
                             // Save camt052 statement to file
-                            var camt052f_ = Camt052File.Save(connectionDetails.Account, camt);
+                            string camt052f_ = Camt052File.Save(connectionDetails.Account, camt);
 
                             // Process the camt052 file
                             camt052Parser.ProcessFile(camt052f_);
@@ -395,7 +390,7 @@ namespace libfintx
                             break;
                         case CamtVersion.Camt053:
                             // Save camt053 statement to file
-                            var camt053f_ = Camt053File.Save(connectionDetails.Account, camt);
+                            string camt053f_ = Camt053File.Save(connectionDetails.Account, camt);
 
                             // Process the camt053 file
                             camt053Parser.ProcessFile(camt053f_);
@@ -426,14 +421,14 @@ namespace libfintx
         /// </returns>
         public HBCIDialogResult<List<AccountTransaction>> TransactionsSimple(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var result = Transactions(tanDialog, startDate, endDate);
+            HBCIDialogResult<List<SwiftStatement>> result = Transactions(tanDialog, startDate, endDate);
             if (!result.IsSuccess)
                 return result.TypedResult<List<AccountTransaction>>();
 
-            var transactionList = new List<AccountTransaction>();
-            foreach (var swiftStatement in result.Data)
+            List<AccountTransaction> transactionList = new List<AccountTransaction>();
+            foreach (SwiftStatement swiftStatement in result.Data)
             {
-                foreach (var swiftTransaction in swiftStatement.SwiftTransactions)
+                foreach (SwiftTransaction swiftTransaction in swiftStatement.SwiftTransactions)
                 {
                     transactionList.Add(new AccountTransaction()
                     {
@@ -474,7 +469,7 @@ namespace libfintx
         public HBCIDialogResult Transfer(TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -487,7 +482,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(HIRMS))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKCCS(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+            string BankCode = Transaction.HKCCS(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -515,7 +510,7 @@ namespace libfintx
         public HBCIDialogResult CollectiveTransfer(TANDialog tanDialog, List<Pain00100203CtData> painData,
             string numberOfTransactions, decimal totalAmount, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -528,7 +523,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKCCM(this, painData, numberOfTransactions, totalAmount);
+            string BankCode = Transaction.HKCCM(this, painData, numberOfTransactions, totalAmount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -557,7 +552,7 @@ namespace libfintx
         public HBCIDialogResult CollectiveTransfer_Terminated(TANDialog tanDialog, List<Pain00100203CtData> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -570,7 +565,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(HIRMS))
                 HIRMS = HIRMS;
 
-            var BankCode = Transaction.HKCME(this, painData, numberOfTransactions, totalAmount, executionDay);
+            string BankCode = Transaction.HKCME(this, painData, numberOfTransactions, totalAmount, executionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -601,7 +596,7 @@ namespace libfintx
         public HBCIDialogResult Transfer_Terminated(ConnectionDetails connectionDetails, TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, DateTime executionDay, string hirms, bool anonymous)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -614,7 +609,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKCSE(this, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
+            string BankCode = Transaction.HKCSE(this, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -644,7 +639,7 @@ namespace libfintx
         public HBCIDialogResult Rebooking(TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -657,7 +652,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKCUM(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
+            string BankCode = Transaction.HKCUM(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -692,7 +687,7 @@ namespace libfintx
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
             string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -705,7 +700,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKDSE(this, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
+            string BankCode = Transaction.HKDSE(this, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -734,7 +729,7 @@ namespace libfintx
         public HBCIDialogResult CollectiveCollect(TANDialog tanDialog, DateTime settlementDate, List<Pain00800202CcData> painData,
            string numberOfTransactions, decimal totalAmount, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -747,7 +742,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKDME(this, settlementDate, painData, numberOfTransactions, totalAmount);
+            string BankCode = Transaction.HKDME(this, settlementDate, painData, numberOfTransactions, totalAmount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -775,7 +770,7 @@ namespace libfintx
         public HBCIDialogResult Prepaid(TANDialog tanDialog, int mobileServiceProvider, string phoneNumber,
             int amount, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -788,7 +783,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKPPD(this, mobileServiceProvider, phoneNumber, amount);
+            string BankCode = Transaction.HKPPD(this, mobileServiceProvider, phoneNumber, amount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -823,7 +818,7 @@ namespace libfintx
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
            int executionDay, DateTime? lastExecutionDay, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -836,7 +831,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKCDE(this, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
+            string BankCode = Transaction.HKCDE(this, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -850,7 +845,7 @@ namespace libfintx
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
            int executionDay, DateTime? lastExecutionDay, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -863,7 +858,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKCDN(this, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
+            string BankCode = Transaction.HKCDN(this, OrderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -876,7 +871,7 @@ namespace libfintx
         public HBCIDialogResult DeleteBankersOrder(ConnectionDetails connectionDetails, TANDialog tanDialog, string orderId, string receiverName, string receiverIBAN,
             string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, HKCDE.TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDay, string hirms)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result;
 
@@ -889,7 +884,7 @@ namespace libfintx
             if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
-            var BankCode = Transaction.HKCDL(this, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
+            string BankCode = Transaction.HKCDL(this, orderId, receiverName, receiverIBAN, receiverBIC, amount, purpose, firstTimeExecutionDay, timeUnit, rota, executionDay, lastExecutionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -909,7 +904,7 @@ namespace libfintx
         /// </returns>
         public HBCIDialogResult<List<BankersOrder>> GetBankersOrders(ConnectionDetails connectionDetails, TANDialog tanDialog)
         {
-            var result = InitializeConnection();
+            HBCIDialogResult result = InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<BankersOrder>>();
 
@@ -918,7 +913,7 @@ namespace libfintx
                 return result.TypedResult<List<BankersOrder>>();
 
             // Success
-            var BankCode = Transaction.HKCDB(this);
+            string BankCode = Transaction.HKCDB(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<BankersOrder>>();
@@ -928,48 +923,48 @@ namespace libfintx
                 return result.TypedResult<List<BankersOrder>>();
 
             BankCode = result.RawData;
-            var startIdx = BankCode.IndexOf("HICDB");
+            int startIdx = BankCode.IndexOf("HICDB");
             if (startIdx < 0)
                 return result.TypedResult<List<BankersOrder>>();
 
             List<BankersOrder> data = new List<BankersOrder>();
 
-            var BankCode_ = BankCode.Substring(startIdx);
+            string BankCode_ = BankCode.Substring(startIdx);
             for (; ; )
             {
-                var match = Regex.Match(BankCode_, @"HICDB.+?(?<xml><\?xml.+?</Document>)\+(?<orderid>.*?)\+(?<firstdate>\d*):(?<turnus>[MW]):(?<rota>\d+):(?<execday>\d+)(:(?<lastdate>\d+))?", RegexOptions.Singleline);
+                Match match = Regex.Match(BankCode_, @"HICDB.+?(?<xml><\?xml.+?</Document>)\+(?<orderid>.*?)\+(?<firstdate>\d*):(?<turnus>[MW]):(?<rota>\d+):(?<execday>\d+)(:(?<lastdate>\d+))?", RegexOptions.Singleline);
                 if (match.Success)
                 {
-                    var xml = match.Groups["xml"].Value;
+                    string xml = match.Groups["xml"].Value;
                     // xml ist UTF-8
                     xml = Converter.ConvertEncoding(xml, Encoding.GetEncoding("ISO-8859-1"), Encoding.UTF8);
 
-                    var orderId = match.Groups["orderid"].Value;
+                    string orderId = match.Groups["orderid"].Value;
 
-                    var firstExecutionDateStr = match.Groups["firstdate"].Value;
+                    string firstExecutionDateStr = match.Groups["firstdate"].Value;
                     DateTime? firstExecutionDate = !string.IsNullOrWhiteSpace(firstExecutionDateStr) ? DateTime.ParseExact(firstExecutionDateStr, "yyyyMMdd", CultureInfo.InvariantCulture) : default(DateTime?);
 
-                    var timeUnitStr = match.Groups["turnus"].Value;
+                    string timeUnitStr = match.Groups["turnus"].Value;
                     TimeUnit timeUnit = timeUnitStr == "M" ? TimeUnit.Monthly : TimeUnit.Weekly;
 
-                    var rota = match.Groups["rota"].Value;
+                    string rota = match.Groups["rota"].Value;
 
-                    var executionDayStr = match.Groups["execday"].Value;
+                    string executionDayStr = match.Groups["execday"].Value;
                     int executionDay = Convert.ToInt32(executionDayStr);
 
-                    var lastExecutionDateStr = match.Groups["lastdate"].Value;
+                    string lastExecutionDateStr = match.Groups["lastdate"].Value;
                     DateTime? lastExecutionDate = !string.IsNullOrWhiteSpace(lastExecutionDateStr) ? DateTime.ParseExact(lastExecutionDateStr, "yyyyMMdd", CultureInfo.InvariantCulture) : default(DateTime?);
 
-                    var painData = Pain00100103CtData.Create(xml);
+                    Pain00100103CtData painData = Pain00100103CtData.Create(xml);
 
                     if (firstExecutionDate.HasValue && executionDay > 0)
                     {
-                        var item = new BankersOrder(orderId, painData, firstExecutionDate.Value, timeUnit, rota, executionDay, lastExecutionDate);
+                        BankersOrder item = new BankersOrder(orderId, painData, firstExecutionDate.Value, timeUnit, rota, executionDay, lastExecutionDate);
                         data.Add(item);
                     }
                 }
 
-                var endIdx = BankCode_.IndexOf("'");
+                int endIdx = BankCode_.IndexOf("'");
                 if (BankCode_.Length <= endIdx + 1)
                     break;
 
@@ -1000,7 +995,7 @@ namespace libfintx
                 return result;
 
             // Success
-            var BankCode = Transaction.HKCSB(this);
+            string BankCode = Transaction.HKCSB(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result;
@@ -1020,8 +1015,8 @@ namespace libfintx
         /// </returns>
         public HBCIDialogResult TAN4(string TAN, string MediumName)
         {
-            var BankCode = Transaction.TAN4(this, TAN, MediumName);
-            var result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+            string BankCode = Transaction.TAN4(this, TAN, MediumName);
+            HBCIDialogResult result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
 
             return result;
         }
@@ -1046,7 +1041,7 @@ namespace libfintx
             //if (!result.IsSuccess)
             //    return result.TypedResult<List<string>>();
 
-            var BankCode = Transaction.HKTAB(this);
+            string BankCode = Transaction.HKTAB(this);
             result = new HBCIDialogResult<List<string>>(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<string>>();
@@ -1057,7 +1052,7 @@ namespace libfintx
             //    return result.TypedResult<List<string>>();
 
             BankCode = result.RawData;
-            var BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
+            string BankCode_ = "HITAB" + Helper.Parse_String(BankCode, "'HITAB", "'");
             return result.TypedResult(Helper.Parse_TANMedium(BankCode_));
         }
 

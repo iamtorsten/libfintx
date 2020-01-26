@@ -23,7 +23,7 @@
 
 namespace libfintx
 {
-    class HKVVB
+    internal class HKVVB
     {
     }
 

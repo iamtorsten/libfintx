@@ -23,7 +23,7 @@
 
 namespace libfintx
 {
-    class HNSHA
+    internal class HNSHA
     {
     }
 

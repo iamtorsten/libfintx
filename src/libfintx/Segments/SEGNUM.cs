@@ -25,7 +25,7 @@ using System;
 
 namespace libfintx
 {
-    class SEGNUM
+    internal class SEGNUM
     {
         public static string SETVal(int NUM)
         {

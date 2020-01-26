@@ -23,7 +23,7 @@
 
 namespace libfintx
 {
-    class HKIDN
+    internal class HKIDN
     {
     }
 

@@ -59,7 +59,7 @@ namespace libfintx
         /// </summary>
         /// <param name="toEncode"></param>
         /// <returns></returns>
-        static public string EncodeTo64(string toEncode)
+        public static string EncodeTo64(string toEncode)
         {
             byte[] toEncodeAsBytes = Encoding.ASCII.GetBytes(toEncode);
             string returnValue = Convert.ToBase64String(toEncodeAsBytes);
@@ -72,7 +72,7 @@ namespace libfintx
         /// </summary>
         /// <param name="encodedData"></param>
         /// <returns></returns>
-        static public string DecodeFrom64(string encodedData)
+        public static string DecodeFrom64(string encodedData)
         {
             byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
             string returnValue = Encoding.ASCII.GetString(encodedDataAsBytes);
@@ -85,7 +85,7 @@ namespace libfintx
         /// </summary>
         /// <param name="encodedData"></param>
         /// <returns></returns>
-        static public string DecodeFrom64EncodingDefault(string encodedData)
+        public static string DecodeFrom64EncodingDefault(string encodedData)
         {
             byte[] encodedDataAsBytes = Convert.FromBase64String(encodedData);
             string returnValue = Encoding.GetEncoding("ISO-8859-1").GetString(encodedDataAsBytes);
@@ -98,7 +98,7 @@ namespace libfintx
         /// </summary>
         /// <param name="Segments"></param>
         /// <returns></returns>
-        static public string Encrypt(string Segments)
+        public static string Encrypt(string Segments)
         {
             return "HNVSD:999:1+@" + Segments.Length + "@" + Segments + "'";
         }
@@ -110,7 +110,7 @@ namespace libfintx
         /// <param name="StrStart"></param>
         /// <param name="StrEnd"></param>
         /// <returns></returns>
-        static public string Parse_String(string StrSource, string StrStart, string StrEnd)
+        public static string Parse_String(string StrSource, string StrStart, string StrEnd)
         {
             int Start, End;
 
@@ -204,8 +204,7 @@ namespace libfintx
 
                             foreach (string value in procedures)
                             {
-                                int i;
-                                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out i))
+                                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int i))
                                 {
                                     if (Convert.ToString(i).StartsWith("9"))
                                     {
@@ -523,7 +522,7 @@ namespace libfintx
             return result;
         }
 
-        static FlickerRenderer flickerCodeRenderer = null;
+        private static FlickerRenderer flickerCodeRenderer = null;
 
         /// <summary>
         /// Fill given <code>TANDialog</code> and wait for user to enter a TAN.
