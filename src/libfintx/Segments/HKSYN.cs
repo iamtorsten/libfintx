@@ -38,7 +38,7 @@ namespace libfintx
             {
                 string segments_ =
                     "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
-                    "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
+                    "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
                     "HKSYN:" + SEGNUM.SETVal(5) + ":2+0'";
 
                 segments = segments_;
@@ -47,7 +47,7 @@ namespace libfintx
             {
                 string segments_ =
                     "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
-                    "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
+                    "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
                     "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
 
                 segments = segments_;

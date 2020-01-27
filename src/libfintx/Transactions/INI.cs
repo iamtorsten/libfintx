@@ -51,7 +51,7 @@ namespace libfintx
                     {
                         string segments_ =
                             "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
-                            "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.ProductId + "+" + Program.Version + "'";
+                            "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
 
                         segments = segments_;
                     }
@@ -59,7 +59,7 @@ namespace libfintx
                     {
                         string segments_ =
                             "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
-                            "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.ProductId + "+" + Program.Version + "'";
+                            "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
 
                         if (client.HITANS != null && client.HITANS.Substring(0, 3).Equals("6+4"))
                             segments_ = HKTAN.Init_HKTAN(client, segments_);
@@ -112,7 +112,7 @@ namespace libfintx
                     {
                         string segments_ =
                             "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
-                            "HKVVB:" + SEGNUM.SETVal(3) + ":3+0+0+1+" + Program.ProductId + "+" + Program.Version + "'";
+                            "HKVVB:" + SEGNUM.SETVal(3) + ":3+0+0+1+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
 
                         segments = segments_;
                     }
@@ -150,7 +150,7 @@ namespace libfintx
                     {
                         string segments__ =
                             "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
-                            "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
+                            "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
                             "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
 
                         segments = segments__;

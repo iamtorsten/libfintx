@@ -28,5 +28,14 @@ namespace libfintx
             Log.Enabled = Enabled;	
             Log.MaxFileSize = maxFileSizeMB;	
         }
+
+        public static string Buildname { get; set; } = "libfintx";
+
+        public static string Version { get; set; } = "0.1";
+
+        /// <summary>
+        /// Produktregistrierungsnummer. Replace it with you own id if available.
+        /// </summary>
+        public static string ProductId = "9FA6681DEC0CF3046BFC2F8A6";
     }
 }

@@ -767,12 +767,12 @@ namespace libfintx
         public static string GetProgramBaseDir()
         {
             var userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (Program.Buildname == null)
+            if (FinTsConfig.Buildname == null)
             {
                 throw new InvalidOperationException("Der Wert von Program.Buildname muss gesetzt sein.");
             }
 
-            var buildname = Program.Buildname.StartsWith(".") ? Program.Buildname : $".{Program.Buildname}";
+            var buildname = FinTsConfig.Buildname.StartsWith(".") ? FinTsConfig.Buildname : $".{FinTsConfig.Buildname}";
 
             return Path.Combine(userHome, buildname);
         }
@@ -855,7 +855,7 @@ namespace libfintx
         public static bool Parse_Segment_RDH_Key(FinTsClient client, string Message, int BLZ, string UserID)
         {
             var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var dir = Path.Combine(documents, Program.Buildname);
+            var dir = Path.Combine(documents, FinTsConfig.Buildname);
 
             Message = Message.Replace("'?", "||?");
 
@@ -892,7 +892,7 @@ namespace libfintx
                 File.WriteAllText(Path.Combine(dir, "280_" + BLZ + ".bpd"), bpd);
 
             // UPD
-            dir = Path.Combine(documents, Program.Buildname);
+            dir = Path.Combine(documents, FinTsConfig.Buildname);
             dir = Path.Combine(dir, "UPD");
 
             if (!Directory.Exists(dir))

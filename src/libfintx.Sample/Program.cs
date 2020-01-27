@@ -30,10 +30,9 @@ namespace libfintx.Sample
             Console.WriteLine("PIN:");
             details.Pin = Console.ReadLine();
 
-            FinTsConfig.Debugging(true);
-
             var client = new FinTsClient(details);
-            HBCIOutput(client.Balance(new TANDialog(WaitForTAN)).Messages);
+            var result = client.Balance(new TANDialog(WaitForTAN));
+            HBCIOutput(result.Messages);
         }
 
         /// <summary>

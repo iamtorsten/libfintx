@@ -39,6 +39,9 @@ namespace libfintx
 
         internal HBCIDialogResult InitializeConnection()
         {
+            if (HKTAN.SegmentId == null)
+                HKTAN.SegmentId = "HKIDN";
+
             HBCIDialogResult result;
             string BankCode;
             try
