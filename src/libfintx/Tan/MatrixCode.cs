@@ -64,7 +64,7 @@ namespace libfintx
                 int len = data.Length - offset;
                 b = new byte[len];
                 Array.Copy(data, offset, b, 0, len);
-                MemoryStream ms = new MemoryStream(b);
+                var ms = new MemoryStream(b);
                 CodeImage = Image.Load(ms);
             }
             catch (Exception ex)

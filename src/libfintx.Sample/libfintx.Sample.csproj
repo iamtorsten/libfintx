@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.7.82" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\libfintx\libfintx.csproj" />
   </ItemGroup>
 </Project>
