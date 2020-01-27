@@ -769,7 +769,7 @@ namespace libfintx
             var userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             if (FinTsConfig.Buildname == null)
             {
-                throw new InvalidOperationException("Der Wert von Program.Buildname muss gesetzt sein.");
+                throw new InvalidOperationException("Der Wert von FinTsConfig.Buildname muss gesetzt sein.");
             }
 
             var buildname = FinTsConfig.Buildname.StartsWith(".") ? FinTsConfig.Buildname : $".{FinTsConfig.Buildname}";
