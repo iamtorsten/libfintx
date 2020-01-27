@@ -35,11 +35,11 @@ namespace libfintx
         {
             Log.Write("Starting job HKCCM: Collective transfer money");
             var connectionDetails = client.ConnectionDetails;
-            SEG.NUM = SEGNUM.SETInt(3);
+            client.SEGNUM = SEGNUM.SETInt(3);
 
             var TotalAmount_ = TotalAmount.ToString().Replace(",", ".");
 
-            string segments = "HKCCM:" + SEG.NUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
+            string segments = "HKCCM:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
             var painMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, PainData, NumberofTransactions, TotalAmount, new DateTime(1999, 1, 1));
 
@@ -47,11 +47,11 @@ namespace libfintx
 
             if (Helper.IsTANRequired("HKCCM"))
             {
-                SEG.NUM = SEGNUM.SETInt(4);
+                client.SEGNUM = SEGNUM.SETInt(4);
                 segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
             var response = FinTSMessage.Send(connectionDetails.Url, message);
 
             client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");

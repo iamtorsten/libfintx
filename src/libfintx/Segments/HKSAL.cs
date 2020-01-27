@@ -37,20 +37,20 @@ namespace libfintx
             var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
-            SEG.NUM = SEGNUM.SETInt(3);
+            client.SEGNUM = SEGNUM.SETInt(3);
 
             if (Convert.ToInt16(client.HISALS) >= 7)
-                segments = "HKSAL:" + SEG.NUM + ":" + client.HISALS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+N'";
+                segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+N'";
             else
-                segments = "HKSAL:" + SEG.NUM + ":" + client.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
+                segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
 
             if (Helper.IsTANRequired("HKSAL"))
             {
-                SEG.NUM = SEGNUM.SETInt(4);
+                client.SEGNUM = SEGNUM.SETInt(4);
                 segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
             client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");

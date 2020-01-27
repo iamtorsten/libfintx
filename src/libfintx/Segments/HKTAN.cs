@@ -42,25 +42,25 @@ namespace libfintx
             if (String.IsNullOrEmpty(client.HITAB)) // TAN Medium Name not set
             {
                 if (client.HITANS.Substring(0, 3).Equals("6+4"))
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + client.HITANS + "+" + SegmentId + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+" + SegmentId + "'";
                 else
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + client.HITANS + "+'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+'";
             }
             else // TAN Medium Name set
             {
                 // Version 3, Process 4
                 if (client.HITANS.Substring(0, 3).Equals("3+4"))
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + client.HITANS + "++++++++" + client.HITAB + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "++++++++" + client.HITAB + "'";
                 // Version 4, Process 4
                 if (client.HITANS.Substring(0, 3).Equals("4+4"))
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + client.HITANS + "+++++++++" + client.HITAB + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+++++++++" + client.HITAB + "'";
                 // Version 5, Process 4
                 if (client.HITANS.Substring(0, 3).Equals("5+4"))
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + client.HITANS + "+++++++++++" + client.HITAB + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+++++++++++" + client.HITAB + "'";
                 // Version 6, Process 4
                 if (client.HITANS.Substring(0, 3).Equals("6+4"))
                 {
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + client.HITANS + "+" + SegmentId + "+++++++++" + client.HITAB + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+" + SegmentId + "+++++++++" + client.HITAB + "'";
                 }
             }
 

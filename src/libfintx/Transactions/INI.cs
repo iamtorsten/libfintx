@@ -42,7 +42,7 @@ namespace libfintx
                 {
                     string segments;
 
-                    SEG.NUM = SEGNUM.SETInt(5);
+                    client.SEGNUM = SEGNUM.SETInt(5);
 
                     /// <summary>
                     /// INI
@@ -77,7 +77,7 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    var message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
+                    var message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
                     var response = FinTSMessage.Send(connectionDetails.Url, message);
 
                     Helper.Parse_Segment(client, response);
@@ -127,9 +127,9 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    SEG.NUM = SEGNUM.SETInt(4);
+                    client.SEGNUM = SEGNUM.SETInt(4);
 
-                    string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, SEG.NUM);
+                    string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
                     string response = FinTSMessage.Send(connectionDetails.Url, message);
 
                     var messages = Helper.Parse_Segment(client, response);
@@ -162,9 +162,9 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    SEG.NUM = SEGNUM.SETInt(5);
+                    client.SEGNUM = SEGNUM.SETInt(5);
 
-                    message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, SEG.NUM);
+                    message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
                     response = FinTSMessage.Send(connectionDetails.Url, message);
 
                     Helper.Parse_Segment(client, response);

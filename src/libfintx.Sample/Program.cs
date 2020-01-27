@@ -117,7 +117,7 @@ namespace libfintx.Sample
             Console.WriteLine("Transaction count:", result.Data.Count);
             foreach (var trans in result.Data)
             {
-                Console.WriteLine("Transaction - Start Date: {0}, Amount: {1}", trans.StartDate, trans.EndBalance - trans.StartBalance);
+                Console.WriteLine("Transaction - Start Date: {0}, Amount: {1}\u20AC", trans.StartDate, trans.EndBalance - trans.StartBalance);
             }
         }
 

@@ -63,9 +63,9 @@ namespace libfintx
                 throw new Exception("HBCI version not supported");
             }
 
-            SEG.NUM = SEGNUM.SETInt(5);
+            client.SEGNUM = SEGNUM.SETInt(5);
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
             Helper.Parse_Segment(client, response);
