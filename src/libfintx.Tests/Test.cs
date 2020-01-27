@@ -38,12 +38,10 @@ using System.Windows.Forms;
 
 using SixLabors.ImageSharp;
 
-namespace libfintx
+namespace libfintx.Tests
 {
     public class Test
     {
-        bool Anonymous;
-
         private readonly ITestOutputHelper output;
 
         public Test(ITestOutputHelper output)

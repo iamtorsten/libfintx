@@ -14,8 +14,7 @@ namespace libfintx
 {
     public class FinTsClient
     {
-        private readonly bool m_anonymous;
-
+        public bool Anonymous { get; }
         public ConnectionDetails ConnectionDetails { get; }
         public string SystemId { get; internal set; }
         public string HITAB { get; set; }
@@ -35,8 +34,7 @@ namespace libfintx
         public FinTsClient(ConnectionDetails conn, bool anon = false)
         {
             ConnectionDetails = conn;
-            m_anonymous = anon;
-            InitializeConnection();
+            Anonymous = anon;
         }
 
         internal HBCIDialogResult InitializeConnection()
@@ -59,7 +57,7 @@ namespace libfintx
                 {
                     SystemId = ConnectionDetails.CustomerSystemId;
                 }
-                BankCode = Transaction.INI(this, m_anonymous);
+                BankCode = Transaction.INI(this);
             }
             finally
             {
@@ -479,7 +477,7 @@ namespace libfintx
 
             TransactionConsole.Output = string.Empty;
 
-            if (!string.IsNullOrEmpty(HIRMS))
+            if (!string.IsNullOrEmpty(hirms))
                 HIRMS = hirms;
 
             string BankCode = Transaction.HKCCS(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
@@ -562,8 +560,8 @@ namespace libfintx
 
             TransactionConsole.Output = string.Empty;
 
-            if (!string.IsNullOrEmpty(HIRMS))
-                HIRMS = HIRMS;
+            if (!string.IsNullOrEmpty(hirms))
+                HIRMS = hirms;
 
             string BankCode = Transaction.HKCME(this, painData, numberOfTransactions, totalAmount, executionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);

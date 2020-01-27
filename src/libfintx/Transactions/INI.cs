@@ -30,10 +30,10 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static string Init_INI(FinTsClient client, bool anonymous)
+        public static string Init_INI(FinTsClient client)
         {
             var connectionDetails = client.ConnectionDetails;
-            if (!anonymous)
+            if (!client.Anonymous)
             {
                 /// <summary>
                 /// Sync

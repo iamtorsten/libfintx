@@ -53,9 +53,9 @@ namespace libfintx
 {
     public static class Transaction
     {
-        public static string INI(FinTsClient client, bool Anonymous)
+        public static string INI(FinTsClient client)
         {
-            return Init_INI(client, Anonymous);
+            return Init_INI(client);
         }
 
         public static string HKEND(FinTsClient client, string dialogId)

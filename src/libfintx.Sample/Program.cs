@@ -23,8 +23,6 @@ namespace libfintx.Sample
             details.Blz = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("KontoID:");
             details.Account = Console.ReadLine();
-            Console.WriteLine("IBAN:");
-            details.Iban = Console.ReadLine();
             Console.WriteLine("Institute FinTS Url:");
             details.Url = Console.ReadLine();
             Console.WriteLine("Account:");
@@ -32,9 +30,10 @@ namespace libfintx.Sample
             Console.WriteLine("PIN:");
             details.Pin = Console.ReadLine();
 
+            FinTsConfig.Debugging(true);
+
             var client = new FinTsClient(details);
-            HBCIOutput(client.Synchronization().Messages);
-            HBCIOutput(client.Accounts(new TANDialog(WaitForTAN)).Messages);
+            HBCIOutput(client.Balance(new TANDialog(WaitForTAN)).Messages);
         }
 
         /// <summary>
