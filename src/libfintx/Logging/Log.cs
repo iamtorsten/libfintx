@@ -73,7 +73,7 @@ namespace libfintx
 
                 if (MaxFileSize > 0)
                 {
-                    var sizeMB = new FileInfo(file).Length / (double)1000000;
+                    var sizeMB = new FileInfo(file).Length / (double) 1000000;
                     if (sizeMB > MaxFileSize)
                         File.WriteAllText(file, string.Empty);
                 }

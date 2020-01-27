@@ -19,7 +19,7 @@ namespace libfintx
             var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1)).Replace("'", "");
             segments = segments.Replace("@@", "@" + sepaMessage.Length + "@") + sepaMessage;
 
-            segments += "++" + OrderId + "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char)timeUnit + ":" + Rota + ":" + ExecutionDay;
+            segments += "++" + OrderId + "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char) timeUnit + ":" + Rota + ":" + ExecutionDay;
             if (LastExecutionDay != null)
                 segments += ":" + LastExecutionDay.Value.ToString("yyyyMMdd");
 

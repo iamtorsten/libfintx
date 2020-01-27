@@ -48,7 +48,7 @@ namespace libfintx
 
                 // Get the character corresponding to the integral value.
                 string stringValue = Char.ConvertFromUtf32(value);
-                charValue = charValue + (char)value;
+                charValue = charValue + (char) value;
             }
 
             return charValue;

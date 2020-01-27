@@ -367,7 +367,7 @@ namespace libfintx
                 return false;
             }
 
-            FlickerCode other = (FlickerCode)obj;
+            FlickerCode other = (FlickerCode) obj;
 
             if (this.lc != other.lc)
             {
@@ -685,7 +685,7 @@ namespace libfintx
             while (n != 0)
             {
                 q += n % 10;
-                n = (int)Math.Floor(Convert.ToDouble(n / 10));
+                n = (int) Math.Floor(Convert.ToDouble(n / 10));
             }
 
             return q;

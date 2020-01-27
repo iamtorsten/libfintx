@@ -51,7 +51,7 @@ namespace libfintx
             });
             using (TextReader reader = new StringReader(xml))
             {
-                return Create((pain_001_001_03.Document)ser.Deserialize(reader));
+                return Create((pain_001_001_03.Document) ser.Deserialize(reader));
             }
         }
         public static Pain00100103CtData Create(libfintx.pain_001_001_03.Document xml)
@@ -75,7 +75,7 @@ namespace libfintx
                     if (paymentInfo.CreditTxInfos == null)
                         paymentInfo.CreditTxInfos = new List<CreditTransferTransactionInfo>();
                     var creditTxInfo = new CreditTransferTransactionInfo();
-                    creditTxInfo.Amount = ((libfintx.pain_001_001_03.ActiveOrHistoricCurrencyAndAmount)cdtTrfTxInf.Amt?.Item).Value;
+                    creditTxInfo.Amount = ((libfintx.pain_001_001_03.ActiveOrHistoricCurrencyAndAmount) cdtTrfTxInf.Amt?.Item).Value;
                     creditTxInfo.Creditor = cdtTrfTxInf.Cdtr?.Nm;
                     creditTxInfo.CreditorAccount = cdtTrfTxInf.CdtrAcct?.Id?.Item?.ToString();
                     creditTxInfo.CreditorAgent = cdtTrfTxInf.CdtrAgt?.FinInstnId?.BIC;
