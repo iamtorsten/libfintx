@@ -10,8 +10,9 @@ namespace libfintx
         public ConnectionDetails ConnectionDetails { get; }
         public string SystemId { get; internal set; }
         public string HITAB { get; set; }
+        public string HIRMS { get; set; }
+
         internal int SEGNUM { get; set; }
-        internal string HIRMS { get; set; }
         internal string HIRMSf { get; set; }
         internal string HNHBK { get; set; }
         internal string HNHBS { get; set; }
