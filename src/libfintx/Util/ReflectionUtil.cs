@@ -26,8 +26,8 @@ namespace libfintx.Util
 
         public static string ToString(object obj)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (System.Reflection.PropertyInfo property in obj.GetType().GetProperties())
+            var sb = new StringBuilder();
+            foreach (var property in obj.GetType().GetProperties())
             {
                 sb.Append(property.Name);
                 sb.Append(": ");
@@ -53,7 +53,7 @@ namespace libfintx.Util
                     }
                 }
 
-                sb.Append(System.Environment.NewLine);
+                sb.Append(Environment.NewLine);
             }
 
             return sb.ToString();

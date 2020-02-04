@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,24 +21,24 @@
  * 	
  */
 
-using libfintx.Data;
 using System;
 
 namespace libfintx
 {
     public static class HKSYN
     {
-        public static string Init_HKSYN(ConnectionDetails connectionDetails)
+        public static string Init_HKSYN(FinTsClient client)
         {
             Log.Write("Starting Synchronisation");
 
             string segments;
+            var connectionDetails = client.ConnectionDetails;
 
             if (connectionDetails.HbciVersion == 220)
             {
                 string segments_ =
                     "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
-                    "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
+                    "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
                     "HKSYN:" + SEGNUM.SETVal(5) + ":2+0'";
 
                 segments = segments_;
@@ -47,7 +47,7 @@ namespace libfintx
             {
                 string segments_ =
                     "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
-                    "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + Program.ProductId + "+" + Program.Version + "'" +
+                    "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
                     "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
 
                 segments = segments_;
@@ -63,12 +63,12 @@ namespace libfintx
                 throw new Exception("HBCI version not supported");
             }
 
-            SEG.NUM = SEGNUM.SETInt(5);
+            client.SEGNUM = SEGNUM.SETInt(5);
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Helper.Parse_Segment(connectionDetails.UserId, connectionDetails.Blz, connectionDetails.HbciVersion, response);
+            Helper.Parse_Segment(client, response);
 
             return response;
         }

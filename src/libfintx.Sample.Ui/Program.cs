@@ -1,25 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace libfintx_test
+namespace libfintx.Sample.Ui
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.ThreadException += new ThreadExceptionEventHandler(HandleUncatchedException);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainForm());
         }
 
         private static void HandleUncatchedException(object sender, ThreadExceptionEventArgs t)

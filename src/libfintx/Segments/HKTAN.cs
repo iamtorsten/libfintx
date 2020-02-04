@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -37,30 +37,30 @@ namespace libfintx
         /// </summary>
         /// <param name="segments"></param>
         /// <returns></returns>
-        public static string Init_HKTAN(string segments)
+        public static string Init_HKTAN(FinTsClient client, string segments)
         {
-            if (String.IsNullOrEmpty(Segment.HITAB)) // TAN Medium Name not set
+            if (String.IsNullOrEmpty(client.HITAB)) // TAN Medium Name not set
             {
-                if (Segment.HITANS.Substring(0, 3).Equals("6+4"))
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+" + SegmentId + "'";
+                if (client.HITANS.Substring(0, 3).Equals("6+4"))
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+" + SegmentId + "'";
                 else
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+'";
             }
             else // TAN Medium Name set
             {
                 // Version 3, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("3+4"))
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "++++++++" + Segment.HITAB + "'";
+                if (client.HITANS.Substring(0, 3).Equals("3+4"))
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "++++++++" + client.HITAB + "'";
                 // Version 4, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("4+4"))
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+++++++++" + Segment.HITAB + "'";
+                if (client.HITANS.Substring(0, 3).Equals("4+4"))
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+++++++++" + client.HITAB + "'";
                 // Version 5, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("5+4"))
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+++++++++++" + Segment.HITAB + "'";
+                if (client.HITANS.Substring(0, 3).Equals("5+4"))
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+++++++++++" + client.HITAB + "'";
                 // Version 6, Process 4
-                if (Segment.HITANS.Substring(0, 3).Equals("6+4"))
+                if (client.HITANS.Substring(0, 3).Equals("6+4"))
                 {
-                    segments = segments + "HKTAN:" + SEG.NUM + ":" + Segment.HITANS + "+" + SegmentId + "+++++++++" + Segment.HITAB + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+" + SegmentId + "+++++++++" + client.HITAB + "'";
                 }
             }
 

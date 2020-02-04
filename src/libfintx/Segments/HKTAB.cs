@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,9 +21,6 @@
  * 	
  */
 
-
-using libfintx.Data;
-
 namespace libfintx
 {
     public static class HKTAB
@@ -31,17 +28,18 @@ namespace libfintx
         /// <summary>
         /// Request TAN medium name
         /// </summary>
-        public static string Init_HKTAB(ConnectionDetails connectionDetails)
+        public static string Init_HKTAB(FinTsClient client)
         {
             Log.Write("Starting job HKTAB: Request tan medium name");
 
+            var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
             segments = "HKTAB:" + SEGNUM.SETVal(3) + ":4+0+A'";
 
-            SEG.NUM = SEGNUM.SETInt(3);
+            client.SEGNUM = SEGNUM.SETInt(3);
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
             return FinTSMessage.Send(connectionDetails.Url, message);
         }
     }

@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2017 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -90,10 +90,8 @@ namespace libfintx
 
             Segments = sigHead + Segments + sigTrail;
 
-            byte[] encryptedSessionKey = null;
-            byte[] encryptedMessage = null;
 
-            RdhxCrypt.Encrypt(Segments, out encryptedSessionKey, out encryptedMessage);
+            RdhxCrypt.Encrypt(Segments, out byte[] encryptedSessionKey, out byte[] encryptedMessage);
 
             encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+" + RdhProfile.RDHPROFILE + "+4+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:" + Enc.ENCALG_2K3DES + ":@" +
                encryptedSessionKey.Length + "@" + Encoding.GetEncoding("iso8859-1").GetString(encryptedSessionKey) + ":" + Enc.ENC_KEYTYPE_RSA + ":1+" + SEG_Country.Germany + ":" + RdhKeyStore.Blz + ":0:" +

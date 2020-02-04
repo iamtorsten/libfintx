@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2017 Torsten Klinger
+ *  Copyright (c) 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ namespace libfintx
 
         #region RDH-10
 
-        static byte[] sessionKey;
+        private static byte[] sessionKey;
 
         public static void Encrypt(string Message, out byte[] encSessionKey, out byte[] encMsg)
         {
@@ -67,7 +67,7 @@ namespace libfintx
             return k;
         }
 
-        static byte[] encryptKey(byte[] Key)
+        private static byte[] encryptKey(byte[] Key)
         {
             sessionKey = InitDES3Key();
 
@@ -118,7 +118,7 @@ namespace libfintx
             return result;
         }
 
-        static byte[] encryptMessage(string msg)
+        private static byte[] encryptMessage(string msg)
         {
             byte[] plainmsg = Encoding.GetEncoding("iso8859-1").GetBytes(msg);
 

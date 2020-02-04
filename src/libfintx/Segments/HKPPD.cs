@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,9 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
-using System;
-
 namespace libfintx
 {
     public static class HKPPD
@@ -31,26 +28,27 @@ namespace libfintx
         /// <summary>
         /// Load prepaid
         /// </summary>
-        public static string Init_HKPPD(ConnectionDetails connectionDetails, int MobileServiceProvider, string PhoneNumber, int Amount)
+        public static string Init_HKPPD(FinTsClient client, int MobileServiceProvider, string PhoneNumber, int Amount)
         {
             Log.Write("Starting job HKPPD: Load prepaid");
 
-            SEG.NUM = SEGNUM.SETInt(3);
+            client.SEGNUM = SEGNUM.SETInt(3);
 
-            string segments = "HKPPD:" + SEG.NUM + ":2+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
+            var connectionDetails = client.ConnectionDetails;
+            string segments = "HKPPD:" + client.SEGNUM + ":2+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 
             if (Helper.IsTANRequired("HKPPD"))
             {
-                SEG.NUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(segments);
+                client.SEGNUM = SEGNUM.SETInt(4);
+                segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
             var TAN = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+            client.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
-            Helper.Parse_Message(TAN);
+            Helper.Parse_Message(client, TAN);
 
             return TAN;
         }

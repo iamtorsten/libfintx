@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2017 Torsten Klinger
+ *  Copyright (c) 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ using System.Text;
 
 namespace libfintx
 {
-    static class RdhxPassport
+    internal static class RdhxPassport
     {
         // KEYS
 

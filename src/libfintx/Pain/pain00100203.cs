@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -52,66 +52,66 @@ namespace libfintx
 
             string Message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03 pain.001.002.03.xsd\">" +
-                "<CstmrCdtTrfInitn>" + 
-                "<GrpHdr>" + 
-                "<MsgId>" + msgId + "</MsgId>" + 
-                "<CreDtTm>" + creDtTm + "</CreDtTm>" + 
-                "<NbOfTxs>1</NbOfTxs>" + 
-                "<CtrlSum>" + Amount_ + "</CtrlSum>" + 
-                "<InitgPty>" +
-                "<Nm>" + Accountholder + "</Nm>" + 
-                "</InitgPty>" + 
-                "</GrpHdr>" + 
-                "<PmtInf>" + 
-                "<PmtInfId>" + pmtInfId + "</PmtInfId>" + 
-                "<PmtMtd>TRF</PmtMtd>" + 
-                "<NbOfTxs>1</NbOfTxs>" + 
+                "<CstmrCdtTrfInitn>" +
+                "<GrpHdr>" +
+                "<MsgId>" + msgId + "</MsgId>" +
+                "<CreDtTm>" + creDtTm + "</CreDtTm>" +
+                "<NbOfTxs>1</NbOfTxs>" +
                 "<CtrlSum>" + Amount_ + "</CtrlSum>" +
-                "<PmtTpInf>" + 
-                "<SvcLvl>" + 
-                "<Cd>SEPA</Cd>" + 
-                "</SvcLvl>" + 
-                "</PmtTpInf>" + 
-                "<ReqdExctnDt>" + ExecutionDay.ToString("yyyy-MM-dd") + "</ReqdExctnDt>" + 
+                "<InitgPty>" +
+                "<Nm>" + Accountholder + "</Nm>" +
+                "</InitgPty>" +
+                "</GrpHdr>" +
+                "<PmtInf>" +
+                "<PmtInfId>" + pmtInfId + "</PmtInfId>" +
+                "<PmtMtd>TRF</PmtMtd>" +
+                "<NbOfTxs>1</NbOfTxs>" +
+                "<CtrlSum>" + Amount_ + "</CtrlSum>" +
+                "<PmtTpInf>" +
+                "<SvcLvl>" +
+                "<Cd>SEPA</Cd>" +
+                "</SvcLvl>" +
+                "</PmtTpInf>" +
+                "<ReqdExctnDt>" + ExecutionDay.ToString("yyyy-MM-dd") + "</ReqdExctnDt>" +
                 "<Dbtr>" +
-                "<Nm>" + Accountholder + "</Nm>" + 
+                "<Nm>" + Accountholder + "</Nm>" +
                 "</Dbtr>" +
                 "<DbtrAcct>" +
                 "<Id>" +
-                "<IBAN>" + AccountholderIBAN + "</IBAN>" + 
-                "</Id>" + 
+                "<IBAN>" + AccountholderIBAN + "</IBAN>" +
+                "</Id>" +
                 "</DbtrAcct>" +
                 "<DbtrAgt>" +
                 "<FinInstnId>" +
-                "<BIC>" + AccountholderBIC + "</BIC>" + 
+                "<BIC>" + AccountholderBIC + "</BIC>" +
                 "</FinInstnId>" +
-                "</DbtrAgt>" + 
-                "<ChrgBr>SLEV</ChrgBr>" + 
-                "<CdtTrfTxInf>" + 
-                "<PmtId>" + 
-                "<EndToEndId>NOTPROVIDED</EndToEndId>" + 
+                "</DbtrAgt>" +
+                "<ChrgBr>SLEV</ChrgBr>" +
+                "<CdtTrfTxInf>" +
+                "<PmtId>" +
+                "<EndToEndId>NOTPROVIDED</EndToEndId>" +
                 "</PmtId>" +
                 "<Amt>" +
-                "<InstdAmt Ccy=\"EUR\">" + Amount_ + "</InstdAmt>" + 
+                "<InstdAmt Ccy=\"EUR\">" + Amount_ + "</InstdAmt>" +
                 "</Amt>" +
                 "<CdtrAgt>" +
                 "<FinInstnId>" +
-                "<BIC>" + ReceiverBIC + "</BIC>" + 
+                "<BIC>" + ReceiverBIC + "</BIC>" +
                 "</FinInstnId>" +
                 "</CdtrAgt>" +
                 "<Cdtr>" +
-                "<Nm>" + Receiver + "</Nm>" + 
-                "</Cdtr>" + 
+                "<Nm>" + Receiver + "</Nm>" +
+                "</Cdtr>" +
                 "<CdtrAcct>" +
-                "<Id>" + 
-                "<IBAN>" + ReceiverIBAN + "</IBAN>" + 
+                "<Id>" +
+                "<IBAN>" + ReceiverIBAN + "</IBAN>" +
                 "</Id>" + "</CdtrAcct>" +
                 "<RmtInf>" +
                 "<Ustrd>" + Usage + "</Ustrd>" +
                 "</RmtInf>" +
                 "</CdtTrfTxInf>" +
                 "</PmtInf>" +
-                "</CstmrCdtTrfInitn>"+
+                "</CstmrCdtTrfInitn>" +
                 "</Document>" +
                 "'";
 
@@ -151,7 +151,7 @@ namespace libfintx
                 "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03 pain.001.002.03.xsd\">" +
                 "<CstmrCdtTrfInitn>" +
                 "<GrpHdr>" +
-                "<MsgId>" + Program.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
+                "<MsgId>" + FinTsConfig.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
                 "<CreDtTm>" + datetime_ + "</CreDtTm>" +
                 "<NbOfTxs>" + NumberofTransactions + "</NbOfTxs>" +
                 "<CtrlSum>" + Amount_ + "</CtrlSum>" +
@@ -160,7 +160,7 @@ namespace libfintx
                 "</InitgPty>" +
                 "</GrpHdr>" +
                 "<PmtInf>" +
-                "<PmtInfId>" + Program.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
+                "<PmtInfId>" + FinTsConfig.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
                 "<PmtMtd>TRF</PmtMtd>" +
                 "<Cd>SEPA</Cd>" +
                 "</SvcLvl>" +
@@ -181,43 +181,43 @@ namespace libfintx
                 "</DbtrAgt>" +
                 "<ChrgBr>SLEV</ChrgBr>" +
                 "<CdtTrfTxInf>";
-                
-                foreach (var transaction in PainData)
-                {
-                    var Amount__ = transaction.Amount.ToString().Replace(",", ".");
 
-                    string Message_ = "<PmtId>" +
-                        "<EndToEndId>NOTPROVIDED</EndToEndId>" +
-                        "</PmtId>" +
-                        "<Amt>" +
-                        "<InstdAmt Ccy=\"EUR\">" + Amount__ + "</InstdAmt>" +
-                        "</Amt>" +
-                        "<CdtrAgt>" +
-                        "<FinInstnId>" +
-                        "<BIC>" + transaction.ReceiverBic + "</BIC>" +
-                        "</FinInstnId>" +
-                        "</CdtrAgt>" +
-                        "<Cdtr>" +
-                        "<Nm>" + transaction.Receiver + "</Nm>" +
-                        "</Cdtr>" +
-                        "<CdtrAcct>" +
-                        "<Id>" +
-                        "<IBAN>" + transaction.ReceiverIban + "</IBAN>" +
-                        "</Id>" + "</CdtrAcct>" +
-                        "<RmtInf>" +
-                        "<Ustrd>" + transaction.Usage + "</Ustrd>" +
-                        "</RmtInf>" +
-                        "</CdtTrfTxInf>" +
-                        "</PmtInf>";
+            foreach (var transaction in PainData)
+            {
+                var Amount__ = transaction.Amount.ToString().Replace(",", ".");
 
-                    Message = Message + Message_;
-                }
+                string Message_ = "<PmtId>" +
+                    "<EndToEndId>NOTPROVIDED</EndToEndId>" +
+                    "</PmtId>" +
+                    "<Amt>" +
+                    "<InstdAmt Ccy=\"EUR\">" + Amount__ + "</InstdAmt>" +
+                    "</Amt>" +
+                    "<CdtrAgt>" +
+                    "<FinInstnId>" +
+                    "<BIC>" + transaction.ReceiverBic + "</BIC>" +
+                    "</FinInstnId>" +
+                    "</CdtrAgt>" +
+                    "<Cdtr>" +
+                    "<Nm>" + transaction.Receiver + "</Nm>" +
+                    "</Cdtr>" +
+                    "<CdtrAcct>" +
+                    "<Id>" +
+                    "<IBAN>" + transaction.ReceiverIban + "</IBAN>" +
+                    "</Id>" + "</CdtrAcct>" +
+                    "<RmtInf>" +
+                    "<Ustrd>" + transaction.Usage + "</Ustrd>" +
+                    "</RmtInf>" +
+                    "</CdtTrfTxInf>" +
+                    "</PmtInf>";
 
-                string Message__ = "</CstmrCdtTrfInitn>" +
-                    "</Document>" +
-                    "'";
+                Message = Message + Message_;
+            }
 
-                Message = Message + Message__;
+            string Message__ = "</CstmrCdtTrfInitn>" +
+                "</Document>" +
+                "'";
+
+            Message = Message + Message__;
 
             return Message;
         }

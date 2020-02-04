@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ namespace libfintx
 {
     public class FlickerCode
     {
-        private bool InstanceFieldsInitialized = false;
+        private readonly bool InstanceFieldsInitialized = false;
 
         private void InitializeInstanceFields()
         {
@@ -281,7 +281,7 @@ namespace libfintx
         private string CreateLuhnChecksum()
         {
             // Payload
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             //Controlbytes
             foreach (int? ii in this.startCode.controlBytes)
@@ -293,15 +293,15 @@ namespace libfintx
             sb.Append(this.startCode.RenderData());
 
             // DE
-            if (!string.ReferenceEquals(this.de1.data, null))
+            if (this.de1.data is object)
             {
                 sb.Append(this.de1.RenderData());
             }
-            if (!string.ReferenceEquals(this.de2.data, null))
+            if (this.de2.data is object)
             {
                 sb.Append(this.de2.RenderData());
             }
-            if (!string.ReferenceEquals(this.de3.data, null))
+            if (this.de3.data is object)
             {
                 sb.Append(this.de3.RenderData());
             }
@@ -367,7 +367,7 @@ namespace libfintx
                 return false;
             }
 
-            FlickerCode other = (FlickerCode)obj;
+            var other = (FlickerCode) obj;
 
             if (this.lc != other.lc)
             {
@@ -394,7 +394,7 @@ namespace libfintx
                 return false;
             }
 
-            if (string.ReferenceEquals(this.rest, null))
+            if (this.rest is null)
             {
                 return (string.ReferenceEquals(other.rest, null));
             }
@@ -429,7 +429,7 @@ namespace libfintx
 
             internal virtual string Parse(string s)
             {
-                if (string.ReferenceEquals(s, null) || s.Length == 0)
+                if (s is null || s.Length == 0)
                 {
                     return s;
                 }
@@ -455,7 +455,7 @@ namespace libfintx
                     return "";
                 }
 
-                Encoding enc = this.Encoding;
+                var enc = this.Encoding;
 
                 int len = RenderData().Length / 2;
 
@@ -496,12 +496,12 @@ namespace libfintx
 
             internal virtual string RenderData()
             {
-                if (string.ReferenceEquals(this.data, null))
+                if (this.data is null)
                 {
-                    return "";
+                    return string.Empty;
                 }
 
-                Encoding enc = this.Encoding;
+                var enc = this.Encoding;
 
                 if (enc == Encoding.ASC)
                 {
@@ -521,7 +521,7 @@ namespace libfintx
 
             public override string ToString()
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
 
                 sb.Append("  Length  : " + this.length + "\n");
                 sb.Append("  LDE     : " + this.lde + "\n");
@@ -685,7 +685,7 @@ namespace libfintx
             while (n != 0)
             {
                 q += n % 10;
-                n = (int)Math.Floor(Convert.ToDouble(n / 10));
+                n = (int) Math.Floor(Convert.ToDouble(n / 10));
             }
 
             return q;

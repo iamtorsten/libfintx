@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ namespace libfintx.Camt.Camt052
                 byte[] bytes = encoding.GetBytes(xmlDocument);
                 Document document;
                 using (var stream = new MemoryStream(bytes))
-                    document = (Document)serializer.Deserialize(stream);
+                    document = (Document) serializer.Deserialize(stream);
 
                 ProcessDocument(document);
             }
@@ -71,7 +71,7 @@ namespace libfintx.Camt.Camt052
                 XmlSerializer serializer = new XmlSerializer(typeof(Document));
                 Document document;
                 using (var stream = new FileStream(filename, FileMode.Open))
-                    document = (Document)serializer.Deserialize(stream);
+                    document = (Document) serializer.Deserialize(stream);
 
                 ProcessDocument(document);
             }
@@ -96,9 +96,9 @@ namespace libfintx.Camt.Camt052
 
                 object accReportAccount = accReport.Acct?.Id?.Item;
                 if (accReportAccount is string)
-                    stmt.AccountCode = (string)accReportAccount;
+                    stmt.AccountCode = (string) accReportAccount;
                 else if (accReportAccount is GenericAccountIdentification1)
-                    stmt.AccountCode = ((GenericAccountIdentification1)accReportAccount).Id;
+                    stmt.AccountCode = ((GenericAccountIdentification1) accReportAccount).Id;
 
                 stmt.BankCode = accReport.Acct?.Svcr?.FinInstnId?.BIC;
                 stmt.Currency = accReport.Acct?.Ccy;
@@ -229,9 +229,9 @@ namespace libfintx.Camt.Camt052
                             txDetails?.RltdPties?.CdtrAcct?.Id?.Item :
                             txDetails?.RltdPties?.DbtrAcct?.Id?.Item;
                         if (account is string)
-                            tr.AccountCode = (string)account;
+                            tr.AccountCode = (string) account;
                         else if (account is GenericAccountIdentification1)
-                            tr.AccountCode = ((GenericAccountIdentification1)account).Id;
+                            tr.AccountCode = ((GenericAccountIdentification1) account).Id;
 
                         string CrdtName = txDetails?.RltdPties?.Cdtr?.Nm;
                         string DbtrName = txDetails?.RltdPties?.Dbtr?.Nm;

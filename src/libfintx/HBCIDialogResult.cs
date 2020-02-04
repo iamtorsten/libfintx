@@ -18,7 +18,7 @@ namespace libfintx
         /// </summary>
         public bool IsSCARequired => GetMessage("0030") != null;
 
-        private List<HBCIBankMessage> messages;
+        private readonly List<HBCIBankMessage> messages;
         public IEnumerable<HBCIBankMessage> Messages => messages;
 
         public HBCIDialogResult(IEnumerable<HBCIBankMessage> messages, string rawData)

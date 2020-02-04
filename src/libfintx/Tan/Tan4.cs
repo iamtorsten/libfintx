@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
 using System;
 
 namespace libfintx
@@ -31,27 +30,28 @@ namespace libfintx
         /// <summary>
         /// TAN process 4
         /// </summary>
-        public static string Send_TAN4(ConnectionDetails connectionDetails, string TAN, string MediumName)
+        public static string Send_TAN4(FinTsClient client, string TAN, string MediumName)
         {
             Log.Write("Starting job TAN process 4");
 
+            var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
-            var HITANS = !String.IsNullOrEmpty(Segment.HITANS.Substring(0, 1)) ? Int32.Parse(Segment.HITANS.Substring(0, 1)) : 0;
+            var HITANS = !String.IsNullOrEmpty(client.HITANS.Substring(0, 1)) ? int.Parse(client.HITANS.Substring(0, 1)) : 0;
 
             // Version 3
             if (HITANS == 3)
-                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
             // Version 4
             if (HITANS == 4)
-                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
             // Version 5
             if (HITANS == 5)
-                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + Segment.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
 
-            SEG.NUM = SEGNUM.SETInt(3);
+            client.SEGNUM = SEGNUM.SETInt(3);
 
-            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS + ":" + TAN, SEG.NUM));
+            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS + ":" + TAN, client.SEGNUM));
         }
     }
 }

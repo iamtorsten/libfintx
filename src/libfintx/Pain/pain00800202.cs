@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ namespace libfintx
                 "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.008.002.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.008.002.02 pain.008.002.02.xsd\">" +
                 "<CstmrDrctDbtInitn>" +
                 "<GrpHdr>" +
-                "<MsgId>" + Program.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
+                "<MsgId>" + FinTsConfig.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
                 "<CreDtTm>" + datetime_ + "</CreDtTm>" +
                 "<NbOfTxs>1</NbOfTxs>" +
                 "<CtrlSum>" + Amount_ + "</CtrlSum>" +
@@ -74,7 +74,7 @@ namespace libfintx
                 "</InitgPty>" +
                 "</GrpHdr>" +
                 "<PmtInf>" +
-                "<PmtInfId>" + Program.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
+                "<PmtInfId>" + FinTsConfig.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
                 "<PmtMtd>DD</PmtMtd>" +
                 "<NbOfTxs>1</NbOfTxs>" +
                 "<CtrlSum>" + Amount_ + "</CtrlSum>" +
@@ -182,7 +182,7 @@ namespace libfintx
                 "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.008.002.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.008.002.02 pain.008.002.02.xsd\">" +
                 "<CstmrDrctDbtInitn>" +
                 "<GrpHdr>" +
-                "<MsgId>" + Program.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
+                "<MsgId>" + FinTsConfig.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
                 "<CreDtTm>" + datetime_ + "</CreDtTm>" +
                 "<NbOfTxs>" + NumberofTransactions + "</NbOfTxs>" +
                 "<CtrlSum>" + Amount_ + "</CtrlSum>" +
@@ -191,7 +191,7 @@ namespace libfintx
                 "</InitgPty>" +
                 "</GrpHdr>" +
                 "<PmtInf>" +
-                "<PmtInfId>" + Program.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
+                "<PmtInfId>" + FinTsConfig.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
                 "<PmtMtd>DD</PmtMtd>" +
                 "<PmtTpInf>" +
                 "<SvcLvl>" +

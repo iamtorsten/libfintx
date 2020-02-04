@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -235,7 +235,7 @@ namespace libfintx
                 req.ContentLength = data.Length;
                 req.KeepAlive = false;
 
-                using (Stream reqStream = req.GetRequestStream())
+                using (var reqStream = req.GetRequestStream())
                 {
                     reqStream.Write(data, 0, data.Length);
                     reqStream.Flush();
@@ -243,11 +243,11 @@ namespace libfintx
 
                 string FinTSMessage = string.Empty;
 
-                using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
+                using (var res = (HttpWebResponse) req.GetResponse())
                 {
-                    using (Stream resStream = res.GetResponseStream())
+                    using (var resStream = res.GetResponseStream())
                     {
-                        using (StreamReader streamReader = new StreamReader(resStream, Encoding.UTF8))
+                        using (var streamReader = new StreamReader(resStream, Encoding.UTF8))
                         {
                             FinTSMessage = Helper.DecodeFrom64EncodingDefault(streamReader.ReadToEnd());
                         }

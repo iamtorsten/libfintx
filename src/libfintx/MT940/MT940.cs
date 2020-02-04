@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -191,12 +191,12 @@ namespace libfintx
                     int month = Convert.ToInt32(swiftData.Substring(0, 2));
                     int day = Convert.ToInt32(swiftData.Substring(2, 2));
 
-                    // Posting date 30 Dec 2017, Valuta date 1 Jan 2018
+                    // Posting date 30 Dec 2020, Valuta date 1 Jan 2020
                     if (month > SWIFTTransaction.ValueDate.Month && month == SWIFTTransaction.ValueDate.AddMonths(-1).Month)
                     {
                         year--;
                     }
-                    // Posting date 1 Jan 2018, Valuta date 30 Dec 2017
+                    // Posting date 1 Jan 2020, Valuta date 30 Dec 2020
                     else if (month < SWIFTTransaction.ValueDate.Month && month == SWIFTTransaction.ValueDate.AddMonths(1).Month)
                     {
                         year++;
@@ -476,8 +476,7 @@ namespace libfintx
                 // Kleinster Betrag der gemeldeten Haben-Umsätze
                 else if (Regex.IsMatch(swiftData, @"C\d+,\d*"))
                 {
-                    decimal amount = 0;
-                    decimal.TryParse(swiftData.Substring(1), out amount);
+                    decimal.TryParse(swiftData.Substring(1), out decimal amount);
 
                     SWIFTStatement.SmallestCreditAmount = amount;
                 }
@@ -487,8 +486,7 @@ namespace libfintx
             {
                 if (Regex.IsMatch(swiftData, @"\d{10}"))
                 {
-                    DateTime creationDate;
-                    DateTime.TryParseExact(swiftData, "yyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out creationDate);
+                    DateTime.TryParseExact(swiftData, "yyMMddHHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime creationDate);
 
                     SWIFTStatement.CreationDate = creationDate;
                 }
@@ -500,15 +498,13 @@ namespace libfintx
                     // Easier parsing
                     // 1912090901+0100 -> 1912090901+01:00
                     var dateStr = swiftData.Substring(0, 13) + ":" + swiftData.Substring(13, 2);
-                    DateTimeOffset dateTimeOffset;
-                    DateTimeOffset.TryParseExact(dateStr, "yyMMddHHmmzzz", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTimeOffset);
+                    DateTimeOffset.TryParseExact(dateStr, "yyMMddHHmmzzz", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateTimeOffset);
 
                     SWIFTStatement.CreationDate = dateTimeOffset.DateTime;
                 }
                 else
                 {
-                    DateTime creationDate;
-                    DateTime.TryParseExact(swiftData, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out creationDate);
+                    DateTime.TryParseExact(swiftData, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime creationDate);
 
                     SWIFTStatement.CreationDate = creationDate;
                 }
@@ -618,7 +614,7 @@ namespace libfintx
 
             for (counter = 0; counter < Content.Length; counter++)
             {
-                if ((Content[counter] == (char)10) || (Content[counter] == (char)13) || (Content[counter] == '@'))
+                if ((Content[counter] == (char) 10) || (Content[counter] == (char) 13) || (Content[counter] == '@'))
                 {
                     break;
                 }
@@ -626,12 +622,12 @@ namespace libfintx
 
             string line = Content.Substring(0, counter);
 
-            if ((counter < Content.Length) && (Content[counter] == (char)13))
+            if ((counter < Content.Length) && (Content[counter] == (char) 13))
             {
                 counter++;
             }
 
-            if ((counter < Content.Length) && (Content[counter] == (char)10))
+            if ((counter < Content.Length) && (Content[counter] == (char) 10))
             {
                 counter++;
             }

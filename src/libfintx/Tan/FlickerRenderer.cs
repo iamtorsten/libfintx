@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -57,12 +57,12 @@ namespace libfintx
         /// </summary>
         public const int FREQUENCY_MAX = 40;
 
-        private int halfbyteid = 0;
-        private int clock = 0;
-        private IList<int[]> bitarray = null;
+        private readonly int halfbyteid = 0;
+        private readonly int clock = 0;
+        private readonly IList<int[]> bitarray = null;
 
         private Thread thread = null;
-        private int iterations = 0;
+        private readonly int iterations = 0;
         private int freq = FREQUENCY_DEFAULT;
 
 #if WINDOWS

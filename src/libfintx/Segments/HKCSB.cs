@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -21,8 +21,6 @@
  * 	
  */
 
-using libfintx.Data;
-
 namespace libfintx
 {
     public static class HKCSB
@@ -30,26 +28,27 @@ namespace libfintx
         /// <summary>
         /// Get terminated transfers
         /// </summary>
-        public static string Init_HKCSB(ConnectionDetails connectionDetails)
+        public static string Init_HKCSB(FinTsClient client)
         {
             Log.Write("Starting job HKCSB: Get terminated transfers");
 
-            SEG.NUM = SEGNUM.SETInt(3);
+            client.SEGNUM = SEGNUM.SETInt(3);
 
-            string segments = "HKCSB:" + SEG.NUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+sepade?:xsd?:pain.001.001.03.xsd'";
+            var connectionDetails = client.ConnectionDetails;
+            string segments = "HKCSB:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+sepade?:xsd?:pain.001.001.03.xsd'";
 
             if (Helper.IsTANRequired("HKCSB"))
             {
-                SEG.NUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(segments);
+                client.SEGNUM = SEGNUM.SETInt(4);
+                segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, Segment.HNHBS, Segment.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, Segment.HISYN, segments, Segment.HIRMS, SEG.NUM);
+            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
             string response = FinTSMessage.Send(connectionDetails.Url, message);
 
-            Segment.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+            client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
-            Helper.Parse_Message(response);
+            Helper.Parse_Message(client, response);
 
             return response;
         }

@@ -35,7 +35,7 @@ namespace libfintx
         /// &lt;summary&gt;
         /// DES Provider used in the encryption algorythm.
         /// &lt;/summary&gt;
-        private DESCryptoServiceProvider des = new DESCryptoServiceProvider();
+        private readonly DESCryptoServiceProvider des = new DESCryptoServiceProvider();
 
         /// &lt;summary&gt;
         /// Initializes a new instance of the PKCSKeyGenerator class.

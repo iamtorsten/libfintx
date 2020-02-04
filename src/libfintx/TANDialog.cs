@@ -31,7 +31,7 @@ namespace libfintx
 
         public Image<Rgba32> MatrixImage { get; internal set; }
 
-        private Func<TANDialog, string> _waitForTan;
+        private readonly Func<TANDialog, string> _waitForTan;
 
         /// <summary>
         /// Render Flickercode as GIF.

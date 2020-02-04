@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ namespace libfintx
                 int len = data.Length - offset;
                 b = new byte[len];
                 Array.Copy(data, offset, b, 0, len);
-                MemoryStream ms = new MemoryStream(b);
+                var ms = new MemoryStream(b);
                 CodeImage = Image.Load(ms);
             }
             catch (Exception ex)

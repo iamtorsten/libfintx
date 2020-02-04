@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (c) 2016 - 2018 Torsten Klinger
+ *  Copyright (c) 2016 - 2020 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  * 	
  * 	libfintx is free software; you can redistribute it and/or
@@ -30,8 +30,6 @@ using System.IO;
 using Xunit;
 using Xunit.Abstractions;
 
-using HBCI = libfintx.Main;
-
 #if (DEBUG && WINDOWS)
 using hbci = libfintx;
 
@@ -39,15 +37,11 @@ using System.Windows.Forms;
 #endif
 
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
-namespace libfintx
+namespace libfintx.Tests
 {
     public class Test
     {
-        bool Anonymous;
-
         private readonly ITestOutputHelper output;
 
         public Test(ITestOutputHelper output)
@@ -69,22 +63,14 @@ namespace libfintx
                 UserId = "xxx",
                 Pin = "xxx"
             };
-            Anonymous = false;
 
-            #region Sync
+            var client = new FinTsClient(connectionDetails);
 
-            /* Sync */
-
-            libfintx.Main.Assembly("libfintx", "0.1");
-            libfintx.Main.Tracing(true);
-
-            #endregion
-
-            #region balance
+            #region Balance
 
             /* Balance */
 
-            var balance = HBCI.Balance(connectionDetails, new TANDialog(WaitForTAN), false);
+            var balance = client.Balance(new TANDialog(WaitForTAN));
 
             Console.WriteLine("[ Balance ]");
             Console.WriteLine();
@@ -103,15 +89,11 @@ namespace libfintx
             {
                 // ...
             };
-            Anonymous = false;
 
             /* Sync */
+            var client = new FinTsClient(connectionDetails);
 
-            libfintx.Main.Assembly("libfintx", "0.1");
-
-            libfintx.Main.Tracing(true);
-
-            var accounts = libfintx.Main.Accounts(connectionDetails, new TANDialog(WaitForTAN), Anonymous);
+            var accounts = client.Accounts(new TANDialog(WaitForTAN));
             foreach (var acc in accounts.Data)
             {
                 output.WriteLine(acc.ToString());
@@ -130,19 +112,13 @@ namespace libfintx
                 Pin = "xxx"
             };
 
-            #region Sync
+            var client = new FinTsClient(connectionDetails);
 
-            /* Sync */
-            libfintx.Main.Assembly("libfintx", "0.1");
-            libfintx.Main.Tracing(true);
-
-            #endregion
-
-            #region tanmediumname
+            #region TanMediumName
 
             /* TANMediumname */
 
-            var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails).Data?.FirstOrDefault();
+            var tanmediumname = client.RequestTANMediumName().Data?.FirstOrDefault();
 
             Console.WriteLine("[ TAN Medium Name ]");
             Console.WriteLine();
@@ -173,8 +149,6 @@ namespace libfintx
             decimal amount = 0;
             string usage = string.Empty;
 
-            bool anonymous = false;
-
             ConnectionDetails connectionDetails = new ConnectionDetails()
             {
                 AccountHolder = "Torsten Klinger",
@@ -187,34 +161,23 @@ namespace libfintx
                 Pin = "xxx"
             };
 
+            var client = new FinTsClient(connectionDetails);
+
             receiver = "Klinger";
             receiverIBAN = "xxx";
             receiverBIC = "GENODEF1HSB";
             amount = 1.0m;
             usage = "TEST";
 
-            HBCI.Assembly("libfintx", "1");
-            HBCI.Tracing(true);
-
-            if (HBCI.Synchronization(connectionDetails).IsSuccess)
+            if (client.Synchronization().IsSuccess)
             {
-                Segment.HIRMS = "921"; // -> pushTAN
+                string hirms = "921"; // -> pushTAN
 
-                var tanmediumname = libfintx.Main.RequestTANMediumName(connectionDetails);
-                Segment.HITAB = tanmediumname.Data.FirstOrDefault();
+                var tanmediumname = client.RequestTANMediumName();
+                client.HITAB = tanmediumname.Data.FirstOrDefault();
 
-                System.Threading.Thread.Sleep(5000);
-
-                Console.WriteLine(HBCI.Transfer(connectionDetails, new TANDialog(WaitForTAN), receiver, receiverIBAN, receiverBIC, amount, usage, Segment.HIRMS, anonymous));
-
-                output.WriteLine(Segment.HITANS);
+                Console.WriteLine(client.Transfer(new TANDialog(WaitForTAN), receiver, receiverIBAN, receiverBIC, amount, usage, hirms));
             }
-
-            var timer = new System.Threading.Timer(
-                e => HBCI.Transaction_Output(),
-                null,
-                TimeSpan.Zero,
-                TimeSpan.FromSeconds(10));
         }
 
 #if (WINDOWS)
