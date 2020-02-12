@@ -11,6 +11,7 @@ namespace libfintx
         public string SystemId { get; internal set; }
         public string HITAB { get; set; }
         public string HIRMS { get; set; }
+        public string HITANS { get; set; }
 
         internal int SEGNUM { get; set; }
         internal string HIRMSf { get; set; }
@@ -18,7 +19,6 @@ namespace libfintx
         internal string HNHBS { get; set; }
         internal string HISALS { get; set; }
         internal string HISALSf { get; set; }
-        internal string HITANS { get; set; }
         internal string HKKAZ { get; set; }
         internal string HKCAZ { get { return "1"; } }
         internal string HITAN { get; set; }
