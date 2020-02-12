@@ -41,7 +41,7 @@ namespace libfintx
         {
             try
             {
-                string pattern = $@"HIUPD.*?$";
+                string pattern = @"HIUPD.*?$";
                 MatchCollection result = Regex.Matches(message, pattern, RegexOptions.Multiline);
 
                 for (int ctr = 0; ctr <= result.Count - 1; ctr++)
@@ -77,8 +77,8 @@ namespace libfintx
                         if (Accountnumber?.Length > 2 || Accountiban?.Length > 2)
                         {
                             // Account permissions
-                            string pat = "\\+.*?:1";
-                            MatchCollection res = Regex.Matches(result[ctr].Value, pat, RegexOptions.Singleline);
+                            string pat = @"\+[A-Z]+:1";
+                            var res = Regex.Matches(result[ctr].Value, pat, RegexOptions.Singleline);
 
                             for (int c = 0; c <= res.Count - 1; c++)
                             {
