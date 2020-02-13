@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security;
 
 namespace libfintx
 {
@@ -61,88 +62,93 @@ namespace libfintx
 
             var Amount_ = Amount.ToString().Replace(",", ".");
 
+            var Accountholder_ = SecurityElement.Escape(Accountholder);
+            var Payer_ = SecurityElement.Escape(Payer);
+            var Usage_ = SecurityElement.Escape(Usage);
+
             string Message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.008.002.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.008.002.02 pain.008.002.02.xsd\">" +
-                "<CstmrDrctDbtInitn>" +
-                "<GrpHdr>" +
-                "<MsgId>" + FinTsConfig.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
-                "<CreDtTm>" + datetime_ + "</CreDtTm>" +
-                "<NbOfTxs>1</NbOfTxs>" +
-                "<CtrlSum>" + Amount_ + "</CtrlSum>" +
-                "<InitgPty>" +
-                "<Nm>" + Accountholder + "</Nm>" +
-                "</InitgPty>" +
-                "</GrpHdr>" +
-                "<PmtInf>" +
-                "<PmtInfId>" + FinTsConfig.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
-                "<PmtMtd>DD</PmtMtd>" +
-                "<NbOfTxs>1</NbOfTxs>" +
-                "<CtrlSum>" + Amount_ + "</CtrlSum>" +
-                "<PmtTpInf>" +
-                "<SvcLvl>" +
-                "<Cd>SEPA</Cd>" +
-                "</SvcLvl>" +
-                "<LclInstrm>" +
-                "<Cd>CORE</Cd>" +
-                "</LclInstrm>" +
-                "<SeqTp>OOFF</SeqTp>" +
-                "</PmtTpInf>" +
-                "<ReqdColltnDt>" + SettlementDate.ToString("yyyy-MM-dd") + "</ReqdColltnDt>" +
-                "<Cdtr>" +
-                "<Nm>" + Accountholder + "</Nm>" +
-                "</Cdtr>" +
-                "<CdtrAcct>" +
-                "<Id>" +
-                "<IBAN>" + AccountholderIBAN + "</IBAN>" +
-                "</Id>" +
-                "</CdtrAcct>" +
-                "<CdtrAgt>" +
-                "<FinInstnId>" +
-                "<BIC>" + AccountholderBIC + "</BIC>" +
-                "</FinInstnId>" +
-                "</CdtrAgt>" +
-                "<ChrgBr>SLEV</ChrgBr>" +
-                "<DrctDbtTxInf>" +
-                "<PmtId>" +
-                "<EndToEndId>NOTPROVIDED</EndToEndId>" +
-                "</PmtId>" +
-                "<InstdAmt Ccy=\"EUR\">" + Amount_ + "</InstdAmt>" +
-                "<DrctDbtTx>" +
-                "<MndtRltdInf>" +
-                "<MndtId>" + MandateNumber + "</MndtId>" +
-                "<DtOfSgntr>" + MandateDate.ToString("yyyy-MM-dd") + "</DtOfSgntr>" +
-                "</MndtRltdInf>" +
-                "<CdtrSchmeId>" +
-                "<Id>" +
-                "<PrvtId>" +
-                "<Othr>" +
-                "<Id>" + CeditorIDNumber + "</Id>" +
-                "<SchmeNm>" +
-                "<Prtry>SEPA</Prtry>" +
-                "</SchmeNm>" +
-                "</Othr>" +
-                "</PrvtId>" +
-                "</Id>" +
-                "</CdtrSchmeId>" +
-                "</DrctDbtTx>" +
-                "<DbtrAgt>" +
-                "<FinInstnId>" +
-                "<BIC>" + PayerBIC + "</BIC>" +
-                "</FinInstnId>" +
-                "</DbtrAgt>" +
-                "<Dbtr>" +
-                "<Nm>" + Payer + "</Nm>" +
-                "</Dbtr>" + "<DbtrAcct>" +
-                "<Id>" +
-                "<IBAN>" + PayerIBAN + "</IBAN>" +
-                "</Id>" +
-                "</DbtrAcct>" +
-                "<RmtInf>" +
-                "<Ustrd>" + Usage + "</Ustrd>" +
-                "</RmtInf>" +
-                "</DrctDbtTxInf>" +
-                "</PmtInf>" +
-                "</CstmrDrctDbtInitn>" +
+                    "<CstmrDrctDbtInitn>" +
+                        "<GrpHdr>" +
+                            "<MsgId>" + FinTsConfig.Buildname + "-" + RndNr.ToString().Replace("-", "") + "</MsgId>" +
+                            "<CreDtTm>" + datetime_ + "</CreDtTm>" +
+                            "<NbOfTxs>1</NbOfTxs>" +
+                            "<CtrlSum>" + Amount_ + "</CtrlSum>" +
+                            "<InitgPty>" +
+                            "<Nm>" + Accountholder_ + "</Nm>" +
+                            "</InitgPty>" +
+                        "</GrpHdr>" +
+                        "<PmtInf>" +
+                            "<PmtInfId>" + FinTsConfig.Buildname + "-" + RndNr_.ToString().Replace("-", "") + "</PmtInfId>" +
+                            "<PmtMtd>DD</PmtMtd>" +
+                            "<NbOfTxs>1</NbOfTxs>" +
+                            "<CtrlSum>" + Amount_ + "</CtrlSum>" +
+                            "<PmtTpInf>" +
+                            "<SvcLvl>" +
+                            "<Cd>SEPA</Cd>" +
+                            "</SvcLvl>" +
+                            "<LclInstrm>" +
+                                "<Cd>CORE</Cd>" +
+                            "</LclInstrm>" +
+                            "<SeqTp>OOFF</SeqTp>" +
+                            "</PmtTpInf>" +
+                            "<ReqdColltnDt>" + SettlementDate.ToString("yyyy-MM-dd") + "</ReqdColltnDt>" +
+                            "<Cdtr>" +
+                                "<Nm>" + Accountholder_ + "</Nm>" +
+                            "</Cdtr>" +
+                            "<CdtrAcct>" +
+                                "<Id>" +
+                                    "<IBAN>" + AccountholderIBAN + "</IBAN>" +
+                                "</Id>" +
+                            "</CdtrAcct>" +
+                            "<CdtrAgt>" +
+                                "<FinInstnId>" +
+                                    "<BIC>" + AccountholderBIC + "</BIC>" +
+                                "</FinInstnId>" +
+                            "</CdtrAgt>" +
+                            "<ChrgBr>SLEV</ChrgBr>" +
+                            "<DrctDbtTxInf>" +
+                                "<PmtId>" +
+                                    "<EndToEndId>NOTPROVIDED</EndToEndId>" +
+                                "</PmtId>" +
+                                "<InstdAmt Ccy=\"EUR\">" + Amount_ + "</InstdAmt>" +
+                                "<DrctDbtTx>" +
+                                    "<MndtRltdInf>" +
+                                        "<MndtId>" + MandateNumber + "</MndtId>" +
+                                        "<DtOfSgntr>" + MandateDate.ToString("yyyy-MM-dd") + "</DtOfSgntr>" +
+                                    "</MndtRltdInf>" +
+                                    "<CdtrSchmeId>" +
+                                        "<Id>" +
+                                            "<PrvtId>" +
+                                            "<Othr>" +
+                                                "<Id>" + CeditorIDNumber + "</Id>" +
+                                                "<SchmeNm>" +
+                                                    "<Prtry>SEPA</Prtry>" +
+                                                "</SchmeNm>" +
+                                            "</Othr>" +
+                                            "</PrvtId>" +
+                                        "</Id>" +
+                                    "</CdtrSchmeId>" +
+                                "</DrctDbtTx>" +
+                                "<DbtrAgt>" +
+                                    "<FinInstnId>" +
+                                        "<BIC>" + PayerBIC + "</BIC>" +
+                                    "</FinInstnId>" +
+                                "</DbtrAgt>" +
+                                "<Dbtr>" +
+                                    "<Nm>" + Payer_ + "</Nm>" +
+                                "</Dbtr>" +
+                                "<DbtrAcct>" +
+                                    "<Id>" +
+                                        "<IBAN>" + PayerIBAN + "</IBAN>" +
+                                    "</Id>" +
+                                "</DbtrAcct>" +
+                                "<RmtInf>" +
+                                    "<Ustrd>" + Usage_ + "</Ustrd>" +
+                                "</RmtInf>" +
+                            "</DrctDbtTxInf>" +
+                        "</PmtInf>" +
+                    "</CstmrDrctDbtInitn>" +
                 "</Document>" +
                 "'";
 

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security;
 
 namespace libfintx
 {
@@ -50,68 +51,72 @@ namespace libfintx
 
             var Amount_ = Amount.ToString().Replace(",", ".");
 
+            var Accountholder_ = SecurityElement.Escape(Accountholder);
+            var Receiver_ = SecurityElement.Escape(Receiver);
+            var Usage_ = SecurityElement.Escape(Usage);
+
             string Message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.002.03 pain.001.002.03.xsd\">" +
-                "<CstmrCdtTrfInitn>" +
-                "<GrpHdr>" +
-                "<MsgId>" + msgId + "</MsgId>" +
-                "<CreDtTm>" + creDtTm + "</CreDtTm>" +
-                "<NbOfTxs>1</NbOfTxs>" +
-                "<CtrlSum>" + Amount_ + "</CtrlSum>" +
-                "<InitgPty>" +
-                "<Nm>" + Accountholder + "</Nm>" +
-                "</InitgPty>" +
-                "</GrpHdr>" +
-                "<PmtInf>" +
-                "<PmtInfId>" + pmtInfId + "</PmtInfId>" +
-                "<PmtMtd>TRF</PmtMtd>" +
-                "<NbOfTxs>1</NbOfTxs>" +
-                "<CtrlSum>" + Amount_ + "</CtrlSum>" +
-                "<PmtTpInf>" +
-                "<SvcLvl>" +
-                "<Cd>SEPA</Cd>" +
-                "</SvcLvl>" +
-                "</PmtTpInf>" +
-                "<ReqdExctnDt>" + ExecutionDay.ToString("yyyy-MM-dd") + "</ReqdExctnDt>" +
-                "<Dbtr>" +
-                "<Nm>" + Accountholder + "</Nm>" +
-                "</Dbtr>" +
-                "<DbtrAcct>" +
-                "<Id>" +
-                "<IBAN>" + AccountholderIBAN + "</IBAN>" +
-                "</Id>" +
-                "</DbtrAcct>" +
-                "<DbtrAgt>" +
-                "<FinInstnId>" +
-                "<BIC>" + AccountholderBIC + "</BIC>" +
-                "</FinInstnId>" +
-                "</DbtrAgt>" +
-                "<ChrgBr>SLEV</ChrgBr>" +
-                "<CdtTrfTxInf>" +
-                "<PmtId>" +
-                "<EndToEndId>NOTPROVIDED</EndToEndId>" +
-                "</PmtId>" +
-                "<Amt>" +
-                "<InstdAmt Ccy=\"EUR\">" + Amount_ + "</InstdAmt>" +
-                "</Amt>" +
-                "<CdtrAgt>" +
-                "<FinInstnId>" +
-                "<BIC>" + ReceiverBIC + "</BIC>" +
-                "</FinInstnId>" +
-                "</CdtrAgt>" +
-                "<Cdtr>" +
-                "<Nm>" + Receiver + "</Nm>" +
-                "</Cdtr>" +
-                "<CdtrAcct>" +
-                "<Id>" +
-                "<IBAN>" + ReceiverIBAN + "</IBAN>" +
-                "</Id>" + "</CdtrAcct>" +
-                "<RmtInf>" +
-                "<Ustrd>" + Usage + "</Ustrd>" +
-                "</RmtInf>" +
-                "</CdtTrfTxInf>" +
-                "</PmtInf>" +
-                "</CstmrCdtTrfInitn>" +
+                    "<CstmrCdtTrfInitn>" +
+                        "<GrpHdr>" +
+                        "<MsgId>" + msgId + "</MsgId>" +
+                        "<CreDtTm>" + creDtTm + "</CreDtTm>" +
+                        "<NbOfTxs>1</NbOfTxs>" +
+                        "<CtrlSum>" + Amount_ + "</CtrlSum>" +
+                        "<InitgPty>" +
+                        "<Nm>" + Accountholder_ + "</Nm>" +
+                        "</InitgPty>" +
+                        "</GrpHdr>" +
+                            "<PmtInf>" +
+                            "<PmtInfId>" + pmtInfId + "</PmtInfId>" +
+                            "<PmtMtd>TRF</PmtMtd>" +
+                            "<NbOfTxs>1</NbOfTxs>" +
+                            "<CtrlSum>" + Amount_ + "</CtrlSum>" +
+                            "<PmtTpInf>" +
+                            "<SvcLvl>" +
+                            "<Cd>SEPA</Cd>" +
+                            "</SvcLvl>" +
+                            "</PmtTpInf>" +
+                            "<ReqdExctnDt>" + $"{ExecutionDay:yyyy-MM-dd}" + "</ReqdExctnDt>" +
+                            "<Dbtr>" +
+                                "<Nm>" + Accountholder_ + "</Nm>" +
+                            "</Dbtr>" +
+                            "<DbtrAcct>" +
+                                "<Id>" +
+                                    "<IBAN>" + AccountholderIBAN + "</IBAN>" +
+                                "</Id>" +
+                            "</DbtrAcct>" +
+                            "<DbtrAgt>" +
+                                "<FinInstnId>" +
+                                    "<BIC>" + AccountholderBIC + "</BIC>" +
+                                "</FinInstnId>" +
+                            "</DbtrAgt>" +
+                            "<ChrgBr>SLEV</ChrgBr>" +
+                            "<CdtTrfTxInf>" +
+                                "<PmtId>" +
+                                    "<EndToEndId>NOTPROVIDED</EndToEndId>" +
+                                "</PmtId>" +
+                                "<Amt>" +
+                                    "<InstdAmt Ccy=\"EUR\">" + Amount_ + "</InstdAmt>" +
+                                "</Amt>" +
+                                "<CdtrAgt>" +
+                                    "<FinInstnId>" +
+                                        "<BIC>" + ReceiverBIC + "</BIC>" +
+                                    "</FinInstnId>" +
+                                    "</CdtrAgt>" +
+                                "<Cdtr>" +
+                                    "<Nm>" + Receiver_ + "</Nm>" +
+                                "</Cdtr>" +
+                                "<CdtrAcct>" +
+                                    "<Id>" +
+                                        "<IBAN>" + ReceiverIBAN + "</IBAN>" +
+                                    "</Id>" + "</CdtrAcct>" +
+                                "<RmtInf>" +
+                                    "<Ustrd>" + Usage_ + "</Ustrd>" +
+                                "</RmtInf>" +
+                            "</CdtTrfTxInf>" +
+                        "</PmtInf>" +
+                    "</CstmrCdtTrfInitn>" +
                 "</Document>" +
                 "'";
 
