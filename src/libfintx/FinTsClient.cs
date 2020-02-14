@@ -337,7 +337,7 @@ namespace libfintx
         /// <returns>
         /// Success or failure
         /// </returns>
-        private bool Synchronization_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
+        public bool Synchronization_RDH(int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
         {
             if (Transaction.INI_RDH(this, BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password) == true)
             {
