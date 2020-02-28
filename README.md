@@ -14,6 +14,10 @@ This client library supports both APIs, HBCI 2.2 and FinTS 3.0.
 
 It can be used to read the balance of a bank account, receive an account statement, and make a SEPA payment using PIN/TAN.
 
+| Target | Branch | Version | Download link |
+| ------ | ------ | ------ | ------ |
+| Nuget | master | v0.0.1 | [![NuGet](https://img.shields.io/badge/nuget-v0.0.1-blue)](https://www.nuget.org/packages/libfintx/) |
+
 # Usage
 
 There are many reasons why you need to use a banking library which can exchange data from your application with the bank. One reason for example is to found a [Fintech](https://de.wikipedia.org/wiki/Finanztechnologie).
