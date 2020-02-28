@@ -12,6 +12,8 @@ Today most of all german banks support this online banking standards.
 
 This client library supports both APIs, HBCI 2.2 and FinTS 3.0.
 
+# Nuget
+
 It can be used to read the balance of a bank account, receive an account statement, and make a SEPA payment using PIN/TAN.
 
 | Target | Branch | Version | Download link |
