@@ -1,3 +1,5 @@
+<img src="https://github.com/mrklintscher/libfintx/blob/master/res/logo.png" align="right">
+
 # libfintx
 
 [![Build Status](https://travis-ci.org/mrklintscher/libfintx.svg?branch=master)](https://travis-ci.org/mrklintscher/libfintx)
