@@ -1,4 +1,4 @@
-namespace libfintx
+﻿namespace libfintx
 {
     public static class FinTsConfig
     {
@@ -31,7 +31,7 @@ namespace libfintx
 
         public static string Buildname { get; set; } = "libfintx";
 
-        public static string Version { get; set; } = "0.1";
+        public static string Version { get; set; } = "0.0.1";
 
         /// <summary>
         /// Produktregistrierungsnummer. Replace it with you own id if available.
