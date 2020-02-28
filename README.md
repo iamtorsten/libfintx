@@ -61,3 +61,9 @@ The verification process is done by using the default [**WebRequest**](https://m
 Copyright (c) 2016 - 2020 **Torsten Klinger**
 
 Licensed under GNU Lesser General Public License. Please read the LICENSE file.
+
+# Support
+
+You can contact me on Telegram. 💬
+
+[![Telegram](https://img.shields.io/badge/telegram-chat-blue)](https://t.me/mrklintscher)
