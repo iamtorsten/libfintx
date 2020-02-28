@@ -4,7 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Company>Torsten Klinger</Company>
     <Description>C# based client library for HBCI 2.2 and FinTS 3.0</Description>
-    <Copyright>Copyright © 2016 - 2019 Torsten Klinger</Copyright>
+    <Copyright>Copyright © 2016 - 2020 Torsten Klinger</Copyright>
+    <AssemblyVersion>0.1</AssemblyVersion>
+    <FileVersion>0.1</FileVersion>
+    <Version>0.1</Version>
+    <Authors>Torsten Klinger</Authors>
   </PropertyGroup>
 
   <ItemGroup>
