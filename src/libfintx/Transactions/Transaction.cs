@@ -45,8 +45,6 @@ using static libfintx.HKSAL;
 using static libfintx.HKSYN;
 using static libfintx.HKTAB;
 using static libfintx.INI;
-/* RDH */
-using static libfintx.INI_RDH;
 using static libfintx.Tan;
 using static libfintx.Tan4;
 
@@ -163,13 +161,6 @@ namespace libfintx
         public static async Task<String> HKCAZ(FinTsClient client, string FromDate, string ToDate, string Startpoint, CamtVersion camtVers)
         {
             return await Init_HKCAZ(client, FromDate, ToDate, Startpoint, camtVers);
-        }
-
-        /* RDH */
-
-        public static bool INI_RDH(FinTsClient client, int BLZ, string URL, int Port, int HBCIVersion, string UserID, string FilePath, string Password)
-        {
-            return Init_INI_RDH(client, BLZ, URL, Port, HBCIVersion, UserID, FilePath, Password);
         }
     }
 }
