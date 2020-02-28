@@ -646,7 +646,7 @@ namespace libfintx.Sample.Ui
             return true;
         }
 
-        private static readonly string _accountFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "account.csv");
+        private static readonly string AccountFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "account.csv");
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -654,7 +654,7 @@ namespace libfintx.Sample.Ui
 
             string account = $"{txt_kontonummer.Text};{txt_bankleitzahl.Text};{txt_bankleitzahl_zentrale.Text};{txt_bic.Text};{txt_iban.Text};{txt_url.Text};{txt_hbci_version.Text};{txt_userid.Text};{txt_tanverfahren.Text};{txt_tan_medium.Text}";
 
-            File.WriteAllText(_accountFile, account);
+            File.WriteAllText(AccountFile, account);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -665,9 +665,9 @@ namespace libfintx.Sample.Ui
             if (chk_tracing.Checked)
                 FinTsConfig.Tracing(true);
 
-            if (File.Exists(_accountFile))
+            if (File.Exists(AccountFile))
             {
-                var content = File.ReadAllText(_accountFile);
+                var content = File.ReadAllText(AccountFile);
                 var fields = content.Split(';');
                 if (fields.Length == 10)
                 {
