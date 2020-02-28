@@ -21,6 +21,8 @@
  * 	
  */
 
+using System;
+using System.Threading.Tasks;
 using libfintx.Camt;
 
 namespace libfintx
@@ -30,7 +32,7 @@ namespace libfintx
         /// <summary>
         /// Transactions in camt053 format
         /// </summary>
-        public static string Init_HKCAZ(FinTsClient client, string FromDate, string ToDate, string Startpoint, CamtVersion camtVers)
+        public static async Task<String> Init_HKCAZ(FinTsClient client, string FromDate, string ToDate, string Startpoint, CamtVersion camtVers)
         {
             string segments = string.Empty;
             var connectionDetails = client.ConnectionDetails;
@@ -107,7 +109,7 @@ namespace libfintx
             }
 
             string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-            string response = FinTSMessage.Send(connectionDetails.Url, message);
+            string response = await FinTSMessage.Send(connectionDetails.Url, message);
 
             client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 

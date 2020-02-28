@@ -22,12 +22,13 @@
  */
 
 using System;
+using System.Threading.Tasks;
 
 namespace libfintx
 {
     public static class HKSYN
     {
-        public static string Init_HKSYN(FinTsClient client)
+        public static async Task<String> Init_HKSYN(FinTsClient client)
         {
             Log.Write("Starting Synchronisation");
 
@@ -66,7 +67,7 @@ namespace libfintx
             client.SEGNUM = SEGNUM.SETInt(5);
 
             string message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
-            string response = FinTSMessage.Send(connectionDetails.Url, message);
+            string response = await FinTSMessage.Send(connectionDetails.Url, message);
 
             Helper.Parse_Segment(client, response);
 

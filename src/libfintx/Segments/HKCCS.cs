@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Threading.Tasks;
 
 namespace libfintx
 {
@@ -30,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// Transfer
         /// </summary>
-        public static string Init_HKCCS(FinTsClient client, string ReceiverName, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage)
+        public static async Task<String> Init_HKCCS(FinTsClient client, string ReceiverName, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage)
         {
             Log.Write("Starting job HKCCS: Transfer money");
             var connectionDetails = client.ConnectionDetails;
@@ -65,7 +66,7 @@ namespace libfintx
             }
 
             var message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-            var response = FinTSMessage.Send(connectionDetails.Url, message);
+            var response = await FinTSMessage.Send(connectionDetails.Url, message);
 
             client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 

@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Threading.Tasks;
 
 namespace libfintx
 {
@@ -30,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// Balance
         /// </summary>
-        public static string Init_HKSAL(FinTsClient client)
+        public static async Task<String> Init_HKSAL(FinTsClient client)
         {
             Log.Write("Starting job HKSAL: Request balance");
 
@@ -51,7 +52,7 @@ namespace libfintx
             }
 
             string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-            string response = FinTSMessage.Send(connectionDetails.Url, message);
+            string response = await FinTSMessage.Send(connectionDetails.Url, message);
 
             client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 

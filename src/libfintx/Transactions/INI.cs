@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Threading.Tasks;
 
 namespace libfintx
 {
@@ -30,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static string Init_INI(FinTsClient client)
+        public static async Task<String> Init_INI(FinTsClient client)
         {
             var connectionDetails = client.ConnectionDetails;
             if (!client.Anonymous)
@@ -78,7 +79,7 @@ namespace libfintx
                     }
 
                     var message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-                    var response = FinTSMessage.Send(connectionDetails.Url, message);
+                    var response = await FinTSMessage.Send(connectionDetails.Url, message);
 
                     Helper.Parse_Segment(client, response);
 
@@ -130,7 +131,7 @@ namespace libfintx
                     client.SEGNUM = SEGNUM.SETInt(4);
 
                     string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
-                    string response = FinTSMessage.Send(connectionDetails.Url, message);
+                    string response = await FinTSMessage.Send(connectionDetails.Url, message);
 
                     var messages = Helper.Parse_Segment(client, response);
                     var result = new HBCIDialogResult(messages, response);
@@ -165,7 +166,7 @@ namespace libfintx
                     client.SEGNUM = SEGNUM.SETInt(5);
 
                     message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-                    response = FinTSMessage.Send(connectionDetails.Url, message);
+                    response = await FinTSMessage.Send(connectionDetails.Url, message);
 
                     Helper.Parse_Segment(client, response);
 

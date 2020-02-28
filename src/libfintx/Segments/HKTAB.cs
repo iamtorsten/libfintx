@@ -21,6 +21,9 @@
  * 	
  */
 
+using System;
+using System.Threading.Tasks;
+
 namespace libfintx
 {
     public static class HKTAB
@@ -28,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// Request TAN medium name
         /// </summary>
-        public static string Init_HKTAB(FinTsClient client)
+        public static async Task<String> Init_HKTAB(FinTsClient client)
         {
             Log.Write("Starting job HKTAB: Request tan medium name");
 
@@ -40,7 +43,7 @@ namespace libfintx
             client.SEGNUM = SEGNUM.SETInt(3);
 
             string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-            return FinTSMessage.Send(connectionDetails.Url, message);
+            return await FinTSMessage.Send(connectionDetails.Url, message);
         }
     }
 }

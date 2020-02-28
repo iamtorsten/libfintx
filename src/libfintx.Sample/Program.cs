@@ -77,9 +77,9 @@ namespace libfintx.Sample
             Console.ReadLine();
         }
 
-        private static void Accounts(FinTsClient client)
+        private static async void Accounts(FinTsClient client)
         {
-            var result = client.Accounts(new TANDialog(WaitForTAN));
+            var result = await client.Accounts(new TANDialog(WaitForTAN));
             if (!result.IsSuccess)
             {
                 HBCIOutput(result.Messages);
@@ -93,9 +93,9 @@ namespace libfintx.Sample
             }
         }
 
-        private static void Balance(FinTsClient client)
+        private static async void Balance(FinTsClient client)
         {
-            var result = client.Balance(new TANDialog(WaitForTAN));
+            var result = await client.Balance(new TANDialog(WaitForTAN));
             if (!result.IsSuccess)
             {
                 HBCIOutput(result.Messages);
@@ -105,9 +105,9 @@ namespace libfintx.Sample
             Console.WriteLine("Balance is: {0}\u20AC", result.Data.Balance);
         }
 
-        private static void Transactions(FinTsClient client)
+        private static async void Transactions(FinTsClient client)
         {
-            var result = client.Transactions(new TANDialog(WaitForTAN));
+            var result = await client.Transactions(new TANDialog(WaitForTAN));
             if (!result.IsSuccess)
             {
                 HBCIOutput(result.Messages);

@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Threading.Tasks;
 
 namespace libfintx
 {
@@ -30,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// TAN process 4
         /// </summary>
-        public static string Send_TAN4(FinTsClient client, string TAN, string MediumName)
+        public static async Task<String> Send_TAN4(FinTsClient client, string TAN, string MediumName)
         {
             Log.Write("Starting job TAN process 4");
 
@@ -51,7 +52,7 @@ namespace libfintx
 
             client.SEGNUM = SEGNUM.SETInt(3);
 
-            return FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS + ":" + TAN, client.SEGNUM));
+            return await FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS + ":" + TAN, client.SEGNUM));
         }
     }
 }

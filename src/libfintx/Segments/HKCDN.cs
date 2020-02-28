@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using static libfintx.HKCDE;
 
 namespace libfintx
@@ -8,7 +9,7 @@ namespace libfintx
         /// <summary>
         /// Submit bankers order
         /// </summary>
-        public static string Init_HKCDN(FinTsClient client, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit, string Rota, int ExecutionDay, DateTime? LastExecutionDay)
+        public static async Task<String> Init_HKCDN(FinTsClient client, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit, string Rota, int ExecutionDay, DateTime? LastExecutionDay)
         {
             Log.Write("Starting job HKCDN: Modify bankers order");
 
@@ -33,7 +34,7 @@ namespace libfintx
             }
 
             string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-            var TAN = FinTSMessage.Send(connectionDetails.Url, message);
+            var TAN = await FinTSMessage.Send(connectionDetails.Url, message);
 
             client.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 

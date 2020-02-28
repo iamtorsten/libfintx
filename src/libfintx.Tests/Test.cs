@@ -50,7 +50,7 @@ namespace libfintx.Tests
         }
 
         [Fact]
-        public void Test_Balance()
+        public async void Test_Balance()
         {
             var connectionDetails = new ConnectionDetails()
             {
@@ -70,7 +70,7 @@ namespace libfintx.Tests
 
             /* Balance */
 
-            var balance = client.Balance(new TANDialog(WaitForTAN));
+            var balance = await client.Balance(new TANDialog(WaitForTAN));
 
             Console.WriteLine("[ Balance ]");
             Console.WriteLine();
@@ -83,7 +83,7 @@ namespace libfintx.Tests
         }
 
         [Fact]
-        public void Test_Accounts()
+        public async void Test_Accounts()
         {
             var connectionDetails = new ConnectionDetails()
             {
@@ -93,7 +93,7 @@ namespace libfintx.Tests
             /* Sync */
             var client = new FinTsClient(connectionDetails);
 
-            var accounts = client.Accounts(new TANDialog(WaitForTAN));
+            var accounts = await client.Accounts(new TANDialog(WaitForTAN));
             foreach (var acc in accounts.Data)
             {
                 output.WriteLine(acc.ToString());
@@ -101,7 +101,7 @@ namespace libfintx.Tests
         }
 
         [Fact]
-        public void Test_Request_TANMediumName()
+        public async void Test_Request_TANMediumName()
         {
             var connectionDetails = new ConnectionDetails()
             {
@@ -118,11 +118,13 @@ namespace libfintx.Tests
 
             /* TANMediumname */
 
-            var tanmediumname = client.RequestTANMediumName().Data?.FirstOrDefault();
+            var tanmediumname = await client.RequestTANMediumName();
+
+            var t = tanmediumname.Data?.FirstOrDefault();
 
             Console.WriteLine("[ TAN Medium Name ]");
             Console.WriteLine();
-            Console.WriteLine(tanmediumname);
+            Console.WriteLine(t);
             Console.WriteLine();
 
             #endregion
@@ -141,7 +143,7 @@ namespace libfintx.Tests
         }
 
         [Fact]
-        public void Test_PushTAN()
+        public async void Test_PushTAN()
         {
             string receiver = string.Empty;
             string receiverIBAN = string.Empty;
@@ -169,11 +171,13 @@ namespace libfintx.Tests
             amount = 1.0m;
             usage = "TEST";
 
-            if (client.Synchronization().IsSuccess)
+            var result = await client.Synchronization();
+
+            if (result.IsSuccess)
             {
                 string hirms = "921"; // -> pushTAN
 
-                var tanmediumname = client.RequestTANMediumName();
+                var tanmediumname = await client.RequestTANMediumName();
                 client.HITAB = tanmediumname.Data.FirstOrDefault();
 
                 Console.WriteLine(client.Transfer(new TANDialog(WaitForTAN), receiver, receiverIBAN, receiverBIC, amount, usage, hirms));

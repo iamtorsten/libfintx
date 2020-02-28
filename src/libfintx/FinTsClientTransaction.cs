@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using libfintx.Camt;
 using libfintx.Camt.Camt052;
 using libfintx.Camt.Camt053;
@@ -21,13 +22,13 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public HBCIDialogResult<List<SwiftStatement>> Transactions(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
+        public async Task<HBCIDialogResult<List<SwiftStatement>>> Transactions(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
         {
-            var result = InitializeConnection();
+            var result = await InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
-            result = ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
@@ -35,12 +36,12 @@ namespace libfintx
             string endDateStr = endDate?.ToString("yyyyMMdd");
 
             // Success
-            string BankCode = Transaction.HKKAZ(this, startDateStr, endDateStr, null);
+            string BankCode = await Transaction.HKKAZ(this, startDateStr, endDateStr, null);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
-            result = ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<SwiftStatement>>();
 
@@ -63,12 +64,12 @@ namespace libfintx
 
                 string Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
 
-                BankCode_ = Transaction.HKKAZ(this, startDateStr, endDateStr, Startpoint);
+                BankCode_ = await Transaction.HKKAZ(this, startDateStr, endDateStr, Startpoint);
                 result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode_), BankCode_);
                 if (!result.IsSuccess)
                     return result.TypedResult<List<SwiftStatement>>();
 
-                result = ProcessSCA(result, tanDialog);
+                result = await ProcessSCA(result, tanDialog);
                 if (!result.IsSuccess)
                     return result.TypedResult<List<SwiftStatement>>();
 
@@ -97,14 +98,14 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public HBCIDialogResult<List<CamtStatement>> Transactions_camt(TANDialog tanDialog, CamtVersion camtVers,
+        public async Task<HBCIDialogResult<List<CamtStatement>>> Transactions_camt(TANDialog tanDialog, CamtVersion camtVers,
             DateTime? startDate = null, DateTime? endDate = null, bool saveCamtFile = false)
         {
-            var result = InitializeConnection();
+            var result = await InitializeConnection();
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
-            result = ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
@@ -115,12 +116,12 @@ namespace libfintx
             string endDateStr = endDate?.ToString("yyyyMMdd");
 
             // Success
-            string BankCode = Transaction.HKCAZ(this, startDateStr, endDateStr, null, camtVers);
+            string BankCode = await Transaction.HKCAZ(this, startDateStr, endDateStr, null, camtVers);
             result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
-            result = ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
                 return result.TypedResult<List<CamtStatement>>();
 
@@ -195,7 +196,7 @@ namespace libfintx
             while (BankCode_.Contains("+3040::"))
             {
                 string Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
-                BankCode_ = Transaction.HKCAZ(this, startDateStr, endDateStr, Startpoint, camtVers);
+                BankCode_ = await Transaction.HKCAZ(this, startDateStr, endDateStr, Startpoint, camtVers);
                 result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
                 if (!result.IsSuccess)
                     return result.TypedResult<List<CamtStatement>>();
@@ -256,9 +257,9 @@ namespace libfintx
         /// <returns>
         /// Transactions
         /// </returns>
-        public HBCIDialogResult<List<AccountTransaction>> TransactionsSimple(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<HBCIDialogResult<List<AccountTransaction>>> TransactionsSimple(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null)
         {
-            var result = Transactions(tanDialog, startDate, endDate);
+            var result = await Transactions(tanDialog, startDate, endDate);
             if (!result.IsSuccess)
                 return result.TypedResult<List<AccountTransaction>>();
 

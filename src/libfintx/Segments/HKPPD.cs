@@ -21,6 +21,9 @@
  * 	
  */
 
+using System;
+using System.Threading.Tasks;
+
 namespace libfintx
 {
     public static class HKPPD
@@ -28,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// Load prepaid
         /// </summary>
-        public static string Init_HKPPD(FinTsClient client, int MobileServiceProvider, string PhoneNumber, int Amount)
+        public static async Task<String> Init_HKPPD(FinTsClient client, int MobileServiceProvider, string PhoneNumber, int Amount)
         {
             Log.Write("Starting job HKPPD: Load prepaid");
 
@@ -44,7 +47,7 @@ namespace libfintx
             }
 
             string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-            var TAN = FinTSMessage.Send(connectionDetails.Url, message);
+            var TAN = await FinTSMessage.Send(connectionDetails.Url, message);
 
             client.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 
