@@ -9,6 +9,9 @@
     <FileVersion>0.1</FileVersion>
     <Version>0.1</Version>
     <Authors>Torsten Klinger</Authors>
+    <RepositoryUrl>https://github.com/mrklintscher/libfintx</RepositoryUrl>
+    <PackageTags>hbci, fints, banking</PackageTags>
+    <PackageProjectUrl>https://github.com/mrklintscher/libfintx</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
