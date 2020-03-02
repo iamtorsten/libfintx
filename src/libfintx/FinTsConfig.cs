@@ -1,7 +1,36 @@
-﻿namespace libfintx
+﻿using System;
+using System.IO;
+
+namespace libfintx
 {
     public static class FinTsConfig
     {
+        private static string _programBaseDir;
+        public static string ProgramBaseDir
+        {
+            get
+            {
+                if (_programBaseDir == null)
+                {
+                    var userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                    if (Buildname == null)
+                    {
+                        throw new InvalidOperationException("Der Wert von FinTsConfig.Buildname muss gesetzt sein.");
+                    }
+
+                    var buildname = Buildname.StartsWith(".") ? Buildname : $".{Buildname}";
+
+                    _programBaseDir = Path.Combine(userHome, buildname);
+                }
+
+                return _programBaseDir;
+            }
+            set
+            {
+                _programBaseDir = value;
+            }
+        }
+
         /// <summary>	
         /// Enable / Disable Tracing	
         /// </summary>	

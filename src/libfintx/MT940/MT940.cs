@@ -674,7 +674,7 @@ namespace libfintx
             string dir = null;
             if (writeToFile)
             {
-                dir = Helper.GetProgramBaseDir();
+                dir = FinTsConfig.ProgramBaseDir;
 
                 dir = Path.Combine(dir, "STA");
 
@@ -842,7 +842,7 @@ namespace libfintx
                             "TypeCode: " + TypeCode + " ' " +
                             "Amount: " + Amount + " ' " + "++ENDUMS++";
 
-                        dir = Helper.GetProgramBaseDir();
+                        dir = FinTsConfig.ProgramBaseDir;
                         dir = Path.Combine(dir, "MT940");
 
                         string filename_ = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".MT940"));

@@ -49,7 +49,7 @@ namespace libfintx
             if (Enabled)
             {
                 // Directory
-                var dir = Helper.GetProgramBaseDir();
+                var dir = FinTsConfig.ProgramBaseDir;
 
                 if (!Directory.Exists(dir))
                 {

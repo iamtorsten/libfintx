@@ -36,7 +36,7 @@ namespace libfintx.Camt.Camt053
         {
             encoding = encoding ?? Encoding.UTF8;
 
-            string dir = Helper.GetProgramBaseDir();
+            string dir = FinTsConfig.ProgramBaseDir;
 
             dir = Path.Combine(dir, "camt053");
 

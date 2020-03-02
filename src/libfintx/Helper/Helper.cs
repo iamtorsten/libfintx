@@ -764,22 +764,9 @@ namespace libfintx
             return value.Replace(" ", "_");
         }
 
-        public static string GetProgramBaseDir()
-        {
-            var userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            if (FinTsConfig.Buildname == null)
-            {
-                throw new InvalidOperationException("Der Wert von FinTsConfig.Buildname muss gesetzt sein.");
-            }
-
-            var buildname = FinTsConfig.Buildname.StartsWith(".") ? FinTsConfig.Buildname : $".{FinTsConfig.Buildname}";
-
-            return Path.Combine(userHome, buildname);
-        }
-
         private static string GetBPDDir()
         {
-            var dir = GetProgramBaseDir();
+            var dir = FinTsConfig.ProgramBaseDir;
             return Path.Combine(dir, "BPD");
         }
 
@@ -790,7 +777,7 @@ namespace libfintx
 
         private static string GetUPDDir()
         {
-            var dir = GetProgramBaseDir();
+            var dir = FinTsConfig.ProgramBaseDir;
             return Path.Combine(dir, "UPD");
         }
 
