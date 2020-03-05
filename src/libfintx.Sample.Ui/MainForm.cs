@@ -685,7 +685,7 @@ namespace libfintx.Sample.Ui
                 }
             }
 
-            var dir = Helper.GetProgramBaseDir();
+            var dir = FinTsConfig.ProgramBaseDir;
             var productIdFile = Path.Combine(dir, "Product_Id.txt");
 
             if (File.Exists(productIdFile))
