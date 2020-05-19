@@ -83,6 +83,4 @@ See the file LICENSE.txt for further information.
 
 # Support
 
-You can contact me on Telegram. 💬
-
-[![Telegram](https://img.shields.io/badge/telegram-chat-blue)](https://t.me/mrklintscher)
+You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com). 💬
