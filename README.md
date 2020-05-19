@@ -16,7 +16,7 @@ The Electronic Banking Internet Communication Standard (EBICS) is a German trans
 
 This client library supports all four APIs, HBCI 2.2, FinTS 3.0 and EBICS H004 and H005.
 
-It can be used to read the balance of a bank account, receive an account statement, and make a SEPA payment using PIN/TAN.
+It can be used to read the balance of a bank account, receive an account statement, and make a SEPA payment using **PIN/TAN** and **EBICS**.
 
 # Nuget
 
