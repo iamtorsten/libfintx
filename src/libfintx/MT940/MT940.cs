@@ -353,7 +353,10 @@ namespace libfintx
                     else if ((key >= 20) && (key <= 29))
                     {
                         // No space between description lines
-                        SWIFTTransaction.Description += value;
+                        if (value.EndsWith(" "))
+                            SWIFTTransaction.Description += value;
+                        else
+                            SWIFTTransaction.Description += value + " ";
                         AssignDescriptionSubField(SWIFTTransaction, value, ref lastDescriptionSubfield);
                     }
                     else if (key == 30)
