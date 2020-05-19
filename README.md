@@ -50,6 +50,9 @@ Look at the demo projects inside the master branch.
 * Load mobile phone prepaid card (**HKPPD**)
 * Submit banker's order (**HKCDE**)
 * Get banker's orders (**HKCSB**)
+* Send Credit Transfer Initiation (**CCT**)
+* Send Direct Debit Initiation (**CDD**)
+* Pick up Swift daily statements (**STA**)
 
 # Specification
 
@@ -67,7 +70,6 @@ The verification process is done by using the default [**WebRequest**](https://m
 * Only version E002 for encryption can be used.
 * Only version X002 for authentication can be used.
 * It was developed using EBICS Version H004, but H005 should work.
-* Currently implemented commands/requests: INI, HIA, HPB, PTK, SPR, STA, CCT, CDD
 
 # Copyright & License
 
