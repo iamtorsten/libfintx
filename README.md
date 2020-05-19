@@ -22,7 +22,7 @@ It can be used to read the balance of a bank account, receive an account stateme
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v0.0.1 | [![NuGet](https://img.shields.io/badge/nuget-v0.0.1-blue)](https://www.nuget.org/packages/libfintx/) |
+| Nuget | master | v0.0.2 | [![NuGet](https://img.shields.io/badge/nuget-v0.0.2-blue)](https://www.nuget.org/packages/libfintx/) |
 
 # Usage
 
