@@ -63,7 +63,7 @@ also an [unauthorized english translation](http://www.hbci-zka.de/english/specif
 
 The verification process is done by using the default [**WebRequest**](https://msdn.microsoft.com/de-de/library/system.net.webrequest(v=vs.110).aspx) class.
 
-# Limitations EBICS
+# Limitations
 
 * Usage with certificates has been prepared but not completely implemented yet. It works with private/public keys.
 * Only version A005 for signatures can be used. A006 uses PSS padding, which is currently not supported by .NET Core 2.x. Bouncy Castle is only used for PEM file and certificate management.
