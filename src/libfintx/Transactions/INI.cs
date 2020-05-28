@@ -43,7 +43,7 @@ namespace libfintx
                 {
                     string segments;
 
-                    client.SEGNUM = SEGNUM.SETInt(4);
+                    client.SEGNUM = SEGNUM.SETInt(5);
 
                     /// <summary>
                     /// INI

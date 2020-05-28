@@ -107,9 +107,9 @@ namespace libfintx
 
                 if (String.IsNullOrEmpty(TAN_))
                 {
-                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + PIN + "'";
+                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum) + ":1+" + secRef + "++" + PIN + "'";
 
-                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + "XXXXXX" + "'");
+                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum) + ":1+" + secRef + "++" + "XXXXXX" + "'");
                 }
 
                 else
@@ -145,9 +145,9 @@ namespace libfintx
 
                 if (String.IsNullOrEmpty(TAN_))
                 {
-                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + "'";
+                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum) + ":2+" + secRef + "++" + PIN + "'";
 
-                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + "XXXXXX" + "'");
+                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum) + ":2+" + secRef + "++" + "XXXXXX" + "'");
                 }
 
                 else
