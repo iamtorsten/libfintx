@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommandLine;
 using libfintx.Data;
 
@@ -35,12 +36,12 @@ namespace libfintx.Sample
             public OperationType Operation { get; set; }
         }
 
-        static string WaitForTAN(TANDialog tanDialog)
+        static async Task<string> WaitForTanAsync(TANDialog tanDialog)
         {
             foreach (var msg in tanDialog.DialogResult.Messages)
                 Console.WriteLine(msg);
 
-            return Console.ReadLine();
+            return await Task.FromResult(Console.ReadLine());
         }
 
         static void Main(string[] args)
@@ -79,7 +80,7 @@ namespace libfintx.Sample
 
         private static async void Accounts(FinTsClient client)
         {
-            var result = await client.Accounts(new TANDialog(WaitForTAN));
+            var result = await client.Accounts(new TANDialog(WaitForTanAsync));
             if (!result.IsSuccess)
             {
                 HBCIOutput(result.Messages);
@@ -95,7 +96,7 @@ namespace libfintx.Sample
 
         private static async void Balance(FinTsClient client)
         {
-            var result = await client.Balance(new TANDialog(WaitForTAN));
+            var result = await client.Balance(new TANDialog(WaitForTanAsync));
             if (!result.IsSuccess)
             {
                 HBCIOutput(result.Messages);
@@ -107,7 +108,7 @@ namespace libfintx.Sample
 
         private static async void Transactions(FinTsClient client)
         {
-            var result = await client.Transactions(new TANDialog(WaitForTAN));
+            var result = await client.Transactions(new TANDialog(WaitForTanAsync));
             if (!result.IsSuccess)
             {
                 HBCIOutput(result.Messages);

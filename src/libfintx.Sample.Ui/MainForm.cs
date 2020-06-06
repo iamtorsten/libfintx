@@ -601,7 +601,7 @@ namespace libfintx.Sample.Ui
             UpdateIban();
         }
 
-        public string WaitForTAN(TANDialog tanDialog)
+        public async Task<string> WaitForTanAsync(TANDialog tanDialog)
         {
             HBCIOutput(tanDialog.DialogResult.Messages);
 
@@ -624,7 +624,7 @@ namespace libfintx.Sample.Ui
 
             _tanReady = false;
 
-            return tan;
+            return await Task.FromResult(tan);
         }
 
         private async Task<bool> InitTANMedium(FinTsClient client)
@@ -659,7 +659,7 @@ namespace libfintx.Sample.Ui
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _tanDialog = new TANDialog(WaitForTAN, pBox_tan);
+            _tanDialog = new TANDialog(WaitForTanAsync, pBox_tan);
             _bankList = Bank.GetBankList();
 
             if (chk_tracing.Checked)
