@@ -138,7 +138,7 @@ namespace libfintx
             tanDialog.DialogResult = result;
             if (result.IsSCARequired)
             {
-                string tan = Helper.WaitForTAN(this, result, tanDialog);
+                string tan = await Helper.WaitForTanAsync(this, result, tanDialog);
                 if (tan == null)
                 {
                     string BankCode = await Transaction.HKEND(this, HNHBK);

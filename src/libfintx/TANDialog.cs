@@ -1,6 +1,7 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
+using System.Threading.Tasks;
 
 #if WINDOWS
 using System.Windows.Forms;
@@ -31,18 +32,18 @@ namespace libfintx
 
         public Image<Rgba32> MatrixImage { get; internal set; }
 
-        private readonly Func<TANDialog, string> _waitForTan;
+        private readonly Func<TANDialog, Task<string>> _waitForTanAsync;
 
         /// <summary>
         /// Render Flickercode as GIF.
         /// </summary>
-        /// <param name="waitForTan"></param>
+        /// <param name="waitForTanAsync"></param>
         /// <param name="dialogResult"></param>
         /// <param name="flickerImage"></param>
         /// <param name="flickerWidth"></param>
         /// <param name="flickerHeight"></param>
-        public TANDialog(Func<TANDialog, string> waitForTan, int flickerWidth = 320, int flickerHeight = 120)
-            : this(waitForTan)
+        public TANDialog(Func<TANDialog, Task<string>> waitForTanAsync, int flickerWidth = 320, int flickerHeight = 120)
+            : this(waitForTanAsync)
         {
             RenderFlickerCodeAsGif = true;
             FlickerWidth = flickerWidth;
@@ -52,11 +53,11 @@ namespace libfintx
         /// <summary>
         /// Render TANCode (Flicker/Matrix) in WinForms.
         /// </summary>
-        /// <param name="waitForTan"></param>
+        /// <param name="waitForTanAsync"></param>
         /// <param name="dialogResult"></param>
         /// <param name="pictureBox"></param>
-        public TANDialog(Func<TANDialog, string> waitForTan, object pictureBox)
-            : this(waitForTan)
+        public TANDialog(Func<TANDialog, Task<string>> waitForTanAsync, object pictureBox)
+            : this(waitForTanAsync)
         {
             PictureBox = pictureBox;
         }
@@ -65,12 +66,12 @@ namespace libfintx
         /// <summary>
         /// Enter a TAN without any visual components, e.g. pushTAN or mobileTAN.
         /// </summary>
-        /// <param name="waitForTan">Function which takes a </param>
+        /// <param name="waitForTanAsync">Function which takes a </param>
         /// <param name="dialogResult"></param>
         /// <param name="matrixImage"></param>
-        public TANDialog(Func<TANDialog, string> waitForTan)
+        public TANDialog(Func<TANDialog, Task<string>> waitForTanAsync)
         {
-            _waitForTan = waitForTan;
+            _waitForTanAsync = waitForTanAsync;
         }
 
         /// <summary>
@@ -78,9 +79,9 @@ namespace libfintx
         /// </summary>
         /// <param name="dialogResult">The <code>HBCIDialogResult</code> from the bank which requests the TAN. Can be used to display bank messages in the dialog.</param>
         /// <returns></returns>
-        internal string WaitForTAN()
+        internal async Task<string> WaitForTanAsync()
         {
-            return _waitForTan?.Invoke(this);
+            return await _waitForTanAsync?.Invoke(this);
         }
     }
 }

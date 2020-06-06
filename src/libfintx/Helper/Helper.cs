@@ -28,6 +28,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace libfintx
 {
@@ -533,7 +534,7 @@ namespace libfintx
         /// <param name="flickerWidth"></param>
         /// <param name="flickerHeight"></param>
         /// <param name="renderFlickerCodeAsGif"></param>
-        public static string WaitForTAN(FinTsClient client, HBCIDialogResult dialogResult, TANDialog tanDialog)
+        public static async Task<string> WaitForTanAsync(FinTsClient client, HBCIDialogResult dialogResult, TANDialog tanDialog)
         {
             var BankCode_ = "HIRMS" + Parse_String(dialogResult.RawData, "'HIRMS", "'");
             String[] values = BankCode_.Split('+');
@@ -680,7 +681,7 @@ namespace libfintx
                 }
             }
 
-            return tanDialog.WaitForTAN();
+            return await tanDialog.WaitForTanAsync();
         }
 
         /// <summary>
