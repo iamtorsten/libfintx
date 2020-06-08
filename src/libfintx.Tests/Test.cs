@@ -29,6 +29,7 @@ using System.Linq;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
+using System.Threading.Tasks;
 
 #if (DEBUG && WINDOWS)
 using hbci = libfintx;
@@ -70,7 +71,7 @@ namespace libfintx.Tests
 
             /* Balance */
 
-            var balance = await client.Balance(new TANDialog(WaitForTAN));
+            var balance = await client.Balance(new TANDialog(WaitForTanAsync));
 
             Console.WriteLine("[ Balance ]");
             Console.WriteLine();
@@ -93,7 +94,7 @@ namespace libfintx.Tests
             /* Sync */
             var client = new FinTsClient(connectionDetails);
 
-            var accounts = await client.Accounts(new TANDialog(WaitForTAN));
+            var accounts = await client.Accounts(new TANDialog(WaitForTanAsync));
             foreach (var acc in accounts.Data)
             {
                 output.WriteLine(acc.ToString());
@@ -180,7 +181,7 @@ namespace libfintx.Tests
                 var tanmediumname = await client.RequestTANMediumName();
                 client.HITAB = tanmediumname.Data.FirstOrDefault();
 
-                Console.WriteLine(client.Transfer(new TANDialog(WaitForTAN), receiver, receiverIBAN, receiverBIC, amount, usage, hirms));
+                Console.WriteLine(client.Transfer(new TANDialog(WaitForTanAsync), receiver, receiverIBAN, receiverBIC, amount, usage, hirms));
             }
         }
 
@@ -249,7 +250,7 @@ namespace libfintx.Tests
             output.WriteLine(HBCI.Transaction_Output());
         }
 #endif
-        public static string WaitForTAN(TANDialog tanDialog)
+        public async Task<string> WaitForTanAsync(TANDialog tanDialog)
         {
             foreach (var msg in tanDialog.DialogResult.Messages)
                 Console.WriteLine(msg);
