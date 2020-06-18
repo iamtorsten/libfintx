@@ -43,8 +43,6 @@ namespace libfintx
                 {
                     string segments;
 
-                    client.SEGNUM = SEGNUM.SETInt(5);
-
                     /// <summary>
                     /// INI
                     /// </summary>
@@ -63,7 +61,14 @@ namespace libfintx
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
 
                         if (client.HITANS != null && client.HITANS.Substring(0, 3).Equals("6+4"))
+                        {
+                            client.SEGNUM = SEGNUM.SETInt(5);
                             segments_ = HKTAN.Init_HKTAN(client, segments_);
+                        }
+                        else
+                        {
+                            client.SEGNUM = SEGNUM.SETInt(4);
+                        }
 
                         segments = segments_;
                     }
