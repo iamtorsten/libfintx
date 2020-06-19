@@ -214,7 +214,7 @@ namespace libfintx
         /// <param name="Url"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static async Task<String> Send(string Url, string Message)
+        public static async Task<string> Send(string Url, string Message)
         {
             Log.Write("Connect to FinTS Server");
             Log.Write("Url: " + Url);
@@ -233,53 +233,49 @@ namespace libfintx
         /// <param name="Url"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        private static async Task<String> SendAsync(String Url, String Message)
+        private static async Task<string> SendAsync(string Url, string Message)
         {
-            String FinTSMessage = await Task.Run(() =>
+            try
             {
-                try
+                string FinTSMessage = string.Empty;
+                var req = WebRequest.Create(Url) as HttpWebRequest;
+
+                byte[] data = Encoding.ASCII.GetBytes(Helper.EncodeTo64(Message));
+
+                req.Method = "POST";
+                req.Timeout = 10000;
+                req.ContentType = "application/octet-stream";
+                req.ContentLength = data.Length;
+                req.KeepAlive = false;
+
+                using (var reqStream = await req.GetRequestStreamAsync())
                 {
-                    var req = WebRequest.Create(Url) as HttpWebRequest;
+                    await reqStream.WriteAsync(data, 0, data.Length);
+                    await reqStream.FlushAsync();
+                }
 
-                    byte[] data = Encoding.ASCII.GetBytes(Helper.EncodeTo64(Message));
-
-                    req.Method = "POST";
-                    req.Timeout = 10000;
-                    req.ContentType = "application/octet-stream";
-                    req.ContentLength = data.Length;
-                    req.KeepAlive = false;
-
-                    using (var reqStream = req.GetRequestStream())
+                using (var res = (HttpWebResponse) await req.GetResponseAsync())
+                {
+                    using (var resStream = res.GetResponseStream())
                     {
-                        reqStream.Write(data, 0, data.Length);
-                        reqStream.Flush();
-                    }
-
-                    using (var res = (HttpWebResponse) req.GetResponse())
-                    {
-                        using (var resStream = res.GetResponseStream())
+                        using (var streamReader = new StreamReader(resStream, Encoding.UTF8))
                         {
-                            using (var streamReader = new StreamReader(resStream, Encoding.UTF8))
-                            {
-                                FinTSMessage = Helper.DecodeFrom64EncodingDefault(streamReader.ReadToEnd());
-                            }
+                            FinTSMessage = Helper.DecodeFrom64EncodingDefault(streamReader.ReadToEnd());
                         }
                     }
-
-                    // Warning:
-                    // This writes plain message incl. PIN, UserID and TAN human readable into a textfile!
-                    if (Trace.Enabled)
-                        Trace.Write(FinTSMessage);
-
-                    return FinTSMessage;
                 }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException("Fehler beim Versenden der HBCI-Nachricht.", ex);
-                }
-            });
 
-            return FinTSMessage;
+                // Warning:
+                // This writes plain message incl. PIN, UserID and TAN human readable into a textfile!
+                if (Trace.Enabled)
+                    Trace.Write(FinTSMessage);
+
+                return FinTSMessage;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Fehler beim Versenden der HBCI-Nachricht.", ex);
+            }
         }
     }
 }
