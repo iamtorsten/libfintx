@@ -1,7 +1,6 @@
 ﻿using libfintx.Camt;
 using libfintx.Data;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -607,7 +606,12 @@ namespace libfintx.Sample.Ui
 
             if (tanDialog.MatrixImage != null)
             {
-                pBox_tan.Image = tanDialog.MatrixImage.ToBitmap();
+                using (var memoryStream = new MemoryStream())
+                {
+                    tanDialog.MatrixImage.SaveAsBmp(memoryStream);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    pBox_tan.Image = new System.Drawing.Bitmap(memoryStream);
+                }
             }
 
             txt_tan.BackColor = System.Drawing.Color.LightYellow;
@@ -695,19 +699,5 @@ namespace libfintx.Sample.Ui
             date_umsatzabruf_von.Value = DateTime.Now.AddDays(-90);
         }
     }
-
-    public static class ImageSharpExtensions
-    {
-        public static System.Drawing.Bitmap ToBitmap<TPixel>(this Image<TPixel> image) where TPixel : struct, IPixel<TPixel>
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                image.SaveAsBmp(memoryStream);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                return new System.Drawing.Bitmap(memoryStream);
-            }
-        }
-    }
+    
 }

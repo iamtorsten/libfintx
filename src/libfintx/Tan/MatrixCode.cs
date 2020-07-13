@@ -65,7 +65,7 @@ namespace libfintx
                 b = new byte[len];
                 Array.Copy(data, offset, b, 0, len);
                 var ms = new MemoryStream(b);
-                CodeImage = Image.Load(ms);
+                CodeImage = (Image<Rgba32>) Image.Load(ms);
             }
             catch (Exception ex)
             {
