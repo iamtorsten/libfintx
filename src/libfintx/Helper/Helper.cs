@@ -834,6 +834,7 @@ namespace libfintx
             var HIPINS = BPD.HIPINS;
             return HIPINS != null && HIPINS.IsTanRequired(gvName);
         }
+
     }
 }
 

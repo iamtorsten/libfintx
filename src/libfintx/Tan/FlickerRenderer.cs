@@ -33,10 +33,11 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Drawing.Processing;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using CoreRectangle = SixLabors.Primitives.Rectangle;
+using CoreRectangle = SixLabors.ImageSharp.Rectangle;
 
 namespace libfintx
 {
@@ -128,7 +129,7 @@ namespace libfintx
                         {
                             for (int b = 0; b < 5; b++)
                             {
-                                var color = bitarray[i][b] == 1 ? Rgba32.White : Rgba32.Black;
+                                var color = bitarray[i][b] == 1 ? Color.White :Color.Black;
                                 var bounds = new CoreRectangle(b * barwidth + margin, margin, barwidth - 2 * margin, height - 2 * margin);
                                 frame.Mutate(x => x.Fill(color, bounds));
                             }
