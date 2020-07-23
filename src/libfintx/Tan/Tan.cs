@@ -82,8 +82,8 @@ namespace libfintx
 
             client.SEGNUM = SEGNUM.SETInt(3);
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS + ":" + TAN, client.SEGNUM);
-            string response = await FinTSMessage.Send(connectionDetails.Url, message);
+            string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS + ":" + TAN);
+            string response = await FinTSMessage.Send(client, message);
 
             Helper.Parse_Message(client, response);
 

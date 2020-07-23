@@ -44,15 +44,15 @@ namespace libfintx
             if (HITANS == 3)
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
             // Version 4
-            if (HITANS == 4)
+            else if (HITANS == 4)
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
             // Version 5
-            if (HITANS == 5)
+            else if (HITANS == 5)
                 segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
 
             client.SEGNUM = SEGNUM.SETInt(3);
 
-            return await FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS + ":" + TAN, client.SEGNUM));
+            return await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS + ":" + TAN));
         }
     }
 }

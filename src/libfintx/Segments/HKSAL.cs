@@ -51,8 +51,8 @@ namespace libfintx
                 segments = HKTAN.Init_HKTAN(client, segments);
             }
 
-            string message = FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-            string response = await FinTSMessage.Send(connectionDetails.Url, message);
+            string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS);
+            string response = await FinTSMessage.Send(client, message);
 
             client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
 

@@ -44,7 +44,7 @@ namespace libfintx
 
             client.SEGNUM = SEGNUM.SETInt(3);
 
-            return await FinTSMessage.Send(connectionDetails.Url, FinTSMessage.Create(connectionDetails.HbciVersion, client.HNHBS, client.HNHBK, connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM));
+            return await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS));
         }
     }
 }

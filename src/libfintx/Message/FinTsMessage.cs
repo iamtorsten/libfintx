@@ -31,23 +31,50 @@ namespace libfintx
 {
     public static class FinTSMessage
     {
+
         /// <summary>
         /// Create FinTS message
         /// </summary>
-        /// <param name="Version"></param>
-        /// <param name="MsgNum"></param>
-        /// <param name="DialogID"></param>
-        /// <param name="BLZ"></param>
-        /// <param name="UserID"></param>
-        /// <param name="PIN"></param>
-        /// <param name="SystemID"></param>
+        /// <param name="client"></param>
         /// <param name="Segments"></param>
-        /// <param name="HIRMS_TAN"></param>
         /// <param name="SegmentNum"></param>
         /// <returns></returns>
-        public static string Create(int Version, string MsgNum, string DialogID, int BLZ, string UserID, string PIN,
-            string SystemID, string Segments, string HIRMS_TAN, int SegmentNum)
+
+        public static string CreateSync(FinTsClient client, string Segments)
         {
+            return Create(client, "1", "0", Segments, null, "0");
+        }
+        /// <summary>
+        /// Create FinTS message
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="MsgNum"></param>
+        /// /// <param name="DialogID"></param>
+        /// <param name="Segments"></param>
+        /// /// <param name="HIRMS_TAN"></param>
+        /// <param name="SegmentNum"></param>
+        /// /// <param name="SystemID"></param>
+        /// <returns></returns>
+        ///
+        /// (iwen65) First redesign to make things easier and more readable. All important params were values that had been stored as properties of the FinTsClient
+        /// If this is connected as close as this it is better to pass the client as ref parameter, that makes the hole method much more flexible and extensible
+        /// without breaking changes.
+        /// ConnectionDetails are a part of the client too. We can handle the new added ServiceProtocolType inside the common connectioninfo without breaking changes too.
+        /// Mostly it will be TLS12 but who knows.
+        /// I'm pretty sure the method can be simplified even more. 
+        /// 
+        public static string Create(FinTsClient client, string MsgNum, string DialogID, string Segments, string HIRMS_TAN, string SystemID = null)
+        {
+
+            int Version = client.ConnectionDetails.HbciVersion;
+            int BLZ = client.ConnectionDetails.BlzPrimary;
+            string UserID = client.ConnectionDetails.UserId;
+            string PIN = client.ConnectionDetails.Pin;
+            int SegmentNum = client.SEGNUM;
+
+            if (SystemID == null)
+                SystemID = client.SystemId; 
+
             if (String.IsNullOrEmpty(MsgNum))
                 MsgNum = "1";
 
@@ -214,17 +241,17 @@ namespace libfintx
         /// <param name="Url"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static async Task<string> Send(string Url, string Message)
+        public static async Task<string> Send(FinTsClient client, string Message)
         {
             Log.Write("Connect to FinTS Server");
-            Log.Write("Url: " + Url);
+            Log.Write("Url: " + client.ConnectionDetails.Url);
 
             // Warning:
             // This writes plain message incl. PIN, UserID and TAN human readable into a textfile!
             if (Trace.Enabled)
                 Trace.Write(Message);
 
-            return await SendAsync(Url, Message);
+            return await SendAsync(client, Message);
         }
 
         /// <summary>
@@ -233,12 +260,13 @@ namespace libfintx
         /// <param name="Url"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        private static async Task<string> SendAsync(string Url, string Message)
+        private static async Task<string> SendAsync(FinTsClient client, string Message)
         {
             try
             {
                 string FinTSMessage = string.Empty;
-                var req = WebRequest.Create(Url) as HttpWebRequest;
+                ServicePointManager.SecurityProtocol = client.ConnectionDetails.SecurityProtocol;
+                var req = WebRequest.Create(client.ConnectionDetails.Url) as HttpWebRequest;
 
                 byte[] data = Encoding.ASCII.GetBytes(Helper.EncodeTo64(Message));
 
