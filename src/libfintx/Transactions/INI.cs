@@ -83,8 +83,8 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    var message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-                    var response = await FinTSMessage.Send(connectionDetails.Url, message);
+                    var message = FinTSMessage.Create(client, "1", "0", segments, client.HIRMS);
+                    var response = await FinTSMessage.Send(client, message);
 
                     Helper.Parse_Segment(client, response);
 
@@ -136,7 +136,7 @@ namespace libfintx
                     client.SEGNUM = SEGNUM.SETInt(4);
 
                     string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
-                    string response = await FinTSMessage.Send(connectionDetails.Url, message);
+                    string response = await FinTSMessage.Send(client, message);
 
                     var messages = Helper.Parse_Segment(client, response);
                     var result = new HBCIDialogResult(messages, response);
@@ -170,8 +170,8 @@ namespace libfintx
 
                     client.SEGNUM = SEGNUM.SETInt(5);
 
-                    message = FinTSMessage.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.BlzPrimary, connectionDetails.UserId, connectionDetails.Pin, client.SystemId, segments, client.HIRMS, client.SEGNUM);
-                    response = await FinTSMessage.Send(connectionDetails.Url, message);
+                    message = FinTSMessage.Create(client, "1", "0", segments, client.HIRMS);
+                    response = await FinTSMessage.Send(client, message);
 
                     Helper.Parse_Segment(client, response);
 

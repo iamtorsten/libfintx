@@ -1,4 +1,6 @@
-﻿namespace libfintx.Data
+﻿using System.Net; // Perhaps using int -> SecurityProtocolType conversion better than binding a lib to this class.
+
+namespace libfintx.Data
 {
     public class ConnectionDetails
     {
@@ -62,8 +64,12 @@
         /// </summary>
         public string CustomerSystemId { get; set; }
 
+        // Security
+        public SecurityProtocolType SecurityProtocol { get; set; }
+
         public ConnectionDetails()
         {
+            SecurityProtocol = SecurityProtocolType.Tls12; 
             HbciVersion = 300;
         }
     }
