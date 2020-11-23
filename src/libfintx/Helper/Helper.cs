@@ -276,7 +276,10 @@ namespace libfintx
                     {
                         var TAN = Parse_String(item.Replace("HITANS:", ""), ":", "+").Replace(":", "+");
 
-                        client.HITANS = TAN;
+                        if (!string.IsNullOrEmpty(client.HITANS) && TAN == "7+4")
+                            ; // Ignore HKTAN version 7 if other version is available and version 7 isn't implemented in libfintx
+                        else
+                            client.HITANS = TAN;
                     }
 
                     if (item.Contains("HKKAZ"))
