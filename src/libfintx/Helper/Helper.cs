@@ -166,6 +166,10 @@ namespace libfintx
                 SaveUPD(connDetails.Blz, connDetails.UserId, upd);
                 UPD.ParseUpd(upd);
 
+                //Add BIC to Account information (Not retrieved bz UPD??)
+                foreach (AccountInformation accInfo in UPD.HIUPD.AccountList)
+                    accInfo.AccountBic = connDetails.Bic;
+
                 foreach (var item in values)
                 {
                     if (item.Contains("HIRMG"))

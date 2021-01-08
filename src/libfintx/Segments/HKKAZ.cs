@@ -37,6 +37,17 @@ namespace libfintx
 
             var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
+            AccountInformation activeAccount;
+            if (client.activeAccount != null)
+                activeAccount = client.activeAccount;
+            else
+                activeAccount = new AccountInformation()
+                {
+                    AccountNumber = connectionDetails.Account,
+                    AccountBankCode = connectionDetails.Blz.ToString(),
+                    AccountIban = connectionDetails.Iban,
+                    AccountBic = connectionDetails.Bic,
+                };
 
             client.SEGNUM = SEGNUM.SETInt(3);
 
@@ -45,16 +56,16 @@ namespace libfintx
                 if (string.IsNullOrEmpty(Startpoint))
                 {
                     if (Convert.ToInt16(client.HKKAZ) < 7)
-                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
+                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
                     else
-                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
+                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
                 }
                 else
                 {
                     if (Convert.ToInt16(client.HKKAZ) < 7)
-                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N++++" + Startpoint + "'";
+                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N++++" + Startpoint + "'";
                     else
-                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N++++" + Startpoint + "'";
+                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N++++" + Startpoint + "'";
                 }
             }
             else
@@ -62,16 +73,16 @@ namespace libfintx
                 if (string.IsNullOrEmpty(Startpoint))
                 {
                     if (Convert.ToInt16(client.HKKAZ) < 7)
-                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "'";
+                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                     else
-                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "'";
+                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                 }
                 else
                 {
                     if (Convert.ToInt16(client.HKKAZ) < 7)
-                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
-                    else
-                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                   else
+                        segments = "HKKAZ:" + client.SEGNUM + ":" + client.HKKAZ + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                 }
             }
 
