@@ -9,6 +9,7 @@ namespace libfintx
     {
         public bool Anonymous { get; }
         public ConnectionDetails ConnectionDetails { get; }
+        public AccountInformation activeAccount { get; set; }
         public string SystemId { get; internal set; }
         public string HITAB { get; set; }
         public string HIRMS { get; set; }
@@ -29,6 +30,7 @@ namespace libfintx
         {
             ConnectionDetails = conn;
             Anonymous = anon;
+            activeAccount = null;
         }
 
         internal async Task<HBCIDialogResult> InitializeConnection()
