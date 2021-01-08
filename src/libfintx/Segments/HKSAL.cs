@@ -36,14 +36,27 @@ namespace libfintx
             Log.Write("Starting job HKSAL: Request balance");
 
             var connectionDetails = client.ConnectionDetails;
+            AccountInformation activeAccount;
+            if (client.activeAccount != null)
+                activeAccount = client.activeAccount;
+            else
+                activeAccount = new AccountInformation()
+                {
+                    AccountNumber = connectionDetails.Account,
+                    AccountBankCode = connectionDetails.Blz.ToString(),
+                    AccountIban = connectionDetails.Iban,
+                    AccountBic = connectionDetails.Bic,
+                };
+
+
             string segments = string.Empty;
 
             client.SEGNUM = SEGNUM.SETInt(3);
 
             if (Convert.ToInt16(client.HISALS) >= 7)
-                segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+N'";
+                segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + "+N'";
             else
-                segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+N'";
+                segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
 
             if (Helper.IsTANRequired("HKSAL"))
             {
