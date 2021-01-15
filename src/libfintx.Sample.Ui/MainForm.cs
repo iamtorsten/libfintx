@@ -413,18 +413,21 @@ namespace libfintx.Sample.Ui
 
                 if (bankersOrders.IsSuccess)
                 {
-                    foreach (var item in bankersOrders.Data)
+                    if (bankersOrders.Data != null && bankersOrders.Data.Count >0)
                     {
-                        Pain00100103CtData.PaymentInfo paymentData = item.SepaData.Payments.FirstOrDefault();
-                        var txInfo = paymentData.CreditTxInfos.FirstOrDefault();
+                        foreach (var item in bankersOrders.Data)
+                        {
+                            Pain00100103CtData.PaymentInfo paymentData = item.SepaData.Payments.FirstOrDefault();
+                            var txInfo = paymentData.CreditTxInfos.FirstOrDefault();
 
-                        SimpleOutput("Auftrags-Id: " + item.OrderId + " | " +
-                            "Empfänger: " + txInfo.Creditor + " | " +
-                            "Betrag: " + txInfo.Amount + " | " +
-                            "Verwendungszweck: " + txInfo.RemittanceInformation + " | " +
-                            "Erste Ausführung: " + $"{item.FirstExecutionDate:d}" + " | " +
-                            "Nächste Ausführung: " + $"{paymentData.RequestedExecutionDate:d}" + " | " +
-                            "Letzte Ausführung: " + $"{item.LastExecutionDate:d}");
+                            SimpleOutput("Auftrags-Id: " + item.OrderId + " | " +
+                                "Empfänger: " + txInfo.Creditor + " | " +
+                                "Betrag: " + txInfo.Amount + " | " +
+                                "Verwendungszweck: " + txInfo.RemittanceInformation + " | " +
+                                "Erste Ausführung: " + $"{item.FirstExecutionDate:d}" + " | " +
+                                "Nächste Ausführung: " + $"{paymentData.RequestedExecutionDate:d}" + " | " +
+                                "Letzte Ausführung: " + $"{item.LastExecutionDate:d}");
+                        }
                     }
                 }
             }
