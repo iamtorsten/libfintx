@@ -22,7 +22,7 @@ It can be used to read the balance of a bank account, receive an account stateme
 
 | Target | Branch | Version | Download link |
 | ------ | ------ | ------ | ------ |
-| Nuget | master | v0.0.2 | [![NuGet](https://img.shields.io/badge/nuget-v0.0.2-blue)](https://www.nuget.org/packages/libfintx/) |
+| Nuget | master | v0.0.3 | [![NuGet](https://img.shields.io/badge/nuget-v0.0.3-blue)](https://www.nuget.org/packages/libfintx/) |
 
 # Usage
 
@@ -73,7 +73,7 @@ The verification process is done by using the default [**WebRequest**](https://m
 
 # Copyright & License
 
-Copyright (c) 2016 - 2020 **Torsten Klinger**
+Copyright (c) 2016 - 2021 **Torsten Klinger**
 
 Licensed under GNU Lesser General Public License. Please read the LICENSE file.
 
