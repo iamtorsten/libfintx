@@ -10,17 +10,13 @@ using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using StatePrinting;
-using StatePrinting.Configurations;
-using StatePrinting.FieldHarvesters;
-using StatePrinting.OutputFormatters;
-using StatePrinting.ValueConverters;
+using Newtonsoft.Json;
 
 namespace libfintx.Config
 {
     public abstract class KeyPair<T> : IDisposable
     {
-        private static readonly Stateprinter _printer;
+        
         
         protected RSA _publicKey;
         protected RSA _privateKey;
@@ -100,20 +96,9 @@ namespace libfintx.Config
 
         static KeyPair()
         {
-            var cfg = new Configuration();
-
-            cfg.SetIndentIncrement(" ");            
-            cfg.OutputFormatter = new JsonStyle(cfg);
             
-            cfg.Add(new StandardTypesConverter(cfg));
-            cfg.Add(new StringConverter());
-            cfg.Add(new DateTimeConverter(cfg));
-            cfg.Add(new EnumConverter());
-            cfg.Add(new PublicFieldsAndPropertiesHarvester());
-
-            _printer = new Stateprinter(cfg);            
         }
 
-        public override string ToString() => _printer.PrintObject(this);
+        public override string ToString() => JsonConvert.SerializeObject(this, Formatting.Indented);
     }
 }

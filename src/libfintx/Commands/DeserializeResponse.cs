@@ -7,15 +7,12 @@
  */
 
 using libfintx.Handler;
-using StatePrinting;
-using StatePrinting.OutputFormatters;
+using Newtonsoft.Json;
 
 namespace libfintx.Commands
 {
     internal class DeserializeResponse
-    {
-        private static readonly Stateprinter _printer;
-        
+    {       
         public int NumSegments { get; set; }
         public int SegmentNumber { get; set; }
         public bool LastSegment { get; set; }
@@ -38,13 +35,10 @@ namespace libfintx.Commands
         
         static DeserializeResponse()
         {
-            _printer = new Stateprinter();
-            _printer.Configuration.SetNewlineDefinition("");
-            _printer.Configuration.SetIndentIncrement(" ");
-            _printer.Configuration.SetOutputFormatter(new JsonStyle(_printer.Configuration));
+
         }
 
-        public override string ToString() => _printer.PrintObject(this);
+        public override string ToString() => JsonConvert.SerializeObject(this, Formatting.Indented);
     }
     
     
