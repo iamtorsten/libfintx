@@ -1,4 +1,4 @@
-/*
+﻿/*
  * NetEbics -- .NET Core EBICS Client Library
  * (c) Copyright 2018 Bjoern Kuensting
  *
@@ -6,14 +6,13 @@
  * file 'LICENSE.txt', which is part of this source code package.
  */
 
-using StatePrinting;
-using StatePrinting.OutputFormatters;
+using Newtonsoft.Json;
 
 namespace libfintx.Config
 {
     public class EbicsConfig
     {
-        private static readonly Stateprinter _printer;
+        
         
         public string Address { get; set; }
         public bool TLS { get; set; }
@@ -26,12 +25,9 @@ namespace libfintx.Config
 
         static EbicsConfig()
         {
-            _printer = new Stateprinter();
-            _printer.Configuration.SetNewlineDefinition("");
-            _printer.Configuration.SetIndentIncrement(" ");
-            _printer.Configuration.SetOutputFormatter(new JsonStyle(_printer.Configuration));
+
         }
 
-        public override string ToString() => _printer.PrintObject(this);
+        public override string ToString() => JsonConvert.SerializeObject(this, Formatting.Indented);
     }
 }

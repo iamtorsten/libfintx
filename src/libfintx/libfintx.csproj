@@ -22,13 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.9" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.8" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.1" />
+    <PackageReference Include="Iconic.Zlib.Netstandard" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.9" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0010" />
-    <PackageReference Include="StatePrinter" Version="3.0.1" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.0" />
-    <PackageReference Include="Zlib.Portable" Version="1.11.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

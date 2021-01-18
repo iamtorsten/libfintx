@@ -6,14 +6,13 @@
  * file 'LICENSE.txt', which is part of this source code package.
  */
 
-using StatePrinting;
-using StatePrinting.OutputFormatters;
+using Newtonsoft.Json;
 
 namespace libfintx.Config
 {
     public class BankParams
     {
-        private static readonly Stateprinter _printer;
+        
         
         public AuthKeyPair AuthKeys { get; set; }
         public CryptKeyPair CryptKeys { get; set; }
@@ -21,12 +20,9 @@ namespace libfintx.Config
 
         static BankParams()
         {
-            _printer = new Stateprinter();
-            _printer.Configuration.SetNewlineDefinition("");
-            _printer.Configuration.SetIndentIncrement(" ");
-            _printer.Configuration.SetOutputFormatter(new JsonStyle(_printer.Configuration));
+
         }
 
-        public override string ToString() => _printer.PrintObject(this);
+        public override string ToString() => JsonConvert.SerializeObject(this, Formatting.Indented);
     }
 }
