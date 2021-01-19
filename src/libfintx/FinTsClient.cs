@@ -13,16 +13,15 @@ namespace libfintx
         public string SystemId { get; internal set; }
         public string HITAB { get; set; }
         public string HIRMS { get; set; }
-        public string HITANS { get; set; }
+        public int HITANS { get; set; }
 
         internal int SEGNUM { get; set; }
         internal string HIRMSf { get; set; }
         internal string HNHBK { get; set; }
-        internal string HNHBS { get; set; }
-        internal string HISALS { get; set; }
-        internal string HISALSf { get; set; }
-        internal string HKKAZ { get; set; }
-        internal string HKCAZ { get { return "1"; } }
+        internal int HNHBS { get; set; }
+        internal int HISALS { get; set; }
+        internal int HIKAZS { get; set; }
+        internal int HICAZS => 1;
         internal string HITAN { get; set; }
         internal int HISPAS { get; set; }
 

@@ -60,7 +60,7 @@ namespace libfintx
                             "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
                             "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
 
-                        if (client.HITANS != null && client.HITANS.Substring(0, 3).Equals("6+4"))
+                        if (client.HITANS == 6)
                         {
                             client.SEGNUM = SEGNUM.SETInt(5);
                             segments_ = HKTAN.Init_HKTAN(client, segments_);
@@ -83,12 +83,10 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    var message = FinTSMessage.Create(client, "1", "0", segments, client.HIRMS);
+                    var message = FinTSMessage.Create(client, 1, "0", segments, client.HIRMS);
                     var response = await FinTSMessage.Send(client, message);
 
-                    Helper.Parse_Segment(client, response);
-
-                    client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN:", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+                    Helper.Parse_Segments(client, response);
 
                     return response;
                 }
@@ -138,7 +136,7 @@ namespace libfintx
                     string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
                     string response = await FinTSMessage.Send(client, message);
 
-                    var messages = Helper.Parse_Segment(client, response);
+                    var messages = Helper.Parse_Segments(client, response);
                     var result = new HBCIDialogResult(messages, response);
                     if (!result.IsSuccess)
                     {
@@ -170,12 +168,10 @@ namespace libfintx
 
                     client.SEGNUM = SEGNUM.SETInt(5);
 
-                    message = FinTSMessage.Create(client, "1", "0", segments, client.HIRMS);
+                    message = FinTSMessage.Create(client, 1, "0", segments, client.HIRMS);
                     response = await FinTSMessage.Send(client, message);
 
-                    Helper.Parse_Segment(client, response);
-
-                    client.HITAN = Helper.Parse_String(Helper.Parse_String(response, "HITAN:", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
+                    Helper.Parse_Segments(client, response);
 
                     return response;
                 }

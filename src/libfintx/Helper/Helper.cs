@@ -128,6 +128,33 @@ namespace libfintx
             }
         }
 
+        public static Segment Parse_Segment(string segment)
+        {
+            var match = Regex.Match(segment, @"(?<Name>[A-Z]+):(?<Number>\d+):(?<Version>\d+)(:(?<Ref>\d+))?\+(?<Payload>.*)");
+            if (match.Success)
+            {
+                var result = new Segment(segment);
+                try
+                {
+                    result.Name = match.Groups["Name"].Value;
+                    result.Number = Convert.ToInt32(match.Groups["Number"].Value);
+                    result.Version = Convert.ToInt32(match.Groups["Version"].Value);
+                    if (match.Groups["Ref"].Success)
+                        result.Ref = Convert.ToInt32(match.Groups["Ref"].Value);
+                    result.Payload = match.Groups["Payload"].Value;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write($"Error parsing segment {segment}: {ex.Message}");
+                    return null;
+                }
+
+                return result;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Parsing segment -> UPD, BPD
         /// </summary>
@@ -136,7 +163,7 @@ namespace libfintx
         /// <param name="HBCIVersion"></param>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static List<HBCIBankMessage> Parse_Segment(FinTsClient client, string Message)
+        public static List<HBCIBankMessage> Parse_Segments(FinTsClient client, string Message)
         {
             try
             {
@@ -144,6 +171,20 @@ namespace libfintx
                 List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
                 string[] values = Message.Split('\'');
+
+                List<Segment> segments = new List<Segment>();
+                foreach (var item in values)
+                {
+                    var segment = Parse_Segment(item);
+                    if (segment != null)
+                    {
+                        segments.Add(segment);
+                    }
+                    else
+                    {
+                        Log.Write($"Couldn't parse segment:{Environment.NewLine}{item}");
+                    }
+                }
 
                 string msg = string.Join(Environment.NewLine, values);
 
@@ -170,14 +211,14 @@ namespace libfintx
                 foreach (AccountInformation accInfo in UPD.HIUPD.AccountList)
                     accInfo.AccountBic = connDetails.Bic;
 
-                foreach (var item in values)
+                foreach (var segment in segments)
                 {
-                    if (item.Contains("HIRMG"))
+                    if (segment.Name == "HIRMG")
                     {
                         // HIRMG:2:2+9050::Die Nachricht enthÃ¤lt Fehler.+9800::Dialog abgebrochen+9010::Initialisierung fehlgeschlagen, Auftrag nicht bearbeitet.
                         // HIRMG:2:2+9800::Dialogabbruch.
 
-                        string[] HIRMG_messages = item.Split('+');
+                        string[] HIRMG_messages = segment.Payload.Split('+');
                         foreach (var HIRMG_message in HIRMG_messages)
                         {
                             var message = Parse_BankCode_Message(HIRMG_message);
@@ -186,10 +227,10 @@ namespace libfintx
                         }
                     }
 
-                    if (item.Contains("HIRMS"))
+                    if (segment.Name == "HIRMS")
                     {
                         // HIRMS:3:2:2+9942::PIN falsch. Zugang gesperrt.'
-                        string[] HIRMS_messages = item.Split('+');
+                        string[] HIRMS_messages = segment.Payload.Split('+');
                         foreach (var HIRMS_message in HIRMS_messages)
                         {
                             var message = Parse_BankCode_Message(HIRMS_message);
@@ -241,80 +282,64 @@ namespace libfintx
                         }
                     }
 
-                    if (item.Contains("HNHBK"))
+                    if (segment.Name == "HNHBK")
                     {
-                        var ID = Parse_String(item.ToString(), "+1+", ":1");
+                        var ID = Parse_String(segment.Payload, "+1+", ":1");
                         client.HNHBK = ID;
                     }
 
-                    if (item.Contains("HISYN"))
+                    if (segment.Name == "HISYN")
                     {
-                        var ID = item.Substring(item.IndexOf("+") + 1);
-                        client.SystemId = ID;
-
-                        Log.Write("Customer System ID: " + ID);
+                        client.SystemId = segment.Payload;
+                        Log.Write("Customer System ID: " + client.SystemId);
                     }
 
-                    if (item.Contains("HNHBS"))
+                    if (segment.Name == "HNHBS")
                     {
-                        var item_ = item + "'";
-
-                        var MSG = Parse_String(item_.Replace("HNHBS:", ""), "+", "'");
-
-                        if (MSG.Equals("0") || MSG == null)
-                            client.HNHBS = "2";
+                        if (segment.Payload == null || segment.Payload == "0")
+                            client.HNHBS = 2;
                         else
-                            client.HNHBS = Convert.ToString(Convert.ToInt16(MSG) + 1);
+                            client.HNHBS = Convert.ToInt32(segment.Payload) + 1;
                     }
 
-                    if (item.Contains("HISALS"))
+                    if (segment.Name == "HISALS")
                     {
-                        var SEG = Parse_String(item.Replace("HISALS:", ""), ":", ":");
-
-                        client.HISALS = SEG;
-
-                        client.HISALSf = item;
+                        client.HISALS = segment.Version;
                     }
 
-                    if (item.Contains("HITANS"))
+                    if (segment.Name == "HITANS")
                     {
-                        var TAN = Parse_String(item.Replace("HITANS:", ""), ":", "+").Replace(":", "+");
-
-                        if (!string.IsNullOrEmpty(client.HITANS) && TAN == "7+4")
+                        if (client.HITANS != 0 && segment.Version == 7)
                             ; // Ignore HKTAN version 7 if other version is available and version 7 isn't implemented in libfintx
                         else
-                            client.HITANS = TAN;
+                            client.HITANS = segment.Version;
                     }
 
-                    if (item.Contains("HKKAZ"))
+                    if (segment.Name == "HITAN")
                     {
-                        string pattern = @"HKKAZ;.*?;";
-                        Regex rgx = new Regex(pattern);
-                        string sentence = item;
+                        client.HITAN = Parse_String(segment.Payload.Replace("?+", "??"), "++", "+");
+                    }
 
-                        foreach (Match match in rgx.Matches(sentence))
+                    if (segment.Name == "HIKAZS")
+                    {
+                        if (client.HIKAZS == 0)
                         {
-                            var VER = Parse_String(match.Value, "HKKAZ;", ";");
-
-                            if (string.IsNullOrEmpty(client.HKKAZ))
-                                client.HKKAZ = VER;
-                            else
-                            {
-                                if (int.Parse(VER) > int.Parse(client.HKKAZ))
-                                {
-                                    client.HKKAZ = VER;
-                                }
-                            }
+                            client.HIKAZS = segment.Version;
+                        }
+                        else
+                        {
+                            if (segment.Version > client.HIKAZS)
+                                client.HIKAZS = segment.Version;
                         }
                     }
 
-                    if (item.Contains("HISPAS"))
+                    if (segment.Name == "HISPAS")
                     {
-                        if (item.Contains("pain.001.001.03"))
+                        if (segment.Payload.Contains("pain.001.001.03"))
                             client.HISPAS = 1;
-                        else if (item.Contains("pain.001.002.03"))
+                        else if (segment.Payload.Contains("pain.001.002.03"))
                             client.HISPAS = 2;
-                        else if (item.Contains("pain.001.003.03"))
+                        else if (segment.Payload.Contains("pain.001.003.03"))
                             client.HISPAS = 3;
 
                         if (client.HISPAS == 0)
@@ -322,9 +347,9 @@ namespace libfintx
                     }
                 }
 
-                // Fallback if HKKAZ is not delivered by BPD (eg. Postbank)
-                if (string.IsNullOrEmpty(client.HKKAZ))
-                    client.HKKAZ = "5";
+                // Fallback if HIKAZS is not delivered by BPD (eg. Postbank)
+                if (client.HIKAZS == 0)
+                    client.HIKAZS = 0;
 
                 return result;
             }
@@ -347,25 +372,37 @@ namespace libfintx
             {
                 var values = Message.Split('\'');
 
+                List<Segment> segments = new List<Segment>();
                 foreach (var item in values)
                 {
-                    if (item.Contains("HNHBS"))
+                    var segment = Parse_Segment(item);
+                    if (segment != null)
                     {
-                        var item_ = item + "'";
-
-                        var MSG = Parse_String(item_.Replace("HNHBS:", ""), "+", "'");
-
-                        if (MSG.Equals("0") || MSG == null)
-                            client.HNHBS = "2";
-                        else
-                            client.HNHBS = Convert.ToString(Convert.ToInt16(MSG) + 1);
+                        segments.Add(segment);
+                    }
+                    else
+                    {
+                        Log.Write($"Couldn't parse segment:{Environment.NewLine}{item}");
                     }
                 }
 
-                if (!string.IsNullOrEmpty(client.HNHBS))
-                    return true;
-                else
-                    return false;
+                foreach (var segment in segments)
+                {
+                    if (segment.Name == "HNHBS")
+                    {
+                        if (segment.Payload == null || segment.Payload == "0")
+                            client.HNHBS = 2;
+                        else
+                            client.HNHBS = Convert.ToInt32(segment.Payload) + 1;
+                    }
+
+                    if (segment.Name == "HITAN")
+                    {
+                        client.HITAN = Parse_String(segment.Payload.Replace("?+", "??"), "++", "+");
+                    }
+                }
+
+                return client.HNHBS > 0;
             }
             catch (Exception ex)
             {

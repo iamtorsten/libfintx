@@ -36,8 +36,6 @@ namespace libfintx
             string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS);
             var TAN = await FinTSMessage.Send(client, message);
 
-            client.HITAN = Helper.Parse_String(Helper.Parse_String(TAN, "HITAN", "'").Replace("?+", "??"), "++", "+").Replace("??", "?+");
-
             Helper.Parse_Message(client, TAN);
 
             return TAN;

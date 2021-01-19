@@ -42,7 +42,7 @@ namespace libfintx
 
         public static string CreateSync(FinTsClient client, string Segments)
         {
-            return Create(client, "1", "0", Segments, null, "0");
+            return Create(client, 1, "0", Segments, null, "0");
         }
         /// <summary>
         /// Create FinTS message
@@ -63,7 +63,7 @@ namespace libfintx
         /// Mostly it will be TLS12 but who knows.
         /// I'm pretty sure the method can be simplified even more. 
         /// 
-        public static string Create(FinTsClient client, string MsgNum, string DialogID, string Segments, string HIRMS_TAN, string SystemID = null)
+        public static string Create(FinTsClient client, int MsgNum, string DialogID, string Segments, string HIRMS_TAN, string SystemID = null)
         {
 
             int Version = client.ConnectionDetails.HbciVersion;
@@ -75,8 +75,8 @@ namespace libfintx
             if (SystemID == null)
                 SystemID = client.SystemId; 
 
-            if (String.IsNullOrEmpty(MsgNum))
-                MsgNum = "1";
+            if (MsgNum == 0)
+                MsgNum = 1;
 
             DialogID += "";
 
@@ -200,7 +200,7 @@ namespace libfintx
             else if (!String.IsNullOrEmpty(TAN_))
                 Log.Write(payload.Replace(UserID, "XXXXXX").Replace(PIN, "XXXXXX").Replace(TAN_, "XXXXXX"));
 
-            var msgLen = HEAD_LEN + TRAIL_LEN + MsgNum.Length * 2 + DialogID.Length + payload.Length + encHead.Length;
+            var msgLen = HEAD_LEN + TRAIL_LEN + ($"{MsgNum}".Length * 2) + DialogID.Length + payload.Length + encHead.Length;
 
             var paddedLen = ("000000000000").Substring(0, 12 - Convert.ToString(msgLen).Length) + Convert.ToString(msgLen);
 

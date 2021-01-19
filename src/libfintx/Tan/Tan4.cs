@@ -35,20 +35,17 @@ namespace libfintx
         {
             Log.Write("Starting job TAN process 4");
 
-            var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
-            var HITANS = !String.IsNullOrEmpty(client.HITANS.Substring(0, 1)) ? int.Parse(client.HITANS.Substring(0, 1)) : 0;
-
             // Version 3
-            if (HITANS == 3)
-                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4+++++++" + MediumName + "'";
+            if (client.HITANS == 3)
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+4+++++++" + MediumName + "'";
             // Version 4
-            else if (HITANS == 4)
-                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4++++++++" + MediumName + "'";
+            else if (client.HITANS == 4)
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+4++++++++" + MediumName + "'";
             // Version 5
-            else if (HITANS == 5)
-                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+4++++++++++" + MediumName + "'";
+            else if (client.HITANS == 5)
+                segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+4++++++++++" + MediumName + "'";
 
             client.SEGNUM = SEGNUM.SETInt(3);
 

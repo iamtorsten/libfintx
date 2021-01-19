@@ -34,50 +34,47 @@ namespace libfintx
         public static async Task<String> Send_TAN(FinTsClient client, string TAN)
         {
             Log.Write("Starting TAN process");
-            var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
-
-            var HITANS = !string.IsNullOrEmpty(client.HITANS.Substring(0, 1)) ? int.Parse(client.HITANS.Substring(0, 1)) : 0;
 
             if (string.IsNullOrEmpty(client.HITAB)) // TAN Medium Name not set
             {
                 // Version 2
-                if (HITANS == 2)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N'";
+                if (client.HITANS == 2)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
                 // Version 3
-                else if (HITANS == 3)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N'";
+                else if (client.HITANS == 3)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
                 // Version 4
-                else if (HITANS == 4)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N'";
+                else if (client.HITANS == 4)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
                 // Version 5
-                else if (HITANS == 5)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "++N'";
+                else if (client.HITANS == 5)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
                 // Version 6
-                else if (HITANS == 6)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "+N'";
+                else if (client.HITANS == 6)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "+N'";
                 else // default
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "++N'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
             }
             else
             {
                 // Version 2
-                if (HITANS == 2)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                if (client.HITANS == 2)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 3
-                else if (HITANS == 3)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                else if (client.HITANS == 3)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 4
-                else if (HITANS == 4)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                else if (client.HITANS == 4)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 5
-                else if (HITANS == 5)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                else if (client.HITANS == 5)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 6
-                else if (HITANS == 6)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++++" + client.HITAN + "+N++++" + client.HITAB + "'";
+                else if (client.HITANS == 6)
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "+N++++" + client.HITAB + "'";
                 else // default
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS.Substring(0, 1) + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
             }
 
             client.SEGNUM = SEGNUM.SETInt(3);

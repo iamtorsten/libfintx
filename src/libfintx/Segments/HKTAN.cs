@@ -41,26 +41,26 @@ namespace libfintx
         {
             if (String.IsNullOrEmpty(client.HITAB)) // TAN Medium Name not set
             {
-                if (client.HITANS.Substring(0, 3).Equals("6+4"))
-                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+" + SegmentId + "'";
+                if (client.HITANS == 6)
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + SegmentId + "'";
                 else
-                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+'";
             }
             else // TAN Medium Name set
             {
                 // Version 3, Process 4
-                if (client.HITANS.Substring(0, 3).Equals("3+4"))
-                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "++++++++" + client.HITAB + "'";
+                if (client.HITANS == 3)
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4++++++++" + client.HITAB + "'";
                 // Version 4, Process 4
-                if (client.HITANS.Substring(0, 3).Equals("4+4"))
-                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+++++++++" + client.HITAB + "'";
+                if (client.HITANS == 4)
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+++++++++" + client.HITAB + "'";
                 // Version 5, Process 4
-                if (client.HITANS.Substring(0, 3).Equals("5+4"))
-                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+++++++++++" + client.HITAB + "'";
+                if (client.HITANS == 5)
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+++++++++++" + client.HITAB + "'";
                 // Version 6, Process 4
-                if (client.HITANS.Substring(0, 3).Equals("6+4"))
+                if (client.HITANS == 6)
                 {
-                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+" + SegmentId + "+++++++++" + client.HITAB + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + SegmentId + "+++++++++" + client.HITAB + "'";
                 }
             }
 
