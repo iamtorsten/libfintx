@@ -38,7 +38,7 @@ namespace libfintx
             client.SEGNUM = SEGNUM.SETInt(3);
 
             var connectionDetails = client.ConnectionDetails;
-            string segments = "HKCSB:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+sepade?:xsd?:pain.001.001.03.xsd'";
+            string segments = "HKCSB:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'";
 
             if (Helper.IsTANRequired("HKCSB"))
             {
