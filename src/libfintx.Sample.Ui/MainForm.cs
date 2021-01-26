@@ -701,6 +701,46 @@ namespace libfintx.Sample.Ui
             chk_umsatzabruf_von.Checked = true;
             date_umsatzabruf_von.Value = DateTime.Now.AddDays(-90);
         }
+
+        private async void btn_terminueberweisungen_abholen_Click(object sender, EventArgs e)
+        {
+            var connectionDetails = GetConnectionDetails();
+            var client = new FinTsClient(connectionDetails);
+            var sync = await client.Synchronization();
+
+            HBCIOutput(sync.Messages);
+
+            if (sync.IsSuccess)
+            {
+                // TAN-Verfahren
+                client.HIRMS = txt_tanverfahren.Text;
+
+                if (!await InitTANMedium(client))
+                    return;
+
+                var result = await client.GetTerminatedTransfers(_tanDialog);
+
+                HBCIOutput(result.Messages);
+
+                if (result.Data != null && result.Data.Count > 0)
+                {
+                    foreach (var item in result.Data)
+                    {
+                        Pain00100103CtData.PaymentInfo paymentData = item.SepaData.Payments.FirstOrDefault();
+                        var txInfo = paymentData.CreditTxInfos.FirstOrDefault();
+
+                        SimpleOutput(
+                            "Auftrags-Id: " + item.OrderId + " | " +
+                            (item.Deleteable != null ? "Löschbar: " + item.Deleteable + " | " : null) +
+                            (item.Modifiable != null ? "Löschbar: " + item.Modifiable + " | " : null) +
+                            "Empfänger: " + txInfo.Creditor + " | " +
+                            "Betrag: " + txInfo.Amount + " | " +
+                            "Verwendungszweck: " + txInfo.RemittanceInformation + " | " +
+                            "Ausführung: " + $"{paymentData.RequestedExecutionDate:d}");
+                    }
+                }
+            }
+        }
     }
     
 }

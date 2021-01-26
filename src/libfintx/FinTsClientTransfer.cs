@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using libfintx.Data;
 
 namespace libfintx
 {
@@ -183,25 +187,66 @@ namespace libfintx
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public async Task<HBCIDialogResult> GetTerminatedTransfers(TANDialog tanDialog)
+        public async Task<HBCIDialogResult<List<Transfer>>> GetTerminatedTransfers(TANDialog tanDialog)
         {
             var result = await InitializeConnection();
             if (!result.IsSuccess)
-                return result;
+                return result.TypedResult<List<Transfer>>();
 
             result = await ProcessSCA(result, tanDialog);
             if (!result.IsSuccess)
-                return result;
+                return result.TypedResult<List<Transfer>>();
 
             // Success
             string BankCode = await Transaction.HKCSB(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
             if (!result.IsSuccess)
-                return result;
+                return result.TypedResult<List<Transfer>>();
 
             result = await ProcessSCA(result, tanDialog);
 
-            return result;
+            if (!result.IsSuccess)
+                return result.TypedResult<List<Transfer>>();
+
+            BankCode = result.RawData;
+            int startIdx = BankCode.IndexOf("HICSB");
+            if (startIdx < 0)
+                return result.TypedResult<List<Transfer>>();
+
+            var data = new List<Transfer>();
+
+            string BankCode_ = BankCode.Substring(startIdx);
+            for (; ; )
+            {
+                var match = Regex.Match(BankCode_, @"HICSB.+?(?<xml><\?xml.+?</Document>)\+(?<orderid>.*?)(\+(?<deleteable>j|n))?(\+(?<modifiable>j|n))?'", RegexOptions.Singleline);
+                if (match.Success)
+                {
+                    string xml = match.Groups["xml"].Value;
+                    // xml ist UTF-8
+                    xml = Converter.ConvertEncoding(xml, Encoding.GetEncoding("ISO-8859-1"), Encoding.UTF8);
+
+                    string orderId = match.Groups["orderid"].Value;
+                    bool? deleteable = match.Groups["deleteable"].Value == "j" ? true : (match.Groups["deleteable"].Value == "n" ? false : (bool?) null);
+                    bool? modifiable = match.Groups["modifiable"].Value == "j" ? true : (match.Groups["modifiable"].Value == "n" ? false : (bool?) null);
+
+                    var painData = Pain00100103CtData.Create(xml);
+
+                    var item = new Transfer(orderId, deleteable, modifiable, painData);
+                    data.Add(item);
+                }
+
+                int endIdx = BankCode_.IndexOf("'");
+                if (BankCode_.Length <= endIdx + 1)
+                    break;
+
+                BankCode_ = BankCode_.Substring(endIdx + 1);
+                startIdx = BankCode_.IndexOf("HICSB");
+                if (startIdx < 0)
+                    break;
+            }
+
+            // Success
+            return result.TypedResult(data);
         }
 
     }
