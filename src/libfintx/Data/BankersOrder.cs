@@ -34,29 +34,16 @@ namespace libfintx.Data
             ExecutionDay = executionDay;
             LastExecutionDate = lastExecutionDate;
         }
+
         public override bool Equals(object obj)
         {
-            var order = obj as BankersOrder;
-            return order != null &&
-                   OrderId == order.OrderId &&
-                   EqualityComparer<Pain00100103CtData>.Default.Equals(SepaData, order.SepaData) &&
-                   FirstExecutionDate == order.FirstExecutionDate &&
-                   TimeUnit == order.TimeUnit &&
-                   Rota == order.Rota &&
-                   ExecutionDay == order.ExecutionDay &&
-                   LastExecutionDate == order.LastExecutionDate;
+            return obj is BankersOrder order &&
+                   OrderId == order.OrderId;
         }
+
         public override int GetHashCode()
         {
-            var hashCode = 434083080;
-            hashCode *= -1521134295 + EqualityComparer<string>.Default.GetHashCode(OrderId);
-            hashCode *= -1521134295 + EqualityComparer<Pain00100103CtData>.Default.GetHashCode(SepaData);
-            hashCode *= -1521134295 + FirstExecutionDate.GetHashCode();
-            hashCode *= -1521134295 + TimeUnit.GetHashCode();
-            hashCode *= -1521134295 + EqualityComparer<string>.Default.GetHashCode(Rota);
-            hashCode *= -1521134295 + ExecutionDay.GetHashCode();
-            hashCode *= -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(LastExecutionDate);
-            return hashCode;
+            return 755918762 + EqualityComparer<string>.Default.GetHashCode(OrderId);
         }
     }
 }
