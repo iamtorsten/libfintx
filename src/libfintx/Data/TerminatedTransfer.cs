@@ -4,14 +4,14 @@ using static libfintx.HKCDE;
 
 namespace libfintx.Data
 {
-    public class Transfer
+    public class TerminatedTransfer
     {
         public string OrderId { get; set; }
         public bool? Deleteable { get; set; }
         public bool? Modifiable { get; set; }
         public Pain00100103CtData SepaData { get; set; }
 
-        public Transfer(string orderId, bool? deleteable, bool? modifiable, Pain00100103CtData sepaData)
+        public TerminatedTransfer(string orderId, bool? deleteable, bool? modifiable, Pain00100103CtData sepaData)
         {
             OrderId = orderId;
             Deleteable = deleteable;
@@ -21,7 +21,7 @@ namespace libfintx.Data
 
         public override bool Equals(object obj)
         {
-            return obj is Transfer transfer &&
+            return obj is TerminatedTransfer transfer &&
                    OrderId == transfer.OrderId;
         }
 

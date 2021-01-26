@@ -33,6 +33,8 @@ using static libfintx.HKCDE;
 using static libfintx.HKCDL;
 using static libfintx.HKCDN;
 using static libfintx.HKCME;
+using static libfintx.HKCSL;
+using static libfintx.HKCSA;
 using static libfintx.HKCSB;
 using static libfintx.HKCSE;
 using static libfintx.HKCUM;
@@ -136,6 +138,16 @@ namespace libfintx
         public static async Task<String> HKCSB(FinTsClient client)
         {
             return await Init_HKCSB(client);
+        }
+
+        public static async Task<String> HKCSL(FinTsClient client, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        {
+            return await Init_HKCSL(client, OrderId, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+        }
+
+        public static async Task<String> HKCSA(FinTsClient client, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        {
+            return await Init_HKCSA(client, OrderId, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
         }
 
         public static async Task<String> HKCDB(FinTsClient client)
