@@ -317,7 +317,7 @@ namespace libfintx
 
                     if (segment.Name == "HITAN")
                     {
-                        client.HITAN = Parse_String(segment.Payload.Replace("?+", "??"), "++", "+");
+                        client.HITAN = Parse_String(segment.Payload.Replace("?+", "??"), "++", "+").Replace("??", "?+");
                     }
 
                     if (segment.Name == "HIKAZS")
@@ -398,7 +398,7 @@ namespace libfintx
 
                     if (segment.Name == "HITAN")
                     {
-                        client.HITAN = Parse_String(segment.Payload.Replace("?+", "??"), "++", "+");
+                        client.HITAN = Parse_String(segment.Payload.Replace("?+", "??"), "++", "+").Replace("??", "?+");
                     }
                 }
 
