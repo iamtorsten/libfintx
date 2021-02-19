@@ -34,10 +34,11 @@ namespace libfintx
         /// <summary>	
         /// Enable / Disable Tracing	
         /// </summary>	
-        public static void Tracing(bool Enabled, bool Formatted = false, int maxFileSizeMB = 10)
+        public static void Tracing(bool Enabled, bool Formatted = false, bool maskCredentials = true, int maxFileSizeMB = 1)
         {
             Trace.Enabled = Enabled;
             Trace.Formatted = Formatted;
+            Trace.MaskCredentials = maskCredentials;
             Trace.MaxFileSize = maxFileSizeMB;
         }
 

@@ -512,7 +512,7 @@ namespace libfintx.Sample.Ui
 
         private void chk_Tracing_CheckedChanged(object sender, EventArgs e)
         {
-            FinTsConfig.Tracing(chk_tracing.Checked, false);
+            FinTsConfig.Tracing(chk_tracing.Checked, false, chk_tracingMaskCredentials.Checked);
             if (chk_tracing.Checked)
             {
                 MessageBox.Show("Achtung: Die Nachrichten werden im Klartext (inkl. PIN, Benutzerkennung, TAN) in eine Textdatei geschrieben!");

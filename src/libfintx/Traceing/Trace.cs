@@ -41,9 +41,28 @@ namespace libfintx
         public static bool Formatted { get; set; }
 
         /// <summary>
+        /// Mask credentials (User-ID, PIN) before writing to trace file.
+        /// </summary>
+        public static bool MaskCredentials { get; set; }
+
+        /// <summary>
         /// Maximum size of trace file in MB after file will be cleared. Non-positive value means that file will never be cleared.
         /// </summary>
         public static int MaxFileSize { get; set; }
+
+        /// <summary>
+        /// Used to mask credentials.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="userId"></param>
+        /// <param name="pin"></param>
+        public static void Write(string message, string userId, string pin)
+        {
+            message = Regex.Replace(message, $@"\b{userId}\b", "XXXXXX");
+            message = Regex.Replace(message, $@"\b{pin}\b", "XXXXXX");
+
+            Write(message);
+        }
 
         /// <summary>
         /// Trace
@@ -86,7 +105,7 @@ namespace libfintx
                 if (Formatted)
                 {
                     var formatted = string.Empty;
-                    var matches = Regex.Matches(message, "[A-Z]{5}[^']*'+");
+                    var matches = Regex.Matches(message, "[A-Z]+?[^']*'+");
                     foreach (Match match in matches)
                     {
                         formatted += match.Value + Environment.NewLine;

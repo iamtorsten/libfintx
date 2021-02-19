@@ -86,6 +86,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btn_daueraufträge_abholen = new System.Windows.Forms.Button();
             this.btn_terminueberweisungen_abholen = new System.Windows.Forms.Button();
+            this.chk_tracingMaskCredentials = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pBox_tan)).BeginInit();
             this.SuspendLayout();
             // 
@@ -660,11 +661,25 @@
             this.btn_terminueberweisungen_abholen.UseVisualStyleBackColor = true;
             this.btn_terminueberweisungen_abholen.Click += new System.EventHandler(this.btn_terminueberweisungen_abholen_Click);
             // 
+            // chk_tracingMaskCredentials
+            // 
+            this.chk_tracingMaskCredentials.AutoSize = true;
+            this.chk_tracingMaskCredentials.Checked = true;
+            this.chk_tracingMaskCredentials.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chk_tracingMaskCredentials.Location = new System.Drawing.Point(1084, 451);
+            this.chk_tracingMaskCredentials.Margin = new System.Windows.Forms.Padding(6);
+            this.chk_tracingMaskCredentials.Name = "chk_tracingMaskCredentials";
+            this.chk_tracingMaskCredentials.Size = new System.Drawing.Size(259, 29);
+            this.chk_tracingMaskCredentials.TabIndex = 102;
+            this.chk_tracingMaskCredentials.Text = "Zugangsdaten maskieren";
+            this.chk_tracingMaskCredentials.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2237, 1401);
+            this.Controls.Add(this.chk_tracingMaskCredentials);
             this.Controls.Add(this.btn_terminueberweisungen_abholen);
             this.Controls.Add(this.btn_daueraufträge_abholen);
             this.Controls.Add(this.chk_umsatzabruf_bis);
@@ -795,6 +810,7 @@
         internal System.Windows.Forms.Label label3;
         internal System.Windows.Forms.Button btn_daueraufträge_abholen;
         internal System.Windows.Forms.Button btn_terminueberweisungen_abholen;
+        private System.Windows.Forms.CheckBox chk_tracingMaskCredentials;
     }
 }
 

@@ -249,7 +249,12 @@ namespace libfintx
             // Warning:
             // This writes plain message incl. PIN, UserID and TAN human readable into a textfile!
             if (Trace.Enabled)
-                Trace.Write(Message);
+            {
+                if (Trace.MaskCredentials)
+                    Trace.Write(Message, client.ConnectionDetails.UserId, client.ConnectionDetails.Pin);
+                else
+                    Trace.Write(Message);
+            }
 
             return await SendAsync(client, Message);
         }
@@ -296,7 +301,12 @@ namespace libfintx
                 // Warning:
                 // This writes plain message incl. PIN, UserID and TAN human readable into a textfile!
                 if (Trace.Enabled)
-                    Trace.Write(FinTSMessage);
+                {
+                    if (Trace.MaskCredentials)
+                        Trace.Write(FinTSMessage, client.ConnectionDetails.UserId, client.ConnectionDetails.Pin);
+                    else
+                        Trace.Write(FinTSMessage);
+                }
 
                 return FinTSMessage;
             }
