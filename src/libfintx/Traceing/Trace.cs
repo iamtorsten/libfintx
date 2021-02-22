@@ -58,8 +58,8 @@ namespace libfintx
         /// <param name="pin"></param>
         public static void Write(string message, string userId, string pin)
         {
-            message = Regex.Replace(message, $@"\b{userId}\b", "XXXXXX");
-            message = Regex.Replace(message, $@"\b{pin}\b", "XXXXXX");
+            message = Regex.Replace(message, $@"\b{Regex.Escape(userId)}\b", "XXXXXX");
+            message = Regex.Replace(message, $@"\b{Regex.Escape(pin)}\b", "XXXXXX");
 
             Write(message);
         }
