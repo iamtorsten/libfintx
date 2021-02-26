@@ -174,14 +174,14 @@ namespace libfintx.Camt.Camt052
                 {
                     foreach (ReportEntry2 entry in entries)
                     {
-                        if (entry.Amt.Ccy != stmt.Currency)
+                        bool pending = entry.Sts == EntryStatus2Code.PDNG;
+                        if (!pending && entry.Amt.Ccy != stmt.Currency)
                         {
-                            throw new Exception("transaction currency " + entry.Amt.Ccy + " does not match the bank statement currency");
+                            throw new Exception($"Transaction currency '{entry.Amt.Ccy}' does not match the bank statement currency '{stmt.Currency}'.");
                         }
 
                         CamtTransaction tr = new CamtTransaction();
-
-                        tr.Pending = entry.Sts == EntryStatus2Code.PDNG;
+                        tr.Pending = pending;
 
                         if (entry.BookgDt != null)
                         {
