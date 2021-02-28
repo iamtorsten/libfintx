@@ -6,7 +6,7 @@ In dieser Zeit gelang es jedoch nicht, die Bibliothek für alle Kreditinstitute 
 
 Ich habe alle meine Möglichkeiten ausgeschöpft, die Weiterentwicklung voranzutreiben. Jedoch letztlich ohne Erfolg. Ich kann leider keine 10.000 Euro investieren um das Ziel durch einen externen Entwickler zu erreichen.
 
-Ich werde jetzt noch bis 15. März 2021 versuchen, dass Ruder herumrumzureißen und die Bibliothek irgendwie zu vollenden. Sollte es mir nicht gelingen, muss ich schweren Herzens die Löschung und Sperrung beim ZKA benatragen. Danach darf der Quellcode nicht mehr verwendet werden! Eventuell findet sich ja noch der ein oder andere Entwickler, welcher Interesse an der Entwicklung hat.
+Ich werde jetzt noch bis 15. März 2021 versuchen, dass Ruder herumrzureißen und die Bibliothek irgendwie zu vollenden. Sollte es mir nicht gelingen, muss ich schweren Herzens die Löschung und Sperrung beim ZKA benatragen. Danach darf der Quellcode nicht mehr verwendet werden! Eventuell findet sich ja noch der ein oder andere Entwickler, welcher Interesse an der Entwicklung hat.
 
 Vorsorglich weise ich auf die Verwendung von **HBCI4Java** hin. Dieses Projekt ist vollständig und belastbar.
 
