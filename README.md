@@ -61,7 +61,7 @@ also an [unauthorized english translation](http://www.hbci-zka.de/english/specif
 
 # Tested banks
 
-* Raiffeisebanken
+* Raiffeisenbanken
 * Sparkassen
 * DKB
 * DiBa
