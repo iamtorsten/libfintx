@@ -133,7 +133,7 @@ See the file LICENSE.txt for further information.
 
 * Refactoring segment parsing
 * Refactoring HITAN parsing
-* Using namespaces of packages instead of root namespace
+* Using namespace of package instead of root namespace
 
 # Support
 
