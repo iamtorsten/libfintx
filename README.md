@@ -129,6 +129,12 @@ Parts of this library are based on Bjoern Kuensting [NetEbics](https://github.co
 
 See the file LICENSE.txt for further information.
 
+# ToDo
+
+* Refactoring segment parsing
+* Refactoring HITAN parsing
+* Using namespaces of packages instead of root namespace
+
 # Support
 
 You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com). 💬
