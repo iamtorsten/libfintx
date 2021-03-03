@@ -67,6 +67,9 @@ also an [unauthorized english translation](http://www.hbci-zka.de/english/specif
 * DiBa
 * Consorsbank
 * Sparda
+* Postbank
+* Norisbank
+* Deutsche Bank
 
 # Sample code
 
