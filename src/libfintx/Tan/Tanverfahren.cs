@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace libfintx.Tan
+namespace libfintx
 {
     class Tanverfahren
     {
