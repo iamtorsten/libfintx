@@ -132,7 +132,6 @@ See the file LICENSE.txt for further information.
 # ToDo
 
 * Refactoring segment parsing
-* Refactoring HITAN parsing
 * Using namespace of package instead of root namespace
 
 # Support
