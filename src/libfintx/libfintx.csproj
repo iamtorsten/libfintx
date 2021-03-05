@@ -31,4 +31,10 @@
     <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Banken.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
