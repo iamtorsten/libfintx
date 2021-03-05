@@ -56,8 +56,7 @@ Look at the demo projects inside the master branch.
 
 # Specification
 
-For exact information please refer to the [german version of the specification](http://www.hbci-zka.de/spec/spezifikation.htm). There is
-also an [unauthorized english translation](http://www.hbci-zka.de/english/specification/engl_2_2.htm).
+For exact information please refer to the [german version of the specification](http://www.hbci-zka.de/spec/spezifikation.htm).
 
 # Tested banks
 
