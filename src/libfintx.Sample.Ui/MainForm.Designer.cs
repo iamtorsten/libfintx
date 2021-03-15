@@ -538,6 +538,8 @@
             // chk_tracingFormatted
             // 
             this.chk_tracingFormatted.AutoSize = true;
+            this.chk_tracingFormatted.Checked = true;
+            this.chk_tracingFormatted.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chk_tracingFormatted.Location = new System.Drawing.Point(1496, 402);
             this.chk_tracingFormatted.Margin = new System.Windows.Forms.Padding(6);
             this.chk_tracingFormatted.Name = "chk_tracingFormatted";

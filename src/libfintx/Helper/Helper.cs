@@ -29,6 +29,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using libfintx.Data.Segment;
 
 namespace libfintx
 {
@@ -130,29 +131,7 @@ namespace libfintx
 
         public static Segment Parse_Segment(string segment)
         {
-            var match = Regex.Match(segment, @"(?<Name>[A-Z]+):(?<Number>\d+):(?<Version>\d+)(:(?<Ref>\d+))?\+(?<Payload>.*)");
-            if (match.Success)
-            {
-                var result = new Segment(segment);
-                try
-                {
-                    result.Name = match.Groups["Name"].Value;
-                    result.Number = Convert.ToInt32(match.Groups["Number"].Value);
-                    result.Version = Convert.ToInt32(match.Groups["Version"].Value);
-                    if (match.Groups["Ref"].Success)
-                        result.Ref = Convert.ToInt32(match.Groups["Ref"].Value);
-                    result.Payload = match.Groups["Payload"].Value;
-                }
-                catch (Exception ex)
-                {
-                    Log.Write($"Error parsing segment {segment}: {ex.Message}");
-                    return null;
-                }
-
-                return result;
-            }
-
-            return null;
+            return SegmentParserFactory.ParseSegment(segment);
         }
 
         /// <summary>
@@ -170,7 +149,7 @@ namespace libfintx
                 var connDetails = client.ConnectionDetails;
                 List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
-                string[] values = Message.Split('\'');
+                string[] values = Message.Split('\'').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
                 List<Segment> segments = new List<Segment>();
                 foreach (var item in values)
@@ -370,7 +349,7 @@ namespace libfintx
         {
             try
             {
-                var values = Message.Split('\'');
+                string[] values = Message.Split('\'').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray(); ;
 
                 List<Segment> segments = new List<Segment>();
                 foreach (var item in values)

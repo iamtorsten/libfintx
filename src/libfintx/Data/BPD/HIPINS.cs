@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using libfintx.Data.Segment;
 
 namespace libfintx
 {
-    public class HIPINS
+    public class HIPINS : SegmentBase
     {
         public Dictionary<string, bool> GvPinTan { get; set; }
 
-        public HIPINS()
+        public HIPINS(Segment segment) : base(segment)
         {
             GvPinTan = new Dictionary<string, bool>();
         }
@@ -15,31 +16,6 @@ namespace libfintx
         public bool IsTanRequired(string gvName)
         {
             return GvPinTan.ContainsKey(gvName) ? GvPinTan[gvName] : false;
-        }
-
-        public static HIPINS Parse_HIPINS(string hipins)
-        {
-            HIPINS result = new HIPINS();
-
-            if (hipins == null)
-                return result;
-
-            // HIPINS:170:1:4+1+1+0+5:5:6:USERID:CUSTID:HKAUB:J:
-            // HIPINS:78:1:4+1+1+0+5:20:6:VR-NetKey oder Alias::HKTAN:N:
-            var match = Regex.Match(hipins, @"HIPINS:(\d*):(\d*):(\d*)\+(\d*)\+(\d*)\+(\d*)\+(\d*):(\d*):(\d*):(?<belegungbenutzerkennung>.*?):(?<belegungkundenid>.*?):(?<gvlist>.*)");
-            if (match.Success)
-            {
-                var gvList = match.Groups["gvlist"].Value;
-                foreach (Match gvMatch in Regex.Matches(gvList, @"(?<gv>[A-Z]+):(?<tanrequired>J|N)"))
-                {
-                    var gv = gvMatch.Groups["gv"].Value;
-                    var tanRequired = gvMatch.Groups["tanrequired"].Value;
-
-                    result.GvPinTan[gv] = (tanRequired == "J");
-                }
-            }
-
-            return result;
         }
     }
 }

@@ -21,6 +21,7 @@
  * 	
  */
 
+using libfintx.Data.Segment;
 using libfintx.Util;
 using System;
 using System.Collections.Generic;
@@ -34,9 +35,11 @@ namespace libfintx
 
         public static HIPINS HIPINS { get; set; }
 
-        public static List<HITANS> HITANS { get; set; }
+        public static List<HICAZS> HICAZS { get; set; }
 
-        public static HICAZS HICAZS { get; set; }
+        public static List<HIKAZS> HIKAZS { get; set; }
+
+        public static List<Segment> SegmentList { get; set; }
 
         public static void Reset()
         {
@@ -46,22 +49,23 @@ namespace libfintx
         public static void ParseBpd(string bpd)
         {
             Value = bpd;
+            SegmentList = new List<Segment>();
+            HICAZS = new List<HICAZS>();
+            HIKAZS = new List<HIKAZS>();
 
-            var lines = bpd.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-
-            var hipins = lines.FirstOrDefault(l => l.StartsWith("HIPINS"));
-            HIPINS = HIPINS.Parse_HIPINS(hipins ?? string.Empty);
-
-            HITANS = new List<HITANS>();
-            var list = lines.Where(l => l.StartsWith("HITANS"));
-            foreach (var hitans in list)
+            var lines = bpd.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Where(l => !string.IsNullOrWhiteSpace(l));
+            foreach (var line in lines)
             {
-                var item = libfintx.HITANS.Parse_HITANS(hitans);
-                HITANS.Add(item);
+                var segment = SegmentParserFactory.ParseSegment(line);
+                if (segment is HIPINS)
+                    HIPINS = (HIPINS) segment;
+                else if (segment is HICAZS)
+                    HICAZS.Add((HICAZS) segment);
+                else if (segment is HIKAZS)
+                    HIKAZS.Add((HIKAZS) segment);
+                else
+                    SegmentList.Add(segment);
             }
-
-            var hicazs = lines.FirstOrDefault(l => l.StartsWith("HICAZS"));
-            HICAZS = HICAZS.Parse_HICAZS(hicazs);
         }
     }
 }

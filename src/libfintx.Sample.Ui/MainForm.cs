@@ -279,6 +279,10 @@ namespace libfintx.Sample.Ui
                 DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
                 DateTime? endDate = chk_umsatzabruf_bis.Checked ? date_umsatzabruf_bis.Value : (DateTime?)null;
 
+                int? maxDays = BPD.HIKAZS.OrderByDescending(s => s.Version).FirstOrDefault()?.Zeitraum;
+                if (startDate != null && maxDays != null && DateTime.Now.AddDays(maxDays.Value * -1).Date > startDate.Value.Date)
+                    MessageBox.Show($"Es können nur Umsätze abgeholt werden, die maximal {maxDays} Tage zurückliegen.");
+
                 var transactions = await client.Transactions(_tanDialog, startDate, endDate);
 
                 HBCIOutput(transactions.Messages);
@@ -670,7 +674,7 @@ namespace libfintx.Sample.Ui
             _bankList = Bank.GetBankList();
 
             if (chk_tracing.Checked)
-                FinTsConfig.Tracing(true);
+                FinTsConfig.Tracing(true, chk_tracingFormatted.Checked);
 
             if (File.Exists(AccountFile))
             {
