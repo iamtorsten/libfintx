@@ -354,7 +354,17 @@ namespace libfintx
                 List<Segment> segments = new List<Segment>();
                 foreach (var item in values)
                 {
-                    var segment = Parse_Segment(item);
+                    Segment segment = null;
+                    try
+                    {
+                        segment = Parse_Segment(item);
+                    }
+                    catch (Exception)
+                    {
+                        Log.Write($"Couldn't parse segment:{Environment.NewLine}{item}");
+                        continue;
+                    }
+
                     if (segment != null)
                     {
                         segments.Add(segment);
