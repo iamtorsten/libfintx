@@ -124,7 +124,7 @@ Copyright (c) 2016 - 2021 **Torsten Klinger**
 
 Licensed under GNU Lesser General Public License. Please read the LICENSE file.
 
-Parts of this library are based on Bjoern Kuensting [NetEbics](https://github.com/hohlerde/NetEbics) client. These are licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+Parts of this library are based on Bjoern Kuensting [NetEbics](https://github.com/hohlerde/NetEbics) client. These are licensed under MIT License.
 
 See the file LICENSE.txt for further information.
 
