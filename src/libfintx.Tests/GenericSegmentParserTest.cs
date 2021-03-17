@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,20 +11,6 @@ namespace libfintx.Tests
 {
     public class GenericSegmentParserTest
     {
-        [Fact]
-        public void TestPhotoTan()
-        {
-            string segmentCode = File.ReadAllText("photoTan.txt");
-            var segment = new Segment(segmentCode);
-            segment = new GenericSegmentParser().ParseSegment(segment);
-
-            Assert.Equal("HITAN", segment.Name);
-            Assert.Equal(5, segment.Number);
-            Assert.Equal(6, segment.Version);
-            Assert.Equal(4, segment.Ref);
-            Assert.NotNull(segment.Payload);
-        }
-
         [Fact]
         public void TestHikazs()
         {

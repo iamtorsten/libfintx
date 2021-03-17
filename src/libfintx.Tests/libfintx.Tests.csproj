@@ -19,10 +19,4 @@
     <ProjectReference Include="..\libfintx\libfintx.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="photoTan.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

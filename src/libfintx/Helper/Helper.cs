@@ -129,9 +129,43 @@ namespace libfintx
             }
         }
 
-        public static Segment Parse_Segment(string segment)
+        public static List<string> SplitSegments(string message)
         {
-            return SegmentParserFactory.ParseSegment(segment);
+            List<string> segments = new List<string>();
+
+            var values = message.Split('\'');
+            foreach (var item in values)
+            {
+                if (item == string.Empty)
+                    continue;
+
+                var lastSegment = segments.LastOrDefault();
+                if (lastSegment != null && lastSegment.EndsWith("?")) // escape
+                {
+                    segments.RemoveAt(segments.Count - 1);
+                    segments.Add(lastSegment + "'" + item);
+                }
+                else
+                {
+                    segments.Add(item);
+                }
+            }
+
+            return segments;
+        }
+
+        public static Segment Parse_Segment(string segmentCode)
+        {
+            Segment segment = null;
+            try
+            {
+                segment = SegmentParserFactory.ParseSegment(segmentCode);
+            }
+            catch (Exception ex)
+            {
+                Log.Write($"Couldn't parse segment: {ex.Message}{Environment.NewLine}{segmentCode}");
+            }
+            return segment;
         }
 
         /// <summary>
@@ -149,20 +183,14 @@ namespace libfintx
                 var connDetails = client.ConnectionDetails;
                 List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
-                string[] values = Message.Split('\'').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                List<string> values = SplitSegments(Message);
 
                 List<Segment> segments = new List<Segment>();
                 foreach (var item in values)
                 {
-                    var segment = Parse_Segment(item);
+                    Segment segment = Parse_Segment(item);
                     if (segment != null)
-                    {
                         segments.Add(segment);
-                    }
-                    else
-                    {
-                        Log.Write($"Couldn't parse segment:{Environment.NewLine}{item}");
-                    }
                 }
 
                 string msg = string.Join(Environment.NewLine, values);
@@ -349,30 +377,14 @@ namespace libfintx
         {
             try
             {
-                string[] values = Message.Split('\'').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray(); ;
+                List<string> values = SplitSegments(Message);
 
                 List<Segment> segments = new List<Segment>();
                 foreach (var item in values)
                 {
-                    Segment segment = null;
-                    try
-                    {
-                        segment = Parse_Segment(item);
-                    }
-                    catch (Exception)
-                    {
-                        Log.Write($"Couldn't parse segment:{Environment.NewLine}{item}");
-                        continue;
-                    }
-
+                    Segment segment = Parse_Segment(item);
                     if (segment != null)
-                    {
                         segments.Add(segment);
-                    }
-                    else
-                    {
-                        Log.Write($"Couldn't parse segment:{Environment.NewLine}{item}");
-                    }
                 }
 
                 foreach (var segment in segments)
@@ -573,7 +585,7 @@ namespace libfintx
         public static async Task<string> WaitForTanAsync(FinTsClient client, HBCIDialogResult dialogResult, TANDialog tanDialog)
         {
             var BankCode_ = "HIRMS" + Parse_String(dialogResult.RawData, "'HIRMS", "'");
-            String[] values = BankCode_.Split('+');
+            string[] values = BankCode_.Split('+');
             foreach (var item in values)
             {
                 if (!item.StartsWith("HIRMS"))
@@ -588,10 +600,13 @@ namespace libfintx
 
             var processname = string.Empty;
 
-            foreach (var item in processes)
+            if (processes != null)
             {
-                if (item.ProcessNumber.Equals(client.HIRMS))
-                    processname = item.ProcessName;
+                foreach (var item in processes)
+                {
+                    if (item.ProcessNumber.Equals(client.HIRMS))
+                        processname = item.ProcessName;
+                }
             }
 
             // Smart-TAN plus optisch
