@@ -32,35 +32,26 @@ namespace libfintx
             activeAccount = null;
         }
 
-        internal async Task<HBCIDialogResult> InitializeConnection()
+        internal async Task<HBCIDialogResult> InitializeConnection(string hkTanSegmentId = "HKIDN")
         {
-            if (HKTAN.SegmentId == null)
-                HKTAN.SegmentId = "HKIDN";
-
             HBCIDialogResult result;
             string BankCode;
-            try
+
+            // Check if the user provided a SystemID
+            if (ConnectionDetails.CustomerSystemId == null)
             {
-                // Check if the user provided a SystemID
-                if (ConnectionDetails.CustomerSystemId == null)
+                result = await Synchronization();
+                if (!result.IsSuccess)
                 {
-                    result = await Synchronization();
-                    if (!result.IsSuccess)
-                    {
-                        Log.Write("Synchronisation failed.");
-                        return result;
-                    }
+                    Log.Write("Synchronisation failed.");
+                    return result;
                 }
-                else
-                {
-                    SystemId = ConnectionDetails.CustomerSystemId;
-                }
-                BankCode = await Transaction.INI(this);
             }
-            finally
+            else
             {
-                HKTAN.SegmentId = null;
+                SystemId = ConnectionDetails.CustomerSystemId;
             }
+            BankCode = await Transaction.INI(this, hkTanSegmentId);
 
             var bankMessages = Helper.Parse_BankCode(BankCode);
             result = new HBCIDialogResult(bankMessages, BankCode);

@@ -54,9 +54,9 @@ namespace libfintx
 {
     public static class Transaction
     {
-        public static async Task<String> INI(FinTsClient client)
+        public static async Task<String> INI(FinTsClient client, string hkTanSegmentId = null)
         {
-            return await Init_INI(client);
+            return await Init_INI(client, hkTanSegmentId);
         }
 
         public static async Task<String> HKEND(FinTsClient client, string dialogId)

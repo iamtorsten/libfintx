@@ -49,7 +49,7 @@ namespace libfintx
             if (Helper.IsTANRequired("HKCSL"))
             {
                 client.SEGNUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(client, segments);
+                segments = HKTAN.Init_HKTAN(client, segments, "HKCSL");
             }
 
             string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS);

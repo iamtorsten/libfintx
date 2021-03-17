@@ -52,7 +52,7 @@ namespace libfintx
             if (Helper.IsTANRequired("HKDME"))
             {
                 client.SEGNUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(client, segments);
+                segments = HKTAN.Init_HKTAN(client, segments, "HKDME");
             }
 
             var TAN = await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS));

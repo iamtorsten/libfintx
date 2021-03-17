@@ -28,21 +28,16 @@ namespace libfintx
     public static class HKTAN
     {
         /// <summary>
-        /// HKTAN Segment (e.g. HKIDN)
-        /// </summary>
-        public static string SegmentId { get; set; }
-
-        /// <summary>
         /// Set tan process
         /// </summary>
         /// <param name="segments"></param>
         /// <returns></returns>
-        public static string Init_HKTAN(FinTsClient client, string segments)
+        public static string Init_HKTAN(FinTsClient client, string segments, string segmentId)
         {
             if (String.IsNullOrEmpty(client.HITAB)) // TAN Medium Name not set
             {
                 if (client.HITANS == 6)
-                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + SegmentId + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "'";
                 else
                     segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+'";
             }
@@ -60,7 +55,7 @@ namespace libfintx
                 // Version 6, Process 4
                 if (client.HITANS == 6)
                 {
-                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + SegmentId + "+++++++++" + client.HITAB + "'";
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "+++++++++" + client.HITAB + "'";
                 }
             }
 

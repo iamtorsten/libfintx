@@ -105,7 +105,7 @@ namespace libfintx
             if (Helper.IsTANRequired("HKCAZ"))
             {
                 client.SEGNUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(client, segments);
+                segments = HKTAN.Init_HKTAN(client, segments, "HKCAZ");
             }
 
             string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS);

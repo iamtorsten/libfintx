@@ -47,9 +47,7 @@ namespace libfintx
         /// </returns>
         public async Task<HBCIDialogResult<List<string>>> RequestTANMediumName()
         {
-            HKTAN.SegmentId = "HKTAB";
-
-            HBCIDialogResult result = await InitializeConnection();
+            HBCIDialogResult result = await InitializeConnection("HKTAB");
             if (!result.IsSuccess)
                 return result.TypedResult<List<string>>();
 

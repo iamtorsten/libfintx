@@ -31,7 +31,7 @@ namespace libfintx
         /// <summary>
         /// INI
         /// </summary>
-        public static async Task<String> Init_INI(FinTsClient client)
+        public static async Task<String> Init_INI(FinTsClient client, string hkTanSegmentId = null)
         {
             var connectionDetails = client.ConnectionDetails;
             if (!client.Anonymous)
@@ -63,7 +63,7 @@ namespace libfintx
                         if (client.HITANS == 6)
                         {
                             client.SEGNUM = SEGNUM.SETInt(5);
-                            segments_ = HKTAN.Init_HKTAN(client, segments_);
+                            segments_ = HKTAN.Init_HKTAN(client, segments_, hkTanSegmentId);
                         }
                         else
                         {

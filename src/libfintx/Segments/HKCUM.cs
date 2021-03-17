@@ -47,7 +47,7 @@ namespace libfintx
             if (Helper.IsTANRequired("HKCUM"))
             {
                 client.SEGNUM = SEGNUM.SETInt(4);
-                segments = HKTAN.Init_HKTAN(client, segments);
+                segments = HKTAN.Init_HKTAN(client, segments, "HKCUM");
             }
 
             var TAN = await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS));
