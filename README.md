@@ -69,6 +69,7 @@ For exact information please refer to the [german version of the specification](
 * Postbank
 * Norisbank
 * Deutsche Bank
+* Unicredit Bank
 
 # Sample code
 
