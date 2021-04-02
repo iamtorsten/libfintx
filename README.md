@@ -124,11 +124,7 @@ The verification process is done by using the default [**WebRequest**](https://m
 
 Copyright (c) 2016 - 2021 **Torsten Klinger**
 
-Licensed under GNU Lesser General Public License. Please read the LICENSE file.
-
-Parts of this library are based on Bjoern Kuensting [NetEbics](https://github.com/hohlerde/NetEbics) client. These are licensed under MIT License.
-
-See the file LICENSE.txt for further information.
+Licensed under GNU Affero General Public License. Please read the LICENSE file.
 
 # ToDo
 
@@ -137,4 +133,4 @@ See the file LICENSE.txt for further information.
 
 # Support
 
-You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com). 💬
+You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com).
