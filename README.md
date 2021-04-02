@@ -124,7 +124,7 @@ The verification process is done by using the default [**WebRequest**](https://m
 
 Copyright (c) 2016 - 2021 **Torsten Klinger**
 
-Licensed under GNU Affero General Public License. Please read the LICENSE file.
+Licensed under **GNU Affero General Public License**. Please read the LICENSE file.
 
 # ToDo
 
