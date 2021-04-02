@@ -131,4 +131,4 @@ You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com).
 
 # Community
 
-Join our developer community at slack to discuss bugs and further developments with us [Slack](https://libfintx.slack.com).
+Join our developer community at [Slack](https://libfintx.slack.com) to discuss bugs and further developments with us.
