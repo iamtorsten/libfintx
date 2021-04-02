@@ -18,12 +18,6 @@ This client library supports all four APIs, HBCI 2.2, FinTS 3.0 and EBICS H004 a
 
 It can be used to read the balance of a bank account, receive an account statement, and make a SEPA payment using **PIN/TAN** and **EBICS**.
 
-# Nuget
-
-| Target | Branch | Version | Download link |
-| ------ | ------ | ------ | ------ |
-| Nuget | master | 0.0.3 | [![NuGet](https://img.shields.io/badge/nuget-v0.0.3-blue)](https://www.nuget.org/packages/libfintx/) |
-
 # Usage
 
 There are many reasons why you need to use a banking library which can exchange data from your application with the bank. One reason for example is to found a [Fintech](https://de.wikipedia.org/wiki/Finanztechnologie).
@@ -124,11 +118,7 @@ The verification process is done by using the default [**WebRequest**](https://m
 
 Copyright (c) 2016 - 2021 **Torsten Klinger**
 
-Licensed under GNU Lesser General Public License. Please read the LICENSE file.
-
-Parts of this library are based on Bjoern Kuensting [NetEbics](https://github.com/hohlerde/NetEbics) client. These are licensed under MIT License.
-
-See the file LICENSE.txt for further information.
+Licensed under **GNU Affero General Public License**. Please read the LICENSE file.
 
 # ToDo
 
@@ -137,4 +127,4 @@ See the file LICENSE.txt for further information.
 
 # Support
 
-You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com). 💬
+You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com).
