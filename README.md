@@ -128,3 +128,7 @@ Licensed under **GNU Affero General Public License**. Please read the LICENSE fi
 # Support
 
 You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com).
+
+# Community
+
+Join our developer community at slack to discuss bugs and further developments with us [Slack](https://libfintx.slack.com).
