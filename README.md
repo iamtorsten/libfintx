@@ -70,6 +70,7 @@ For exact information please refer to the [german version of the specification](
 * Norisbank
 * Deutsche Bank
 * Unicredit Bank
+* Commerzbank
 
 # Sample code
 
