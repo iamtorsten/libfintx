@@ -30,7 +30,7 @@ namespace libfintx.INIFile
     /// <summary>
     /// Represents a property in an INI file.
     /// </summary>
-    public class IniProperty
+    public class IniProperty : IIniProperty
     {
         /// <summary>
         /// Property name (key).

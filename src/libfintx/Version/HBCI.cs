@@ -22,18 +22,11 @@
 
 using System;
 
-namespace libfintx
+namespace libfintx.Version
 {
-    internal class SEGNUM
+    class HBCI
     {
-        public static string SETVal(int NUM)
-        {
-            return Convert.ToString(NUM);
-        }
-
-        public static int SETInt(int NUM)
-        {
-            return NUM;
-        }
+        public static String v220 = "220";
+        public static String v300 = "300";
     }
 }

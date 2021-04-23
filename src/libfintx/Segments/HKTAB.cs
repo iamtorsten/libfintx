@@ -37,9 +37,9 @@ namespace libfintx
             var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
-            segments = "HKTAB:" + SEGNUM.SETVal(3) + ":4+0+A'";
+            segments = "HKTAB:" + SEG_NUM.Seg3 + ":4+0+A'";
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS);
             return await FinTSMessage.Send(client, message);

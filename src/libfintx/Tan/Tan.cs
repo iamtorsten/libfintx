@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 
 namespace libfintx
 {
+    // HKTAN#7 decoupled S implementieren
     public static class Tan
     {
         /// <summary>
@@ -39,44 +40,44 @@ namespace libfintx
             {
                 // Version 2
                 if (client.HITANS == 2)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
                 // Version 3
                 else if (client.HITANS == 3)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
                 // Version 4
                 else if (client.HITANS == 4)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
                 // Version 5
                 else if (client.HITANS == 5)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
                 // Version 6
                 else if (client.HITANS == 6)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "+N'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N'";
                 else // default
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
             }
             else
             {
                 // Version 2
                 if (client.HITANS == 2)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 3
                 else if (client.HITANS == 3)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 4
                 else if (client.HITANS == 4)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 5
                 else if (client.HITANS == 5)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N++++" + client.HITAB + "'";
                 // Version 6
                 else if (client.HITANS == 6)
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++++" + client.HITAN + "+N++++" + client.HITAB + "'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N++++" + client.HITAB + "'";
                 else // default
-                    segments = "HKTAN:" + SEGNUM.SETVal(3) + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
             }
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS + ":" + TAN);
             string response = await FinTSMessage.Send(client, message);

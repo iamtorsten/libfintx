@@ -20,30 +20,12 @@
  * 	
  */
 
-using System;
-using System.Threading.Tasks;
-
-namespace libfintx
+namespace libfintx.INIFile
 {
-    public static class HKSPA
+    public interface IIniProperty
     {
-        /// <summary>
-        /// Request SEPA account connection
-        /// </summary>
-        /// <param name="connectionDetails"></param>
-        /// <returns></returns>
-        public static async Task<String> Init_HKSPA(FinTsClient client)
-        {
-            Log.Write("Starting job HKSPA: Request SEPA account connection");
-
-            var connectionDetails = client.ConnectionDetails;
-            string segments = string.Empty;
-
-            segments = "HKEND:" + SEG_NUM.Seg3 + "1'";
-
-            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
-
-            return await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS));
-        }
+        string Comment { get; set; }
+        string Name { get; set; }
+        string Value { get; set; }
     }
 }

@@ -22,6 +22,7 @@
 
 using System;
 using System.Threading.Tasks;
+using libfintx.Version;
 
 namespace libfintx
 {
@@ -34,21 +35,21 @@ namespace libfintx
             string segments;
             var connectionDetails = client.ConnectionDetails;
 
-            if (connectionDetails.HbciVersion == 220)
+            if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v220))
             {
                 string segments_ =
-                    "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
-                    "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
-                    "HKSYN:" + SEGNUM.SETVal(5) + ":2+0'";
+                    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
+                    "HKVVB:" + SEG_NUM.Seg4 + ":2+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
+                    "HKSYN:" + SEG_NUM.Seg5 + ":2+0'";
 
                 segments = segments_;
             }
-            else if (connectionDetails.HbciVersion == 300)
+            else if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v300))
             {
                 string segments_ =
-                    "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
-                    "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
-                    "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
+                    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
+                    "HKVVB:" + SEG_NUM.Seg4 + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
+                    "HKSYN:" + SEG_NUM.Seg5 + ":3+0'";
 
                 segments = segments_;
             }
@@ -63,7 +64,7 @@ namespace libfintx
                 throw new Exception("HBCI version not supported");
             }
 
-            client.SEGNUM = SEGNUM.SETInt(5);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg5);
 
             string message = FinTSMessage.CreateSync(client, segments);
             string response = await FinTSMessage.Send(client, message);

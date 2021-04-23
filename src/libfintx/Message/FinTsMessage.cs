@@ -25,6 +25,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using libfintx.Version;
 
 namespace libfintx
 {
@@ -109,9 +110,9 @@ namespace libfintx
                 }
             }
 
-            if (Version == 220)
+            if (Version == Convert.ToInt16(HBCI.v220))
             {
-                encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+998+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
@@ -119,14 +120,14 @@ namespace libfintx
 
                 if (HIRMS_TAN == null)
                 {
-                    sigHead = "HNSHK:2:3+" + "900" + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:3+" + Sig.SECFUNC_SIG_PT_2STEP_MIN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1 +6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
 
                 else
                 {
-                    sigHead = "HNSHK:2:3+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:3+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
@@ -145,18 +146,18 @@ namespace libfintx
                     Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
                 }
             }
-            else if (Version == 300)
+            else if (Version == Convert.ToInt16(HBCI.v300))
             {
                 if (HIRMS_TAN == null)
-                    encHead = "HNVSK:998:3+PIN:1+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                    encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:1+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
                 else
-                    encHead = "HNVSK:998:3+PIN:2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                    encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
                 if (HIRMS_TAN == null)
                 {
-                    sigHead = "HNSHK:2:4+PIN:1+" + Sig.SECFUNC_SIG_PT_1STEP + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:4+PIN:1+" + Sig.SECFUNC_SIG_PT_1STEP + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
@@ -164,7 +165,7 @@ namespace libfintx
                 {
                     var SECFUNC = HIRMS_TAN.Equals("999") ? "1" : "2";
 
-                    sigHead = "HNSHK:2:4+PIN:" + SECFUNC + "+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:999:1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sigHead = "HNSHK:2:4+PIN:" + SECFUNC + "+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
@@ -205,15 +206,15 @@ namespace libfintx
 
             var msgHead = string.Empty;
 
-            if (Version == 220)
+            if (Version == Convert.ToInt16(HBCI.v220))
             {
-                msgHead = "HNHBK:1:3+" + paddedLen + "+" + ("220") + "+" + DialogID + "+" + MsgNum + "'";
+                msgHead = "HNHBK:1:3+" + paddedLen + "+" + (HBCI.v220) + "+" + DialogID + "+" + MsgNum + "'";
 
                 Log.Write(msgHead);
             }
-            else if (Version == 300)
+            else if (Version == Convert.ToInt16(HBCI.v300))
             {
-                msgHead = "HNHBK:1:3+" + paddedLen + "+" + ("300") + "+" + DialogID + "+" + MsgNum + "'";
+                msgHead = "HNHBK:1:3+" + paddedLen + "+" + (HBCI.v300) + "+" + DialogID + "+" + MsgNum + "'";
 
                 Log.Write(msgHead);
             }

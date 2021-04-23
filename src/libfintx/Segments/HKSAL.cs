@@ -50,7 +50,7 @@ namespace libfintx
 
             string segments = string.Empty;
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             if (Convert.ToInt16(client.HISALS) >= 7)
                 segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + "+N'";
@@ -59,7 +59,7 @@ namespace libfintx
 
             if (Helper.IsTANRequired("HKSAL"))
             {
-                client.SEGNUM = SEGNUM.SETInt(4);
+                client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
                 segments = HKTAN.Init_HKTAN(client, segments, "HKSAL");
             }
 

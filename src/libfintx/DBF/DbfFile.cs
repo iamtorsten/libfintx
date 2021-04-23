@@ -32,7 +32,7 @@ namespace libfintx.DBF
     /// This class represents a DBF file. You can create new, open, update and save DBF files using this class and supporting classes.
     /// Also, this class supports reading/writing from/to an internet forward only type of stream!
     /// </summary>
-    public class DbfFile
+    public class DbfFile : IDbfFile
     {
 
         /// <summary>

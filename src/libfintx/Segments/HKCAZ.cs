@@ -36,7 +36,7 @@ namespace libfintx
             string segments = string.Empty;
             var connectionDetails = client.ConnectionDetails;
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             switch (camtVers)
             {
@@ -66,7 +66,7 @@ namespace libfintx
                         }
                     }
 
-                    client.SEGNUM = SEGNUM.SETInt(3);
+                    client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
                     break;
 
                 case CamtVersion.Camt053:
@@ -103,7 +103,7 @@ namespace libfintx
 
             if (Helper.IsTANRequired("HKCAZ"))
             {
-                client.SEGNUM = SEGNUM.SETInt(4);
+                client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
                 segments = HKTAN.Init_HKTAN(client, segments, "HKCAZ");
             }
 

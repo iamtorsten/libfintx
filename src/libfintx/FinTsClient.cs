@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace libfintx
 {
-    public partial class FinTsClient
+    public partial class FinTsClient : IFinTsClient
     {
         public bool Anonymous { get; }
         public ConnectionDetails ConnectionDetails { get; }

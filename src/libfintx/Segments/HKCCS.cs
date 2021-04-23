@@ -38,7 +38,7 @@ namespace libfintx
 
             string sepaMessage = string.Empty;
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             if (client.HISPAS == 1)
             {
@@ -60,7 +60,7 @@ namespace libfintx
 
             if (Helper.IsTANRequired("HKCCS"))
             {
-                client.SEGNUM = SEGNUM.SETInt(4);
+                client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
                 segments = HKTAN.Init_HKTAN(client, segments, "HKCCS");
             }
 

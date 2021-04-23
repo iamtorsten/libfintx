@@ -34,14 +34,14 @@ namespace libfintx
         {
             Log.Write("Starting job HKPPD: Load prepaid");
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             var connectionDetails = client.ConnectionDetails;
             string segments = "HKPPD:" + client.SEGNUM + ":2+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 
             if (Helper.IsTANRequired("HKPPD"))
             {
-                client.SEGNUM = SEGNUM.SETInt(4);
+                client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
                 segments = HKTAN.Init_HKTAN(client, segments, "HKPPD");
             }
 

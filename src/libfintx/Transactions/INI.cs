@@ -48,25 +48,25 @@ namespace libfintx
                     if (connectionDetails.HbciVersion == 220)
                     {
                         string segments_ =
-                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
-                            "HKVVB:" + SEGNUM.SETVal(4) + ":2+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
+                            "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
+                            "HKVVB:" + SEG_NUM.Seg4 + ":2+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
 
                         segments = segments_;
                     }
                     else if (connectionDetails.HbciVersion == 300)
                     {
                         string segments_ =
-                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
-                            "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
+                            "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
+                            "HKVVB:" + SEG_NUM.Seg4 + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
 
                         if (client.HITANS == 6)
                         {
-                            client.SEGNUM = SEGNUM.SETInt(5);
+                            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg5);
                             segments_ = HKTAN.Init_HKTAN(client, segments_, hkTanSegmentId);
                         }
                         else
                         {
-                            client.SEGNUM = SEGNUM.SETInt(4);
+                            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
                         }
 
                         segments = segments_;
@@ -114,8 +114,8 @@ namespace libfintx
                     if (connectionDetails.HbciVersion == 300)
                     {
                         string segments_ =
-                            "HKIDN:" + SEGNUM.SETVal(2) + ":2+280:" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
-                            "HKVVB:" + SEGNUM.SETVal(3) + ":3+0+0+1+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
+                            "HKIDN:" + SEG_NUM.Seg2 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
+                            "HKVVB:" + SEG_NUM.Seg3 + ":3+0+0+1+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'";
 
                         segments = segments_;
                     }
@@ -130,7 +130,7 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    client.SEGNUM = SEGNUM.SETInt(4);
+                    client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
 
                     string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
                     string response = await FinTSMessage.Send(client, message);
@@ -152,9 +152,9 @@ namespace libfintx
                     if (connectionDetails.HbciVersion == 300)
                     {
                         string segments__ =
-                            "HKIDN:" + SEGNUM.SETVal(3) + ":2+280:" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
-                            "HKVVB:" + SEGNUM.SETVal(4) + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
-                            "HKSYN:" + SEGNUM.SETVal(5) + ":3+0'";
+                            "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
+                            "HKVVB:" + SEG_NUM.Seg4 + ":3+0+0+0+" + FinTsConfig.ProductId + "+" + FinTsConfig.Version + "'" +
+                            "HKSYN:" + SEG_NUM.Seg5 + ":3+0'";
 
                         segments = segments__;
                     }
@@ -165,7 +165,7 @@ namespace libfintx
                         throw new Exception("HBCI version not supported");
                     }
 
-                    client.SEGNUM = SEGNUM.SETInt(5);
+                    client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg5);
 
                     message = FinTSMessage.Create(client, 1, "0", segments, client.HIRMS);
                     response = await FinTSMessage.Send(client, message);

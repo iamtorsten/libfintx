@@ -21,29 +21,15 @@
  */
 
 using System;
-using System.Threading.Tasks;
 
 namespace libfintx
 {
-    public static class HKSPA
+    internal class SEG_NUM
     {
-        /// <summary>
-        /// Request SEPA account connection
-        /// </summary>
-        /// <param name="connectionDetails"></param>
-        /// <returns></returns>
-        public static async Task<String> Init_HKSPA(FinTsClient client)
-        {
-            Log.Write("Starting job HKSPA: Request SEPA account connection");
-
-            var connectionDetails = client.ConnectionDetails;
-            string segments = string.Empty;
-
-            segments = "HKEND:" + SEG_NUM.Seg3 + "1'";
-
-            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
-
-            return await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS));
-        }
+        public static String Seg1 = "1";
+        public static String Seg2 = "2";
+        public static String Seg3 = "3";
+        public static String Seg4 = "4";
+        public static String Seg5 = "5";
     }
 }

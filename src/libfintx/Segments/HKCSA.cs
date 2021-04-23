@@ -34,7 +34,7 @@ namespace libfintx
         {
             Log.Write("Starting job HKCSA: Modify terminated transfer");
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
             var connectionDetails = client.ConnectionDetails;
             string segments = "HKCSA:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 
@@ -47,7 +47,7 @@ namespace libfintx
 
             if (Helper.IsTANRequired("HKCSA"))
             {
-                client.SEGNUM = SEGNUM.SETInt(4);
+                client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
                 segments = HKTAN.Init_HKTAN(client, segments, "HKCSA");
             }
 

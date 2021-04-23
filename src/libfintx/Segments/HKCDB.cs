@@ -34,14 +34,14 @@ namespace libfintx
         {
             Log.Write("Starting job HKCDB: Get bankers order");
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             var connectionDetails = client.ConnectionDetails;
             string segments = "HKCDB:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'";
 
             if (Helper.IsTANRequired("HKCDB"))
             {
-                client.SEGNUM = SEGNUM.SETInt(4);
+                client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
                 segments = HKTAN.Init_HKTAN(client, segments, "HKCDB");
             }
 

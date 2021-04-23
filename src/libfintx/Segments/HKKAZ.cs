@@ -48,7 +48,7 @@ namespace libfintx
                     AccountBic = connectionDetails.Bic,
                 };
 
-            client.SEGNUM = SEGNUM.SETInt(3);
+            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             if (string.IsNullOrEmpty(FromDate))
             {
@@ -87,7 +87,7 @@ namespace libfintx
 
             if (Helper.IsTANRequired("HKKAZ"))
             {
-                client.SEGNUM = SEGNUM.SETInt(4);
+                client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
                 segments = HKTAN.Init_HKTAN(client, segments, "HKKAZ");
             }
 
