@@ -22,6 +22,7 @@
 
 using System;
 using System.Threading.Tasks;
+using libfintx.Version;
 
 namespace libfintx
 {
@@ -45,7 +46,7 @@ namespace libfintx
                     /// <summary>
                     /// INI
                     /// </summary>
-                    if (connectionDetails.HbciVersion == 220)
+                    if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v220))
                     {
                         string segments_ =
                             "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
@@ -53,7 +54,7 @@ namespace libfintx
 
                         segments = segments_;
                     }
-                    else if (connectionDetails.HbciVersion == 300)
+                    else if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v300))
                     {
                         string segments_ =
                             "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
@@ -111,7 +112,7 @@ namespace libfintx
 
                     string segments;
 
-                    if (connectionDetails.HbciVersion == 300)
+                    if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v300))
                     {
                         string segments_ =
                             "HKIDN:" + SEG_NUM.Seg2 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
@@ -149,7 +150,7 @@ namespace libfintx
                     /// <summary>
                     /// INI
                     /// </summary>
-                    if (connectionDetails.HbciVersion == 300)
+                    if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v300))
                     {
                         string segments__ =
                             "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
