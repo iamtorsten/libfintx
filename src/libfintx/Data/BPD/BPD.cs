@@ -54,15 +54,22 @@ namespace libfintx
             var lines = bpd.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Where(l => !string.IsNullOrWhiteSpace(l));
             foreach (var line in lines)
             {
-                var segment = SegmentParserFactory.ParseSegment(line);
-                if (segment is HIPINS)
-                    HIPINS = (HIPINS) segment;
-                else if (segment is HICAZS)
-                    HICAZS.Add((HICAZS) segment);
-                else if (segment is HIKAZS)
-                    HIKAZS.Add((HIKAZS) segment);
-                else
-                    SegmentList.Add(segment);
+                try
+                {
+                    var segment = SegmentParserFactory.ParseSegment(line);
+                    if (segment is HIPINS)
+                        HIPINS = (HIPINS) segment;
+                    else if (segment is HICAZS)
+                        HICAZS.Add((HICAZS) segment);
+                    else if (segment is HIKAZS)
+                        HIKAZS.Add((HIKAZS) segment);
+                    else
+                        SegmentList.Add(segment);
+                }
+                catch (Exception ex)
+                {
+                    Log.Write($"Couldn't parse segment: {ex.Message}{Environment.NewLine}{line}");
+                }
             }
         }
     }
