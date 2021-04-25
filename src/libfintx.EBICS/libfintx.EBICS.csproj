@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Iconic.Zlib.Netstandard" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.9" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\libfintx.EBICSConfig\libfintx.EBICSConfig.csproj" />
+    <ProjectReference Include="..\libfintx.Security\libfintx.Security.csproj" />
+    <ProjectReference Include="..\libfintx.Xml\libfintx.Xml.csproj" />
+  </ItemGroup>
+
+</Project>

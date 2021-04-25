@@ -1,4 +1,4 @@
-﻿using libfintx.INIFile;
+﻿using libfintx.Setttings;
 
 namespace libfintx.Samples.INIFile
 {

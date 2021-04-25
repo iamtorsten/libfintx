@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using libfintx.DBF;
+using libfintx.Database;
 
 namespace libfintx.Sample.Database
 {

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0010" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\libfintx.FinTSConfig\libfintx.FinTSConfig.csproj" />
+    <ProjectReference Include="..\libfintx.Globals\libfintx.Globals.csproj" />
+    <ProjectReference Include="..\libfintx.Logger\libfintx.Logger.csproj" />
+    <ProjectReference Include="..\libfintx.Sepa\libfintx.Sepa.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Bank\Banken.csv">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using libfintx.FinTS.Statement;
 using Xunit;
 
 namespace libfintx.Tests

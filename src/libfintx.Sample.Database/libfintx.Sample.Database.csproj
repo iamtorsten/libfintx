@@ -50,9 +50,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libfintx\libfintx.csproj">
-      <Project>{7f69841c-b99e-4236-ae26-5b6ad0538ae6}</Project>
-      <Name>libfintx</Name>
+    <ProjectReference Include="..\libfintx.Database\libfintx.Database.csproj">
+      <Project>{301dfd17-58a8-4692-94e5-277319c82865}</Project>
+      <Name>libfintx.Database</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

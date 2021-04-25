@@ -23,13 +23,14 @@
 
 //#define WINDOWS
 
-using libfintx.Data;
+using libfintx.FinTS.Data;
 using System;
 using System.Linq;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
 using System.Threading.Tasks;
+using libfintx.FinTS;
 
 #if (DEBUG && WINDOWS)
 using hbci = libfintx;

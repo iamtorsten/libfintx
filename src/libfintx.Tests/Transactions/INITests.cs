@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xunit;
-using libfintx;
+using libfintx.FinTS;
 
 namespace libfintx.Tests.Transactions
 {

@@ -1,5 +1,9 @@
-﻿using libfintx.Camt;
-using libfintx.Data;
+﻿using libfintx.FinTS;
+using libfintx.FinTS.Camt;
+using libfintx.FinTS.Data;
+using libfintx.FinTSConfig;
+using libfintx.Globals;
+using libfintx.Sepa;
 using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
@@ -273,11 +277,11 @@ namespace libfintx.Sample.Ui
                 // TAN-Verfahren
                 client.HIRMS = txt_tanverfahren.Text;
 
-                if (! await InitTANMedium(client))
+                if (!await InitTANMedium(client))
                     return;
 
-                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
-                DateTime? endDate = chk_umsatzabruf_bis.Checked ? date_umsatzabruf_bis.Value : (DateTime?)null;
+                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?) null;
+                DateTime? endDate = chk_umsatzabruf_bis.Checked ? date_umsatzabruf_bis.Value : (DateTime?) null;
 
                 int? maxDays = BPD.HIKAZS.OrderByDescending(s => s.Version).FirstOrDefault()?.Zeitraum;
                 if (startDate != null && maxDays != null && DateTime.Now.AddDays(maxDays.Value * -1).Date > startDate.Value.Date)
@@ -324,10 +328,10 @@ namespace libfintx.Sample.Ui
                 // TAN-Verfahren
                 client.HIRMS = txt_tanverfahren.Text;
 
-                if (! await InitTANMedium(client))
+                if (!await InitTANMedium(client))
                     return;
 
-                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
+                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?) null;
 
                 var transactions = await client.Transactions_camt(_tanDialog, CamtVersion.Camt052, startDate);
 
@@ -370,10 +374,10 @@ namespace libfintx.Sample.Ui
                 // TAN-Verfahren
                 client.HIRMS = txt_tanverfahren.Text;
 
-                if (! await InitTANMedium(client))
+                if (!await InitTANMedium(client))
                     return;
 
-                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
+                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?) null;
 
                 var transactions = await client.Transactions_camt(_tanDialog, CamtVersion.Camt053, startDate);
 
@@ -408,7 +412,7 @@ namespace libfintx.Sample.Ui
                 // TAN-Verfahren
                 client.HIRMS = txt_tanverfahren.Text;
 
-                if (! await InitTANMedium(client))
+                if (!await InitTANMedium(client))
                     return;
 
                 var bankersOrders = await client.GetBankersOrders(_tanDialog);
@@ -417,7 +421,7 @@ namespace libfintx.Sample.Ui
 
                 if (bankersOrders.IsSuccess)
                 {
-                    if (bankersOrders.Data != null && bankersOrders.Data.Count >0)
+                    if (bankersOrders.Data != null && bankersOrders.Data.Count > 0)
                     {
                         foreach (var item in bankersOrders.Data)
                         {
@@ -444,7 +448,7 @@ namespace libfintx.Sample.Ui
         /// <param name="e"></param>
         private async void btn_überweisen_Click(object sender, EventArgs e)
         {
-            FinTsConfig.Logging(true);
+            Config.Logging(true);
 
             var connectionDetails = GetConnectionDetails();
             var client = new FinTsClient(connectionDetails);
@@ -516,7 +520,7 @@ namespace libfintx.Sample.Ui
 
         private void chk_Tracing_CheckedChanged(object sender, EventArgs e)
         {
-            FinTsConfig.Tracing(chk_tracing.Checked, false, chk_tracingMaskCredentials.Checked);
+            Config.Tracing(chk_tracing.Checked, false, chk_tracingMaskCredentials.Checked);
             if (chk_tracing.Checked)
             {
                 MessageBox.Show("Achtung: Die Nachrichten werden im Klartext (inkl. PIN, Benutzerkennung, TAN) in eine Textdatei geschrieben!");
@@ -526,7 +530,7 @@ namespace libfintx.Sample.Ui
 
         private void chk_tracingFormatted_CheckedChanged(object sender, EventArgs e)
         {
-            FinTsConfig.Tracing(chk_tracing.Checked, chk_tracingFormatted.Checked);
+            Config.Tracing(chk_tracing.Checked, chk_tracingFormatted.Checked);
         }
 
         private ConnectionDetails GetConnectionDetails()
@@ -536,7 +540,7 @@ namespace libfintx.Sample.Ui
                 AccountHolder = txt_empfängername.Text,
                 Account = txt_kontonummer.Text,
                 Blz = Convert.ToInt32(txt_bankleitzahl.Text),
-                BlzHeadquarter = string.IsNullOrWhiteSpace(txt_bankleitzahl_zentrale.Text) ? (int?)null : Convert.ToInt32(txt_bankleitzahl_zentrale.Text),
+                BlzHeadquarter = string.IsNullOrWhiteSpace(txt_bankleitzahl_zentrale.Text) ? (int?) null : Convert.ToInt32(txt_bankleitzahl_zentrale.Text),
                 Bic = txt_bic.Text,
                 Iban = Regex.Replace(txt_iban.Text, @"\s+", ""),
                 Url = txt_url.Text,
@@ -674,7 +678,7 @@ namespace libfintx.Sample.Ui
             _bankList = Bank.GetBankList();
 
             if (chk_tracing.Checked)
-                FinTsConfig.Tracing(true, chk_tracingFormatted.Checked);
+                Config.Tracing(true, chk_tracingFormatted.Checked);
 
             if (File.Exists(AccountFile))
             {
@@ -696,11 +700,11 @@ namespace libfintx.Sample.Ui
                 }
             }
 
-            var dir = FinTsConfig.ProgramBaseDir;
+            var dir = FinTsGlobals.ProgramBaseDir;
             var productIdFile = Path.Combine(dir, "Product_Id.txt");
 
             if (File.Exists(productIdFile))
-                FinTsConfig.ProductId = File.ReadAllText(productIdFile);
+                FinTsGlobals.ProductId = File.ReadAllText(productIdFile);
 
             chk_umsatzabruf_von.Checked = true;
             date_umsatzabruf_von.Value = DateTime.Now.AddDays(-90);
@@ -746,5 +750,5 @@ namespace libfintx.Sample.Ui
             }
         }
     }
-    
+
 }

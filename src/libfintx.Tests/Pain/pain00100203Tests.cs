@@ -1,7 +1,8 @@
 ﻿using System;
 using Xunit;
-using libfintx;
+using libfintx.FinTS;
 using System.Collections.Generic;
+using libfintx.Sepa;
 
 namespace libfintx.Tests.Pain
 {

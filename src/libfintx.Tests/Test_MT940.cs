@@ -1,4 +1,5 @@
 ﻿using System;
+using libfintx.FinTS.Statement;
 using Xunit;
 
 namespace libfintx.Tests

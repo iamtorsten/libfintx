@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\libfintx.Globals\libfintx.Globals.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Pain\pain_001_001_03\pain.001.001.03.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+
+</Project>

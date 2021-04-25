@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandLine;
-using libfintx.Data;
+using libfintx.FinTS;
+using libfintx.FinTS.Data;
 
 namespace libfintx.Sample
 {

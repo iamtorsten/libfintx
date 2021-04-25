@@ -106,9 +106,29 @@
     <None Include="tan.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libfintx\libfintx.csproj">
-      <Project>{7f69841c-b99e-4236-ae26-5b6ad0538ae6}</Project>
-      <Name>libfintx</Name>
+    <ProjectReference Include="..\libfintx.FinTSConfig\libfintx.FinTSConfig.csproj">
+      <Project>{30de3eb4-cac7-44ae-b6e0-339df98db0c0}</Project>
+      <Name>libfintx.FinTSConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.FinTS\libfintx.FinTS.csproj">
+      <Project>{8224a286-f80b-4a70-ad12-506e785c9523}</Project>
+      <Name>libfintx.FinTS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.Globals\libfintx.Globals.csproj">
+      <Project>{92c45f76-57b3-4c47-9414-6e4acb15c44e}</Project>
+      <Name>libfintx.Globals</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.Logger\libfintx.Logger.csproj">
+      <Project>{fd5e2682-23cb-4999-89e6-1870e3dc6ad7}</Project>
+      <Name>libfintx.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.Sepa\libfintx.Sepa.csproj">
+      <Project>{2025e5a8-0d07-4a83-95aa-d2b94d13a8b3}</Project>
+      <Name>libfintx.Sepa</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.Settings\libfintx.Settings.csproj">
+      <Project>{1b2b651b-b212-4576-afa5-2318b4a8ddff}</Project>
+      <Name>libfintx.Settings</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

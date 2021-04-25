@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using libfintx.FinTS;
+using libfintx.FinTS.Message;
 using Xunit;
 
 namespace libfintx.Tests.Message

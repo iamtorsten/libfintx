@@ -21,12 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Pain\pain_001_001_02\**" />
-    <EmbeddedResource Remove="Pain\pain_001_001_02\**" />
-    <None Remove="Pain\pain_001_001_02\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Iconic.Zlib.Netstandard" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -37,9 +31,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Bank\Banken.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\libfintx.EBICSConfig\libfintx.EBICSConfig.csproj" />
+    <ProjectReference Include="..\libfintx.Database\libfintx.Database.csproj" />
+    <ProjectReference Include="..\libfintx.EBICS\libfintx.EBICS.csproj" />
+    <ProjectReference Include="..\libfintx.FinTSConfig\libfintx.FinTSConfig.csproj" />
+    <ProjectReference Include="..\libfintx.FinTS\libfintx.FinTS.csproj" />
+    <ProjectReference Include="..\libfintx.Globals\libfintx.Globals.csproj" />
+    <ProjectReference Include="..\libfintx.Logger\libfintx.Logger.csproj" />
+    <ProjectReference Include="..\libfintx.Security\libfintx.Security.csproj" />
+    <ProjectReference Include="..\libfintx.Sepa\libfintx.Sepa.csproj" />
+    <ProjectReference Include="..\libfintx.Settings\libfintx.Settings.csproj" />
+    <ProjectReference Include="..\libfintx.Xml\libfintx.Xml.csproj" />
   </ItemGroup>
 
 </Project>

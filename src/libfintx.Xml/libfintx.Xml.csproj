@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\libfintx.EBICSConfig\libfintx.EBICSConfig.csproj" />
+    <ProjectReference Include="..\libfintx.Security\libfintx.Security.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using libfintx.Data.Segment;
+using libfintx.FinTS;
+using libfintx.FinTS.Data.Segment;
 using Xunit;
 
 namespace libfintx.Tests

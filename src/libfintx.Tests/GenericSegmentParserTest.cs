@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using libfintx.Data.Segment;
+using libfintx.FinTS.Data.Segment;
 using Xunit;
 
 namespace libfintx.Tests
