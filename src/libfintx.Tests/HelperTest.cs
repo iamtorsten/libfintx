@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using libfintx.Data.Segment;
 using Xunit;
 
 namespace libfintx.Tests
@@ -26,6 +27,24 @@ HNHBS:7:1+1'";
             var segments = Helper.SplitSegments(message);
 
             Assert.Equal(8, segments.Count);
+        }
+
+        [Fact]
+        public void Test_PhotoTAN()
+        {
+            var message = File.ReadAllText("Resources/Photo_TAN.txt");
+            var rawSegments = Helper.SplitSegments(message);
+
+            // Helper.SplitSegments() does not handle binary data correctly.
+            // After this has been fixed, this test can be modified so that it does not expect an exception any more
+            Assert.Throws<ArgumentException>(() =>
+            {
+                foreach (var rawSegment in rawSegments)
+                {
+                    var segment = new Segment(rawSegment);
+                    new GenericSegmentParser().ParseSegment(segment);
+                }
+            });
         }
     }
 }
