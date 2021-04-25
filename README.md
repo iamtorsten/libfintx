@@ -120,11 +120,6 @@ Copyright (c) 2016 - 2021 **Torsten Klinger**
 
 Licensed under **GNU Affero General Public License**. Please read the LICENSE file.
 
-# ToDo
-
-* Refactoring segment parsing
-* Using namespace of package instead of root namespace
-
 # Support
 
 You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com).
