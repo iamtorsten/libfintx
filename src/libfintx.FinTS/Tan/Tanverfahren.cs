@@ -62,6 +62,9 @@ namespace libfintx.FinTS
                         case "921": // pushTAN
                             list.Add(new TanProcess { ProcessNumber = "921", ProcessName = "pushTAN" });
                             break;
+                        case "922": // pushTAN decoupled
+                            list.Add(new TanProcess { ProcessNumber = "922", ProcessName = "pushTAN 2.0" });
+                            break;
                         case "942": // mobile-TAN
                             list.Add(new TanProcess { ProcessNumber = "942", ProcessName = "mobile-TAN" });
                             break;
@@ -76,6 +79,15 @@ namespace libfintx.FinTS
                             break;
                         case "982": // photo-TAN
                             list.Add(new TanProcess { ProcessNumber = "982", ProcessName = "photo-TAN" });
+                            break;
+                        case "994": // chipTAN (Manuell)
+                            list.Add(new TanProcess { ProcessNumber = "994", ProcessName = "chipTAN (Manuell)" });
+                            break;
+                        case "995": // chipTAN (Flicker)
+                            list.Add(new TanProcess { ProcessNumber = "995", ProcessName = "chipTAN (Flicker)" });
+                            break;
+                        case "996": // mobileTAN
+                            list.Add(new TanProcess { ProcessNumber = "996", ProcessName = "mobileTAN" });
                             break;
                     }
                 }
