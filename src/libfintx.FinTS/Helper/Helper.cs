@@ -317,7 +317,8 @@ namespace libfintx.FinTS
 
                     if (segment.Name == "HITANS")
                     {
-                        if (client.HITANS != 0 && segment.Version == 7)
+                        //if (client.HITANS != 0 && segment.Version == 7)
+                        if (client.HITANS != 0) // Torsten: Freigabe HKTAN#7 in libfintx
                             ; // Ignore HKTAN version 7 if other version is available and version 7 isn't implemented in libfintx
                         else
                             client.HITANS = segment.Version;

@@ -35,7 +35,9 @@ namespace libfintx.FinTS
         {
             if (String.IsNullOrEmpty(client.HITAB)) // TAN Medium Name not set
             {
-                if (client.HITANS == 6)
+                // Erweiterung decoupled
+                // Torsten: Gemäß meiner Auffassung sendet HTAN#7 das Segment deckungsgleich HKTAN#6
+                if (client.HITANS == 6 || client.HITANS == 7)
                     segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "'";
                 else
                     segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+'";
@@ -53,6 +55,13 @@ namespace libfintx.FinTS
                     segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+++++++++++" + client.HITAB + "'";
                 // Version 6, Process 4
                 if (client.HITANS == 6)
+                {
+                    segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "+++++++++" + client.HITAB + "'";
+                }
+                // Version 7, Process 4
+                // Erweiterung decoupled
+                // Torsten: Gemäß meiner Auffassung sendet HTAN#7 das Segment deckungsgleich HKTAN#6
+                if (client.HITANS == 7)
                 {
                     segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "+++++++++" + client.HITAB + "'";
                 }

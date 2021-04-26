@@ -55,6 +55,10 @@ namespace libfintx.FinTS
                 // Version 6
                 else if (client.HITANS == 6)
                     segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N'";
+                // Version 7 -> decoupled
+                // FinTS_3.0_Security_Sicherheitsverfahren_PINTAN_2020-07-10_final_version.pdf Seite 64 - 65
+                else if (client.HITANS == 7)
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+S++++" + client.HITAN + "+N'";
                 else // default
                     segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
             }
@@ -75,6 +79,10 @@ namespace libfintx.FinTS
                 // Version 6
                 else if (client.HITANS == 6)
                     segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N++++" + client.HITAB + "'";
+                // Version 7 -> decoupled
+                // FinTS_3.0_Security_Sicherheitsverfahren_PINTAN_2020-07-10_final_version.pdf Seite 64 - 65
+                else if (client.HITANS == 7)
+                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+S++++" + client.HITAN + "+N++++" + client.HITAB + "'";
                 else // default
                     segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
             }
