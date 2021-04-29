@@ -1,41 +1,0 @@
-HNVSK:998:3+PIN:1+998+1+2::3795847603602000RF2S11F7UPQWN9+1:20210425:082136+2:2:13:@8@        :5:1+280:10070024:XXXXXX:V:0:0+0'HNVSD:999:1+@7878@HIRMG:2:2+0020::Dialoginitialisierung erfolgreich.+3060::Teilweise liegen Warnungen/Hinweise vor.'HIRMS:3:2:3+0020::Information fehlerfrei entgegengenommen.'HIRMS:4:2:4+1040::BPD nicht mehr aktuell. Aktuelle Version folgt.+3920::Meldung unterstützter Ein- und Zwei-Schritt-Verfahren:902+0940::Letzte Anmeldung am 25.04.2021 - 01?:05?:06:25.04.2021 - 01?:05?:06+0010::Auftrag entgegengenommen. Freigabe durch TAN erforderlich.'HIRMS:5:2:5+0030::Auftrag empfangen - Sicherheitsfreigabe erforderlich'HIBPA:6:3:4+41+280:10070024+DB24-Filiale+0+1+300+0'HIKOM:7:4:4+280:10070024+1+2:193.150.167.8::MIM:1+3:https?://fints.deutsche-bank.de/::UUE:1'HISHV:8:3:4+N+RDH:1:9:10+RAH:9:10'HIKPV:9:1:4+6:1'HITANS:10:4:4+1+1+1+N:N:1:901:2:MTAN:::Mobile-TAN:6:1:mobileTAN:256:1:J:1:0:N:N:N:N:N:00:0:1:902:2:MS1.0.0:::photoTAN-Verfahren:7:1:Freigabe durch photoTAN:1::J:1:0:N:N:N:N:N:00:0'HITANS:11:5:4+1+1+1+N:N:1:901:2:MTAN:::Mobile-TAN:6:1:mobileTAN:256:1:J:1:0:N:0:0:N:N:00:0:1:902:2:MS1.0.0:::photoTAN-Verfahren:7:1:Freigabe durch photoTAN:1::J:1:0:N:0:0:N:N:00:0'HITANS:12:6:4+1+1+1+N:N:1:901:2:MTAN:::Mobile-TAN:6:1:mobileTAN:256:J:1:N:0:0:N:N:00:0:N:1:902:2:MS1.0.0:::photoTAN-Verfahren:7:1:Freigabe durch photoTAN:1:J:1:N:0:0:N:N:00:0:N'HIPINS:13:1:4+1+1+1+5:5:6:Benutzerkennung:Kundenkennung:HKCDL:J:HKBSE:J:HKBML:J:HKBBS:N:HKWPD:N:HKCML:J:HKDSE:J:HKTAN:N:HKDSL:J:HKCDB:N:HKPRO:N:HKUMB:J:HKCSB:N:HKCME:J:HKDSA:J:HKBSA:J:HKSAL:N:HKCSL:J:HKSPA:N:HKCCM:J:HKBMB:N:HKBSL:J:HKIPZ:J:HKCDN:J:HKAUB:J:HKDMC:J:HKBME:J:HKDME:J:HKCMB:N:HKCSA:J:HKDMB:N:HKIPS:N:DKPSP:J:HKCCS:J:HKCDE:J:HKPSP:J:HKDBS:N:HKFRD:N:HKCSE:J:HKDML:J:HKKAZ:J:HKDSC:J'DIPINS:14:1:4+1+1+HKCDL:J:HKBSE:J:HKBML:J:HKBBS:N:HKWPD:N:HKCML:J:HKDSE:J:HKTAN:N:HKDSL:J:HKCDB:N:HKPRO:N:HKUMB:J:HKCSB:N:HKCME:J:HKDSA:J:HKBSA:J:HKSAL:N:HKCSL:J:HKSPA:N:HKCCM:J:HKBMB:N:HKBSL:J:HKIPZ:J:HKCDN:J:HKAUB:J:HKDMC:J:HKBME:J:HKDME:J:HKCMB:N:HKCSA:J:HKDMB:N:HKIPS:N:DKPSP:J:HKCCS:J:HKCDE:J:HKDBS:N:HKFRD:N:HKCSE:J:HKDML:J:HKKAZ:J:HKDSC:J'HIPSPS:15:1:4+1+1+1'DIPSPS:16:1:4+1+1'HIPROS:17:2:4+20+1'HIPROS:18:3:4+20+1'HIPROS:19:4:4+20+1+1'HIFRDS:20:1:4+20+1'HIKAZS:21:4:4+20+1+90:N'HIKAZS:22:5:4+20+1+90:N:N'HIKAZS:23:6:4+20+1+1+90:N:N'HIKAZS:24:7:4+20+1+1+90:N:N'HISALS:25:3:4+20+1'HISALS:26:4:4+20+1'HISALS:27:5:4+20+1'HISALS:28:6:4+20+1+1'HISALS:29:7:4+20+1+1'HIWPDS:30:2:4+20+1+N'HIWPDS:31:3:4+20+1+N'HIWPDS:32:4:4+20+1+N:N:N'HIWPDS:33:5:4+20+1+N:N:N'HIWPDS:34:6:4+20+1+1+N:N:N'HIUMBS:35:1:4+20+1+4:51:53:54:56:67:69'HIUMBS:36:2:4+20+1+1+4:51:53:54:56:67:69'HIAUBS:37:3:4+20+1+1'HIAUBS:38:4:4+20+1+1'HIAUBS:39:5:4+20+1+1'HIAUBS:40:6:4+20+1+1+1'XIKDMS:41:1:4+20+1+1+20480'HISPAS:42:1:4+20+1+0+N:N:N:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.003.02:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.001.02'HISPAS:43:2:4+20+1+0+N:N:N:N:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.003.02:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.001.02'HISPAS:44:3:4+20+1+0+N:N:N:N:0:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.003.02:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.001.02'HICCSS:45:1:4+20+1+1'HICSES:46:1:4+20+1+1+0:90'HICSBS:47:1:4+20+1+1+N:N'HICSAS:48:1:4+20+1+1+0:90'HICSLS:49:1:4+20+1+1+J'HICCMS:50:1:4+20+1+1+500:J:J'HICMES:51:1:4+20+1+1+1:90:500:J:J'HICMBS:52:1:4+20+1+1+N:N'HICMLS:53:1:4+20+1+1'HIDSES:54:1:4+20+1+1+1:90:1:90'HIDSCS:55:1:4+20+1+1+1:90:1:90::urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.003.02'HIDBSS:56:1:4+20+1+1+N:N'HIDSAS:57:1:4+20+1+1+1:90:1:90'HIDSLS:58:1:4+20+1+1+J'HIBSES:59:1:4+20+1+1+1:90:1:90'HIBBSS:60:1:4+20+1+1+N:N'HIBSAS:61:1:4+20+1+1+1:90:1:90'HIBSLS:62:1:4+20+1+1+J'HIDMES:63:1:4+20+1+1+1:90:1:90:500:J:J'HIDMCS:64:1:4+20+1+1+500:J:J:1:90:1:90::urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.003.02'HIDMBS:65:1:4+20+1+1+N:N'HIDMLS:66:1:4+20+1+1'HIBMES:67:1:4+20+1+1+1:90:1:90:500:J:J'HIBMBS:68:1:4+20+1+1+N:N'HIBMLS:69:1:4+20+1+1'HICDES:70:1:4+20+1+1+1:1:360:0102030612:010203040506070809101112131415161718192021222324252627282930'HICDBS:71:1:4+20+1+1+N'HICDNS:72:1:4+20+1+1+9:1:360:J:J:J:J:J:J:J:J:J:0102030612:010203040506070809101112131415161718192021222324252627282930'HICDLS:73:1:4+20+1+1+0:0:N:J'HIIPZS:74:1:4+20+1+1+:urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'HIIPSS:75:1:4+20+1+1+3'HITAN:76:6:5+4++JZA3zo7J20210425082136553#LPE#+Bitte geben Sie die photoTan ein+@2963@ 	image/pngPNG
-
-   
-IHDR   Ò   Ò   °û	  MIDATxÚí¡ViG "ó GòÌDDD ÈÙÞ°{ö,Û*ß¹Õ
-ÿ|÷ æL÷ôÿS§¦îÜªûoöB,[ ;aØ	aØ	ÃNÃNvBvÂ°Â°0ìæpqqqvvöîÝ»Íééé§O¾ÿÞv777ÛíÖÿÅÉÉÉõõu>ì¦ssÅ¯Q¼Mñ»u·Û¹­âÅ÷ãÇXØMõ{**8??ÝÄ!ÜPQd±°;::rCE±°s+a';!;aØ	Ã®9ì&¶{yyùðð Î=¯®®_]ØM1ç¿glL÷êÂÎ<w9ïÕÿè3ìagØvcÝ×ý×Ý~·Ùo¶ûíÝþîçK_÷»ÝôXûívw7ûøÊóÏ=Oá='¬Ü¹ò¥Uº²®
-»§=}úvöçK»¿_ø¹Isï¯<¿ñÜóÞSyÂÊ+OXZEá¡+ë: °Ûü³þ==Ð¿þæÞ_y~ãÙÝxù='¬Ü¹ò¥Uº¶v³ÙÎl×ZÛM»ù´§·ûÛ¿Êic¶çövö=ðç7¯^|Oå	+w®<ai®¬K&+d²µc<¾8`¦²¤M¸íÌUU@ú=hØ±Ê	¾ª¢ZáÆJTRíÍ\UY,H
-;Æá+Öh*ün;sUe~íÌvf»`mx"|qÀM¥µÝïsÛ«*«ô[qLÈd
-»ÞTQ¦AI;ºªÄÐ·7ì*
-Ò	*Z-cÑU¥U{ã]EoEª(Ó@C ¤]UbèÛíÌvf»lm÷¢ÞTÑk®°Âg/rtU¡#n+2ÙÙu´Æ®
-)°%ýuD3
-5YÄmßBØz¼bW4"zYÝU
-Tí½°u´Æ®
-)°%ýuD3
-5YÄmÍvf;³ÝÿÕvÖØU!¶¤ÿ¢hÆR¡&¸­LVÈdiwqÆf`ÑK¬¹òY¬GMÅ¢ý¤ß.UÅ¦ÂÐKudå³X× Cû3HwqÆf`ÑK¬¹òY¬GMÅÂa³ÙÎl·.ÍÀ¢;Xså³X4Eû#2YvP'EÈ±9Y¦"U4ÕG
-ï<jØAå õäÅ&ÇrtTg!¼ó¨auRÔe:)RES}ÔðÎf;³Ù.YÛu ÇædNTÑT5¼³LVÈd;ìªÚ%ô.Nù2-¨k3B<nm·ê¯ùÐÍ3åT² ÒÃJÄqìªÚ%ô.Nù2-¨kSBl¶3ÛíbLvUíz§|Ôµ!É
-ìÜÁ>X¤T²ÎáRêdfTvVêø;ÃÐo÷¬.õÛ}ª·w°×pTØJÖ9S*CÌÊÂÎêQÌvf»uj;ÒJÖ9R*SÌÊÂÎjL6íú&LºÒ%cg Î®íÓßfm×7sÅôÐ/õ±S1B§9ö)+oÉöM2u5¦KÎ 
-]Û§#íÌvf»rm×5aÊÔÕ.;(tvm,2YÊdûFÈ@SZjÃR¥Â[QÛõýæk²ºÐæ9ªÛà­Ç`²}
-#d )-µÑa)ÃRá­Ívf;³d²}
-#d )-µÍa)ÅRá­e²B&;!æBÜwZFÅ÷ññAÎ¥`ùrö0ªkû*ÔANá¡©>äBÜwZFÅ7òq³ÙÎlOáÁµ]Æ¸ï<´ïãã2Y!]6ìbS¨¢'dSº<Ú°[¦¶«	z9Â«Bî*]-Ý(Ä¾O2¼*ä%eØíÌv¯²¶ËL¡2Mé6òhÃNÈdc¶®ëQéyísbNM)§QædWõ)=ªíú|RwIÊñd9ÙU]JÏl+sjJù;2'k¶3Û­RÛ­èzTzÄdû\¡SSÊßÉ9Y!m
-»ØÈ+ñ7îS3¡TÚT¿ñ!]l8~öý¾Õ¤[¤:ð)ìb#¯Äß¸OÍZ*RiSýÆf;³Ù®»¶Ë¼ã>5j©H¥Mõ«É
-ì²O¨ðßKÕ¢§:o}¨T!ßEÏÛõö
-29û{;¿!^æ¿!ªEO
-u22'k¶3Û­SÛþÞÖÚîEþr©Zôt¡P'³s²B&û°>^útvTWÑÉ8%W(tþÑ°a×W©¤>]õtVDÉ'2lØõñ²Ô§³Ë ºNÆ)¹B¡óÌvf;³]´¶kâe©OgAuSrBç©É
-lPEÓ±éÑãkkºmJo$ìàù
-}óT¡¨­E*)b°£î¸mÓ£!Æ×Ö
-uÛÞj¶3Ûí,ÖM_[C4ÔmSz«LVÈdsLª)G_æzr
-9Û·«ÃvÃßåSÌ$å:±oWí.*dÊÑ¹¥\¡BgÎöíê°ÝÅf;³Ý
-Lª)G_æzr
-9Û·«vlç,ôÝíëÝe'Õö©«lClw"Tÿ5v³±³ûô¶¡úoM6Äv{wÙIµ}ê*ÛÃÛ5ÛíÌv¹9Yè»Û×»ËNªíSWÙØ®LVÈdqØ1$ÄÔ ëâìdjaæäü6Ã9 Úú ÊÓQFÂ¼MßfØ1$ÄÔ ëâìdjaæäl¶3ÛíêµðABL
-º!ÈNÆ©ÆHfNÎ2Y!-v§+)!À)Ý6¨ÒþªÉÆ¼9PSúí>8·ÖæRÚQ5Ù¢s%¥2õeÄ¦tÛ< Jû3ª&k¶3Û­ ÉÆ+)¹ÚLé¶y@öGMVÈdùéÙ¯à
-:+±o¸
-´R8;&rÏý.:=Õ£ph¥pJm"åS!Sgå ö
-WV
-grÇÐdÍvf»uj»WpLLØ7\Z)ÉU2ÙS;â)}³ôSo­ðVÖ
-çvÇ;V]¥~ñ/½'å]&¾*ëlcã)}³ôSo­ðVÖ
-çvÍvf;³¯í Lé¥÷¤Ð|k·²h8·+2ÙXØÅú`ÛS'Ã2'«Ð	¼Ã]¬3¬Í+3xV"óv	I9lØÅú`Ûs_OèdXæd:×lg¶3ÛEk»Ll3p°¶#'Ã2'«Ð	¼2Y!ÍuÇ4Ç
-ÿ
-ÍÉ®
-Í·ÂYc´°QædSç¦*ÂÐäXéªÐÄ¾CeN6uÊjÿædKWæ[á¬1ZØ(s²f;³Ý*µ]æÕÿ
-ÍÉ®
-Í·ÂYc´05Y!5ìa';ÃÎ°[5ìü¯ÇÇÇWvþcÆÆÕÕÕ«»£££)òÌy£æ¹)æ_]Ø	aØ	ÃNv0ìa÷?Xª»)»³³3wSTpzz»7TTp~~»ûûûívë_ãäääÛ·o±°pssã¶_ãúúºÚRPWH¦È{ÿþ½+fóÜ/_~£å·´¹éÛöóçÏ?~Û'|øðaªçß­0ìÈôí¹Â°0ì0ìa'a';!;aØCÁÓÅ¡\kX    IEND®B`''HNHBS:77:1+1'

@@ -35,7 +35,7 @@ using libfintx.Logger.Log;
 
 namespace libfintx.FinTS
 {
-    public static class Helper
+    public static partial class Helper
     {
         /// <summary>
         /// Regex pattern for HIRMG/HIRMS messages.
@@ -129,31 +129,6 @@ namespace libfintx.FinTS
             {
                 return string.Empty;
             }
-        }
-
-        public static List<string> SplitSegments(string message)
-        {
-            List<string> segments = new List<string>();
-
-            var values = message.Split('\'');
-            foreach (var item in values)
-            {
-                if (item == string.Empty)
-                    continue;
-
-                var lastSegment = segments.LastOrDefault();
-                if (lastSegment != null && lastSegment.EndsWith("?")) // escape
-                {
-                    segments.RemoveAt(segments.Count - 1);
-                    segments.Add(lastSegment + "'" + item);
-                }
-                else
-                {
-                    segments.Add(item);
-                }
-            }
-
-            return segments;
         }
 
         public static Segment Parse_Segment(string segmentCode)

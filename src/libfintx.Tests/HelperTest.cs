@@ -11,41 +11,25 @@ namespace libfintx.Tests
     public class HelperTest
     {
         [Fact]
-        public void TestSplitMessages_1()
+        public void TestSplitSegments_1()
         {
             var message =
-@"HNHBK:1:3+000000000604+300+KI1031610095894+1+KI1031610095894:1'
-HNVSK:998:3+PIN:2+998+1+2::gsYsKzQ0YHYBAAAdyJv1hGuowAQA+1:20210316:100958+2:2:13:@8@00000000:5:1+280:10090000:XXXXXX:V:0:0+0'
-HNVSD:999:1+@381@HNSHK:2:4+PIN:2+944+330097059902611+1+1+2::gsYsKzQ0YHYBAAAdyJv1hGuowAQA+1+1:20210316:100958+1:999:1+6:10:16+280:10090000:XXXXXX:S:0:0'
-HIRMG:3:2+0010::Nachricht entgegengenommen.'
-HIRMS:4:2:5+0030::Auftrag empfangen - Sicherheitsfreigabe erforderlich'
-HITAN:5:6:5+4++BgBjqwg2OngBAAAqEcp9hGuowAQA+Ihre TAN wurde an Ihre App ?'Apple iPhone8,1?' gesendet.'
-HNSHA:6:2+330097059902611''
-HNHBS:7:1+1'";
-
-            message = message.Replace(Environment.NewLine, string.Empty);
+@"HNHBK:1:3+000000000443+300+kQhXXcecBq4120210429134136079%+2+kQhXXcecBq4120210429134136079%:2'
+HNVSK:998:3+PIN:1+998+1+2::37971492958550005K551VUX2BCW3U+1:20210429:134136+2:2:13:@8@        :5:1+280:10070124:XXXXXX:V:0:0+0'
+HNVSD:999:1+@187@
+HIRMG:2:2+9050::Teilweise fehlerhaft.'
+HIRMS:3:2:3+9210::Wert widerspricht Bankvorgaben.'
+HIRMS:4:2:4+9210::Auftrag abgelehnt - Zwei-Schritt-TAN inkonsistent. Eingereichter Auftrag gelösch''
+HNHBS:5:1+2'".Replace(Environment.NewLine, string.Empty);
 
             var segments = Helper.SplitSegments(message);
+            Assert.Equal(5, segments.Count);
 
-            Assert.Equal(8, segments.Count);
-        }
-
-        [Fact]
-        public void Test_PhotoTAN()
-        {
-            var message = File.ReadAllText("Resources/Photo_TAN.txt");
-            var rawSegments = Helper.SplitSegments(message);
-
-            // Helper.SplitSegments() does not handle binary data correctly.
-            // After this has been fixed, this test can be modified so that it does not expect an exception any more
-            Assert.Throws<ArgumentException>(() =>
-            {
-                foreach (var rawSegment in rawSegments)
-                {
-                    var segment = new Segment(rawSegment);
-                    new GenericSegmentParser().ParseSegment(segment);
-                }
-            });
+            Assert.StartsWith("HNHBK", segments[0]);
+            Assert.StartsWith("HIRMG", segments[1]);
+            Assert.StartsWith("HIRMS", segments[2]);
+            Assert.StartsWith("HIRMS", segments[3]);
+            Assert.StartsWith("HNHBS", segments[4]);
         }
     }
 }
