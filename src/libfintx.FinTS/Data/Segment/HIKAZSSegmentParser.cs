@@ -27,7 +27,7 @@ using System.Text.RegularExpressions;
 
 namespace libfintx.FinTS.Data.Segment
 {
-    public class HIKAZSSegmentParser : ISegmentParser
+    internal class HIKAZSSegmentParser : ISegmentParser
     {
         public Segment ParseSegment(Segment segment)
         {

@@ -22,7 +22,7 @@ HIRMS:3:2:3+9210::Wert widerspricht Bankvorgaben.'
 HIRMS:4:2:4+9210::Auftrag abgelehnt - Zwei-Schritt-TAN inkonsistent. Eingereichter Auftrag gelösch''
 HNHBS:5:1+2'".Replace(Environment.NewLine, string.Empty);
 
-            var segments = Helper.SplitSegments(message);
+            var segments = Helper.SplitEncryptedSegments(message);
             Assert.Equal(5, segments.Count);
 
             Assert.StartsWith("HNHBK", segments[0]);

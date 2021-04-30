@@ -160,26 +160,24 @@ namespace libfintx.FinTS
                 var connDetails = client.ConnectionDetails;
                 List<HBCIBankMessage> result = new List<HBCIBankMessage>();
 
-                List<string> values = SplitSegments(Message);
+                List<string> rawSegments = SplitEncryptedSegments(Message);
 
                 List<Segment> segments = new List<Segment>();
-                foreach (var item in values)
+                foreach (var item in rawSegments)
                 {
                     Segment segment = Parse_Segment(item);
                     if (segment != null)
                         segments.Add(segment);
                 }
 
-                string msg = string.Join(Environment.NewLine, values);
-
                 string bpd = string.Empty;
                 string upd = string.Empty;
 
-                var bpaMatch = Regex.Match(msg, @"(HIBPA.+?)\b(HNHBS|HISYN|HIUPA)\b", RegexOptions.Singleline);
+                var bpaMatch = Regex.Match(Message, @"(HIBPA.+?)\b(HITAN|HNHBS|HISYN|HIUPA)\b");
                 if (bpaMatch.Success)
                     bpd = bpaMatch.Groups[1].Value;
 
-                var upaMatch = Regex.Match(msg, @"(HIUPA.+?)\b(HITAN|HNHBS)\b", RegexOptions.Singleline);
+                var upaMatch = Regex.Match(Message, @"(HIUPA.+?)\b(HITAN|HNHBS)\b");
                 if (upaMatch.Success)
                     upd = upaMatch.Groups[1].Value;
 
@@ -192,7 +190,7 @@ namespace libfintx.FinTS
                 UPD.ParseUpd(upd);
 
                 //Add BIC to Account information (Not retrieved bz UPD??)
-                foreach (AccountInformation accInfo in UPD.HIUPD.AccountList)
+                foreach (AccountInformation accInfo in UPD.AccountList)
                     accInfo.AccountBic = connDetails.Bic;
 
                 foreach (var segment in segments)
@@ -357,7 +355,7 @@ namespace libfintx.FinTS
         {
             try
             {
-                List<string> values = SplitSegments(Message);
+                List<string> values = SplitEncryptedSegments(Message);
 
                 List<Segment> segments = new List<Segment>();
                 foreach (var item in values)

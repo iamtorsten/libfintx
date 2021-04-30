@@ -53,12 +53,12 @@ namespace libfintx.FinTS
             HICAZS = new List<HICAZS>();
             HIKAZS = new List<HIKAZS>();
 
-            var lines = bpd.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Where(l => !string.IsNullOrWhiteSpace(l));
-            foreach (var line in lines)
+            List<string> segments = Helper.SplitSegments(bpd);
+            foreach (var rawSegment in segments)
             {
                 try
                 {
-                    var segment = SegmentParserFactory.ParseSegment(line);
+                    var segment = SegmentParserFactory.ParseSegment(rawSegment);
                     if (segment is HIPINS)
                         HIPINS = (HIPINS) segment;
                     else if (segment is HICAZS)
@@ -70,7 +70,7 @@ namespace libfintx.FinTS
                 }
                 catch (Exception ex)
                 {
-                    Log.Write($"Couldn't parse segment: {ex.Message}{Environment.NewLine}{line}");
+                    Log.Write($"Couldn't parse segment: {ex.Message}{Environment.NewLine}{rawSegment}");
                 }
             }
         }

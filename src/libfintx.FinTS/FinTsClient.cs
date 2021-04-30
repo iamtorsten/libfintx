@@ -117,7 +117,7 @@ namespace libfintx.FinTS
             if (!result.IsSuccess)
                 return result.TypedResult<List<AccountInformation>>();
 
-            return new HBCIDialogResult<List<AccountInformation>>(result.Messages, UPD.Value, UPD.HIUPD.AccountList);
+            return new HBCIDialogResult<List<AccountInformation>>(result.Messages, UPD.Value, UPD.AccountList);
         }
 
         /// <summary>

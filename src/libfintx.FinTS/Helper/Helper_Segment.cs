@@ -67,7 +67,7 @@ namespace libfintx.FinTS
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        private static List<string> _SplitSegments(string message)
+        internal static List<string> SplitSegments(string message)
         {
             List<string> segments = new List<string>();
 
@@ -142,7 +142,7 @@ namespace libfintx.FinTS
             if (!match.Success)
                 throw new ArgumentException("Invalid HNVSD segment.");
             var binaryData = hnvsd.Substring(match.Length);
-            var decodedSegments = _SplitSegments(binaryData);
+            var decodedSegments = SplitSegments(binaryData);
             segments.AddRange(decodedSegments);
 
             segments.Add(encryptedSegments.Last()); // HNHBS
@@ -150,9 +150,9 @@ namespace libfintx.FinTS
             return segments;
         }
 
-        public static List<string> SplitSegments(string message)
+        internal static List<string> SplitEncryptedSegments(string message)
         {
-            var encodedSegments = _SplitSegments(message);
+            var encodedSegments = SplitSegments(message);
             var decodedSegments = DecryptSegments(encodedSegments);
 
             return decodedSegments;

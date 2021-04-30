@@ -652,7 +652,7 @@ namespace libfintx.Sample.Ui
                 return false;
             }
             var conn = client.ConnectionDetails;
-            AccountInformation accountInfo = UPD.HIUPD?.GetAccountInformations(conn.Account, conn.Blz.ToString());
+            AccountInformation accountInfo = UPD.GetAccountInformations(conn.Account, conn.Blz.ToString());
             if (accountInfo != null && accountInfo.IsSegmentPermitted("HKTAB"))
             {
                 client.HITAB = txt_tan_medium.Text;
