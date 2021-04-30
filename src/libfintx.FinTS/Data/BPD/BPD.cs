@@ -65,8 +65,8 @@ namespace libfintx.FinTS
                         HICAZS.Add((HICAZS) segment);
                     else if (segment is HIKAZS)
                         HIKAZS.Add((HIKAZS) segment);
-                    else
-                        SegmentList.Add(segment);
+
+                    SegmentList.Add(segment);
                 }
                 catch (Exception ex)
                 {
