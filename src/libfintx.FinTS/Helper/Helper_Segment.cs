@@ -38,7 +38,7 @@ namespace libfintx.FinTS
         {
             var match = Regex.Match(message, @"^[A-Z]+:\d+:\d+(:\d+)?\+");
             if (!match.Success)
-                throw new ArgumentException("Invalid segment. Expected segment begin.");
+                throw new ArgumentException($"Invalid segment. Expected segment begin. Message is: {Truncate(message)}");
 
             currentSegment.Append(match.Value);
             return message.Substring(match.Index + match.Length);
@@ -78,7 +78,7 @@ namespace libfintx.FinTS
             {
                 var delimiter = FindNextDelimiter(message);
                 if (delimiter == null)
-                    throw new ArgumentException($"Invalid segment. Didn't find any delimiter.");
+                    throw new ArgumentException($"Invalid segment. Didn't find any delimiter. Message is: {Truncate(message)}");
 
                 switch (delimiter.Delimiter)
                 {
@@ -96,7 +96,7 @@ namespace libfintx.FinTS
 
                         // binary data must be followed by :,+,'
                         if (message[0] != ':' && message[0] != '+' && message[0] != '\'')
-                            throw new ArgumentException($"Invalid segment. Binary data must be followed by :,+,'");
+                            throw new ArgumentException($"Invalid segment. Binary data must be followed by :,+,'. Message is: {Truncate(message)}");
 
                         break;
                     case Delimiter.Segment:
@@ -156,6 +156,17 @@ namespace libfintx.FinTS
             var decodedSegments = DecryptSegments(encodedSegments);
 
             return decodedSegments;
+        }
+
+        private static string Truncate(string s, int length = 15)
+        {
+            if (s == null)
+                return null;
+
+            if (s.Length < length)
+                return s;
+
+            return s.Substring(0, length) + "...";
         }
     }
 
