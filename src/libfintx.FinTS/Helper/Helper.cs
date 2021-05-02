@@ -170,28 +170,34 @@ namespace libfintx.FinTS
                         segments.Add(segment);
                 }
 
+                // BPD
                 string bpd = string.Empty;
-                string upd = string.Empty;
-
                 var bpaMatch = Regex.Match(Message, @"(HIBPA.+?)\b(HITAN|HNHBS|HISYN|HIUPA)\b");
                 if (bpaMatch.Success)
                     bpd = bpaMatch.Groups[1].Value;
+                if (bpd.Length > 0)
+                {
+                    SaveBPD(connDetails.Blz, bpd);
+                    BPD.ParseBpd(bpd);
+                }
 
+                // UPD
+                string upd = string.Empty;
                 var upaMatch = Regex.Match(Message, @"(HIUPA.+?)\b(HITAN|HNHBS)\b");
                 if (upaMatch.Success)
                     upd = upaMatch.Groups[1].Value;
+                if (upd.Length > 0)
+                {
+                    SaveUPD(connDetails.Blz, connDetails.UserId, upd);
+                    UPD.ParseUpd(upd);
+                }
 
-                // BPD
-                SaveBPD(connDetails.Blz, bpd);
-                BPD.ParseBpd(bpd);
-
-                // UPD
-                SaveUPD(connDetails.Blz, connDetails.UserId, upd);
-                UPD.ParseUpd(upd);
-
-                //Add BIC to Account information (Not retrieved bz UPD??)
-                foreach (AccountInformation accInfo in UPD.AccountList)
-                    accInfo.AccountBic = connDetails.Bic;
+                if (UPD.AccountList != null)
+                {
+                    //Add BIC to Account information (Not retrieved bz UPD??)
+                    foreach (AccountInformation accInfo in UPD.AccountList)
+                        accInfo.AccountBic = connDetails.Bic;
+                }
 
                 foreach (var segment in segments)
                 {
