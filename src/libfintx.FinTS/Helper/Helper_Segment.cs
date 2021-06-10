@@ -83,32 +83,51 @@ namespace libfintx.FinTS
                 switch (delimiter.Delimiter)
                 {
                     case Delimiter.Escape:
-                        currentSegment.Append(message.Substring(0, delimiter.Index) + delimiter.Value);
-                        message = message.Substring(delimiter.Index + delimiter.Value.Length);
+                        {
+                            var length = delimiter.Index + delimiter.Value.Length + 1;
+                            if (message.Length < length)
+                                throw new ArgumentException($"Invalid segment. There are no more characters after escape character. Message is: {Truncate(message)}");
 
-                        break;
+                            // Escape character must be followed by +,:,',?,@
+                            var allowedChars = new[] { '+', ':', '\'', '?', '@' };
+                            if (!allowedChars.Contains(message[length - 1]))
+                                throw new ArgumentException($"Invalid segment. Escape character must be followed by +,:,',?,@. Message is: {Truncate(message)}");
+
+                            currentSegment.Append(message.Substring(0, length));
+                            message = message.Substring(length);
+
+                            break;
+                        }
                     case Delimiter.Binary:
-                        var lengthStr = delimiter.Value.Substring(1, delimiter.Value.Length - 2);
-                        var binaryLength = Convert.ToInt32(lengthStr);
-                        var binaryData = message.Substring(delimiter.Index + delimiter.Value.Length, binaryLength);
-                        currentSegment.Append(message.Substring(0, delimiter.Index) + delimiter.Value + binaryData);
-                        message = message.Substring(delimiter.Index + delimiter.Value.Length + binaryLength);
+                        {
+                            var lengthStr = delimiter.Value.Substring(1, delimiter.Value.Length - 2);
+                            var binaryLength = Convert.ToInt32(lengthStr);
+                            var length = delimiter.Index + delimiter.Value.Length + binaryLength;
+                            if (message.Length < length)
+                                throw new ArgumentException($"Invalid segment. Given binary length {binaryLength} exceeds actual message length. Message is: {Truncate(message)}");
 
-                        // binary data must be followed by :,+,'
-                        if (message[0] != ':' && message[0] != '+' && message[0] != '\'')
-                            throw new ArgumentException($"Invalid segment. Binary data must be followed by :,+,'. Message is: {Truncate(message)}");
+                            currentSegment.Append(message.Substring(0, length));
+                            message = message.Substring(length);
 
-                        break;
+                            // binary data must be followed by +,:,'
+                            var allowedChars = new[] { '+', ':', '\'' };
+                            if (!allowedChars.Contains(message[0]))
+                                throw new ArgumentException($"Invalid segment. Binary data must be followed by +,:,'. Message is: {Truncate(message)}");
+
+                            break;
+                        }
                     case Delimiter.Segment:
-                        currentSegment.Append(message.Substring(0, delimiter.Index));
-                        segments.Add(currentSegment.ToString());
-                        currentSegment = new StringBuilder();
+                        {
+                            currentSegment.Append(message.Substring(0, delimiter.Index));
+                            segments.Add(currentSegment.ToString());
+                            currentSegment = new StringBuilder();
 
-                        message = message.Substring(delimiter.Index + delimiter.Value.Length);
-                        if (message.Length > 0)
-                            message = ProcessSegmentBegin(message, currentSegment);
+                            message = message.Substring(delimiter.Index + delimiter.Value.Length);
+                            if (message.Length > 0)
+                                message = ProcessSegmentBegin(message, currentSegment);
 
-                        break;
+                            break;
+                        }
                     default:
                         break;
                 }
