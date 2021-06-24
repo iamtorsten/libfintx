@@ -39,6 +39,8 @@ namespace libfintx.FinTS
 
         public static List<HIKAZS> HIKAZS { get; set; }
 
+        public static List<HITANS> HITANS { get; set; }
+
         public static List<Segment> SegmentList { get; set; }
 
         public static void Reset()
@@ -52,6 +54,7 @@ namespace libfintx.FinTS
             SegmentList = new List<Segment>();
             HICAZS = new List<HICAZS>();
             HIKAZS = new List<HIKAZS>();
+            HITANS = new List<HITANS>();
 
             List<string> segments = Helper.SplitSegments(bpd);
             foreach (var rawSegment in segments)
@@ -65,6 +68,8 @@ namespace libfintx.FinTS
                         HICAZS.Add((HICAZS) segment);
                     else if (segment is HIKAZS)
                         HIKAZS.Add((HIKAZS) segment);
+                    else if (segment is HITANS)
+                        HITANS.Add((HITANS) segment);
 
                     SegmentList.Add(segment);
                 }

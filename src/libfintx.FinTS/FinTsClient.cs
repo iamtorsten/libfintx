@@ -110,7 +110,7 @@ namespace libfintx.FinTS
         public async Task<HBCIDialogResult<List<AccountInformation>>> Accounts(TANDialog tanDialog)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<AccountInformation>>();
 
             result = await ProcessSCA(result, tanDialog);
@@ -128,7 +128,7 @@ namespace libfintx.FinTS
         public async Task<HBCIDialogResult<AccountBalance>> Balance(TANDialog tanDialog)
         {
             HBCIDialogResult result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<AccountBalance>();
 
             result = await ProcessSCA(result, tanDialog);
@@ -138,7 +138,7 @@ namespace libfintx.FinTS
             // Success
             string BankCode = await Transaction.HKSAL(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<AccountBalance>();
 
             result = await ProcessSCA(result, tanDialog);
@@ -153,7 +153,7 @@ namespace libfintx.FinTS
         private async Task<HBCIDialogResult> ProcessSCA(HBCIDialogResult result, TANDialog tanDialog)
         {
             tanDialog.DialogResult = result;
-            if (result.IsSCARequired)
+            if (result.IsTanRequired)
             {
                 string tan = await Helper.WaitForTanAsync(this, result, tanDialog);
                 if (tan == null)
@@ -165,6 +165,35 @@ namespace libfintx.FinTS
                 {
                     result = await TAN(tan);
                 }
+            }
+            else if (result.IsApprovalRequired)
+            {
+                // Ohne automatisierte Statusabfrage:
+                // await Helper.WaitForTanAsync(this, result, tanDialog);
+                // result = await TAN(null);
+
+
+                // Mit automatisierter Statusabfrage
+                await tanDialog.WaitForTanAsync(); // Dem Benutzer signalisieren, dass auf die Freigabe gewartet wird
+
+                const int Delay = 2000; // Der minimale Zeitraum zwischen zwei Statusabfragen steht in HITANS, wir nehmen einfach 2 Sek
+                await Task.Delay(Delay);
+                result = await TAN(null);
+                while (!result.IsSuccess && !result.HasError && result.IsWaitingForApproval) // Freigabe wurde noch nicht erteilt
+                {
+                    await Task.Delay(Delay);
+                    if (tanDialog.IsCancelWaitForApproval)
+                    {
+                        string BankCode = await Transaction.HKEND(this, HNHBK);
+                        result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+                    }
+                    else
+                    {
+                        result = await TAN(null);
+                    }
+                }
+
+                await tanDialog.OnTransactionEndAsync(result.IsSuccess); // Dem Benutzer signalisieren, dass die Transaktion beendet ist
             }
 
             return result;
@@ -191,7 +220,7 @@ namespace libfintx.FinTS
             decimal amount, string purpose, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -205,7 +234,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKCUM(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -239,7 +268,7 @@ namespace libfintx.FinTS
             string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -253,7 +282,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKDSE(this, payerName, payerIBAN, payerBIC, amount, purpose, settlementDate, mandateNumber, mandateDate, creditorIdNumber);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -281,7 +310,7 @@ namespace libfintx.FinTS
            string numberOfTransactions, decimal totalAmount, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -295,7 +324,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKDME(this, settlementDate, painData, numberOfTransactions, totalAmount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -322,7 +351,7 @@ namespace libfintx.FinTS
             int amount, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -336,7 +365,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKPPD(this, mobileServiceProvider, phoneNumber, amount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);

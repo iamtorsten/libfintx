@@ -55,6 +55,21 @@ namespace libfintx.FinTS
 
         public Image<Rgba32> MatrixImage { get; internal set; }
 
+        /// <summary>
+        /// Bei Verwendung des Decoupled-Verfahren (HKTAN#7) setzen.
+        /// </summary>
+        public bool IsDecoupled { get; set; }
+
+        /// <summary>
+        /// HKTAN#7: Kann gesetzt werden, um die automatisierte Statusabfrage für eine Freigabe zu unterbrechen.
+        /// </summary>
+        public bool IsCancelWaitForApproval { get; set; }
+
+        /// <summary>
+        /// Der Aufrufer kann sich hier registrieren, um darüber benachrichtigt zu werden, dass die Statusabfrage erteilt wurde.
+        /// </summary>
+        private readonly Func<bool, Task> _onTransactionEndAsync;
+
         private readonly Func<TANDialog, Task<string>> _waitForTanAsync;
 
         /// <summary>
@@ -85,7 +100,6 @@ namespace libfintx.FinTS
             PictureBox = pictureBox;
         }
 
-
         /// <summary>
         /// Enter a TAN without any visual components, e.g. pushTAN or mobileTAN.
         /// </summary>
@@ -98,13 +112,35 @@ namespace libfintx.FinTS
         }
 
         /// <summary>
+        /// Enter a TAN without any visual components, e.g. pushTAN or mobileTAN.
+        /// </summary>
+        /// <param name="waitForTanAsync">Function which takes a </param>
+        /// <param name="dialogResult"></param>
+        /// <param name="matrixImage"></param>
+        public TANDialog(Func<TANDialog, Task<string>> waitForTanAsync, Func<bool, Task> onTransactionEndAsync)
+        {
+            _waitForTanAsync = waitForTanAsync;
+            _onTransactionEndAsync = onTransactionEndAsync;
+        }
+
+        /// <summary>
         /// Wait for the user to enter a TAN.
         /// </summary>
         /// <param name="dialogResult">The <code>HBCIDialogResult</code> from the bank which requests the TAN. Can be used to display bank messages in the dialog.</param>
         /// <returns></returns>
         internal async Task<string> WaitForTanAsync()
         {
-            return await _waitForTanAsync?.Invoke(this);
+            return await _waitForTanAsync.Invoke(this);
+        }
+
+        /// <summary>
+        /// Wait for the user to enter a TAN.
+        /// </summary>
+        /// <param name="dialogResult">The <code>HBCIDialogResult</code> from the bank which requests the TAN. Can be used to display bank messages in the dialog.</param>
+        /// <returns></returns>
+        internal async Task OnTransactionEndAsync(bool success)
+        {
+            await (_onTransactionEndAsync != null ? _onTransactionEndAsync.Invoke(success) : Task.CompletedTask);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace libfintx.FinTS
             {
                 // Erweiterung decoupled
                 // Torsten: Gemäß meiner Auffassung sendet HTAN#7 das Segment deckungsgleich HKTAN#6
-                if (client.HITANS == 6 || client.HITANS == 7)
+                if (client.HITANS >= 6)
                     segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "'";
                 else
                     segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+'";

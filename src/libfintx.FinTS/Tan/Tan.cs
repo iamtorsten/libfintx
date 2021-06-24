@@ -90,7 +90,7 @@ namespace libfintx.FinTS
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
-            string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS + ":" + TAN);
+            string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS + (TAN != null ? ":" + TAN : null));
             string response = await FinTSMessage.Send(client, message);
 
             Helper.Parse_Message(client, response);

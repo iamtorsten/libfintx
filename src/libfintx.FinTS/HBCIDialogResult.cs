@@ -39,7 +39,17 @@ namespace libfintx.FinTS
         /// <summary>
         /// Returns true if there is any message with code <i>0030</i>.
         /// </summary>
-        public bool IsSCARequired => GetMessage("0030") != null;
+        public bool IsTanRequired => GetMessage("0030") != null;
+
+        /// <summary>
+        /// Returns true if there is any message with code <i>3955</i>.
+        /// </summary>
+        public bool IsApprovalRequired => GetMessage("3955") != null;
+
+        /// <summary>
+        /// Returns true if there is any message with code <i>3955</i>.
+        /// </summary>
+        public bool IsWaitingForApproval => GetMessage("3956") != null;
 
         private readonly List<HBCIBankMessage> messages;
         public IEnumerable<HBCIBankMessage> Messages => messages;

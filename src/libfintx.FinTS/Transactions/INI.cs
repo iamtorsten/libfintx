@@ -65,7 +65,7 @@ namespace libfintx.FinTS
                             "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
                             "HKVVB:" + SEG_NUM.Seg4 + ":3+0+0+0+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'";
 
-                        if (client.HITANS == 6)
+                        if (client.HITANS >= 6)
                         {
                             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg5);
                             segments_ = HKTAN.Init_HKTAN(client, segments_, hkTanSegmentId);

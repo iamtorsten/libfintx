@@ -55,7 +55,7 @@ namespace libfintx.FinTS
             decimal amount, string purpose, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -69,7 +69,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKCCS(this, receiverName, receiverIBAN, receiverBIC, amount, purpose);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -99,7 +99,7 @@ namespace libfintx.FinTS
             decimal amount, string purpose, DateTime executionDay, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -113,7 +113,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKCSE(this, receiverName, receiverIBAN, receiverBIC, amount, purpose, executionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -141,7 +141,7 @@ namespace libfintx.FinTS
             string numberOfTransactions, decimal totalAmount, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -155,7 +155,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKCCM(this, painData, numberOfTransactions, totalAmount);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -183,7 +183,7 @@ namespace libfintx.FinTS
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -197,7 +197,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKCME(this, painData, numberOfTransactions, totalAmount, executionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -214,7 +214,7 @@ namespace libfintx.FinTS
         public async Task<HBCIDialogResult<List<TerminatedTransfer>>> GetTerminatedTransfers(TANDialog tanDialog)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<TerminatedTransfer>>();
 
             result = await ProcessSCA(result, tanDialog);
@@ -224,7 +224,7 @@ namespace libfintx.FinTS
             // Success
             string BankCode = await Transaction.HKCSB(this);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<TerminatedTransfer>>();
 
             result = await ProcessSCA(result, tanDialog);
@@ -282,7 +282,7 @@ namespace libfintx.FinTS
                 string receiverBIC, decimal amount, string usage, DateTime executionDay, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -296,7 +296,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKCSA(this, orderId, receiverName, receiverIBAN, receiverBIC, amount, usage, executionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -308,7 +308,7 @@ namespace libfintx.FinTS
                 string receiverBIC, decimal amount, string usage, DateTime executionDay, string hirms)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
@@ -322,7 +322,7 @@ namespace libfintx.FinTS
 
             string BankCode = await Transaction.HKCSL(this, orderId, receiverName, receiverIBAN, receiverBIC, amount, usage, executionDay);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result;
 
             result = await ProcessSCA(result, tanDialog);

@@ -48,5 +48,25 @@ HNHBS:5:1+2'".Replace(Environment.NewLine, string.Empty);
             Assert.StartsWith("HNSHA", segments[5]);
             Assert.StartsWith("HNHBS", segments[6]);
         }
+
+        [Fact]
+        public void Test_Parse_Messge()
+        {
+            var message =
+@"HNHBK:1:3+000000000593+300+578550834952=734365254762CQCJ=+3+578550834952=734365254762CQCJ=:3'
+HNVSK:998:3+PIN:2+998+1+2::3pbWX5WFOHoBAABV8lpvtusWrAQA+1:20210623:132245+2:2:13:@8@00000000:5:1+280:10050000:XXXXXXXXX:V:0:0+0'
+HNVSD:999:1+@342@HNSHK:2:4+PIN:2+922+210042763957027+1+1+2::3pbWX5WFOHoBAABV8lpvtusWrAQA+1+1:20210623:132245+1:999:1+6:10:16+280:10050000:XXXXXXXXX:S:0:0'
+HIRMG:3:2+3060::Bitte beachten Sie die enthaltenen Warnungen/Hinweise.'
+HIRMS:4:2:3+3956::Starke Kundenauthentifizierung noch ausstehend.'
+HITAN:5:7:3+S++8578-06-23-13.22.43.709351'
+HNSHA:6:2+210042763957027''
+HNHBS:7:1+3'".Replace(Environment.NewLine, string.Empty);
+
+            var client = new FinTsClient(new FinTS.Data.ConnectionDetails());
+            Helper.Parse_Message(client, message);
+
+            Assert.Equal(4, client.HNHBS);
+            Assert.Equal("8578-06-23-13.22.43.709351", client.HITAN);
+        }
     }
 }

@@ -20,8 +20,6 @@ namespace libfintx.Sample.Ui
     {
         private List<Bank> _bankList;
 
-        private TANDialog _tanDialog;
-
         private bool _closing;
 
         public MainForm()
@@ -191,7 +189,7 @@ namespace libfintx.Sample.Ui
                 if (!await InitTANMedium(client))
                     return;
 
-                var balance = await client.Balance(_tanDialog);
+                var balance = await client.Balance(CreateTANDialog(client));
 
                 HBCIOutput(balance.Messages);
 
@@ -218,7 +216,7 @@ namespace libfintx.Sample.Ui
                 // TAN-Verfahren
                 client.HIRMS = txt_tanverfahren.Text;
 
-                var accounts = await client.Accounts(_tanDialog);
+                var accounts = await client.Accounts(CreateTANDialog(client));
 
                 HBCIOutput(accounts.Messages);
 
@@ -280,14 +278,14 @@ namespace libfintx.Sample.Ui
                 if (!await InitTANMedium(client))
                     return;
 
-                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?) null;
-                DateTime? endDate = chk_umsatzabruf_bis.Checked ? date_umsatzabruf_bis.Value : (DateTime?) null;
+                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
+                DateTime? endDate = chk_umsatzabruf_bis.Checked ? date_umsatzabruf_bis.Value : (DateTime?)null;
 
                 int? maxDays = BPD.HIKAZS.OrderByDescending(s => s.Version).FirstOrDefault()?.Zeitraum;
                 if (startDate != null && maxDays != null && DateTime.Now.AddDays(maxDays.Value * -1).Date > startDate.Value.Date)
                     MessageBox.Show($"Es können nur Umsätze abgeholt werden, die maximal {maxDays} Tage zurückliegen.");
 
-                var transactions = await client.Transactions(_tanDialog, startDate, endDate);
+                var transactions = await client.Transactions(CreateTANDialog(client), startDate, endDate);
 
                 HBCIOutput(transactions.Messages);
 
@@ -331,9 +329,9 @@ namespace libfintx.Sample.Ui
                 if (!await InitTANMedium(client))
                     return;
 
-                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?) null;
+                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
 
-                var transactions = await client.Transactions_camt(_tanDialog, CamtVersion.Camt052, startDate);
+                var transactions = await client.Transactions_camt(CreateTANDialog(client), CamtVersion.Camt052, startDate);
 
                 HBCIOutput(transactions.Messages);
 
@@ -377,9 +375,9 @@ namespace libfintx.Sample.Ui
                 if (!await InitTANMedium(client))
                     return;
 
-                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?) null;
+                DateTime? startDate = chk_umsatzabruf_von.Checked ? date_umsatzabruf_von.Value : (DateTime?)null;
 
-                var transactions = await client.Transactions_camt(_tanDialog, CamtVersion.Camt053, startDate);
+                var transactions = await client.Transactions_camt(CreateTANDialog(client), CamtVersion.Camt053, startDate);
 
                 HBCIOutput(transactions.Messages);
 
@@ -415,7 +413,7 @@ namespace libfintx.Sample.Ui
                 if (!await InitTANMedium(client))
                     return;
 
-                var bankersOrders = await client.GetBankersOrders(_tanDialog);
+                var bankersOrders = await client.GetBankersOrders(CreateTANDialog(client));
 
                 HBCIOutput(bankersOrders.Messages);
 
@@ -459,12 +457,12 @@ namespace libfintx.Sample.Ui
             if (sync.IsSuccess)
             {
                 // TAN-Verfahren
-                var hirms = txt_tanverfahren.Text;
+                client.HIRMS = txt_tanverfahren.Text;
 
                 await InitTANMedium(client);
 
-                var transfer = await client.Transfer(_tanDialog, txt_empfängername.Text, Regex.Replace(txt_empfängeriban.Text, @"\s+", ""), txt_empfängerbic.Text,
-                    decimal.Parse(txt_betrag.Text), txt_verwendungszweck.Text, hirms);
+                var transfer = await client.Transfer(CreateTANDialog(client), txt_empfängername.Text, Regex.Replace(txt_empfängeriban.Text, @"\s+", ""), txt_empfängerbic.Text,
+                    decimal.Parse(txt_betrag.Text), txt_verwendungszweck.Text, client.HIRMS);
 
                 // Out image is needed e. g. for photoTAN
                 //var transfer = Main.Transfer(connectionDetails, txt_empfängername.Text, txt_empfängeriban.Text, txt_empfängerbic.Text,
@@ -509,13 +507,6 @@ namespace libfintx.Sample.Ui
         private void btn_auftrag_bestätigen_tan_Click(object sender, EventArgs e)
         {
             _tanReady = true;
-            // Wird eigentlich nicht mehr benötigt -> UserTANDialog
-
-            //ConnectionDetails connectionDetails = GetConnectionDetails();
-
-            //var tan = Main.TAN(connectionDetails, txt_tan.Text);
-
-            //HBCIOutput(tan.Messages);
         }
 
         private void chk_Tracing_CheckedChanged(object sender, EventArgs e)
@@ -540,7 +531,7 @@ namespace libfintx.Sample.Ui
                 AccountHolder = txt_empfängername.Text,
                 Account = txt_kontonummer.Text,
                 Blz = Convert.ToInt32(txt_bankleitzahl.Text),
-                BlzHeadquarter = string.IsNullOrWhiteSpace(txt_bankleitzahl_zentrale.Text) ? (int?) null : Convert.ToInt32(txt_bankleitzahl_zentrale.Text),
+                BlzHeadquarter = string.IsNullOrWhiteSpace(txt_bankleitzahl_zentrale.Text) ? (int?)null : Convert.ToInt32(txt_bankleitzahl_zentrale.Text),
                 Bic = txt_bic.Text,
                 Iban = Regex.Replace(txt_iban.Text, @"\s+", ""),
                 Url = txt_url.Text,
@@ -615,6 +606,12 @@ namespace libfintx.Sample.Ui
         {
             HBCIOutput(tanDialog.DialogResult.Messages);
 
+            if (tanDialog.IsDecoupled)
+            {
+                _tanReady = true;
+                return await Task.FromResult((string)null);
+            }
+
             if (tanDialog.MatrixImage != null)
             {
                 using (var memoryStream = new MemoryStream())
@@ -645,7 +642,7 @@ namespace libfintx.Sample.Ui
         private async Task<bool> InitTANMedium(FinTsClient client)
         {
             // TAN-Medium-Name
-            var accounts = await client.Accounts(_tanDialog);
+            var accounts = await client.Accounts(CreateTANDialog(client));
             if (!accounts.IsSuccess)
             {
                 HBCIOutput(accounts.Messages);
@@ -674,7 +671,6 @@ namespace libfintx.Sample.Ui
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _tanDialog = new TANDialog(WaitForTanAsync, pBox_tan);
             _bankList = Bank.GetBankList();
 
             if (chk_tracing.Checked)
@@ -710,6 +706,15 @@ namespace libfintx.Sample.Ui
             date_umsatzabruf_von.Value = DateTime.Now.AddDays(-90);
         }
 
+        private TANDialog CreateTANDialog(FinTsClient client)
+        {
+            var dialog = new TANDialog(WaitForTanAsync, pBox_tan);
+            if (client.HIRMS == "922")
+                dialog.IsDecoupled = true;
+
+            return dialog;
+        }
+
         private async void btn_terminueberweisungen_abholen_Click(object sender, EventArgs e)
         {
             var connectionDetails = GetConnectionDetails();
@@ -726,7 +731,7 @@ namespace libfintx.Sample.Ui
                 if (!await InitTANMedium(client))
                     return;
 
-                var result = await client.GetTerminatedTransfers(_tanDialog);
+                var result = await client.GetTerminatedTransfers(CreateTANDialog(client));
 
                 HBCIOutput(result.Messages);
 

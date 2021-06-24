@@ -172,9 +172,15 @@ namespace libfintx.FinTS
         internal static List<string> SplitEncryptedSegments(string message)
         {
             var encodedSegments = SplitSegments(message);
-            var decodedSegments = DecryptSegments(encodedSegments);
-
-            return decodedSegments;
+            if (encodedSegments.Any(s => s.StartsWith("HNVSD")))
+            {
+                var decodedSegments = DecryptSegments(encodedSegments);
+                return decodedSegments;
+            }
+            else // Segments aren't encrypted
+            {
+                return encodedSegments;
+            }
         }
 
         private static string Truncate(string s, int length = 15)

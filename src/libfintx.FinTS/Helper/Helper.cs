@@ -240,7 +240,7 @@ namespace libfintx.FinTS
                             {
                                 if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int i))
                                 {
-                                    if (Convert.ToString(i).StartsWith("9"))
+                                    if (value.StartsWith("9"))
                                     {
                                         if (string.IsNullOrEmpty(TAN))
                                             TAN = i.ToString();
@@ -297,18 +297,30 @@ namespace libfintx.FinTS
 
                     if (segment.Name == "HITANS")
                     {
-                        if (client.HITANS != 0 && segment.Version == 7) // Torsten: Rücknahme der Freigabe. Sparkassen ausserhalb der
-                            // Pilotphase senden in der BPD bereits das Segment, welches in der UPD noch nicht zur Verfügung steht und somit
-                            // zu Abbrüchen führt.
-                        //if (client.HITANS != 0) // Torsten: Freigabe HKTAN#7 in libfintx
-                            ; // Ignore HKTAN version 7 if other version is available and version 7 isn't implemented in libfintx
+                        var hitans = (HITANS) segment;
+                        if (client.HIRMS == null)
+                        {
+                            // Die höchste HKTAN-Version auswählen, welche in den erlaubten TAN-Verfahren (3920) enthalten ist.
+                            var tanProcessesHirms = client.HIRMSf.Split(';').Select(tp => Convert.ToInt32(tp));
+                            if (hitans.TanProcesses.Select(tp => tp.TanCode).Intersect(tanProcessesHirms).Any())
+                                client.HITANS = segment.Version;
+                        }
                         else
-                            client.HITANS = segment.Version;
+                        {
+                            if (hitans.TanProcesses.Any(tp => tp.TanCode == Convert.ToInt32(client.HIRMS)))
+                                client.HITANS = segment.Version;
+                        }
                     }
 
                     if (segment.Name == "HITAN")
                     {
-                        client.HITAN = Parse_String(segment.Payload.Replace("?+", "??"), "++", "+").Replace("??", "?+");
+                        // HITAN:5:7:3+S++8578-06-23-13.22.43.709351
+                        // HITAN:5:7:4+4++8578-06-23-13.22.43.709351+Bitte Auftrag in Ihrer App freigeben.
+                        var match = Regex.Match(segment.Payload, @"\w+\+.*?\+(?<ref>[^\+]+)(\+)?");
+                        if (!match.Success)
+                            throw new ArgumentException($"Could not parse HITAN: {segment}");
+
+                        client.HITAN = match.Groups["ref"].Value;
                     }
 
                     if (segment.Name == "HIKAZS")
@@ -359,42 +371,39 @@ namespace libfintx.FinTS
         /// <returns></returns>
         public static bool Parse_Message(FinTsClient client, string Message)
         {
-            try
-            {
-                List<string> values = SplitEncryptedSegments(Message);
+            List<string> values = SplitEncryptedSegments(Message);
 
-                List<Segment> segments = new List<Segment>();
-                foreach (var item in values)
+            List<Segment> segments = new List<Segment>();
+            foreach (var item in values)
+            {
+                Segment segment = Parse_Segment(item);
+                if (segment != null)
+                    segments.Add(segment);
+            }
+
+            foreach (var segment in segments)
+            {
+                if (segment.Name == "HNHBS")
                 {
-                    Segment segment = Parse_Segment(item);
-                    if (segment != null)
-                        segments.Add(segment);
+                    if (segment.Payload == null || segment.Payload == "0")
+                        client.HNHBS = 2;
+                    else
+                        client.HNHBS = Convert.ToInt32(segment.Payload) + 1;
                 }
 
-                foreach (var segment in segments)
+                if (segment.Name == "HITAN")
                 {
-                    if (segment.Name == "HNHBS")
-                    {
-                        if (segment.Payload == null || segment.Payload == "0")
-                            client.HNHBS = 2;
-                        else
-                            client.HNHBS = Convert.ToInt32(segment.Payload) + 1;
-                    }
+                    // HITAN:5:7:3+S++8578-06-23-13.22.43.709351
+                    // HITAN:5:7:4+4++8578-06-23-13.22.43.709351+Bitte Auftrag in Ihrer App freigeben.
+                    var match = Regex.Match(segment.Payload, @"\w+\+.*?\+(?<ref>[^\+]+)(\+)?");
+                    if (!match.Success)
+                        throw new ArgumentException($"Could not parse HITAN: {segment}");
 
-                    if (segment.Name == "HITAN")
-                    {
-                        client.HITAN = Parse_String(segment.Payload.Replace("?+", "??"), "++", "+").Replace("??", "?+");
-                    }
+                    client.HITAN = match.Groups["ref"].Value;
                 }
-
-                return client.HNHBS > 0;
             }
-            catch (Exception ex)
-            {
-                Log.Write(ex.ToString());
 
-                return false;
-            }
+            return client.HNHBS > 0;
         }
 
         /// <summary>
@@ -556,168 +565,6 @@ namespace libfintx.FinTS
         }
 
         private static FlickerRenderer flickerCodeRenderer = null;
-
-        /// <summary>
-        /// Fill given <code>TANDialog</code> and wait for user to enter a TAN.
-        /// </summary>
-        /// <param name="BankCode"></param>
-        /// <param name="pictureBox"></param>
-        /// <param name="flickerImage"></param>
-        /// <param name="flickerWidth"></param>
-        /// <param name="flickerHeight"></param>
-        /// <param name="renderFlickerCodeAsGif"></param>
-        public static async Task<string> WaitForTanAsync(FinTsClient client, HBCIDialogResult dialogResult, TANDialog tanDialog)
-        {
-            var BankCode_ = "HIRMS" + Parse_String(dialogResult.RawData, "'HIRMS", "'");
-            string[] values = BankCode_.Split('+');
-            foreach (var item in values)
-            {
-                if (!item.StartsWith("HIRMS"))
-                    TransactionConsole.Output = item.Replace("::", ": ");
-            }
-
-            var HITAN = "HITAN" + Parse_String(dialogResult.RawData.Replace("?'", "").Replace("?:", ":").Replace("<br>", Environment.NewLine).Replace("?+", "??"), "'HITAN", "'");
-
-            string HITANFlicker = string.Empty;
-
-            var processes = TanProcesses.Items;
-
-            var processname = string.Empty;
-
-            if (processes != null)
-            {
-                foreach (var item in processes)
-                {
-                    if (item.ProcessNumber.Equals(client.HIRMS))
-                        processname = item.ProcessName;
-                }
-            }
-
-            // Smart-TAN plus optisch
-            // chipTAN optisch
-            if (processname.Equals("Smart-TAN plus optisch") || processname.Contains("chipTAN optisch"))
-            {
-                HITANFlicker = HITAN;
-            }
-
-            String[] values_ = HITAN.Split('+');
-
-            int i = 1;
-
-            foreach (var item in values_)
-            {
-                i = i + 1;
-
-                if (i == 6)
-                {
-                    TransactionConsole.Output = TransactionConsole.Output + "??" + item.Replace("::", ": ").TrimStart();
-
-                    TransactionConsole.Output = TransactionConsole.Output.Replace("??", " ")
-                            .Replace("0030: ", "")
-                            .Replace("1.", Environment.NewLine + "1.")
-                            .Replace("2.", Environment.NewLine + "2.")
-                            .Replace("3.", Environment.NewLine + "3.")
-                            .Replace("4.", Environment.NewLine + "4.")
-                            .Replace("5.", Environment.NewLine + "5.")
-                            .Replace("6.", Environment.NewLine + "6.")
-                            .Replace("7.", Environment.NewLine + "7.")
-                            .Replace("8.", Environment.NewLine + "8.");
-                }
-            }
-
-            // chipTAN optisch
-            if (processname.Contains("chipTAN optisch"))
-            {
-                string FlickerCode = string.Empty;
-
-                FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
-
-                FlickerCode flickerCode = new FlickerCode(FlickerCode);
-                flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), tanDialog.PictureBox);
-                if (!tanDialog.RenderFlickerCodeAsGif)
-                {
-                    RUN_flickerCodeRenderer();
-
-                    Action action = STOP_flickerCodeRenderer;
-                    TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                    ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                    Thread thread = new Thread(start);
-                    thread.Start();
-                }
-                else
-                {
-                    tanDialog.FlickerImage = flickerCodeRenderer.RenderAsGif(tanDialog.FlickerWidth, tanDialog.FlickerHeight);
-                }
-            }
-
-            // Smart-TAN plus optisch
-            if (processname.Equals("Smart-TAN plus optisch"))
-            {
-                HITANFlicker = HITAN.Replace("?@", "??");
-
-                string FlickerCode = string.Empty;
-
-                String[] values__ = HITANFlicker.Split('@');
-
-                int ii = 1;
-
-                foreach (var item in values__)
-                {
-                    ii = ii + 1;
-
-                    if (ii == 4)
-                        FlickerCode = item;
-                }
-
-                FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-                flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), tanDialog.PictureBox);
-                if (!tanDialog.RenderFlickerCodeAsGif)
-                {
-                    RUN_flickerCodeRenderer();
-
-                    Action action = STOP_flickerCodeRenderer;
-                    TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                    ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                    Thread thread = new Thread(start);
-                    thread.Start();
-                }
-                else
-                {
-                    tanDialog.FlickerImage = flickerCodeRenderer.RenderAsGif(tanDialog.FlickerWidth, tanDialog.FlickerHeight);
-                }
-            }
-
-            // Smart-TAN photo
-            if (processname.Equals("Smart-TAN photo"))
-            {
-                var PhotoCode = Parse_String(dialogResult.RawData, ".+@", "'HNSHA");
-
-                var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
-
-                tanDialog.MatrixImage = mCode.CodeImage;
-                mCode.Render(tanDialog.PictureBox);
-            }
-
-            // PhotoTAN
-            if (processname.Equals("photoTAN-Verfahren"))
-            {
-                // HITAN:5:5:4+4++nmf3VmGQDT4qZ20190130091914641+Bitte geben Sie die photoTan ein+@3031@       image/pngÃŠÂ‰PNG
-                var match = Regex.Match(dialogResult.RawData, @"HITAN.+@\d+@(.+)'HNHBS", RegexOptions.Singleline);
-                if (match.Success)
-                {
-                    var PhotoBinary = match.Groups[1].Value;
-
-                    var mCode = new MatrixCode(PhotoBinary);
-
-                    tanDialog.MatrixImage = mCode.CodeImage;
-                    mCode.Render(tanDialog.PictureBox);
-                }
-            }
-
-            return await tanDialog.WaitForTanAsync();
-        }
 
         /// <summary>
         /// Parse a single bank result message.

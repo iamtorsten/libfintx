@@ -49,7 +49,7 @@ namespace libfintx.FinTS
         public async Task<HBCIDialogResult<List<SwiftStatement>>> Transactions(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<SwiftStatement>>();
 
             result = await ProcessSCA(result, tanDialog);
@@ -62,7 +62,7 @@ namespace libfintx.FinTS
             // Success
             string BankCode = await Transaction.HKKAZ(this, startDateStr, endDateStr, null);
             result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<SwiftStatement>>();
 
             result = await ProcessSCA(result, tanDialog);
@@ -94,7 +94,7 @@ namespace libfintx.FinTS
                     return result.TypedResult<List<SwiftStatement>>();
 
                 result = await ProcessSCA(result, tanDialog);
-                if (!result.IsSuccess)
+                if (result.HasError)
                     return result.TypedResult<List<SwiftStatement>>();
 
                 BankCode_ = result.RawData;
@@ -130,7 +130,7 @@ namespace libfintx.FinTS
                 return result.TypedResult<List<CamtStatement>>();
 
             result = await ProcessSCA(result, tanDialog);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<CamtStatement>>();
 
             // Plain camt message
@@ -142,7 +142,7 @@ namespace libfintx.FinTS
             // Success
             string BankCode = await Transaction.HKCAZ(this, startDateStr, endDateStr, null, camtVers);
             result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode), BankCode);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<CamtStatement>>();
 
             result = await ProcessSCA(result, tanDialog);
