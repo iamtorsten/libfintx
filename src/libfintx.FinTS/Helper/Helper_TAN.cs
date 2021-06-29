@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using libfintx.Logger.Log;
 
 namespace libfintx.FinTS
 {
@@ -34,18 +35,17 @@ namespace libfintx.FinTS
 
             string HITANFlicker = string.Empty;
 
-            var processes = BPD.HITANS.SelectMany(h => h.TanProcesses);
+            var processes = BPD.HITANS.Where(h => h.Version == client.HITANS).SelectMany(t => t.TanProcesses);
 
             var processname = string.Empty;
 
-            if (processes != null)
+            foreach (var item in processes)
             {
-                foreach (var item in processes)
-                {
-                    if (item.TanCode.Equals(client.HIRMS))
-                        processname = item.Name;
-                }
+                if (item.TanCode == Convert.ToInt32(client.HIRMS))
+                    processname = item.Name;
             }
+
+            Log.Write($"Processing TAN process '{processname}' ...");
 
             // Smart-TAN plus optisch
             // chipTAN optisch
