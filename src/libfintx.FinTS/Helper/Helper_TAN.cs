@@ -21,7 +21,7 @@ namespace libfintx.FinTS
         /// <param name="flickerWidth"></param>
         /// <param name="flickerHeight"></param>
         /// <param name="renderFlickerCodeAsGif"></param>
-        public static async Task<string> WaitForTanAsync(FinTsClient client, HBCIDialogResult dialogResult, TANDialog tanDialog)
+        public static async Task<string> WaitForTanAsync(FinTsClient client, HBCIDialogResult dialogResult, TanRequest tanRequest)
         {
             var BankCode_ = "HIRMS" + Parse_String(dialogResult.RawData, "'HIRMS", "'");
             string[] values = BankCode_.Split('+');
@@ -35,21 +35,21 @@ namespace libfintx.FinTS
 
             string HITANFlicker = string.Empty;
 
-            var processes = BPD.HITANS.Where(h => h.Version == client.HITANS).SelectMany(t => t.TanProcesses);
+            var tanMethods = BPD.HITANS.Where(h => h.Version == client.HITANS).SelectMany(t => t.TanProcesses);
 
-            var processname = string.Empty;
+            var tanMethod = string.Empty;
 
-            foreach (var item in processes)
+            foreach (var item in tanMethods)
             {
                 if (item.TanCode == Convert.ToInt32(client.HIRMS))
-                    processname = item.Name;
+                    tanMethod = item.Name;
             }
 
-            Log.Write($"Processing TAN process '{processname}' ...");
+            Log.Write($"Processing TAN process '{tanMethod}' ...");
 
             // Smart-TAN plus optisch
             // chipTAN optisch
-            if (processname.Equals("Smart-TAN plus optisch") || processname.Contains("chipTAN optisch"))
+            if (tanMethod.Equals("Smart-TAN plus optisch") || tanMethod.Contains("chipTAN optisch"))
             {
                 HITANFlicker = HITAN;
             }
@@ -80,33 +80,19 @@ namespace libfintx.FinTS
             }
 
             // chipTAN optisch
-            if (processname.Contains("chipTAN optisch"))
+            if (tanMethod.Contains("chipTAN optisch"))
             {
                 string FlickerCode = string.Empty;
 
                 FlickerCode = "CHLGUC" + Helper.Parse_String(HITAN, "CHLGUC", "CHLGTEXT") + "CHLGTEXT";
 
                 FlickerCode flickerCode = new FlickerCode(FlickerCode);
-                flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), tanDialog.PictureBox);
-                if (!tanDialog.RenderFlickerCodeAsGif)
-                {
-                    RUN_flickerCodeRenderer();
-
-                    Action action = STOP_flickerCodeRenderer;
-                    TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                    ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                    Thread thread = new Thread(start);
-                    thread.Start();
-                }
-                else
-                {
-                    tanDialog.FlickerImage = flickerCodeRenderer.RenderAsGif(tanDialog.FlickerWidth, tanDialog.FlickerHeight);
-                }
+                var flickerCodeRenderer = new FlickerCodeRenderer(flickerCode.Render());
+                return await tanRequest.WithFlickerAsync(flickerCodeRenderer);
             }
 
             // Smart-TAN plus optisch
-            if (processname.Equals("Smart-TAN plus optisch"))
+            if (tanMethod.Equals("Smart-TAN plus optisch"))
             {
                 HITANFlicker = HITAN.Replace("?@", "??");
 
@@ -121,56 +107,42 @@ namespace libfintx.FinTS
                     ii = ii + 1;
 
                     if (ii == 4)
+                    {
                         FlickerCode = item;
+                    }
                 }
 
                 FlickerCode flickerCode = new FlickerCode(FlickerCode.Trim());
-                flickerCodeRenderer = new FlickerRenderer(flickerCode.Render(), tanDialog.PictureBox);
-                if (!tanDialog.RenderFlickerCodeAsGif)
-                {
-                    RUN_flickerCodeRenderer();
-
-                    Action action = STOP_flickerCodeRenderer;
-                    TimeSpan span = new TimeSpan(0, 0, 0, 50);
-
-                    ThreadStart start = delegate { RunAfterTimespan(action, span); };
-                    Thread thread = new Thread(start);
-                    thread.Start();
-                }
-                else
-                {
-                    tanDialog.FlickerImage = flickerCodeRenderer.RenderAsGif(tanDialog.FlickerWidth, tanDialog.FlickerHeight);
-                }
+                var flickerCodeRenderer = new FlickerCodeRenderer(flickerCode.Render());
+                return await tanRequest.WithFlickerAsync(flickerCodeRenderer);
             }
 
             // Smart-TAN photo
-            if (processname.Equals("Smart-TAN photo"))
+            if (tanMethod.Equals("Smart-TAN photo"))
             {
                 var PhotoCode = Parse_String(dialogResult.RawData, ".+@", "'HNSHA");
 
                 var mCode = new MatrixCode(PhotoCode.Substring(5, PhotoCode.Length - 5));
 
-                tanDialog.MatrixImage = mCode.CodeImage;
-                mCode.Render(tanDialog.PictureBox);
+                return await tanRequest.WithMatrixAsync(mCode);
             }
 
             // PhotoTAN
-            if (processname.Equals("photoTAN-Verfahren"))
+            if (tanMethod.Equals("photoTAN-Verfahren"))
             {
                 // HITAN:5:5:4+4++nmf3VmGQDT4qZ20190130091914641+Bitte geben Sie die photoTan ein+@3031@       image/pngÃŠÂ‰PNG
                 var match = Regex.Match(dialogResult.RawData, @"HITAN.+@\d+@(.+)'HNHBS", RegexOptions.Singleline);
                 if (match.Success)
                 {
-                    var PhotoBinary = match.Groups[1].Value;
+                    var pichtureBinaryDataString = match.Groups[1].Value;
 
-                    var mCode = new MatrixCode(PhotoBinary);
+                    var mCode = new MatrixCode(pichtureBinaryDataString);
 
-                    tanDialog.MatrixImage = mCode.CodeImage;
-                    mCode.Render(tanDialog.PictureBox);
+                    return await tanRequest.WithMatrixAsync(mCode);
                 }
             }
 
-            return await tanDialog.WaitForTanAsync();
+            return await tanRequest.WithUnknownAsync();
         }
     }
 }

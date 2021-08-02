@@ -42,7 +42,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public async Task<HBCIDialogResult<List<BankersOrder>>> GetBankersOrders(TANDialog tanDialog)
+        public async Task<HBCIDialogResult<List<BankersOrder>>> GetBankersOrders(TanRequest tanDialog)
         {
             var result = await InitializeConnection();
             if (result.HasError)
@@ -118,7 +118,7 @@ namespace libfintx.FinTS
             return result.TypedResult(data);
         }
 
-        public async Task<HBCIDialogResult> DeleteBankersOrder(TANDialog tanDialog, string orderId, string receiverName, string receiverIBAN,
+        public async Task<HBCIDialogResult> DeleteBankersOrder(TanRequest tanDialog, string orderId, string receiverName, string receiverIBAN,
                 string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota, int executionDay, DateTime? lastExecutionDay, string hirms)
         {
             var result = await InitializeConnection();
@@ -165,7 +165,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> SubmitBankersOrder(TANDialog tanDialog, string receiverName, string receiverIBAN,
+        public async Task<HBCIDialogResult> SubmitBankersOrder(TanRequest tanDialog, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
            int executionDay, DateTime? lastExecutionDay, string hirms)
         {
@@ -192,7 +192,7 @@ namespace libfintx.FinTS
             return result;
         }
 
-        public async Task<HBCIDialogResult> ModifyBankersOrder(TANDialog tanDialog, string OrderId, string receiverName, string receiverIBAN,
+        public async Task<HBCIDialogResult> ModifyBankersOrder(TanRequest tanDialog, string OrderId, string receiverName, string receiverIBAN,
            string receiverBIC, decimal amount, string purpose, DateTime firstTimeExecutionDay, TimeUnit timeUnit, string rota,
            int executionDay, DateTime? lastExecutionDay, string hirms)
         {

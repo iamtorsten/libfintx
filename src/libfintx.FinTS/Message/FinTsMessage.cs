@@ -71,8 +71,8 @@ namespace libfintx.FinTS.Message
 
             int Version = client.ConnectionDetails.HbciVersion;
             int BLZ = client.ConnectionDetails.BlzPrimary;
-            string UserID = client.ConnectionDetails.UserId;
-            string PIN = client.ConnectionDetails.Pin;
+            string UserID = client.ConnectionDetails.UserId ?? throw new NullReferenceException("UserID was not set.");
+            string PIN = client.ConnectionDetails.Pin ?? throw new NullReferenceException("Pin was not set.");
             int SegmentNum = client.SEGNUM;
 
             if (SystemID == null)
