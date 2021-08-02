@@ -51,7 +51,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> Transfer(TanRequest tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
+        public async Task<HBCIDialogResult> Transfer(TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string hirms)
         {
             var result = await InitializeConnection();
@@ -95,7 +95,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> Transfer_Terminated(TanRequest tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
+        public async Task<HBCIDialogResult> Transfer_Terminated(TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, DateTime executionDay, string hirms)
         {
             var result = await InitializeConnection();
@@ -137,7 +137,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> CollectiveTransfer(TanRequest tanDialog, List<Pain00100203CtData> painData,
+        public async Task<HBCIDialogResult> CollectiveTransfer(TANDialog tanDialog, List<Pain00100203CtData> painData,
             string numberOfTransactions, decimal totalAmount, string hirms)
         {
             var result = await InitializeConnection();
@@ -179,7 +179,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> CollectiveTransfer_Terminated(TanRequest tanDialog, List<Pain00100203CtData> painData,
+        public async Task<HBCIDialogResult> CollectiveTransfer_Terminated(TANDialog tanDialog, List<Pain00100203CtData> painData,
             string numberOfTransactions, decimal totalAmount, DateTime executionDay, string hirms)
         {
             var result = await InitializeConnection();
@@ -211,7 +211,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Banker's orders
         /// </returns>
-        public async Task<HBCIDialogResult<List<TerminatedTransfer>>> GetTerminatedTransfers(TanRequest tanDialog)
+        public async Task<HBCIDialogResult<List<TerminatedTransfer>>> GetTerminatedTransfers(TANDialog tanDialog)
         {
             var result = await InitializeConnection();
             if (result.HasError)
@@ -278,7 +278,7 @@ namespace libfintx.FinTS
             return result.TypedResult(data);
         }
 
-        public async Task<HBCIDialogResult> ModifyTerminatedTransfer(TanRequest tanDialog, string orderId, string receiverName, string receiverIBAN,
+        public async Task<HBCIDialogResult> ModifyTerminatedTransfer(TANDialog tanDialog, string orderId, string receiverName, string receiverIBAN,
                 string receiverBIC, decimal amount, string usage, DateTime executionDay, string hirms)
         {
             var result = await InitializeConnection();
@@ -304,7 +304,7 @@ namespace libfintx.FinTS
             return result;
         }
 
-        public async Task<HBCIDialogResult> DeleteTerminatedTransfer(TanRequest tanDialog, string orderId, string receiverName, string receiverIBAN,
+        public async Task<HBCIDialogResult> DeleteTerminatedTransfer(TANDialog tanDialog, string orderId, string receiverName, string receiverIBAN,
                 string receiverBIC, decimal amount, string usage, DateTime executionDay, string hirms)
         {
             var result = await InitializeConnection();

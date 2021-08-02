@@ -107,7 +107,7 @@ namespace libfintx.FinTS
         /// </summary>
         /// <param name="tanDialog">The TAN Dialog</param>
         /// <returns>Gets informations about the accounts</returns>
-        public async Task<HBCIDialogResult<List<AccountInformation>>> Accounts(TanRequest tanDialog)
+        public async Task<HBCIDialogResult<List<AccountInformation>>> Accounts(TANDialog tanDialog)
         {
             var result = await InitializeConnection();
             if (result.HasError)
@@ -125,7 +125,7 @@ namespace libfintx.FinTS
         /// </summary>
         /// <param name="tanDialog">The TAN Dialog</param>
         /// <returns>The balance for this account</returns>
-        public async Task<HBCIDialogResult<AccountBalance>> Balance(TanRequest tanDialog)
+        public async Task<HBCIDialogResult<AccountBalance>> Balance(TANDialog tanDialog)
         {
             HBCIDialogResult result = await InitializeConnection();
             if (result.HasError)
@@ -150,7 +150,7 @@ namespace libfintx.FinTS
             return result.TypedResult(balance);
         }
 
-        private async Task<HBCIDialogResult> ProcessSCA(HBCIDialogResult result, TanRequest tanDialog)
+        private async Task<HBCIDialogResult> ProcessSCA(HBCIDialogResult result, TANDialog tanDialog)
         {
             tanDialog.DialogResult = result;
             if (result.IsTanRequired)
@@ -168,18 +168,24 @@ namespace libfintx.FinTS
             }
             else if (result.IsApprovalRequired)
             {
-                await Helper.WaitForTanAsync(this, result, tanDialog);
+                // Ohne automatisierte Statusabfrage:
+                // await Helper.WaitForTanAsync(this, result, tanDialog);
+                // result = await TAN(null);
 
-                const int delay = 2000; // Der minimale Zeitraum zwischen zwei Statusabfragen steht in HITANS, wir nehmen einfach 2 Sek
-                await Task.Delay(delay);
+
+                // Mit automatisierter Statusabfrage
+                await tanDialog.WaitForTanAsync(); // Dem Benutzer signalisieren, dass auf die Freigabe gewartet wird
+
+                const int Delay = 2000; // Der minimale Zeitraum zwischen zwei Statusabfragen steht in HITANS, wir nehmen einfach 2 Sek
+                await Task.Delay(Delay);
                 result = await TAN(null);
                 while (!result.IsSuccess && !result.HasError && result.IsWaitingForApproval) // Freigabe wurde noch nicht erteilt
                 {
-                    await Task.Delay(delay);
+                    await Task.Delay(Delay);
                     if (tanDialog.IsCancelWaitForApproval)
                     {
-                        string bankCode = await Transaction.HKEND(this, HNHBK);
-                        result = new HBCIDialogResult(Helper.Parse_BankCode(bankCode), bankCode);
+                        string BankCode = await Transaction.HKEND(this, HNHBK);
+                        result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
                     }
                     else
                     {
@@ -187,7 +193,7 @@ namespace libfintx.FinTS
                     }
                 }
 
-                await tanDialog.OnTransactionEndedAsync(result.IsSuccess); // Dem Benutzer signalisieren, dass die Transaktion beendet ist
+                await tanDialog.OnTransactionEndAsync(result.IsSuccess); // Dem Benutzer signalisieren, dass die Transaktion beendet ist
             }
 
             return result;
@@ -210,7 +216,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> Rebooking(TanRequest tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
+        public async Task<HBCIDialogResult> Rebooking(TANDialog tanDialog, string receiverName, string receiverIBAN, string receiverBIC,
             decimal amount, string purpose, string hirms)
         {
             var result = await InitializeConnection();
@@ -257,7 +263,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> Collect(TanRequest tanDialog, string payerName, string payerIBAN, string payerBIC,
+        public async Task<HBCIDialogResult> Collect(TANDialog tanDialog, string payerName, string payerIBAN, string payerBIC,
             decimal amount, string purpose, DateTime settlementDate, string mandateNumber, DateTime mandateDate, string creditorIdNumber,
             string hirms)
         {
@@ -300,7 +306,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> CollectiveCollect(TanRequest tanDialog, DateTime settlementDate, List<Pain00800202CcData> painData,
+        public async Task<HBCIDialogResult> CollectiveCollect(TANDialog tanDialog, DateTime settlementDate, List<Pain00800202CcData> painData,
            string numberOfTransactions, decimal totalAmount, string hirms)
         {
             var result = await InitializeConnection();
@@ -341,7 +347,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Bank return codes
         /// </returns>
-        public async Task<HBCIDialogResult> Prepaid(TanRequest tanDialog, int mobileServiceProvider, string phoneNumber,
+        public async Task<HBCIDialogResult> Prepaid(TANDialog tanDialog, int mobileServiceProvider, string phoneNumber,
             int amount, string hirms)
         {
             var result = await InitializeConnection();

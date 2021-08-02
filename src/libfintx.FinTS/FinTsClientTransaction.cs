@@ -46,7 +46,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Transactions
         /// </returns>
-        public async Task<HBCIDialogResult<List<SwiftStatement>>> Transactions(TanRequest tanDialog, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
+        public async Task<HBCIDialogResult<List<SwiftStatement>>> Transactions(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null, bool saveMt940File = false)
         {
             var result = await InitializeConnection();
             if (result.HasError)
@@ -122,7 +122,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Transactions
         /// </returns>
-        public async Task<HBCIDialogResult<List<CamtStatement>>> Transactions_camt(TanRequest tanDialog, CamtVersion camtVers,
+        public async Task<HBCIDialogResult<List<CamtStatement>>> Transactions_camt(TANDialog tanDialog, CamtVersion camtVers,
             DateTime? startDate = null, DateTime? endDate = null, bool saveCamtFile = false)
         {
             var result = await InitializeConnection();
@@ -281,7 +281,7 @@ namespace libfintx.FinTS
         /// <returns>
         /// Transactions
         /// </returns>
-        public async Task<HBCIDialogResult<List<AccountTransaction>>> TransactionsSimple(TanRequest tanDialog, DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<HBCIDialogResult<List<AccountTransaction>>> TransactionsSimple(TANDialog tanDialog, DateTime? startDate = null, DateTime? endDate = null)
         {
             var result = await Transactions(tanDialog, startDate, endDate);
             if (!result.IsSuccess)

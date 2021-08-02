@@ -40,12 +40,12 @@ namespace libfintx.FinTS
         /// <summary>
         /// photoTAN matrix code
         /// </summary>
-        /// <param name="pictureTanString"></param>
-        public MatrixCode(string pictureTanString)
+        /// <param name="photoTanString"></param>
+        public MatrixCode(string photoTanString)
         {
             try
             {
-                var data = Encoding.GetEncoding("ISO-8859-1").GetBytes(pictureTanString);
+                var data = Encoding.GetEncoding("ISO-8859-1").GetBytes(photoTanString);
                 int offset = 0;
 
                 //Read mimetype            
@@ -90,6 +90,12 @@ namespace libfintx.FinTS
                 sb.Append(Convert.ToString(bytes[i], 10));
             }
             return sb.ToString();
+        }
+
+        public void Render(object pictureBox)
+        {
+            if (pictureBox == null)
+                return;
         }
     }
 }

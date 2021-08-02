@@ -564,6 +564,8 @@ namespace libfintx.FinTS
             return result;
         }
 
+        private static FlickerRenderer flickerCodeRenderer = null;
+
         /// <summary>
         /// Parse a single bank result message.
         /// </summary>
@@ -612,12 +614,25 @@ namespace libfintx.FinTS
         }
 
         /// <summary>
+        /// RUN Flicker Code Rendering
+        /// </summary>
+        private static void RUN_flickerCodeRenderer()
+        {
+            flickerCodeRenderer.Start();
+        }
+
+        /// <summary>
         /// STOP Flicker Code Rendering
         /// </summary>
         public static void RunAfterTimespan(Action action, TimeSpan span)
         {
             Thread.Sleep(span);
             action();
+        }
+
+        private static void STOP_flickerCodeRenderer()
+        {
+            flickerCodeRenderer.Stop();
         }
 
         /// <summary>
