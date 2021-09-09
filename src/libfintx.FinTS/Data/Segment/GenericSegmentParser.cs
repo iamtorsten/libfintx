@@ -42,6 +42,8 @@ namespace libfintx.FinTS.Data.Segment
                 segment.Ref = Convert.ToInt32(match.Groups["Ref"].Value);
             segment.Payload = match.Groups["Payload"].Value;
 
+            segment.DataElements = Helper.SplitDataElements(segment.Payload);
+
             return segment;
         }
     }

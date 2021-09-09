@@ -68,5 +68,24 @@ HNHBS:7:1+3'".Replace(Environment.NewLine, string.Empty);
             Assert.Equal(4, client.HNHBS);
             Assert.Equal("8578-06-23-13.22.43.709351", client.HITAN);
         }
+
+        [Fact]
+        public void Test_Parse_Segments_HITAN()
+        {
+            var message =
+@"HNHBK:1:3+000000000715+300+KB1090613095412+2+KB1090613095412:2'
+HNVSK:998:3+PIN:2+998+1+2::3Wekj53GunsBAABbA19vhW?+owAQA+1:20210906:130955+2:2:13:@8@00000000:5:1+280:60090100:XXXXXXXXX:V:0:0+0'
+HNVSD:999:1+@493@HNSHK:2:4+PIN:2+944+1876690780307344+1+1+2::3Wekj53GunsBAABbA19vhW?+owAQA+1+1:20210906:130955+1:999:1+6:10:16+280:60090100:XXXXXXXXX:S:0:0'
+HIRMG:3:2+0010::Nachricht entgegengenommen.'
+HIRMS:4:2:4+0030::Auftrag empfangen - Sicherheitsfreigabe erforderlich'
+HITAN:5:6:4+4++eBYcsEe0unsBAAAXXkX5hG?+owAQA+Eine neue TAN steht zur Abholung bereit.  Die TAN wurde reserviert am  06.09.2021 um 13?:09?:55 Uhr. Eine Push-Nachricht wurde versandt.  Bitte geben Sie die TAN ein.'
+HNSHA:6:2+1876690780307344''
+HNHBS:7:1+2'".Replace(Environment.NewLine, string.Empty);
+
+            FinTsClient client = new FinTsClient(null);
+            Helper.Parse_Segments(client, message);
+
+            Assert.Equal("eBYcsEe0unsBAAAXXkX5hG?+owAQA", client.HITAN);
+        }
     }
 }

@@ -44,7 +44,7 @@ namespace libfintx.FinTS
             return message.Substring(match.Index + match.Length);
         }
 
-        private static DelimiterMatch FindNextDelimiter(string message)
+        private static DelimiterMatch FindNextSegmentDelimiter(string message)
         {
             var escapeMatch = Regex.Match(message, @"\?");
             var binaryMatch = Regex.Match(message, @"@\d+@");
@@ -62,6 +62,72 @@ namespace libfintx.FinTS
             return null;
         }
 
+        private static DelimiterMatch FindNextDataElementDelimiter(string message)
+        {
+            var escapeMatch = Regex.Match(message, @"\?");
+            var dataElementMatch = Regex.Match(message, @"\+");
+
+            var result = new Match[] { escapeMatch, dataElementMatch }.Where(m => m.Success).OrderBy(m => m.Index).FirstOrDefault();
+
+            if (result == escapeMatch)
+                return new DelimiterMatch(Delimiter.Escape, result.Index, result.Value);
+            if (result == dataElementMatch)
+                return new DelimiterMatch(Delimiter.DataElement, result.Index, result.Value);
+
+            return null;
+        }
+
+        internal static List<string> SplitDataElements(string code)
+        {
+            var dataElements = new List<string>();
+
+            StringBuilder currentDataElement = new StringBuilder();
+
+            while (code.Length > 0)
+            {
+                var match = FindNextDataElementDelimiter(code);
+                if (match == null)
+                {
+                    // End of code
+                    dataElements.Add(code);
+                    break;
+                }
+
+                switch (match.Delimiter)
+                {
+                    case Delimiter.Escape:
+                        {
+                            var length = match.Index + match.Value.Length + 1;
+                            if (code.Length < length)
+                                throw new ArgumentException($"Invalid code. There are no more characters after escape character. Code is: {Truncate(code)}");
+
+                            var allowedChars = new[] { '+', ':', '\'', '?', '@' };
+                            if (!allowedChars.Contains(code[length - 1]))
+                                throw new ArgumentException($"Invalid code. Escape character must be followed by +,:,',?,@. Code is: {Truncate(code)}");
+
+                            currentDataElement.Append(code.Substring(0, length));
+                            code = code.Substring(length);
+
+                            break;
+                        }
+                    case Delimiter.DataElement:
+                        {
+                            currentDataElement.Append(code.Substring(0, match.Index));
+                            dataElements.Add(currentDataElement.ToString());
+                            currentDataElement = new StringBuilder();
+
+                            code = code.Substring(match.Index + match.Value.Length);
+
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+
+            return dataElements;
+        }
+
         /// <summary>
         /// Splits segments into strings. Inspired from https://github.com/nemiah/phpFinTS/blob/fce921b5311ee3c15eb075c25627a0584c6bee99/lib/Fhp/Syntax/Parser.php
         /// </summary>
@@ -76,15 +142,15 @@ namespace libfintx.FinTS
 
             while (message.Length > 0)
             {
-                var delimiter = FindNextDelimiter(message);
-                if (delimiter == null)
+                var match = FindNextSegmentDelimiter(message);
+                if (match == null)
                     throw new ArgumentException($"Invalid segment. Didn't find any delimiter. Message is: {Truncate(message)}");
 
-                switch (delimiter.Delimiter)
+                switch (match.Delimiter)
                 {
                     case Delimiter.Escape:
                         {
-                            var length = delimiter.Index + delimiter.Value.Length + 1;
+                            var length = match.Index + match.Value.Length + 1;
                             if (message.Length < length)
                                 throw new ArgumentException($"Invalid segment. There are no more characters after escape character. Message is: {Truncate(message)}");
 
@@ -100,9 +166,9 @@ namespace libfintx.FinTS
                         }
                     case Delimiter.Binary:
                         {
-                            var lengthStr = delimiter.Value.Substring(1, delimiter.Value.Length - 2);
+                            var lengthStr = match.Value.Substring(1, match.Value.Length - 2);
                             var binaryLength = Convert.ToInt32(lengthStr);
-                            var length = delimiter.Index + delimiter.Value.Length + binaryLength;
+                            var length = match.Index + match.Value.Length + binaryLength;
                             if (message.Length < length)
                                 throw new ArgumentException($"Invalid segment. Given binary length {binaryLength} exceeds actual message length. Message is: {Truncate(message)}");
 
@@ -118,11 +184,11 @@ namespace libfintx.FinTS
                         }
                     case Delimiter.Segment:
                         {
-                            currentSegment.Append(message.Substring(0, delimiter.Index));
+                            currentSegment.Append(message.Substring(0, match.Index));
                             segments.Add(currentSegment.ToString());
                             currentSegment = new StringBuilder();
 
-                            message = message.Substring(delimiter.Index + delimiter.Value.Length);
+                            message = message.Substring(match.Index + match.Value.Length);
                             if (message.Length > 0)
                                 message = ProcessSegmentBegin(message, currentSegment);
 
@@ -199,7 +265,8 @@ namespace libfintx.FinTS
     {
         Escape,
         Binary,
-        Segment
+        Segment,
+        DataElement
     }
 
     internal class DelimiterMatch
@@ -215,6 +282,8 @@ namespace libfintx.FinTS
         internal bool IsBinary => Delimiter == Delimiter.Binary;
 
         internal bool IsSegmentEnd => Delimiter == Delimiter.Segment;
+
+        internal bool IsDataElement => Delimiter == Delimiter.DataElement;
 
         internal DelimiterMatch(Delimiter delimiter, int index, string value)
         {

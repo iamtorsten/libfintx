@@ -316,11 +316,9 @@ namespace libfintx.FinTS
                     {
                         // HITAN:5:7:3+S++8578-06-23-13.22.43.709351
                         // HITAN:5:7:4+4++8578-06-23-13.22.43.709351+Bitte Auftrag in Ihrer App freigeben.
-                        var match = Regex.Match(segment.Payload, @"\w+\+.*?\+(?<ref>[^\+]+)(\+)?");
-                        if (!match.Success)
-                            throw new ArgumentException($"Could not parse HITAN: {segment}");
-
-                        client.HITAN = match.Groups["ref"].Value;
+                        if (segment.DataElements.Count < 3)
+                            throw new InvalidOperationException($"Invalid HITAN segment '{segment}'. Payload must have at least 3 data elements.");
+                        client.HITAN = segment.DataElements[2];
                     }
 
                     if (segment.Name == "HIKAZS")

@@ -41,6 +41,25 @@ namespace libfintx.FinTS.Data.Segment
 
         public string Payload { get; set; }
 
+        private List<string> _dataElements;
+        /// <summary>
+        /// Datenelemente der Payload.
+        /// </summary>
+        public List<string> DataElements
+        {
+            get
+            {
+                if (_dataElements == null)
+                    _dataElements = new List<string>();
+
+                return _dataElements;
+            }
+            set
+            {
+                _dataElements = value;
+            }
+        }
+
         public Segment(string value)
         {
             Value = value;
