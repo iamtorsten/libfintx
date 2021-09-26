@@ -177,6 +177,9 @@ namespace libfintx.FinTS
                     bpd = bpaMatch.Groups[1].Value;
                 if (bpd.Length > 0)
                 {
+                    if (bpd.EndsWith("''"))
+                        bpd = bpd.Substring(0, bpd.Length - 1);
+
                     SaveBPD(connDetails.Blz, bpd);
                     BPD.ParseBpd(bpd);
                 }
