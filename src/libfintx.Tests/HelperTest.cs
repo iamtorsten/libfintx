@@ -59,7 +59,7 @@ HNHBS:5:1+2'".Replace(Environment.NewLine, string.Empty);
         }
 
         [Fact]
-        public void Test_Parse_Messge()
+        public void Test_Parse_Message_1()
         {
             var message =
 @"HNHBK:1:3+000000000593+300+578550834952=734365254762CQCJ=+3+578550834952=734365254762CQCJ=:3'
@@ -79,7 +79,28 @@ HNHBS:7:1+3'".Replace(Environment.NewLine, string.Empty);
         }
 
         [Fact]
-        public void Test_Parse_Segments_HITAN()
+        public void Test_Parse_Message_2()
+        {
+            var message =
+@"HNHBK:1:3+000000000717+300+IA1111613545886+2+IA1111613545886:2'
+HNVSK:998:3+PIN:2+998+1+2::VsiR2m3NKH0BAABfF?+evhW?+owAQA+1:20211116:135459+2:2:13:@8@00000000:5:1+280:60090100:XXXXXXXXX:V:0:0+0'
+HNVSD:999:1+@494@
+HNSHK:2:4+PIN:2+944+1766933014065220+1+1+2::VsiR2m3NKH0BAABfF?+evhW?+owAQA+1+1:20211116:135459+1:999:1+6:10:16+280:60090100:XXXXXXXXX:S:0:0'
+HIRMG:3:2+0010::Nachricht entgegengenommen.'
+HIRMS:4:2:4+0030::Auftrag empfangen - Sicherheitsfreigabe erforderlich'
+HITAN:5:6:4+4++76ma3j/MKH0BAABsRcJNhG?+owAQA+Eine neue TAN steht zur Abholung bereit.  Die TAN wurde reserviert am  16.11.2021 um 13?:54?:59 Uhr. Eine Push-Nachricht wurde versandt.  Bitte geben Sie die TAN ein.'
+HNSHA:6:2+1766933014065220''
+HNHBS:7:1+2'".Replace(Environment.NewLine, string.Empty);
+
+            var client = new FinTsClient(new FinTS.Data.ConnectionDetails());
+            Helper.Parse_Message(client, message);
+
+            Assert.Equal(3, client.HNHBS);
+            Assert.Equal("76ma3j/MKH0BAABsRcJNhG?+owAQA", client.HITAN);
+        }
+
+        [Fact]
+        public void Test_Parse_Segments_HITAN_1()
         {
             var message =
 @"HNHBK:1:3+000000000715+300+KB1090613095412+2+KB1090613095412:2'
