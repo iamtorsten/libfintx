@@ -2,10 +2,6 @@
 
 # libfintx
 
-[![Build Status](https://travis-ci.org/libfintx/libfintx.svg?branch=master)](https://travis-ci.org/libfintx/libfintx)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/928e912657d44a6090d329343aa13346)](https://www.codacy.com/app/torsten-klinger/libfintx?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mrklintscher/libfintx&amp;utm_campaign=badger)
-[![Issue Count](https://codeclimate.com/github/libfintx/libfintx/badges/issue_count.svg)](https://codeclimate.com/github/libfintx/libfintx)
-
 An C# based client library for **HBCI 2.2**, **FinTS 3.0**, **EBICS H004** and **EBICS H005**.
 
 In 1995 the ZKA announced a common online banking standard called *Homebanking Computer Interface* (HBCI). In 2003 they published the next generation of this protocol standard and named it *Financial Transaction Services* (FinTS).
