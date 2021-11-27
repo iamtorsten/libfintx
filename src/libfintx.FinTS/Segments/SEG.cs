@@ -25,7 +25,7 @@ using System;
 
 namespace libfintx.FinTS
 {
-    public class SEG
+    public partial class SEG
     {
         public string Delimiter = "+";
         public string Terminator = "'";

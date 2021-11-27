@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
@@ -39,53 +40,354 @@ namespace libfintx.FinTS
             Log.Write("Starting TAN process");
             string segments = string.Empty;
 
+            StringBuilder sb = new StringBuilder();
+            SEG sEG = new SEG();
+
             if (string.IsNullOrEmpty(client.HITAB)) // TAN Medium Name not set
             {
                 // Version 2
                 if (client.HITANS == 2)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                }
+                    
                 // Version 3
                 else if (client.HITANS == 3)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                }
+
                 // Version 4
                 else if (client.HITANS == 4)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
+                }
+
                 // Version 5
                 else if (client.HITANS == 5)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
+                }
+
                 // Version 6
                 else if (client.HITANS == 6)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N'";
+                }
+
                 // Version 7 -> decoupled
                 // FinTS_3.0_Security_Sicherheitsverfahren_PINTAN_2020-07-10_final_version.pdf Seite 64 - 65
                 else if (client.HITANS == 7)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+S++++" + client.HITAN + "+N'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("S");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+S++++" + client.HITAN + "+N'";
+                }
+
                 else // default
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("S");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
+                }
+
             }
             else
             {
                 // Version 2
                 if (client.HITANS == 2)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+
+                }
                 // Version 3
                 else if (client.HITANS == 3)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                }
+
                 // Version 4
                 else if (client.HITANS == 4)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                }
+
                 // Version 5
                 else if (client.HITANS == 5)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                }
+
                 // Version 6
                 else if (client.HITANS == 6)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N++++" + client.HITAB + "'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N++++" + client.HITAB + "'";
+                }
+
                 // Version 7 -> decoupled
                 // FinTS_3.0_Security_Sicherheitsverfahren_PINTAN_2020-07-10_final_version.pdf Seite 64 - 65
                 else if (client.HITANS == 7)
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+S++++" + client.HITAN + "+N++++" + client.HITAB + "'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("S");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+S++++" + client.HITAN + "+N++++" + client.HITAB + "'";
+                }
+
                 else // default
-                    segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                {
+                    sb.Append("HKTAN");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SEG_NUM.Seg3);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(client.HITANS);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("N");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = sb.ToString();
+                    // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N++++" + client.HITAB + "'";
+                }
+
             }
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);

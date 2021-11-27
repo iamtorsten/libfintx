@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Text;
 using libfintx.FinTS.Version;
 
 namespace libfintx.FinTS.Message
@@ -60,9 +61,36 @@ namespace libfintx.FinTS.Message
 
             var msgHead = string.Empty;
 
-            msgHead = "HNHBK:1:3+" + paddedLen + "+" + (HBCI.v300) + "+" + DialogID + "+" + MsgNum + "'";
+            SEG sEG = new SEG();
+            StringBuilder sb = new StringBuilder();
+            sb.Append("HNHBK");
+            sb.Append(sEG.Finisher);
+            sb.Append("1");
+            sb.Append(sEG.Finisher);
+            sb.Append("3");
+            sb.Append(sEG.Delimiter);
+            sb.Append(paddedLen);
+            sb.Append(sEG.Delimiter);
+            sb.Append(HBCI.v300);
+            sb.Append(sEG.Delimiter);
+            sb.Append(DialogID);
+            sb.Append(sEG.Delimiter);
+            sb.Append(MsgNum);
+            sb.Append(sEG.Terminator);
+            msgHead = sb.ToString();
+            //msgHead = "HNHBK:1:3+" + paddedLen + "+" + (HBCI.v300) + "+" + DialogID + "+" + MsgNum + "'";
 
-            var msgEnd = "HNHBS:" + Convert.ToString(SegmentNum + 1) + ":1+" + MsgNum + "'";
+            sb = new StringBuilder();
+            sb.Append("HNHBS");
+            sb.Append(sEG.Finisher);
+            sb.Append(Convert.ToString(SegmentNum + 1));
+            sb.Append(sEG.Finisher);
+            sb.Append("1");
+            sb.Append(sEG.Delimiter);
+            sb.Append(MsgNum);
+            sb.Append(sEG.Terminator);
+            var msgEnd = sb.ToString();
+            //var msgEnd = "HNHBS:" + Convert.ToString(SegmentNum + 1) + ":1+" + MsgNum + "'";
 
             return msgHead + Segments + msgEnd;
         }

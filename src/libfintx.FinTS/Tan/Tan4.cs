@@ -39,15 +39,30 @@ namespace libfintx.FinTS
 
             string segments = string.Empty;
 
+            SEG sEG = new SEG();
+
             // Version 3
             if (client.HITANS == 3)
-                segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4+++++++" + MediumName + "'";
+            {
+                //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4+++++++" + MediumName + "'";
+
+                segments = sEG.toSEG("HKTAN", Convert.ToInt16(SEG_NUM.Seg3), client.HITANS, 4, sEG.Delimiter +
+                    sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + MediumName + sEG.Terminator);
+
+            }
+                
             // Version 4
             else if (client.HITANS == 4)
-                segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4++++++++" + MediumName + "'";
+                segments = sEG.toSEG("HKTAN", Convert.ToInt16(SEG_NUM.Seg3), client.HITANS, 4, sEG.Delimiter +
+                    sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
+                    MediumName + sEG.Terminator);
+            //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4++++++++" + MediumName + "'";
             // Version 5
             else if (client.HITANS == 5)
-                segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4++++++++++" + MediumName + "'";
+                segments = sEG.toSEG("HKTAN", Convert.ToInt16(SEG_NUM.Seg3), client.HITANS, 4, sEG.Delimiter +
+                    sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
+                    sEG.Delimiter + sEG.Delimiter + MediumName + sEG.Terminator);
+            //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4++++++++++" + MediumName + "'";
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 

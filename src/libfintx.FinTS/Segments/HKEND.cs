@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
@@ -42,7 +43,19 @@ namespace libfintx.FinTS
             var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
-            segments = "HKEND:" + SEG_NUM.Seg3 + "1+" + dialogID + "'";
+            //segments = "HKEND:" + SEG_NUM.Seg3 + ":1+" + dialogID + "'";
+
+            SEG sEG = new SEG();
+            StringBuilder sb = new StringBuilder();
+            sb.Append("HKEND");
+            sb.Append(sEG.Finisher);
+            sb.Append(SEG_NUM.Seg3);
+            sb.Append(sEG.Finisher);
+            sb.Append("1");
+            sb.Append(sEG.Delimiter);
+            sb.Append(dialogID);
+            sb.Append(sEG.Terminator);
+            segments = sb.ToString();
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 

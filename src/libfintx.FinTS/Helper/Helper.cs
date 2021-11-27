@@ -104,7 +104,22 @@ namespace libfintx.FinTS
         /// <returns></returns>
         public static string Encrypt(string Segments)
         {
-            return "HNVSD:999:1+@" + Segments.Length + "@" + Segments + "'";
+            SEG sEG = new SEG();
+            StringBuilder sb = new StringBuilder();
+            sb.Append("HNVSD");
+            sb.Append(sEG.Finisher);
+            sb.Append(Sig.SECFUNC_SIG_PT_1STEP);
+            sb.Append(sEG.Finisher);
+            sb.Append("1");
+            sb.Append(sEG.Delimiter);
+            sb.Append("@");
+            sb.Append(Segments.Length);
+            sb.Append("@");
+            sb.Append(Segments);
+            sb.Append(sEG.Terminator);
+            return sb.ToString();
+
+            //return "HNVSD:999:1+@" + Segments.Length + "@" + Segments + "'";
         }
 
         /// <summary>

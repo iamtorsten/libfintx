@@ -26,6 +26,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using libfintx.FinTS.Security;
 using libfintx.FinTS.Version;
 using libfintx.Logger.Log;
 using libfintx.Logger.Trace;
@@ -100,6 +101,9 @@ namespace libfintx.FinTS.Message
 
             string TAN_ = string.Empty;
 
+            SEG sEG = new SEG();
+            StringBuilder sb = new StringBuilder();
+
             if (HIRMS_TAN != null)
             {
                 if (HIRMS_TAN.Length >= 10)
@@ -115,7 +119,55 @@ namespace libfintx.FinTS.Message
 
             if (Version == Convert.ToInt16(HBCI.v220))
             {
-                encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                sb.Append("HNVSK");
+                sb.Append(sEG.Finisher);
+                sb.Append(Enc.SECFUNC_ENC_PLAIN);
+                sb.Append(sEG.Finisher);
+                sb.Append("2");
+                sb.Append(sEG.Delimiter);
+                sb.Append(Enc.SECFUNC_ENC_PLAIN);
+                sb.Append(sEG.Delimiter);
+                sb.Append("1");
+                sb.Append(sEG.Delimiter);
+                sb.Append("1");
+                sb.Append(sEG.Finisher);
+                sb.Append(sEG.Finisher);
+                sb.Append(SystemID);
+                sb.Append(sEG.Delimiter);
+                sb.Append("1");
+                sb.Append(sEG.Finisher);
+                sb.Append(date);
+                sb.Append(sEG.Finisher);
+                sb.Append(time);
+                sb.Append(sEG.Delimiter);
+                sb.Append("2");
+                sb.Append(sEG.Finisher);
+                sb.Append("2");
+                sb.Append(sEG.Finisher);
+                sb.Append(Enc.ENCALG_2K3DES);
+                sb.Append(sEG.Finisher);
+                sb.Append("@8@00000000");
+                sb.Append(sEG.Finisher);
+                sb.Append(Sig.HASHALG_SHA512);
+                sb.Append(sEG.Finisher);
+                sb.Append("1");
+                sb.Append(sEG.Delimiter);
+                sb.Append(SEG_Country.Germany);
+                sb.Append(sEG.Finisher);
+                sb.Append(BLZ);
+                sb.Append(sEG.Finisher);
+                sb.Append(UserID);
+                sb.Append(sEG.Finisher);
+                sb.Append("V");
+                sb.Append(sEG.Finisher);
+                sb.Append("0");
+                sb.Append(sEG.Finisher);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Terminator);
+                encHead = sb.ToString();
+                //encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
@@ -123,68 +175,506 @@ namespace libfintx.FinTS.Message
 
                 if (HIRMS_TAN == null)
                 {
-                    sigHead = "HNSHK:2:3+" + Sig.SECFUNC_SIG_PT_2STEP_MIN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1 +6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sb = new StringBuilder();
+                    sb.Append("HNSHK");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("2");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("3");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Sig.SECFUNC_SIG_PT_2STEP_MIN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SystemID);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(date);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(time);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGMODE_RETAIL_MAC);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Sig.HASHALG_SHA256_SHA256);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGALG_RSA);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGMODE_ISO9796_1);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(SEG_Country.Germany);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(BLZ);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(UserID);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("S");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Terminator);
+                    sigHead = sb.ToString();
+                    // sigHead = "HNSHK:2:3+" + Sig.SECFUNC_SIG_PT_2STEP_MIN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1 +6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
 
                 else
                 {
-                    sigHead = "HNSHK:2:3+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sb = new StringBuilder();
+                    sb.Append("HNSHK");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("2");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("3");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(HIRMS_TAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SystemID);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(date);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(time);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGMODE_RETAIL_MAC);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Sig.HASHALG_SHA256_SHA256);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGALG_RSA);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGMODE_ISO9796_1);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(SEG_Country.Germany);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(BLZ);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(UserID);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("S");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Terminator);
+                    sigHead = sb.ToString();
+                    // sigHead = "HNSHK:2:3+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
 
                 if (String.IsNullOrEmpty(TAN_))
                 {
-                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + PIN + "'";
+                    sb = new StringBuilder();
+                    sb.Append("HNSHA");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Convert.ToString(SegmentNum + 1));
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(PIN);
+                    sb.Append(sEG.Terminator);
+                    sigTrail = sb.ToString();
+                    //sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + PIN + "'";
 
-                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + "XXXXXX" + "'");
+                    sb = new StringBuilder();
+                    sb.Append("HNSHA");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Convert.ToString(SegmentNum + 1));
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("XXXXXX");
+                    sb.Append(sEG.Terminator);
+
+                    Log.Write(sb.ToString());
                 }
 
                 else
                 {
-                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + PIN + TAN_ + "'";
+                    sb = new StringBuilder();
+                    sb.Append("HNSHA");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Convert.ToString(SegmentNum + 1));
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(PIN);
+                    sb.Append(TAN_);
+                    sb.Append(sEG.Terminator);
+                    sigTrail = sb.ToString();
+                    //sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + PIN + TAN_ + "'";
 
-                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":1+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
+                    sb = new StringBuilder();
+                    sb.Append("HNSHA");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Convert.ToString(SegmentNum + 1));
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("XXXXXX");
+                    sb.Append("XXXXXX");
+                    sb.Append(sEG.Terminator);
+
+                    Log.Write(sb.ToString());
                 }
             }
             else if (Version == Convert.ToInt16(HBCI.v300))
             {
                 if (HIRMS_TAN == null)
-                    encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:1+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                {
+                    sb = new StringBuilder();
+                    sb.Append("HNVSK");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Enc.SECFUNC_ENC_PLAIN);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("3");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Step.SEC);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Step.PIN_STEP_ONE);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Enc.SECFUNC_ENC_PLAIN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SystemID);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(date);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(time);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SECFUNC_FINTS_SIG_SIG);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Enc.ENCALG_2K3DES);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("@8@00000000");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.HASHALG_SHA512);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(SEG_Country.Germany);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(BLZ);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(UserID);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("V");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("0");
+                    sb.Append(sEG.Terminator);
+                    encHead = sb.ToString();
+                    // encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:1+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                }
+                    
                 else
-                    encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
-
+                {
+                    sb = new StringBuilder();
+                    sb.Append("HNVSK");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Enc.SECFUNC_ENC_PLAIN);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("3");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Step.SEC);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Step.PIN_STEP_TWO);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Enc.SECFUNC_ENC_PLAIN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SystemID);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(date);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(time);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("2");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SECFUNC_FINTS_SIG_SIG);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Enc.ENCALG_2K3DES);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("@8@00000000");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.HASHALG_SHA512);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(SEG_Country.Germany);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(BLZ);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(UserID);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("V");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("0");
+                    sb.Append(sEG.Terminator);
+                    encHead = sb.ToString();
+                    // encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                }
+                    
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
                 if (HIRMS_TAN == null)
                 {
-                    sigHead = "HNSHK:2:4+PIN:1+" + Sig.SECFUNC_SIG_PT_1STEP + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sb = new StringBuilder();
+                    sb.Append("HNSHK");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SECFUNC_FINTS_SIG_SIG);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Enc.SECFUNC_ENC_3DES);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Step.SEC);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Step.PIN_STEP_ONE);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Sig.SECFUNC_SIG_PT_1STEP);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SystemID);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(date);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(time);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGMODE_RETAIL_MAC);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Sig.HASHALG_SHA256_SHA256);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGALG_RSA);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGMODE_ISO9796_1);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(SEG_Country.Germany);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(BLZ);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(UserID);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("S");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Terminator);
+                    sigHead = sb.ToString();
+                    //sigHead = "HNSHK:2:4+PIN:1+" + Sig.SECFUNC_SIG_PT_1STEP + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
                 else
                 {
                     var SECFUNC = HIRMS_TAN.Equals("999") ? "1" : "2";
-
-                    sigHead = "HNSHK:2:4+PIN:" + SECFUNC + "+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    sb = new StringBuilder();
+                    sb.Append("HNSHK");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SECFUNC_FINTS_SIG_SIG);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Enc.SECFUNC_ENC_3DES);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Step.SEC);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SECFUNC);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(HIRMS_TAN);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(SystemID);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(date);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(time);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("1");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGMODE_RETAIL_MAC);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("1");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(Sig.HASHALG_SHA256_SHA256);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGALG_RSA);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Sig.SIGMODE_ISO9796_1);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(SEG_Country.Germany);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(BLZ);
+                    sb.Append(sEG.Finisher);
+                    sb.Append(UserID);
+                    sb.Append(sEG.Finisher);
+                    sb.Append("S");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Finisher);
+                    sb.Append("0");
+                    sb.Append(sEG.Terminator);
+                    sigHead = sb.ToString();
+                    // sigHead = "HNSHK:2:4+PIN:" + SECFUNC + "+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
 
                 if (String.IsNullOrEmpty(TAN_))
                 {
-                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + "'";
+                    sb = new StringBuilder();
+                    sb.Append("HNSHA");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Convert.ToString(SegmentNum + 1));
+                    sb.Append(sEG.Finisher);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(PIN);
+                    sb.Append(sEG.Terminator);
+                    sigTrail = sb.ToString();
+                    //sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + "'";
 
-                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + "XXXXXX" + "'");
+                    sb = new StringBuilder();
+                    sb.Append("HNSHA");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Convert.ToString(SegmentNum + 1));
+                    sb.Append(sEG.Finisher);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("XXXXXX");
+                    sb.Append(sEG.Terminator);
+
+                    Log.Write(sb.ToString());
                 }
 
                 else
                 {
-                    sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + TAN_ + "'";
+                    sb = new StringBuilder();
+                    sb.Append("HNSHA");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Convert.ToString(SegmentNum + 1));
+                    sb.Append(sEG.Finisher);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(PIN);
+                    sb.Append(TAN_);
+                    sb.Append(sEG.Terminator);
+                    sigTrail = sb.ToString();
+                    //sigTrail = "HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + PIN + TAN_ + "'";
 
-                    Log.Write("HNSHA:" + Convert.ToString(SegmentNum + 1) + ":2+" + secRef + "++" + "XXXXXX" + "XXXXXX" + "'");
+                    sb = new StringBuilder();
+                    sb.Append("HNSHA");
+                    sb.Append(sEG.Finisher);
+                    sb.Append(Convert.ToString(SegmentNum + 1));
+                    sb.Append(sEG.Finisher);
+                    sb.Append("2");
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(secRef);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append("XXXXXX");
+                    sb.Append("XXXXXX");
+                    sb.Append(sEG.Terminator);
+
+                    Log.Write(sb.ToString());
                 }
             }
             else
@@ -211,13 +701,43 @@ namespace libfintx.FinTS.Message
 
             if (Version == Convert.ToInt16(HBCI.v220))
             {
-                msgHead = "HNHBK:1:3+" + paddedLen + "+" + (HBCI.v220) + "+" + DialogID + "+" + MsgNum + "'";
+                sb.Append("HNHBK");
+                sb.Append(sEG.Finisher);
+                sb.Append("1");
+                sb.Append(sEG.Finisher);
+                sb.Append("3");
+                sb.Append(sEG.Delimiter);
+                sb.Append(paddedLen);
+                sb.Append(sEG.Delimiter);
+                sb.Append(HBCI.v220);
+                sb.Append(sEG.Delimiter);
+                sb.Append(DialogID);
+                sb.Append(sEG.Delimiter);
+                sb.Append(MsgNum);
+                sb.Append(sEG.Terminator);
+                msgHead = sb.ToString();
+                //msgHead = "HNHBK:1:3+" + paddedLen + "+" + (HBCI.v220) + "+" + DialogID + "+" + MsgNum + "'";
 
                 Log.Write(msgHead);
             }
             else if (Version == Convert.ToInt16(HBCI.v300))
             {
-                msgHead = "HNHBK:1:3+" + paddedLen + "+" + (HBCI.v300) + "+" + DialogID + "+" + MsgNum + "'";
+                sb.Append("HNHBK");
+                sb.Append(sEG.Finisher);
+                sb.Append("1");
+                sb.Append(sEG.Finisher);
+                sb.Append("3");
+                sb.Append(sEG.Delimiter);
+                sb.Append(paddedLen);
+                sb.Append(sEG.Delimiter);
+                sb.Append(HBCI.v300);
+                sb.Append(sEG.Delimiter);
+                sb.Append(DialogID);
+                sb.Append(sEG.Delimiter);
+                sb.Append(MsgNum);
+                sb.Append(sEG.Terminator);
+                msgHead = sb.ToString();
+                //msgHead = "HNHBK:1:3+" + paddedLen + "+" + (HBCI.v300) + "+" + DialogID + "+" + MsgNum + "'";
 
                 Log.Write(msgHead);
             }
@@ -228,7 +748,17 @@ namespace libfintx.FinTS.Message
                 return string.Empty;
             }
 
-            var msgEnd = "HNHBS:" + Convert.ToString(SegmentNum + 2) + ":1+" + MsgNum + "'";
+            sb = new StringBuilder();
+            sb.Append("HNHBS");
+            sb.Append(sEG.Finisher);
+            sb.Append(Convert.ToString(SegmentNum + 2));
+            sb.Append(sEG.Finisher);
+            sb.Append("1");
+            sb.Append(sEG.Delimiter);
+            sb.Append(MsgNum);
+            sb.Append(sEG.Terminator);
+            var msgEnd = sb.ToString();
+            // var msgEnd = "HNHBS:" + Convert.ToString(SegmentNum + 2) + ":1+" + MsgNum + "'";
 
             Log.Write(msgEnd);
 
