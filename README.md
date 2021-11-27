@@ -123,7 +123,3 @@ Licensed under **GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007**. Pl
 # Support
 
 You can contact me via [E-Mail](mailto:torsten.klinger@googlemail.com).
-
-# Community
-
-Join our developer community at [Slack](https://join.slack.com/t/libfintx/shared_invite/zt-qut8s3qo-r8uCXey6NZIo_swwtHhvzw) to discuss bugs and further developments with us.
