@@ -40,7 +40,10 @@ namespace libfintx.FinTS
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
             var connectionDetails = client.ConnectionDetails;
-            string segments = "HKCDB:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'";
+            SEG sEG = new SEG();
+            string segments = sEG.toSEG("HKCDB", client.SEGNUM, 1, 0, connectionDetails.Iban + sEG.Finisher +
+                connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'");
+            //string segments = "HKCDB:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'";
 
             if (Helper.IsTANRequired("HKCDB"))
             {

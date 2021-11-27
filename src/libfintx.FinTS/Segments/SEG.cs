@@ -22,33 +22,32 @@
  */
 
 using System;
-using System.Threading.Tasks;
-using libfintx.FinTS.Message;
-using libfintx.Logger.Log;
 
 namespace libfintx.FinTS
 {
-    public static class HKTAB
+    public class SEG
     {
-        /// <summary>
-        /// Request TAN medium name
-        /// </summary>
-        public static async Task<String> Init_HKTAB(FinTsClient client)
+        public string Delimiter = "+";
+        public string Terminator = "'";
+        public string Finisher = ":";
+
+        public string toSEG(string header, int num, int version, int refNum, string rawData)
         {
-            Log.Write("Starting job HKTAB: Request tan medium name");
-
-            SEG sEG = new SEG();
-
-            var connectionDetails = client.ConnectionDetails;
-            string segments = string.Empty;
-
-            segments = sEG.toSEG("HKTAB", Convert.ToInt16(SEG_NUM.Seg3), 4, 0, "A" + sEG.Terminator);
-            //segments = "HKTAB:" + SEG_NUM.Seg3 + ":4+0+A'";
-
-            client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
-
-            string message = FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS);
-            return await FinTSMessage.Send(client, message);
+            // "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N'"
+            string seg = string.Empty;
+            seg += header;
+            seg += Finisher;
+            seg += Convert.ToString(num);
+            seg += Finisher;
+            seg += Convert.ToString(version);
+            seg += Delimiter;
+            if (refNum != 0)
+            {
+                seg += Convert.ToString(refNum);
+                seg += Delimiter;
+            }
+            seg += rawData;
+            return seg;
         }
     }
 }

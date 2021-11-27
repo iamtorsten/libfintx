@@ -41,7 +41,10 @@ namespace libfintx.FinTS
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
 
             var connectionDetails = client.ConnectionDetails;
-            string segments = "HKDSE:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
+            SEG sEG = new SEG();
+            string segments = sEG.toSEG("HKDSE", client.SEGNUM, 1, 0, connectionDetails.Iban + sEG.Finisher + connectionDetails.Bic +
+                "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@");
+            //string segments = "HKDSE:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
 
             var message = pain00800202.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CreditorIDNumber);
 

@@ -41,6 +41,8 @@ namespace libfintx.FinTS
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
+            SEG sEG = new SEG();
+
             switch (camtVers)
             {
                 case CamtVersion.Camt052:
@@ -50,22 +52,38 @@ namespace libfintx.FinTS
                     {
                         if (string.IsNullOrEmpty(Startpoint))
                         {
-                            segments = "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N'";
+                            segments = sEG.toSEG("HKCAZ", client.SEGNUM, client.HICAZS, 0,
+                                connectionDetails.Iban + sEG.Finisher + connectionDetails.Bic + sEG.Finisher +
+                                connectionDetails.Account + sEG.Finisher + sEG.Finisher + SEG_Country.Germany +
+                                sEG.Finisher + connectionDetails.Blz + sEG.Delimiter + CamtScheme.Camt052 + sEG.Delimiter + "N" + sEG.Terminator);
+                            //segments = "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N'";
                         }
                         else
                         {
-                            segments = "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N++++" + Startpoint + "'";
+                            segments = sEG.toSEG("HKCAZ", client.SEGNUM, client.HICAZS, 0, connectionDetails.Iban + sEG.Finisher +
+                                connectionDetails.Bic + sEG.Finisher + connectionDetails.Account + sEG.Finisher + sEG.Finisher + SEG_Country.Germany +
+                                sEG.Finisher + connectionDetails.Blz + sEG.Delimiter + CamtScheme.Camt052 + sEG.Delimiter +
+                                "N" + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + Startpoint + sEG.Terminator);
+                            //segments = "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N++++" + Startpoint + "'";
                         }
                     }
                     else
                     {
                         if (string.IsNullOrEmpty(Startpoint))
                         {
-                            segments = "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N+" + FromDate + "+" + ToDate + "'";
+                            segments = sEG.toSEG("HKCAZ", client.SEGNUM, client.HICAZS, 0, connectionDetails.Iban + sEG.Finisher + connectionDetails.Bic + sEG.Finisher +
+                                connectionDetails.Account + sEG.Finisher + sEG.Finisher + SEG_Country.Germany +
+                                sEG.Finisher + connectionDetails.Blz + sEG.Delimiter + CamtScheme.Camt052 + sEG.Delimiter + "N" + sEG.Delimiter +
+                                FromDate + sEG.Delimiter + ToDate + sEG.Terminator);
+                            //segments = "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N+" + FromDate + "+" + ToDate + "'";
                         }
                         else
                         {
-                            segments = "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
+                            segments = sEG.toSEG("HKCAZ", client.SEGNUM, client.HICAZS, 0, connectionDetails.Iban + sEG.Finisher + connectionDetails.Bic + sEG.Finisher +
+                                connectionDetails.Account + sEG.Finisher + sEG.Finisher + SEG_Country.Germany +
+                                sEG.Finisher + connectionDetails.Blz + sEG.Delimiter + CamtScheme.Camt052 + sEG.Delimiter + "N" + sEG.Delimiter +
+                                FromDate + sEG.Delimiter + ToDate + sEG.Delimiter + sEG.Delimiter + Startpoint + sEG.Terminator);
+                            //segments = "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                         }
                     }
 
