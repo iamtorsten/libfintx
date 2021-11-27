@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -13,6 +14,8 @@ namespace libfintx.Sample.Ui
         [STAThread]
         private static void Main()
         {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("de");
+
             Application.ThreadException += new ThreadExceptionEventHandler(HandleUncatchedException);
 
             Application.EnableVisualStyles();
