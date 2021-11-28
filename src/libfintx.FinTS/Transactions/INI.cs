@@ -24,6 +24,7 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.FinTS.Version;
 using libfintx.Globals;
@@ -59,13 +60,13 @@ namespace libfintx.FinTS
                     {
                         sb = new StringBuilder();
                         sb.Append("HKIDN");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg3);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
                         sb.Append(SEG_Country.Germany);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
                         sb.Append(connectionDetails.UserId);
@@ -76,9 +77,9 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
 
                         sb.Append("HKVVB");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg4);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
                         sb.Append("0");
@@ -104,13 +105,13 @@ namespace libfintx.FinTS
                     {
                         sb = new StringBuilder();
                         sb.Append("HKIDN");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg3);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
                         sb.Append(SEG_Country.Germany);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
                         sb.Append(connectionDetails.UserId);
@@ -121,9 +122,9 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
 
                         sb.Append("HKVVB");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg4);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("3");
                         sb.Append(sEG.Delimiter);
                         sb.Append("0");
@@ -199,13 +200,13 @@ namespace libfintx.FinTS
                     {
                         sb = new StringBuilder();
                         sb.Append("HKIDN");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg3);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
                         sb.Append(SEG_Country.Germany);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
                         sb.Append("9999999999");
@@ -216,9 +217,9 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
 
                         sb.Append("HKVVB");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg4);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("3");
                         sb.Append(sEG.Delimiter);
                         sb.Append("0");
@@ -274,13 +275,13 @@ namespace libfintx.FinTS
                     {
                         sb = new StringBuilder();
                         sb.Append("HKIDN");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg3);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
                         sb.Append(SEG_Country.Germany);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
                         sb.Append(connectionDetails.UserId);
@@ -291,9 +292,9 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
 
                         sb.Append("HKVVB");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg4);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("3");
                         sb.Append(sEG.Delimiter);
                         sb.Append("0");
@@ -308,9 +309,9 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
 
                         sb.Append("HKSYN");
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append(SEG_NUM.Seg4);
-                        sb.Append(sEG.Finisher);
+                        sb.Append(DEG.Separator);
                         sb.Append("3");
                         sb.Append(sEG.Delimiter);
                         sb.Append("0");

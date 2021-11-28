@@ -23,6 +23,7 @@
 
 using System;
 using System.Text;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Version;
 
 namespace libfintx.FinTS.Message
@@ -64,9 +65,9 @@ namespace libfintx.FinTS.Message
             SEG sEG = new SEG();
             StringBuilder sb = new StringBuilder();
             sb.Append("HNHBK");
-            sb.Append(sEG.Finisher);
+            sb.Append(DEG.Separator);
             sb.Append("1");
-            sb.Append(sEG.Finisher);
+            sb.Append(DEG.Separator);
             sb.Append("3");
             sb.Append(sEG.Delimiter);
             sb.Append(paddedLen);
@@ -82,9 +83,9 @@ namespace libfintx.FinTS.Message
 
             sb = new StringBuilder();
             sb.Append("HNHBS");
-            sb.Append(sEG.Finisher);
+            sb.Append(DEG.Separator);
             sb.Append(Convert.ToString(SegmentNum + 1));
-            sb.Append(sEG.Finisher);
+            sb.Append(DEG.Separator);
             sb.Append("1");
             sb.Append(sEG.Delimiter);
             sb.Append(MsgNum);

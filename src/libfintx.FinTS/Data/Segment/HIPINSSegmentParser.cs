@@ -45,7 +45,7 @@ namespace libfintx.FinTS.Data.Segment
                     var gv = gvMatch.Groups["gv"].Value;
                     var tanRequired = gvMatch.Groups["tanrequired"].Value;
 
-                    result.GvPinTan[gv] = (tanRequired == "J");
+                    result.GvPinTan[gv] = (tanRequired == DEG.Add);
                 }
             }
 

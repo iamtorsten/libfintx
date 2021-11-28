@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
 
@@ -42,7 +43,7 @@ namespace libfintx.FinTS
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
             string segments = sEG.toSEG("HKPPD", client.SEGNUM, 2, 0,
-                connectionDetails.Iban + sEG.Finisher + connectionDetails.Bic + sEG.Delimiter +
+                connectionDetails.Iban + DEG.Separator + connectionDetails.Bic + sEG.Delimiter +
                 MobileServiceProvider + sEG.Delimiter + PhoneNumber + sEG.Delimiter + Amount + ",:EUR" + sEG.Terminator);
             //string segments = "HKPPD:" + client.SEGNUM + ":2+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 

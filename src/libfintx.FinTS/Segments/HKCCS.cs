@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
 using libfintx.Sepa;
@@ -49,21 +50,21 @@ namespace libfintx.FinTS
             if (client.HISPAS == 1)
             {
                 segments = sEG.toSEG("HKCCS", client.SEGNUM, 1, 0, connectionDetails.Iban +
-                    sEG.Finisher + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+                    DEG.Separator + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
                 //segments = "HKCCS:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
                 sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1));
             }
             else if (client.HISPAS == 2)
             {
                 segments = sEG.toSEG("HKCCS", client.SEGNUM, 1, 0, connectionDetails.Iban +
-                    sEG.Finisher + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
+                    DEG.Separator + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
                 //segments = "HKCCS:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
                 sepaMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1));
             }
             else if (client.HISPAS == 3)
             {
                 segments = sEG.toSEG("HKCCS", client.SEGNUM, 1, 0, connectionDetails.Iban +
-                    sEG.Finisher + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@");
+                    DEG.Separator + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@");
                 //segments = "HKCCS:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@";
                 sepaMessage = pain00100303.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1));
             }

@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
 
@@ -58,11 +59,11 @@ namespace libfintx.FinTS
             SEG sEG = new SEG();
 
             if (Convert.ToInt16(client.HISALS) >= 7)
-                segments = sEG.toSEG("HKSAL", client.SEGNUM, client.HISALS, 0, activeAccount.AccountIban + sEG.Finisher + activeAccount.AccountBic + sEG.Delimiter + "N" + sEG.Terminator);
+                segments = sEG.toSEG("HKSAL", client.SEGNUM, client.HISALS, 0, activeAccount.AccountIban + DEG.Separator + activeAccount.AccountBic + sEG.Delimiter + DEG.DeAdd + sEG.Terminator);
                 //segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + "+N'";
             else
-                segments = sEG.toSEG("HKSAL", client.SEGNUM, client.HISALS, 0, activeAccount.AccountNumber + sEG.Finisher+ sEG.Finisher + SEG_Country.Germany + sEG.Finisher +
-                    activeAccount.AccountBankCode + sEG.Delimiter + "N" + sEG.Terminator);
+                segments = sEG.toSEG("HKSAL", client.SEGNUM, client.HISALS, 0, activeAccount.AccountNumber + DEG.Separator+ DEG.Separator + SEG_Country.Germany + DEG.Separator +
+                    activeAccount.AccountBankCode + sEG.Delimiter + DEG.DeAdd + sEG.Terminator);
                 //segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
 
             if (Helper.IsTANRequired("HKSAL"))

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
 using libfintx.Sepa;
@@ -47,7 +48,7 @@ namespace libfintx.FinTS
             // TODO: Anscheinend wird totalAmount nur in der Version 2 unterstützt, diese hat jedoch nicht jede Bank implementiert.
             //string segments = "HKDME:" + client.SEGNUM + ":2+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+" + TotalAmount_ + ":EUR++" + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKDME", client.SEGNUM, 1, 0, connectionDetails.Iban + sEG.Finisher + connectionDetails.Bic +
+            string segments = sEG.toSEG("HKDME", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator + connectionDetails.Bic +
                 sEG.Delimiter + sEG.Delimiter + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@");
             //string segments = "HKDME:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "++" + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
 

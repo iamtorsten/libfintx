@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
 using libfintx.Sepa;
@@ -41,7 +42,7 @@ namespace libfintx.FinTS
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKCSL", client.SEGNUM, 1, 0, connectionDetails.Iban + sEG.Finisher +
+            string segments = sEG.toSEG("HKCSL", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
                 connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
             //string segments = "HKCSL:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 

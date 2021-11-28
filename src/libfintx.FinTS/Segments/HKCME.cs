@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using libfintx.Logger.Log;
 using libfintx.Sepa;
 using libfintx.FinTS.Message;
+using libfintx.FinTS.Data;
 
 namespace libfintx.FinTS
 {
@@ -45,7 +46,7 @@ namespace libfintx.FinTS
 
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKCME", client.SEGNUM, 1, 0, connectionDetails.Iban + sEG.Finisher +
+            string segments = sEG.toSEG("HKCME", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
                 connectionDetails.Bic + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
             //string segments = "HKCME:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 

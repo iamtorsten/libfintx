@@ -24,6 +24,7 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
 
@@ -49,9 +50,9 @@ namespace libfintx.FinTS
                 if (client.HITANS == 2)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -60,7 +61,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Terminator);
                     segments = sb.ToString();
                     // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
@@ -70,9 +71,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 3)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -81,7 +82,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Terminator);
                     segments = sb.ToString();
                     // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
@@ -91,9 +92,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 4)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -102,7 +103,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Terminator);
                     segments = sb.ToString();
                     // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++" + client.HITAN + "++N'";
@@ -112,9 +113,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 5)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -125,7 +126,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Terminator);
                     segments = sb.ToString();
                     // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
@@ -135,9 +136,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 6)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -148,7 +149,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Terminator);
                     segments = sb.ToString();
                     // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "+N'";
@@ -159,9 +160,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 7)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("S");
@@ -171,7 +172,7 @@ namespace libfintx.FinTS
                     sb.Append(sEG.Delimiter);
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Terminator);
                     segments = sb.ToString();
                     // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+S++++" + client.HITAN + "+N'";
@@ -180,9 +181,9 @@ namespace libfintx.FinTS
                 else // default
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("S");
@@ -193,7 +194,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Terminator);
                     segments = sb.ToString();
                     // segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+2++++" + client.HITAN + "++N'";
@@ -206,9 +207,9 @@ namespace libfintx.FinTS
                 if (client.HITANS == 2)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -217,7 +218,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
@@ -232,9 +233,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 3)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -243,7 +244,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
@@ -258,9 +259,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 4)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -269,7 +270,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
@@ -284,9 +285,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 5)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -297,7 +298,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
@@ -312,9 +313,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 6)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -324,7 +325,7 @@ namespace libfintx.FinTS
                     sb.Append(sEG.Delimiter);
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
@@ -340,9 +341,9 @@ namespace libfintx.FinTS
                 else if (client.HITANS == 7)
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("S");
@@ -352,7 +353,7 @@ namespace libfintx.FinTS
                     sb.Append(sEG.Delimiter);
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
@@ -366,9 +367,9 @@ namespace libfintx.FinTS
                 else // default
                 {
                     sb.Append("HKTAN");
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(SEG_NUM.Seg3);
-                    sb.Append(sEG.Finisher);
+                    sb.Append(DEG.Separator);
                     sb.Append(client.HITANS);
                     sb.Append(sEG.Delimiter);
                     sb.Append("2");
@@ -377,7 +378,7 @@ namespace libfintx.FinTS
                     sb.Append(client.HITAN);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
-                    sb.Append("N");
+                    sb.Append(DEG.DeAdd);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);
                     sb.Append(sEG.Delimiter);

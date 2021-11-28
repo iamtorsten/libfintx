@@ -24,6 +24,7 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.Logger.Log;
 
@@ -48,9 +49,9 @@ namespace libfintx.FinTS
             SEG sEG = new SEG();
             StringBuilder sb = new StringBuilder();
             sb.Append("HKEND");
-            sb.Append(sEG.Finisher);
+            sb.Append(DEG.Separator);
             sb.Append(SEG_NUM.Seg3);
-            sb.Append(sEG.Finisher);
+            sb.Append(DEG.Separator);
             sb.Append("1");
             sb.Append(sEG.Delimiter);
             sb.Append(dialogID);
