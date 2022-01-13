@@ -22,6 +22,8 @@
  */
 
 using System;
+using System.Text;
+using libfintx.FinTS.Segments;
 
 namespace libfintx.FinTS
 {
@@ -41,117 +43,163 @@ namespace libfintx.FinTS
                 // Erweiterung decoupled
                 // Torsten: Gemäß meiner Auffassung sendet HTAN#7 das Segment deckungsgleich HKTAN#6
                 if (client.HITANS >= 6)
-                    segments = segments + sEG.toSEG("HKTAN",
-                        client.SEGNUM,
-                        client.HITANS,
-                        4,
-                        segmentId +
-                        sEG.Terminator);
-                    //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "'";
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(segmentId);
+                    sb.Append(sEG.Terminator);
+                    segments = segments + sEG.toSEG(new SEG_DATA
+                    {
+                        Header = "HKTAN",
+                        Num = client.SEGNUM,
+                        Version = client.HITANS,
+                        RefNum = 4,
+                        RawData = sb.ToString()
+                    });
+                }
+                //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "'";
                 else
-                    segments = segments + sEG.toSEG("HKTAN",
-                        client.SEGNUM,
-                        client.HITANS,
-                        4,
-                        sEG.Terminator);
-                    //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+'";
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(sEG.Terminator);
+                    segments = segments + sEG.toSEG(new SEG_DATA
+                    {
+                        Header = "HKTAN",
+                        Num = client.SEGNUM,
+                        Version = client.HITANS,
+                        RefNum = 4,
+                        RawData = sb.ToString()
+                    });
+                }
+                //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+'";
             }
             else // TAN Medium Name set
             {
                 // Version 3, Process 4
                 if (client.HITANS == 3)
-                    segments = segments + sEG.toSEG("HKTAN",
-                        client.SEGNUM,
-                        client.HITANS,
-                        4,
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        client.HITAB +
-                        sEG.Terminator);
-                    //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4++++++++" + client.HITAB + "'";
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = segments + sEG.toSEG(new SEG_DATA
+                    {
+                        Header = "HKTAN",
+                        Num = client.SEGNUM,
+                        Version = client.HITANS,
+                        RefNum = 4,
+                        RawData = sb.ToString()
+                    });
+                }
+                //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4++++++++" + client.HITAB + "'";
                 // Version 4, Process 4
                 if (client.HITANS == 4)
-                    segments = segments + sEG.toSEG("HKTAN",
-                        client.SEGNUM,
-                        client.HITANS,
-                        4,
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        client.HITAB +
-                        sEG.Terminator);
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = segments + sEG.toSEG(new SEG_DATA
+                    {
+                        Header = "HKTAN",
+                        Num = client.SEGNUM,
+                        Version = client.HITANS,
+                        RefNum = 4,
+                        RawData = sb.ToString()
+                    });
+                }
+                    
                 //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+++++++++" + client.HITAB + "'";
                 // Version 5, Process 4
                 if (client.HITANS == 5)
-                    segments = segments + sEG.toSEG("HKTAN",
-                        client.SEGNUM,
-                        client.HITANS,
-                        4,
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        client.HITAB +
-                        sEG.Terminator);
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = segments + sEG.toSEG(new SEG_DATA
+                    {
+                        Header = "HKTAN",
+                        Num = client.SEGNUM,
+                        Version = client.HITANS,
+                        RefNum = 4,
+                        RawData = sb.ToString()
+                    });
+                }  
                 //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+++++++++++" + client.HITAB + "'";
                 // Version 6, Process 4
                 if (client.HITANS == 6)
                 {
-                    segments = segments + sEG.toSEG("HKTAN",
-                        client.SEGNUM,
-                        client.HITANS,
-                        4,
-                        segmentId +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        client.HITAB +
-                        sEG.Terminator);
-                   // segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "+++++++++" + client.HITAB + "'";
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(segmentId);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = segments + sEG.toSEG(new SEG_DATA
+                    {
+                        Header = "HKTAN",
+                        Num = client.SEGNUM,
+                        Version = client.HITANS,
+                        RefNum = 4,
+                        RawData = sb.ToString()
+                    });
+                    // segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "+++++++++" + client.HITAB + "'";
                 }
                 // Version 7, Process 4
                 // Erweiterung decoupled
                 // Torsten: Gemäß meiner Auffassung sendet HTAN#7 das Segment deckungsgleich HKTAN#6
                 if (client.HITANS == 7)
                 {
-                    segments = segments + sEG.toSEG("HKTAN",
-                        client.SEGNUM,
-                        client.HITANS,
-                        4,
-                        segmentId +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        sEG.Delimiter +
-                        client.HITAB +
-                        sEG.Terminator);
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(segmentId);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(sEG.Delimiter);
+                    sb.Append(client.HITAB);
+                    sb.Append(sEG.Terminator);
+                    segments = segments + sEG.toSEG(new SEG_DATA
+                    {
+                        Header = "HKTAN",
+                        Num = client.SEGNUM,
+                        Version = client.HITANS,
+                        RefNum = 4,
+                        RawData = sb.ToString()
+                    });
                     //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "+++++++++" + client.HITAB + "'";
                 }
             }

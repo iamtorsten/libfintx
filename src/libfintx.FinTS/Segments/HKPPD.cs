@@ -22,9 +22,11 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
+using libfintx.FinTS.Segments;
 using libfintx.Logger.Log;
 
 namespace libfintx.FinTS
@@ -43,21 +45,26 @@ namespace libfintx.FinTS
 
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKPPD",
-                client.SEGNUM,
-                2,
-                0,
-                connectionDetails.Iban +
-                DEG.Separator +
-                connectionDetails.Bic +
-                sEG.Delimiter +
-                MobileServiceProvider +
-                sEG.Delimiter +
-                PhoneNumber +
-                sEG.Delimiter +
-                Amount +
-                ",:EUR" +
-                sEG.Terminator);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(connectionDetails.Iban);
+            sb.Append(DEG.Separator);
+            sb.Append(connectionDetails.Bic);
+            sb.Append(sEG.Delimiter);
+            sb.Append(MobileServiceProvider);
+            sb.Append(sEG.Delimiter);
+            sb.Append(PhoneNumber);
+            sb.Append(sEG.Delimiter);
+            sb.Append(Amount);
+            sb.Append(",:EUR");
+            sb.Append(sEG.Terminator);
+            string segments = sEG.toSEG(new SEG_DATA
+            {
+                Header = "HKPPD",
+                Num = client.SEGNUM,
+                Version = 2,
+                RefNum = 0,
+                RawData = sb.ToString()
+            });
             //string segments = "HKPPD:" + client.SEGNUM + ":2+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 
             if (Helper.IsTANRequired("HKPPD"))

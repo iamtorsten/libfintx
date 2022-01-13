@@ -21,10 +21,18 @@
  * 	
  */
 
-namespace libfintx.FinTS
+namespace libfintx.FinTS.Segments
 {
-    public class SEG_COUNTRY
+    public class SEG_DATA
     {
-        public static string Germany = "280"; // -> hard coded to germany
+        public SEG_DATA()
+        {
+        }
+
+        public string Header { get; set; }
+        public int Num { get; set; }
+        public int Version { get; set; }
+        public int RefNum { get; set; }
+        public string RawData { get; set; }
     }
 }

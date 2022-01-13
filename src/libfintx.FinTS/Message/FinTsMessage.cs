@@ -155,7 +155,7 @@ namespace libfintx.FinTS.Message
                 sb.Append(DEG.Separator);
                 sb.Append("1");
                 sb.Append(sEG.Delimiter);
-                sb.Append(SEG_Country.Germany);
+                sb.Append(SEG_COUNTRY.Germany);
                 sb.Append(DEG.Separator);
                 sb.Append(BLZ);
                 sb.Append(DEG.Separator);
@@ -170,7 +170,7 @@ namespace libfintx.FinTS.Message
                 sb.Append("0");
                 sb.Append(sEG.Terminator);
                 encHead = sb.ToString();
-                //encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                //encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_COUNTRY.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
 
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
@@ -218,7 +218,7 @@ namespace libfintx.FinTS.Message
                     sb.Append(DEG.Separator);
                     sb.Append(Sig.SIGMODE_ISO9796_1);
                     sb.Append(sEG.Delimiter);
-                    sb.Append(SEG_Country.Germany);
+                    sb.Append(SEG_COUNTRY.Germany);
                     sb.Append(DEG.Separator);
                     sb.Append(BLZ);
                     sb.Append(DEG.Separator);
@@ -231,7 +231,7 @@ namespace libfintx.FinTS.Message
                     sb.Append("0");
                     sb.Append(sEG.Terminator);
                     sigHead = sb.ToString();
-                    // sigHead = "HNSHK:2:3+" + Sig.SECFUNC_SIG_PT_2STEP_MIN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1 +6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    // sigHead = "HNSHK:2:3+" + Sig.SECFUNC_SIG_PT_2STEP_MIN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1 +6:10:16+" + SEG_COUNTRY.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
@@ -278,7 +278,7 @@ namespace libfintx.FinTS.Message
                     sb.Append(DEG.Separator);
                     sb.Append(Sig.SIGMODE_ISO9796_1);
                     sb.Append(sEG.Delimiter);
-                    sb.Append(SEG_Country.Germany);
+                    sb.Append(SEG_COUNTRY.Germany);
                     sb.Append(DEG.Separator);
                     sb.Append(BLZ);
                     sb.Append(DEG.Separator);
@@ -291,7 +291,7 @@ namespace libfintx.FinTS.Message
                     sb.Append("0");
                     sb.Append(sEG.Terminator);
                     sigHead = sb.ToString();
-                    // sigHead = "HNSHK:2:3+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    // sigHead = "HNSHK:2:3+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_COUNTRY.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
@@ -406,7 +406,7 @@ namespace libfintx.FinTS.Message
                     sb.Append(DEG.Separator);
                     sb.Append("1");
                     sb.Append(sEG.Delimiter);
-                    sb.Append(SEG_Country.Germany);
+                    sb.Append(SEG_COUNTRY.Germany);
                     sb.Append(DEG.Separator);
                     sb.Append(BLZ);
                     sb.Append(DEG.Separator);
@@ -421,12 +421,11 @@ namespace libfintx.FinTS.Message
                     sb.Append("0");
                     sb.Append(sEG.Terminator);
                     encHead = sb.ToString();
-                    // encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:1+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                    // encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:1+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_COUNTRY.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
                 }
                     
                 else
                 {
-                    sb = new StringBuilder();
                     sb = new StringBuilder();
                     sb.Append("HNVSK");
                     sb.Append(DEG.Separator);
@@ -465,7 +464,7 @@ namespace libfintx.FinTS.Message
                     sb.Append(DEG.Separator);
                     sb.Append("1");
                     sb.Append(sEG.Delimiter);
-                    sb.Append(SEG_Country.Germany);
+                    sb.Append(SEG_COUNTRY.Germany);
                     sb.Append(DEG.Separator);
                     sb.Append(BLZ);
                     sb.Append(DEG.Separator);
@@ -480,14 +479,13 @@ namespace libfintx.FinTS.Message
                     sb.Append("0");
                     sb.Append(sEG.Terminator);
                     encHead = sb.ToString();
-                    // encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
+                    // encHead = "HNVSK:" + Enc.SECFUNC_ENC_PLAIN + ":3+PIN:2+" + Enc.SECFUNC_ENC_PLAIN + "+1+1::" + SystemID + "+1:" + date + ":" + time + "+2:2:13:@8@00000000:5:1+" + SEG_COUNTRY.Germany + ":" + BLZ + ":" + UserID + ":V:0:0+0'";
                 }
                     
                 Log.Write(encHead.Replace(UserID, "XXXXXX"));
 
                 if (HIRMS_TAN == null)
                 {
-                    sb = new StringBuilder();
                     sb = new StringBuilder();
                     sb.Append("HNSHK");
                     sb.Append(DEG.Separator);
@@ -532,7 +530,7 @@ namespace libfintx.FinTS.Message
                     sb.Append(DEG.Separator);
                     sb.Append(Sig.SIGMODE_ISO9796_1);
                     sb.Append(sEG.Delimiter);
-                    sb.Append(SEG_Country.Germany);
+                    sb.Append(SEG_COUNTRY.Germany);
                     sb.Append(DEG.Separator);
                     sb.Append(BLZ);
                     sb.Append(DEG.Separator);
@@ -545,7 +543,7 @@ namespace libfintx.FinTS.Message
                     sb.Append("0");
                     sb.Append(sEG.Terminator);
                     sigHead = sb.ToString();
-                    //sigHead = "HNSHK:2:4+PIN:1+" + Sig.SECFUNC_SIG_PT_1STEP + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    //sigHead = "HNSHK:2:4+PIN:1+" + Sig.SECFUNC_SIG_PT_1STEP + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_COUNTRY.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
@@ -553,7 +551,6 @@ namespace libfintx.FinTS.Message
                 {
                     var SECFUNC = HIRMS_TAN.Equals("999") ? "1" : "2";
 
-                    sb = new StringBuilder();
                     sb = new StringBuilder();
                     sb.Append("HNSHK");
                     sb.Append(DEG.Separator);
@@ -598,7 +595,7 @@ namespace libfintx.FinTS.Message
                     sb.Append(DEG.Separator);
                     sb.Append(Sig.SIGMODE_ISO9796_1);
                     sb.Append(sEG.Delimiter);
-                    sb.Append(SEG_Country.Germany);
+                    sb.Append(SEG_COUNTRY.Germany);
                     sb.Append(DEG.Separator);
                     sb.Append(BLZ);
                     sb.Append(DEG.Separator);
@@ -611,7 +608,7 @@ namespace libfintx.FinTS.Message
                     sb.Append("0");
                     sb.Append(sEG.Terminator);
                     sigHead = sb.ToString();
-                    // sigHead = "HNSHK:2:4+PIN:" + SECFUNC + "+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_Country.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
+                    // sigHead = "HNSHK:2:4+PIN:" + SECFUNC + "+" + HIRMS_TAN + "+" + secRef + "+1+1+1::" + SystemID + "+1+1:" + date + ":" + time + "+1:" + Sig.SIGMODE_RETAIL_MAC + ":1+6:10:16+" + SEG_COUNTRY.Germany + ":" + BLZ + ":" + UserID + ":S:0:0'";
 
                     Log.Write(sigHead.Replace(UserID, "XXXXXX"));
                 }
@@ -757,7 +754,6 @@ namespace libfintx.FinTS.Message
                 return string.Empty;
             }
 
-            sb = new StringBuilder();
             sb = new StringBuilder();
             sb.Append("HNHBS");
             sb.Append(DEG.Separator);

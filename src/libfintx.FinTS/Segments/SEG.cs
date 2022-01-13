@@ -23,6 +23,7 @@
 
 using System;
 using libfintx.FinTS.Data;
+using libfintx.FinTS.Segments;
 
 namespace libfintx.FinTS
 {
@@ -31,22 +32,22 @@ namespace libfintx.FinTS
         public string Delimiter = "+";
         public string Terminator = "'";
 
-        public string toSEG(string header, int num, int version, int refNum, string rawData)
+        public string toSEG(SEG_DATA sEG_DATA)
         {
             // "HKCAZ:" + client.SEGNUM + ":" + client.HICAZS + "+" + connectionDetails.Iban + ":" + connectionDetails.Bic + ":" + connectionDetails.Account + "::280:" + connectionDetails.Blz + "+" + CamtScheme.Camt052 + "+N'"
             string seg = string.Empty;
-            seg += header;
+            seg += sEG_DATA.Header;
             seg += DEG.Separator;
-            seg += Convert.ToString(num);
+            seg += Convert.ToString(sEG_DATA.Num);
             seg += DEG.Separator;
-            seg += Convert.ToString(version);
+            seg += Convert.ToString(sEG_DATA.Version);
             seg += Delimiter;
-            if (refNum != 0)
+            if (sEG_DATA.RefNum != 0)
             {
-                seg += Convert.ToString(refNum);
+                seg += Convert.ToString(sEG_DATA.RefNum);
                 seg += Delimiter;
             }
-            seg += rawData;
+            seg += sEG_DATA.RawData;
             return seg;
         }
     }

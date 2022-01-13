@@ -22,9 +22,11 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
+using libfintx.FinTS.Segments;
 using libfintx.Logger.Log;
 using libfintx.Sepa;
 
@@ -43,14 +45,19 @@ namespace libfintx.FinTS
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKCSA",
-                client.SEGNUM,
-                1,
-                0,
-                connectionDetails.Iban +
-                DEG.Separator +
-                connectionDetails.Bic +
-                "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+            StringBuilder sb = new StringBuilder();
+            sb.Append(connectionDetails.Iban);
+            sb.Append(DEG.Separator);
+            sb.Append(connectionDetails.Bic);
+            sb.Append("+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+            string segments = sEG.toSEG(new SEG_DATA
+            {
+                Header = "HKCSA",
+                Num = client.SEGNUM,
+                Version = 1,
+                RefNum = 0,
+                RawData = sb.ToString()
+            });
             //string segments = "HKCSA:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 
             var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban,

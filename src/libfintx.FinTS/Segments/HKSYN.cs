@@ -42,7 +42,7 @@ namespace libfintx.FinTS
             if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v220))
             {
                 string segments_ =
-                    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
+                    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_COUNTRY.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
                     "HKVVB:" + SEG_NUM.Seg4 + ":2+0+0+0+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'" +
                     "HKSYN:" + SEG_NUM.Seg5 + ":2+0'";
 
@@ -51,7 +51,7 @@ namespace libfintx.FinTS
             else if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v300))
             {
                 string segments_ =
-                    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
+                    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_COUNTRY.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
                     "HKVVB:" + SEG_NUM.Seg4 + ":3+0+0+0+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'" +
                     "HKSYN:" + SEG_NUM.Seg5 + ":3+0'";
 

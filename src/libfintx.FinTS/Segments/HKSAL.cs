@@ -22,9 +22,11 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
+using libfintx.FinTS.Segments;
 using libfintx.Logger.Log;
 
 namespace libfintx.FinTS
@@ -59,32 +61,46 @@ namespace libfintx.FinTS
             SEG sEG = new SEG();
 
             if (Convert.ToInt16(client.HISALS) >= 7)
-                segments = sEG.toSEG("HKSAL",
-                    client.SEGNUM,
-                    client.HISALS,
-                    0,
-                    activeAccount.AccountIban +
-                    DEG.Separator +
-                    activeAccount.AccountBic +
-                    sEG.Delimiter +
-                    DEG.DeAdd +
-                    sEG.Terminator);
-                //segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + "+N'";
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(activeAccount.AccountIban);
+                sb.Append(DEG.Separator);
+                sb.Append(activeAccount.AccountBic);
+                sb.Append(sEG.Delimiter);
+                sb.Append(DEG.DeAdd);
+                sb.Append(sEG.Terminator);
+                segments = sEG.toSEG(new SEG_DATA
+                {
+                    Header = "HKSAL",
+                    Num = client.SEGNUM,
+                    Version = client.HISALS,
+                    RefNum = 0,
+                    RawData = sb.ToString()
+                });
+            }
+            //segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + "+N'";
             else
-                segments = sEG.toSEG("HKSAL",
-                    client.SEGNUM,
-                    client.HISALS,
-                    0,
-                    activeAccount.AccountNumber +
-                    DEG.Separator +
-                    DEG.Separator +
-                    SEG_Country.Germany +
-                    DEG.Separator +
-                    activeAccount.AccountBankCode +
-                    sEG.Delimiter +
-                    DEG.DeAdd +
-                    sEG.Terminator);
-                //segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(activeAccount.AccountNumber);
+                sb.Append(DEG.Separator);
+                sb.Append(DEG.Separator);
+                sb.Append(SEG_COUNTRY.Germany);
+                sb.Append(DEG.Separator);
+                sb.Append(activeAccount.AccountBankCode);
+                sb.Append(sEG.Delimiter);
+                sb.Append(DEG.DeAdd);
+                sb.Append(sEG.Terminator);
+                segments = sEG.toSEG(new SEG_DATA
+                {
+                    Header = "HKSAL",
+                    Num = client.SEGNUM,
+                    Version = client.HISALS,
+                    RefNum = 0,
+                    RawData = sb.ToString()
+                });
+            }
+            //segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
 
             if (Helper.IsTANRequired("HKSAL"))
             {

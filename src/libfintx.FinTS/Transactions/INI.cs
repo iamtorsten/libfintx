@@ -65,7 +65,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
-                        sb.Append(SEG_Country.Germany);
+                        sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
@@ -96,7 +96,7 @@ namespace libfintx.FinTS
                         string segments_ = sb.ToString();
 
                         // string segments_ =
-                        //    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
+                        //    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_COUNTRY.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
                         //    "HKVVB:" + SEG_NUM.Seg4 + ":2+0+0+0+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'";
 
                         segments = segments_;
@@ -110,7 +110,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
-                        sb.Append(SEG_Country.Germany);
+                        sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
@@ -141,7 +141,7 @@ namespace libfintx.FinTS
                         string segments_ = sb.ToString();
 
                         // string segments_ =
-                        //    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
+                        //    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_COUNTRY.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
                         //    "HKVVB:" + SEG_NUM.Seg4 + ":3+0+0+0+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'";
 
                         if (client.HITANS >= 6)
@@ -205,7 +205,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
-                        sb.Append(SEG_Country.Germany);
+                        sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
@@ -236,7 +236,7 @@ namespace libfintx.FinTS
                         string segments_ = sb.ToString();
 
                         // string segments_ =
-                        //    "HKIDN:" + SEG_NUM.Seg2 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
+                        //    "HKIDN:" + SEG_NUM.Seg2 + ":2+" + SEG_COUNTRY.Germany + ":" + connectionDetails.BlzPrimary + "+" + "9999999999" + "+0+0'" +
                         //    "HKVVB:" + SEG_NUM.Seg3 + ":3+0+0+1+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'";
 
                         segments = segments_;
@@ -280,7 +280,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append("2");
                         sb.Append(sEG.Delimiter);
-                        sb.Append(SEG_Country.Germany);
+                        sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
@@ -320,7 +320,7 @@ namespace libfintx.FinTS
                         string segments__ = sb.ToString();
 
                         // string segments__ =
-                        //    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_Country.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
+                        //    "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_COUNTRY.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+" + client.SystemId + "+1'" +
                         //    "HKVVB:" + SEG_NUM.Seg4 + ":3+0+0+0+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'" +
                         //    "HKSYN:" + SEG_NUM.Seg5 + ":3+0'";
 

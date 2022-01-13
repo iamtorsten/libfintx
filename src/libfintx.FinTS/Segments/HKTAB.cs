@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using libfintx.FinTS.Message;
+using libfintx.FinTS.Segments;
 using libfintx.Logger.Log;
 
 namespace libfintx.FinTS
@@ -42,7 +43,14 @@ namespace libfintx.FinTS
             var connectionDetails = client.ConnectionDetails;
             string segments = string.Empty;
 
-            segments = sEG.toSEG("HKTAB", Convert.ToInt16(SEG_NUM.Seg3), 4, 0, "A" + sEG.Terminator);
+            segments = sEG.toSEG(new SEG_DATA
+            {
+                Header = "HKTAB",
+                Num = Convert.ToInt16(SEG_NUM.Seg3),
+                Version = 4,
+                RefNum = 0,
+                RawData = "A" + sEG.Terminator
+            });
             //segments = "HKTAB:" + SEG_NUM.Seg3 + ":4+0+A'";
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);

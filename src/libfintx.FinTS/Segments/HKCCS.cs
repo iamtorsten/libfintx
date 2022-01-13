@@ -22,9 +22,11 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
+using libfintx.FinTS.Segments;
 using libfintx.Logger.Log;
 using libfintx.Sepa;
 
@@ -45,32 +47,41 @@ namespace libfintx.FinTS
             string sepaMessage = string.Empty;
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
-
             SEG sEG = new SEG();
-
+            
             if (client.HISPAS == 1)
             {
-                segments = sEG.toSEG("HKCCS",
-                    client.SEGNUM,
-                    1,
-                    0,
-                    connectionDetails.Iban +
-                    DEG.Separator +
-                    connectionDetails.Bic +
-                    "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+                StringBuilder sb = new StringBuilder();
+                sb.Append(connectionDetails.Iban);
+                sb.Append(DEG.Separator);
+                sb.Append(connectionDetails.Bic);
+                sb.Append("+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+                segments = sEG.toSEG(new SEG_DATA
+                {
+                    Header = "HKCCS",
+                    Num = client.SEGNUM,
+                    Version = 1,
+                    RefNum = 0,
+                    RawData = sb.ToString()
+                });
                 //segments = "HKCCS:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
                 sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1));
             }
             else if (client.HISPAS == 2)
             {
-                segments = sEG.toSEG("HKCCS",
-                    client.SEGNUM,
-                    1,
-                    0,
-                    connectionDetails.Iban +
-                    DEG.Separator +
-                    connectionDetails.Bic +
-                    "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
+                StringBuilder sb = new StringBuilder();
+                sb.Append(connectionDetails.Iban);
+                sb.Append(DEG.Separator);
+                sb.Append(connectionDetails.Bic);
+                sb.Append("+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
+                segments = sEG.toSEG(new SEG_DATA
+                {
+                    Header = "HKCCS",
+                    Num = client.SEGNUM,
+                    Version = 1,
+                    RefNum = 0,
+                    RawData = sb.ToString()
+                });
                 //segments = "HKCCS:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
                 sepaMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
                     connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage,
@@ -78,14 +89,19 @@ namespace libfintx.FinTS
             }
             else if (client.HISPAS == 3)
             {
-                segments = sEG.toSEG("HKCCS",
-                    client.SEGNUM,
-                    1,
-                    0,
-                    connectionDetails.Iban +
-                    DEG.Separator +
-                    connectionDetails.Bic +
-                    "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@");
+                StringBuilder sb = new StringBuilder();
+                sb.Append(connectionDetails.Iban);
+                sb.Append(DEG.Separator);
+                sb.Append(connectionDetails.Bic);
+                sb.Append("+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@");
+                segments = sEG.toSEG(new SEG_DATA
+                {
+                    Header = "HKCCS",
+                    Num = client.SEGNUM,
+                    Version = 1,
+                    RefNum = 0,
+                    RawData = sb.ToString()
+                });
                 //segments = "HKCCS:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@";
                 sepaMessage = pain00100303.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
                     connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount,

@@ -22,8 +22,10 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using libfintx.FinTS.Message;
+using libfintx.FinTS.Segments;
 using libfintx.Logger.Log;
 
 namespace libfintx.FinTS
@@ -45,54 +47,73 @@ namespace libfintx.FinTS
             if (client.HITANS == 3)
             {
                 //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4+++++++" + MediumName + "'";
-
-                segments = sEG.toSEG("HKTAN",
-                    Convert.ToInt16(SEG_NUM.Seg3),
-                    client.HITANS,
-                    4,
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    MediumName +
-                    sEG.Terminator);
+                StringBuilder sb = new StringBuilder();
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(MediumName);
+                sb.Append(sEG.Terminator);
+                segments = sEG.toSEG(new SEG_DATA
+                {
+                    Header = "HKTAN",
+                    Num = Convert.ToInt16(SEG_NUM.Seg3),
+                    Version = client.HITANS,
+                    RefNum = 4,
+                    RawData = sb.ToString()
+                });
             }
                 
             // Version 4
             else if (client.HITANS == 4)
-                segments = sEG.toSEG("HKTAN",
-                    Convert.ToInt16(SEG_NUM.Seg3),
-                    client.HITANS,
-                    4,
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    MediumName +
-                    sEG.Terminator);
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter );
+                sb.Append(sEG.Delimiter );
+                sb.Append(sEG.Delimiter );
+                sb.Append(sEG.Delimiter );
+                sb.Append(sEG.Delimiter );
+                sb.Append(sEG.Delimiter );
+                sb.Append(MediumName );
+                sb.Append(sEG.Terminator);
+                segments = sEG.toSEG(new SEG_DATA
+                {
+                    Header = "HKTAN",
+                    Num = Convert.ToInt16(SEG_NUM.Seg3),
+                    Version = client.HITANS,
+                    RefNum = 4,
+                    RawData = sb.ToString()
+                });
+            }
+                
             //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4++++++++" + MediumName + "'";
             // Version 5
             else if (client.HITANS == 5)
-                segments = sEG.toSEG("HKTAN",
-                    Convert.ToInt16(SEG_NUM.Seg3),
-                    client.HITANS,
-                    4,
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    sEG.Delimiter +
-                    MediumName +
-                    sEG.Terminator);
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(sEG.Delimiter);
+                sb.Append(MediumName);
+                sb.Append(sEG.Terminator);
+                segments = sEG.toSEG(new SEG_DATA
+                {
+                    Header = "HKTAN",
+                    Num = Convert.ToInt16(SEG_NUM.Seg3),
+                    Version = client.HITANS,
+                    RefNum = 4,
+                    RawData = sb.ToString()
+                });
+            }
             //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4++++++++++" + MediumName + "'";
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);

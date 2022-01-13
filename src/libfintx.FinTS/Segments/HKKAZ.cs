@@ -22,9 +22,11 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
+using libfintx.FinTS.Segments;
 using libfintx.Logger.Log;
 
 namespace libfintx.FinTS
@@ -62,78 +64,91 @@ namespace libfintx.FinTS
                 {
                     if (Convert.ToInt16(client.HIKAZS) < 7)
                     {
-                        string rawData = activeAccount.AccountNumber +
-                            DEG.Separator +
-                            DEG.Separator +
-                            SEG_Country.Germany +
-                            DEG.Separator +
-                            activeAccount.AccountBankCode +
-                            sEG.Delimiter + DEG.DeAdd +
-                            sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter + DEG.DeAdd);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG(new SEG_DATA {
+                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HICAZS, RefNum = 0, RawData = rawData}
+                        );
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
                     }
                     else
                     {
-                        string rawData = activeAccount.AccountIban +
-                            DEG.Separator +
-                            activeAccount.AccountBic +
-                            DEG.Separator +
-                            activeAccount.AccountNumber +
-                            DEG.Separator +
-                            DEG.Separator +
-                            SEG_Country.Germany +
-                            DEG.Separator +
-                            activeAccount.AccountBankCode +
-                            sEG.Delimiter +
-                            DEG.DeAdd +
-                            sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountIban);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBic);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(DEG.DeAdd);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG(new SEG_DATA {
+                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HICAZS, RefNum = 0, RawData = rawData });
 
-                        //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::" + SEG_Country.Germany + ":" + activeAccount.AccountBankCode + "+N'";
+                        //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::" + SEG_COUNTRY.Germany + ":" + activeAccount.AccountBankCode + "+N'";
                     }
                 }
                 else
                 {
                     if (Convert.ToInt16(client.HIKAZS) < 7)
                     {
-                        string rawData = activeAccount.AccountNumber +
-                            DEG.Separator +
-                            DEG.Separator +
-                            SEG_Country.Germany +
-                            DEG.Separator +
-                            activeAccount.AccountBankCode +
-                            sEG.Delimiter +
-                            DEG.DeAdd +
-                            sEG.Delimiter +
-                            sEG.Delimiter +
-                            sEG.Delimiter +
-                            sEG.Delimiter +
-                            Startpoint +
-                            sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(DEG.DeAdd);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(Startpoint);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG( new SEG_DATA {
+                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HICAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N++++" + Startpoint + "'";
                     }  
                     else
                     {
-                        string rawData = activeAccount.AccountIban +
-                            DEG.Separator +
-                            activeAccount.AccountBic +
-                            DEG.Separator +
-                            activeAccount.AccountNumber +
-                            DEG.Separator +
-                            DEG.Separator +
-                            SEG_Country.Germany +
-                            activeAccount.AccountBankCode +
-                            sEG.Delimiter +
-                            DEG.DeAdd +
-                            sEG.Delimiter +
-                            sEG.Delimiter +
-                            sEG.Delimiter +
-                            sEG.Delimiter +
-                            Startpoint +
-                            sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountIban);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBic);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(DEG.DeAdd);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(Startpoint);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM, Version = client.HICAZS,
+                            RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N++++" + Startpoint + "'";
                     }   
                 }
@@ -144,42 +159,48 @@ namespace libfintx.FinTS
                 {
                     if (Convert.ToInt16(client.HIKAZS) < 7)
                     {
-                        string rawData = activeAccount.AccountIban +
-                            DEG.Separator +
-                            activeAccount.AccountBic +
-                            DEG.Separator +
-                            activeAccount.AccountNumber +
-                            DEG.Separator +
-                            DEG.Separator +
-                            SEG_Country.Germany +
-                            DEG.Separator +
-                            activeAccount.AccountBankCode +
-                            sEG.Delimiter +
-                            DEG.DeAdd +
-                            sEG.Delimiter +
-                            FromDate +
-                            sEG.Delimiter +
-                            ToDate +
-                            sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountIban);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBic);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(DEG.DeAdd);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(FromDate);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(ToDate);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
+                            Version = client.HICAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                     }
                     else
                     {
-                        string rawData = activeAccount.AccountNumber +
-                            DEG.Separator +
-                            DEG.Separator +
-                            SEG_Country.Germany +
-                            DEG.Separator +
-                            activeAccount.AccountBankCode +
-                            sEG.Delimiter +
-                            DEG.DeAdd +
-                            sEG.Delimiter +
-                            FromDate +
-                            sEG.Delimiter +
-                            ToDate +
-                            sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(DEG.DeAdd);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(FromDate);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(ToDate);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
+                            Version = client.HICAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                     }
                 }
@@ -187,48 +208,54 @@ namespace libfintx.FinTS
                 {
                     if (Convert.ToInt16(client.HIKAZS) < 7)
                     {
-                        string rawData = activeAccount.AccountNumber +
-                            DEG.Separator +
-                            DEG.Separator +
-                            SEG_Country.Germany +
-                            DEG.Separator +
-                            activeAccount.AccountBankCode +
-                            sEG.Delimiter +
-                            DEG.DeAdd +
-                            sEG.Delimiter +
-                            FromDate +
-                            sEG.Delimiter +
-                            ToDate +
-                            sEG.Delimiter +
-                            sEG.Delimiter +
-                            Startpoint +
-                            sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(DEG.DeAdd);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(FromDate);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(ToDate);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(Startpoint);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
+                            Version = client.HICAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                     }
                     else
                     {
-                        string rawData = activeAccount.AccountIban +
-                            DEG.Separator +
-                            activeAccount.AccountBic +
-                            DEG.Separator +
-                            activeAccount.AccountNumber +
-                            DEG.Separator +
-                            DEG.Separator +
-                            SEG_Country.Germany +
-                            DEG.Separator +
-                            activeAccount.AccountBankCode +
-                            sEG.Delimiter +
-                            DEG.DeAdd +
-                            sEG.Delimiter +
-                            FromDate +
-                            sEG.Delimiter +
-                            ToDate +
-                            sEG.Delimiter +
-                            sEG.Delimiter +
-                            Startpoint +
-                            sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountIban);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBic);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(DEG.DeAdd);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(FromDate );
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(ToDate);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(Startpoint);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
+                            Version = client.HICAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                     }    
                 }
