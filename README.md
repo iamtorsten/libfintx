@@ -112,7 +112,7 @@ The verification process is done by using the default [**WebRequest**](https://m
 
 # Copyright & License
 
-Copyright (c) 2016 - 2021 **Torsten Klinger**
+Copyright (c) 2016 - 2022 **Torsten Klinger**
 
 Licensed under **GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007**. Please read the LICENSE file.
 
