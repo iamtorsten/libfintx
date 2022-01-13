@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -41,40 +41,94 @@ namespace libfintx.FinTS
                 // Erweiterung decoupled
                 // Torsten: Gemäß meiner Auffassung sendet HTAN#7 das Segment deckungsgleich HKTAN#6
                 if (client.HITANS >= 6)
-                    segments = segments + sEG.toSEG("HKTAN", client.SEGNUM, client.HITANS, 4, segmentId + sEG.Terminator);
+                    segments = segments + sEG.toSEG("HKTAN",
+                        client.SEGNUM,
+                        client.HITANS,
+                        4,
+                        segmentId +
+                        sEG.Terminator);
                     //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "'";
                 else
-                    segments = segments + sEG.toSEG("HKTAN", client.SEGNUM, client.HITANS, 4, sEG.Terminator);
+                    segments = segments + sEG.toSEG("HKTAN",
+                        client.SEGNUM,
+                        client.HITANS,
+                        4,
+                        sEG.Terminator);
                     //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+'";
             }
             else // TAN Medium Name set
             {
                 // Version 3, Process 4
                 if (client.HITANS == 3)
-                    segments = segments + sEG.toSEG("HKTAN", client.SEGNUM, client.HITANS, 4,
-                        sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                        sEG.Delimiter + sEG.Delimiter + client.HITAB + sEG.Terminator);
+                    segments = segments + sEG.toSEG("HKTAN",
+                        client.SEGNUM,
+                        client.HITANS,
+                        4,
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        client.HITAB +
+                        sEG.Terminator);
                     //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4++++++++" + client.HITAB + "'";
                 // Version 4, Process 4
                 if (client.HITANS == 4)
-                    segments = segments + sEG.toSEG("HKTAN", client.SEGNUM, client.HITANS, 4,
-                        sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                        sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + client.HITAB + sEG.Terminator);
+                    segments = segments + sEG.toSEG("HKTAN",
+                        client.SEGNUM,
+                        client.HITANS,
+                        4,
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        client.HITAB +
+                        sEG.Terminator);
                 //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+++++++++" + client.HITAB + "'";
                 // Version 5, Process 4
                 if (client.HITANS == 5)
-                    segments = segments + sEG.toSEG("HKTAN", client.SEGNUM, client.HITANS, 4,
-                        sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                        sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter+  sEG.Delimiter +
-                        client.HITAB + sEG.Terminator);
+                    segments = segments + sEG.toSEG("HKTAN",
+                        client.SEGNUM,
+                        client.HITANS,
+                        4,
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        client.HITAB +
+                        sEG.Terminator);
                 //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+++++++++++" + client.HITAB + "'";
                 // Version 6, Process 4
                 if (client.HITANS == 6)
                 {
-                    segments = segments + sEG.toSEG("HKTAN", client.SEGNUM, client.HITANS, 4,
-                        segmentId + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                        sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                        client.HITAB + sEG.Terminator);
+                    segments = segments + sEG.toSEG("HKTAN",
+                        client.SEGNUM,
+                        client.HITANS,
+                        4,
+                        segmentId +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        client.HITAB +
+                        sEG.Terminator);
                    // segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "+++++++++" + client.HITAB + "'";
                 }
                 // Version 7, Process 4
@@ -82,10 +136,22 @@ namespace libfintx.FinTS
                 // Torsten: Gemäß meiner Auffassung sendet HTAN#7 das Segment deckungsgleich HKTAN#6
                 if (client.HITANS == 7)
                 {
-                    segments = segments + sEG.toSEG("HKTAN", client.SEGNUM, client.HITANS, 4,
-                        segmentId + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                        sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                        client.HITAB + sEG.Terminator);
+                    segments = segments + sEG.toSEG("HKTAN",
+                        client.SEGNUM,
+                        client.HITANS,
+                        4,
+                        segmentId +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        sEG.Delimiter +
+                        client.HITAB +
+                        sEG.Terminator);
                     //segments = segments + "HKTAN:" + client.SEGNUM + ":" + client.HITANS + "+4+" + segmentId + "+++++++++" + client.HITAB + "'";
                 }
             }

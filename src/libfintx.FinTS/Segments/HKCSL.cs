@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -35,18 +35,26 @@ namespace libfintx.FinTS
         /// <summary>
         /// Delete terminated transfer
         /// </summary>
-        public static async Task<string> Init_HKCSL(FinTsClient client, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        public static async Task<string> Init_HKCSL(FinTsClient client, string OrderId, string Receiver,
+            string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
         {
             Log.Write("Starting job HKCSL: Delete terminated transfer");
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKCSL", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
-                connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+            string segments = sEG.toSEG("HKCSL",
+                client.SEGNUM,
+                1,
+                0,
+                connectionDetails.Iban +
+                DEG.Separator +
+                connectionDetails.Bic +
+                "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
             //string segments = "HKCSL:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 
-            var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay).Replace("'", "");
+            var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
+                connectionDetails.Bic, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay).Replace("'", "");
             segments = segments.Replace("@@", "@" + sepaMessage.Length + "@") + sepaMessage;
 
             segments += sEG.Delimiter + OrderId;

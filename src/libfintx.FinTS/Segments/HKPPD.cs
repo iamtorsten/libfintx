@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -34,7 +34,8 @@ namespace libfintx.FinTS
         /// <summary>
         /// Load prepaid
         /// </summary>
-        public static async Task<String> Init_HKPPD(FinTsClient client, int MobileServiceProvider, string PhoneNumber, int Amount)
+        public static async Task<String> Init_HKPPD(FinTsClient client, int MobileServiceProvider, string PhoneNumber,
+            int Amount)
         {
             Log.Write("Starting job HKPPD: Load prepaid");
 
@@ -42,9 +43,21 @@ namespace libfintx.FinTS
 
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKPPD", client.SEGNUM, 2, 0,
-                connectionDetails.Iban + DEG.Separator + connectionDetails.Bic + sEG.Delimiter +
-                MobileServiceProvider + sEG.Delimiter + PhoneNumber + sEG.Delimiter + Amount + ",:EUR" + sEG.Terminator);
+            string segments = sEG.toSEG("HKPPD",
+                client.SEGNUM,
+                2,
+                0,
+                connectionDetails.Iban +
+                DEG.Separator +
+                connectionDetails.Bic +
+                sEG.Delimiter +
+                MobileServiceProvider +
+                sEG.Delimiter +
+                PhoneNumber +
+                sEG.Delimiter +
+                Amount +
+                ",:EUR" +
+                sEG.Terminator);
             //string segments = "HKPPD:" + client.SEGNUM + ":2+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+" + MobileServiceProvider + "+" + PhoneNumber + "+" + Amount + ",:EUR'";
 
             if (Helper.IsTANRequired("HKPPD"))

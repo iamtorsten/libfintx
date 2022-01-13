@@ -34,7 +34,9 @@ namespace libfintx.FinTS
         /// <summary>
         /// Submit bankers order
         /// </summary>
-        public static async Task<String> Init_HKCDE(FinTsClient client, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit, string Rota, int ExecutionDay, DateTime? LastExecutionDay)
+        public static async Task<String> Init_HKCDE(FinTsClient client, string Receiver, string ReceiverIBAN,
+            string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit,
+            string Rota, int ExecutionDay, DateTime? LastExecutionDay)
         {
             Log.Write("Starting job HKCDE: Submit bankers order");
 
@@ -42,14 +44,23 @@ namespace libfintx.FinTS
 
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKCDE", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
-                connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+            string segments = sEG.toSEG("HKCDE",
+                client.SEGNUM,
+                1,
+                0,
+                connectionDetails.Iban +
+                DEG.Separator +
+                connectionDetails.Bic +
+                "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
             //string segments = "HKCDE:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 
-            var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1)).Replace("'", "");
+            var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
+                connectionDetails.Bic, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage,
+                new DateTime(1999, 1, 1)).Replace("'", "");
             segments = segments.Replace("@@", "@" + sepaMessage.Length + "@") + sepaMessage;
 
-            segments += "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + DEG.Separator + (char) timeUnit + DEG.Separator + Rota + DEG.Separator + ExecutionDay;
+            segments += "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + DEG.Separator + (char) timeUnit +
+                DEG.Separator + Rota + DEG.Separator + ExecutionDay;
             if (LastExecutionDay != null)
                 segments += DEG.Separator + LastExecutionDay.Value.ToString("yyyyMMdd");
 

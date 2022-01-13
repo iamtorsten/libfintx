@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -42,8 +42,14 @@ namespace libfintx.FinTS
 
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKCSB", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
-                connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'");
+            string segments = sEG.toSEG("HKCSB",
+                client.SEGNUM,
+                1,
+                0,
+                connectionDetails.Iban +
+                DEG.Separator +
+                connectionDetails.Bic +
+                "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'");
             //string segments = "HKCSB:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03'";
 
             if (Helper.IsTANRequired("HKCSB"))

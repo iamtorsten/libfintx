@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -35,7 +35,8 @@ namespace libfintx.FinTS
         /// <summary>
         /// Transfer terminated
         /// </summary>
-        public static async Task<String> Init_HKCSE(FinTsClient client, string ReceiverName, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
+        public static async Task<String> Init_HKCSE(FinTsClient client, string ReceiverName, string ReceiverIBAN,
+            string ReceiverBIC, decimal Amount, string Usage, DateTime ExecutionDay)
         {
             Log.Write("Starting job HKCSE: Transfer money terminated");
             var connectionDetails = client.ConnectionDetails;
@@ -49,24 +50,45 @@ namespace libfintx.FinTS
 
             if (client.HISPAS == 1)
             {
-                segments = sEG.toSEG("HKCSE", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
-                    connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+                segments = sEG.toSEG("HKCSE",
+                    client.SEGNUM,
+                    1,
+                    0,
+                    connectionDetails.Iban +
+                    DEG.Separator +
+                    connectionDetails.Bic +
+                    "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
                 //segments = "HKCSE:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
-                sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+                sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
+                    connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
             }
             else if (client.HISPAS == 2)
             {
-                segments = sEG.toSEG("HKCSE", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
-                    connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
+                segments = sEG.toSEG("HKCSE",
+                    client.SEGNUM,
+                    1,
+                    0,
+                    connectionDetails.Iban +
+                    DEG.Separator +
+                    connectionDetails.Bic +
+                    "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
                 //segments = "HKCSE:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
-                sepaMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+                sepaMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
+                    connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
             }
             else if (client.HISPAS == 3)
             {
-                segments = sEG.toSEG("HKCSE", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
-                    connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@");
+                segments = sEG.toSEG("HKCSE",
+                    client.SEGNUM,
+                    1,
+                    0,
+                    connectionDetails.Iban +
+                    DEG.Separator +
+                    connectionDetails.Bic +
+                    "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@");
                 //segments = "HKCSE:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.003.03+@@";
-                sepaMessage = pain00100303.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
+                sepaMessage = pain00100303.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
+                    connectionDetails.Bic, ReceiverName, ReceiverIBAN, ReceiverBIC, Amount, Usage, ExecutionDay);
             }
 
             segments = segments.Replace("@@", "@" + (sepaMessage.Length - 1) + "@") + sepaMessage;

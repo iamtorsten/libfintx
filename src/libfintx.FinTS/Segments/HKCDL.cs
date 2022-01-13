@@ -35,21 +35,32 @@ namespace libfintx.FinTS
         /// <summary>
         /// Delete banker's order
         /// </summary>
-        public static async Task<String> Init_HKCDL(FinTsClient client, string OrderId, string Receiver, string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay, TimeUnit timeUnit, string Rota, int ExecutionDay, DateTime? LastExecutionDay)
+        public static async Task<String> Init_HKCDL(FinTsClient client, string OrderId, string Receiver,
+            string ReceiverIBAN, string ReceiverBIC, decimal Amount, string Usage, DateTime FirstTimeExecutionDay,
+            TimeUnit timeUnit, string Rota, int ExecutionDay, DateTime? LastExecutionDay)
         {
             Log.Write("Starting job HKCDL: Delete bankers order");
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKCDL", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
-                connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
+            string segments = sEG.toSEG("HKCDL",
+                client.SEGNUM,
+                1,
+                0,
+                connectionDetails.Iban +
+                DEG.Separator +
+                connectionDetails.Bic +
+                "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@");
             //string segments = "HKCDL:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.001.03+@@";
 
-            var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage, new DateTime(1999, 1, 1)).Replace("'", "");
+            var sepaMessage = pain00100103.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
+                connectionDetails.Bic, Receiver, ReceiverIBAN, ReceiverBIC, Amount, Usage,
+                new DateTime(1999, 1, 1)).Replace("'", "");
             segments = segments.Replace("@@", "@" + sepaMessage.Length + "@") + sepaMessage;
 
-            segments += "++" + OrderId + "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char) timeUnit + ":" + Rota + ":" + ExecutionDay;
+            segments += "++" + OrderId + "+" + FirstTimeExecutionDay.ToString("yyyyMMdd") + ":" + (char) timeUnit + ":" +
+                Rota + ":" + ExecutionDay;
             if (LastExecutionDay != null)
                 segments += ":" + LastExecutionDay.Value.ToString("yyyyMMdd");
 

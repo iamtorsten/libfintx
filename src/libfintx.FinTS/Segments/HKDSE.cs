@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -35,7 +35,9 @@ namespace libfintx.FinTS
         /// <summary>
         /// Collect
         /// </summary>
-        public static async Task<String> Init_HKDSE(FinTsClient client, string Payer, string PayerIBAN, string PayerBIC, decimal Amount, string Usage, DateTime SettlementDate, string MandateNumber, DateTime MandateDate, string CreditorIDNumber)
+        public static async Task<String> Init_HKDSE(FinTsClient client, string Payer, string PayerIBAN,
+            string PayerBIC, decimal Amount, string Usage, DateTime SettlementDate, string MandateNumber,
+            DateTime MandateDate, string CreditorIDNumber)
         {
             Log.Write("Starting job HKDSE: Collect money");
 
@@ -43,11 +45,19 @@ namespace libfintx.FinTS
 
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKDSE", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator + connectionDetails.Bic +
+            string segments = sEG.toSEG("HKDSE",
+                client.SEGNUM,
+                1,
+                0,
+                connectionDetails.Iban +
+                DEG.Separator +
+                connectionDetails.Bic +
                 "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@");
             //string segments = "HKDSE:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + "+urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.008.002.02+@@";
 
-            var message = pain00800202.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber, MandateDate, CreditorIDNumber);
+            var message = pain00800202.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
+                connectionDetails.Bic, Payer, PayerIBAN, PayerBIC, Amount, Usage, SettlementDate, MandateNumber,
+                MandateDate, CreditorIDNumber);
 
             segments = segments.Replace("@@", "@" + (message.Length - 1) + "@") + message;
 
@@ -57,7 +67,8 @@ namespace libfintx.FinTS
                 segments = HKTAN.Init_HKTAN(client, segments, "HKDSE");
             }
 
-            var response = await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS));
+            var response = await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK,
+                segments, client.HIRMS));
 
             Helper.Parse_Message(client, response);
 

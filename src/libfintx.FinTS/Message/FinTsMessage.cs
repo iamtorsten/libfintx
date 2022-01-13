@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -102,9 +102,10 @@ namespace libfintx.FinTS.Message
 
             string TAN_ = string.Empty;
 
-            SEG sEG = new SEG();
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb;
 
+            SEG sEG = new SEG();
+            
             if (HIRMS_TAN != null)
             {
                 if (HIRMS_TAN.Length >= 10)
@@ -120,6 +121,7 @@ namespace libfintx.FinTS.Message
 
             if (Version == Convert.ToInt16(HBCI.v220))
             {
+                sb = new StringBuilder();
                 sb.Append("HNVSK");
                 sb.Append(DEG.Separator);
                 sb.Append(Enc.SECFUNC_ENC_PLAIN);
@@ -425,6 +427,7 @@ namespace libfintx.FinTS.Message
                 else
                 {
                     sb = new StringBuilder();
+                    sb = new StringBuilder();
                     sb.Append("HNVSK");
                     sb.Append(DEG.Separator);
                     sb.Append(Enc.SECFUNC_ENC_PLAIN);
@@ -484,6 +487,7 @@ namespace libfintx.FinTS.Message
 
                 if (HIRMS_TAN == null)
                 {
+                    sb = new StringBuilder();
                     sb = new StringBuilder();
                     sb.Append("HNSHK");
                     sb.Append(DEG.Separator);
@@ -548,6 +552,8 @@ namespace libfintx.FinTS.Message
                 else
                 {
                     var SECFUNC = HIRMS_TAN.Equals("999") ? "1" : "2";
+
+                    sb = new StringBuilder();
                     sb = new StringBuilder();
                     sb.Append("HNSHK");
                     sb.Append(DEG.Separator);
@@ -702,6 +708,7 @@ namespace libfintx.FinTS.Message
 
             if (Version == Convert.ToInt16(HBCI.v220))
             {
+                sb = new StringBuilder();
                 sb.Append("HNHBK");
                 sb.Append(DEG.Separator);
                 sb.Append("1");
@@ -723,6 +730,7 @@ namespace libfintx.FinTS.Message
             }
             else if (Version == Convert.ToInt16(HBCI.v300))
             {
+                sb = new StringBuilder();
                 sb.Append("HNHBK");
                 sb.Append(DEG.Separator);
                 sb.Append("1");
@@ -749,6 +757,7 @@ namespace libfintx.FinTS.Message
                 return string.Empty;
             }
 
+            sb = new StringBuilder();
             sb = new StringBuilder();
             sb.Append("HNHBS");
             sb.Append(DEG.Separator);

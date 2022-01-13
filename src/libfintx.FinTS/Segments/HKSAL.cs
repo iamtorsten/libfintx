@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -59,11 +59,31 @@ namespace libfintx.FinTS
             SEG sEG = new SEG();
 
             if (Convert.ToInt16(client.HISALS) >= 7)
-                segments = sEG.toSEG("HKSAL", client.SEGNUM, client.HISALS, 0, activeAccount.AccountIban + DEG.Separator + activeAccount.AccountBic + sEG.Delimiter + DEG.DeAdd + sEG.Terminator);
+                segments = sEG.toSEG("HKSAL",
+                    client.SEGNUM,
+                    client.HISALS,
+                    0,
+                    activeAccount.AccountIban +
+                    DEG.Separator +
+                    activeAccount.AccountBic +
+                    sEG.Delimiter +
+                    DEG.DeAdd +
+                    sEG.Terminator);
                 //segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + "+N'";
             else
-                segments = sEG.toSEG("HKSAL", client.SEGNUM, client.HISALS, 0, activeAccount.AccountNumber + DEG.Separator+ DEG.Separator + SEG_Country.Germany + DEG.Separator +
-                    activeAccount.AccountBankCode + sEG.Delimiter + DEG.DeAdd + sEG.Terminator);
+                segments = sEG.toSEG("HKSAL",
+                    client.SEGNUM,
+                    client.HISALS,
+                    0,
+                    activeAccount.AccountNumber +
+                    DEG.Separator +
+                    DEG.Separator +
+                    SEG_Country.Germany +
+                    DEG.Separator +
+                    activeAccount.AccountBankCode +
+                    sEG.Delimiter +
+                    DEG.DeAdd +
+                    sEG.Terminator);
                 //segments = "HKSAL:" + client.SEGNUM + ":" + client.HISALS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
 
             if (Helper.IsTANRequired("HKSAL"))

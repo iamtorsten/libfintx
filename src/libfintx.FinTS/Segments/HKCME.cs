@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -36,7 +36,8 @@ namespace libfintx.FinTS
         /// <summary>
         /// Collective transfer terminated
         /// </summary>
-        public static async Task<String> Init_HKCME(FinTsClient client, List<Pain00100203CtData> PainData, string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
+        public static async Task<String> Init_HKCME(FinTsClient client, List<Pain00100203CtData> PainData,
+            string NumberofTransactions, decimal TotalAmount, DateTime ExecutionDay)
         {
             Log.Write("Starting job HKCME: Collective transfer money terminated");
 
@@ -46,11 +47,20 @@ namespace libfintx.FinTS
 
             var connectionDetails = client.ConnectionDetails;
             SEG sEG = new SEG();
-            string segments = sEG.toSEG("HKCME", client.SEGNUM, 1, 0, connectionDetails.Iban + DEG.Separator +
-                connectionDetails.Bic + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
+            string segments = sEG.toSEG("HKCME",
+                client.SEGNUM,
+                1,
+                0,
+                connectionDetails.Iban +
+                DEG.Separator +
+                connectionDetails.Bic +
+                TotalAmount_ +
+                ":EUR++" +
+                " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@");
             //string segments = "HKCME:" + client.SEGNUM + ":1+" + connectionDetails.Iban + ":" + connectionDetails.Bic + TotalAmount_ + ":EUR++" + " + urn?:iso?:std?:iso?:20022?:tech?:xsd?:pain.001.002.03+@@";
 
-            var painMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.Iban, connectionDetails.Bic, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
+            var painMessage = pain00100203.Create(connectionDetails.AccountHolder, connectionDetails.Iban,
+                connectionDetails.Bic, PainData, NumberofTransactions, TotalAmount, ExecutionDay);
 
             segments = segments.Replace("@@", "@" + (painMessage.Length - 1) + "@") + painMessage;
 

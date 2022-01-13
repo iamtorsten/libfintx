@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -46,27 +46,59 @@ namespace libfintx.FinTS
             {
                 //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4+++++++" + MediumName + "'";
 
-                segments = sEG.toSEG("HKTAN", Convert.ToInt16(SEG_NUM.Seg3), client.HITANS, 4, sEG.Delimiter +
-                    sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + MediumName + sEG.Terminator);
-
+                segments = sEG.toSEG("HKTAN",
+                    Convert.ToInt16(SEG_NUM.Seg3),
+                    client.HITANS,
+                    4,
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    MediumName +
+                    sEG.Terminator);
             }
                 
             // Version 4
             else if (client.HITANS == 4)
-                segments = sEG.toSEG("HKTAN", Convert.ToInt16(SEG_NUM.Seg3), client.HITANS, 4, sEG.Delimiter +
-                    sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                    MediumName + sEG.Terminator);
+                segments = sEG.toSEG("HKTAN",
+                    Convert.ToInt16(SEG_NUM.Seg3),
+                    client.HITANS,
+                    4,
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    MediumName +
+                    sEG.Terminator);
             //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4++++++++" + MediumName + "'";
             // Version 5
             else if (client.HITANS == 5)
-                segments = sEG.toSEG("HKTAN", Convert.ToInt16(SEG_NUM.Seg3), client.HITANS, 4, sEG.Delimiter +
-                    sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter + sEG.Delimiter +
-                    sEG.Delimiter + sEG.Delimiter + MediumName + sEG.Terminator);
+                segments = sEG.toSEG("HKTAN",
+                    Convert.ToInt16(SEG_NUM.Seg3),
+                    client.HITANS,
+                    4,
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    sEG.Delimiter +
+                    MediumName +
+                    sEG.Terminator);
             //segments = "HKTAN:" + SEG_NUM.Seg3 + ":" + client.HITANS + "+4++++++++++" + MediumName + "'";
 
             client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg3);
 
-            return await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK, segments, client.HIRMS + ":" + TAN));
+            return await FinTSMessage.Send(client, FinTSMessage.Create(client, client.HNHBS, client.HNHBK,
+                segments, client.HIRMS + ":" + TAN));
         }
     }
 }
