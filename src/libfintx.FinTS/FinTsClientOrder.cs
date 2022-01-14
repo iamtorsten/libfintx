@@ -33,7 +33,7 @@ using static libfintx.FinTS.HKCDE;
 
 namespace libfintx.FinTS
 {
-    public partial class FinTsClient
+    public partial class FinTsClient : IFinTsClient
     {
         /// <summary>
         /// Get banker's orders
