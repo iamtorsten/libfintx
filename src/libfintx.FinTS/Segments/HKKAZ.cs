@@ -144,7 +144,7 @@ namespace libfintx.FinTS
                 {
                     if (Convert.ToInt16(client.HIKAZS) < 7)
                     {
-                        string rawData = activeAccount.AccountIban +
+ /*                        string rawData = activeAccount.AccountIban +
                             DEG.Separator +
                             activeAccount.AccountBic +
                             DEG.Separator +
@@ -162,6 +162,14 @@ namespace libfintx.FinTS
                             ToDate +
                             sEG.Terminator;
                         segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+ */                        
+                        string rawData = activeAccount.AccountNumber + DEG.Separator + DEG.Separator + SEG_Country.Germany + DEG.Separator +
+                            activeAccount.AccountBankCode + sEG.Delimiter + DEG.DeAdd + sEG.Delimiter +
+                            FromDate + sEG.Delimiter + ToDate + sEG.Terminator;
+                        //segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HIKAZS, 0, rawData);
+
+
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                     }
                     else
