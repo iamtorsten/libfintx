@@ -187,7 +187,8 @@ namespace libfintx.FinTS
                             sEG.Delimiter +
                             ToDate +
                             sEG.Terminator;
-                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        //segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HICAZS, 0, rawData);
+                        segments = sEG.toSEG("HKKAZ", client.SEGNUM, client.HIKAZS, 0, rawData);
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                     }
                 }
