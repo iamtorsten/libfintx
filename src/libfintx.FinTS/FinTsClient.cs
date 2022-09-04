@@ -158,8 +158,7 @@ namespace libfintx.FinTS
                 string tan = await Helper.WaitForTanAsync(this, result, tanDialog);
                 if (tan == null)
                 {
-                    string BankCode = await Transaction.HKEND(this, HNHBK);
-                    result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+                    // Wenn der User keine TAN eingegeben hat, können wir nichts tun
                 }
                 else
                 {
@@ -184,8 +183,7 @@ namespace libfintx.FinTS
                     await Task.Delay(Delay);
                     if (tanDialog.IsCancelWaitForApproval)
                     {
-                        string BankCode = await Transaction.HKEND(this, HNHBK);
-                        result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode), BankCode);
+                        // Nichts tun
                     }
                     else
                     {
