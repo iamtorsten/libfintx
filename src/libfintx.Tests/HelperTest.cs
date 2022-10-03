@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using libfintx.FinTS;
 using libfintx.FinTS.Data.Segment;
@@ -116,6 +117,19 @@ HNHBS:7:1+2'".Replace(Environment.NewLine, string.Empty);
             Helper.Parse_Segments(client, message);
 
             Assert.Equal("eBYcsEe0unsBAAAXXkX5hG?+owAQA", client.HITAN);
+        }
+
+        [Fact]
+        public void Test_Parse_Segments_HISALS()
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Resources\BankMessage.txt");
+            var message = File.ReadAllText(path);
+            var conn = new FinTS.Data.ConnectionDetails();
+            conn.Blz = 1234567;
+            FinTsClient client = new FinTsClient(conn);
+            Helper.Parse_Segments(client, message);
+
+            Assert.Equal(7, client.HISALS);
         }
     }
 }

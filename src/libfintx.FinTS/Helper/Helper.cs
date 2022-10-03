@@ -155,6 +155,8 @@ namespace libfintx.FinTS
         /// <returns></returns>
         public static List<HBCIBankMessage> Parse_Segments(FinTsClient client, string Message)
         {
+            Log.Write("Parsing segments ...");
+
             try
             {
                 var connDetails = client.ConnectionDetails;
