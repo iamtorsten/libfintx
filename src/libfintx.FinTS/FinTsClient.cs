@@ -59,6 +59,8 @@ namespace libfintx.FinTS
 
         internal async Task<HBCIDialogResult> InitializeConnection(string hkTanSegmentId = "HKIDN")
         {
+            Log.Write("Initializing connection ...");
+
             HBCIDialogResult result;
             string BankCode;
 
@@ -113,7 +115,7 @@ namespace libfintx.FinTS
             if (result.HasError)
                 return result.TypedResult<List<AccountInformation>>();
 
-            result = await ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog, true);
             if (!result.IsSuccess)
                 return result.TypedResult<List<AccountInformation>>();
 
@@ -131,7 +133,7 @@ namespace libfintx.FinTS
             if (result.HasError)
                 return result.TypedResult<AccountBalance>();
 
-            result = await ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog, true);
             if (!result.IsSuccess)
                 return result.TypedResult<AccountBalance>();
 
@@ -148,53 +150,6 @@ namespace libfintx.FinTS
             BankCode = result.RawData;
             AccountBalance balance = Helper.Parse_Balance(BankCode);
             return result.TypedResult(balance);
-        }
-
-        private async Task<HBCIDialogResult> ProcessSCA(HBCIDialogResult result, TANDialog tanDialog)
-        {
-            tanDialog.DialogResult = result;
-            if (result.IsTanRequired)
-            {
-                string tan = await Helper.WaitForTanAsync(this, result, tanDialog);
-                if (tan == null)
-                {
-                    // Wenn der User keine TAN eingegeben hat, können wir nichts tun
-                }
-                else
-                {
-                    result = await TAN(tan);
-                }
-            }
-            else if (result.IsApprovalRequired)
-            {
-                // Ohne automatisierte Statusabfrage:
-                // await Helper.WaitForTanAsync(this, result, tanDialog);
-                // result = await TAN(null);
-
-
-                // Mit automatisierter Statusabfrage
-                await tanDialog.WaitForTanAsync(); // Dem Benutzer signalisieren, dass auf die Freigabe gewartet wird
-
-                const int Delay = 2000; // Der minimale Zeitraum zwischen zwei Statusabfragen steht in HITANS, wir nehmen einfach 2 Sek
-                await Task.Delay(Delay);
-                result = await TAN(null);
-                while (!result.IsSuccess && !result.HasError && result.IsWaitingForApproval) // Freigabe wurde noch nicht erteilt
-                {
-                    await Task.Delay(Delay);
-                    if (tanDialog.IsCancelWaitForApproval)
-                    {
-                        // Nichts tun
-                    }
-                    else
-                    {
-                        result = await TAN(null);
-                    }
-                }
-
-                await tanDialog.OnTransactionEndAsync(result.IsSuccess); // Dem Benutzer signalisieren, dass die Transaktion beendet ist
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -221,7 +176,7 @@ namespace libfintx.FinTS
             if (result.HasError)
                 return result;
 
-            result = await ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog, true);
             if (!result.IsSuccess)
                 return result;
 
@@ -269,7 +224,7 @@ namespace libfintx.FinTS
             if (result.HasError)
                 return result;
 
-            result = await ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog, true);
             if (!result.IsSuccess)
                 return result;
 
@@ -311,7 +266,7 @@ namespace libfintx.FinTS
             if (result.HasError)
                 return result;
 
-            result = await ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog, true);
             if (!result.IsSuccess)
                 return result;
 
@@ -352,7 +307,7 @@ namespace libfintx.FinTS
             if (result.HasError)
                 return result;
 
-            result = await ProcessSCA(result, tanDialog);
+            result = await ProcessSCA(result, tanDialog, true);
             if (!result.IsSuccess)
                 return result;
 
@@ -367,6 +322,71 @@ namespace libfintx.FinTS
                 return result;
 
             result = await ProcessSCA(result, tanDialog);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Process required SCA (strong customer authentication).
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="tanDialog"></param>
+        /// <param name="ini">Wenn die SCA direkt nach der Dialog-Initialisierung erforderlich ist.</param>
+        /// <returns></returns>
+        private async Task<HBCIDialogResult> ProcessSCA(HBCIDialogResult result, TANDialog tanDialog, bool ini = false)
+        {
+            if (!result.IsSCARequired)
+            {
+                return result;
+            }
+
+            tanDialog.DialogResult = result;
+            if (result.IsTanRequired)
+            {
+                string tan = await Helper.WaitForTanAsync(this, result, tanDialog);
+                if (tan == null)
+                {
+                    // Wenn der User keine TAN eingegeben hat, können wir nichts tun
+                }
+                else
+                {
+                    result = await TAN(tan);
+                }
+            }
+            else if (result.IsApprovalRequired)
+            {
+                // Ohne automatisierte Statusabfrage:
+                // await Helper.WaitForTanAsync(this, result, tanDialog);
+                // result = await TAN(null);
+
+
+                // Mit automatisierter Statusabfrage
+                await tanDialog.WaitForTanAsync(); // Dem Benutzer signalisieren, dass auf die Freigabe gewartet wird
+
+                const int Delay = 2000; // Der minimale Zeitraum zwischen zwei Statusabfragen steht in HITANS, wir nehmen einfach 2 Sek
+                await Task.Delay(Delay);
+                result = await TAN(null);
+                while (!result.IsSuccess && !result.HasError && result.IsWaitingForApproval) // Freigabe wurde noch nicht erteilt
+                {
+                    await Task.Delay(Delay);
+                    if (tanDialog.IsCancelWaitForApproval)
+                    {
+                        // Nichts tun
+                    }
+                    else
+                    {
+                        result = await TAN(null);
+                    }
+                }
+
+                await tanDialog.OnTransactionEndAsync(result.IsSuccess); // Dem Benutzer signalisieren, dass die Transaktion beendet ist
+            }
+
+            if (result.IsSuccess && ini)
+            {
+                // Fand die SCA direkt nach der Initialisierung statt, ist in der Antwort BPD/UPD enthalten
+                Helper.Parse_Segments(this, result.RawData);
+            }
 
             return result;
         }
