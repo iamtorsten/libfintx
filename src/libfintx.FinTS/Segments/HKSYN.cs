@@ -22,7 +22,9 @@
  */
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
+using libfintx.FinTS.Data;
 using libfintx.FinTS.Message;
 using libfintx.FinTS.Version;
 using libfintx.Globals;
@@ -41,21 +43,111 @@ namespace libfintx.FinTS
 
             if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v220))
             {
-                string segments_ =
+                SEG sEG = new SEG();
+                var sb = new StringBuilder();
+                sb.Append("HKIDN");
+                sb.Append(DEG.Separator);
+                sb.Append(SEG_NUM.Seg3);
+                sb.Append(DEG.Separator);
+                sb.Append("2");
+                sb.Append(sEG.Delimiter);
+                sb.Append(SEG_COUNTRY.Germany);
+                sb.Append(DEG.Separator);
+                sb.Append(connectionDetails.BlzPrimary);
+                sb.Append(sEG.Delimiter);
+                sb.Append(connectionDetails.UserId);
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append("1");
+                sb.Append(sEG.Terminator);
+                sb.Append("HKVVB");
+                sb.Append(DEG.Separator);
+                sb.Append(SEG_NUM.Seg4);
+                sb.Append(DEG.Separator);
+                sb.Append("2");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append(FinTsGlobals.ProductId);
+                sb.Append(sEG.Delimiter);
+                sb.Append(FinTsGlobals.Version);
+                sb.Append(sEG.Terminator);
+                sb.Append("HKSYN");
+                sb.Append(DEG.Separator);
+                sb.Append(SEG_NUM.Seg5);
+                sb.Append(DEG.Separator);
+                sb.Append("2");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Terminator);
+
+                segments = sb.ToString();
+
+                /*string segments_ =
                     "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_COUNTRY.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
                     "HKVVB:" + SEG_NUM.Seg4 + ":2+0+0+0+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'" +
                     "HKSYN:" + SEG_NUM.Seg5 + ":2+0'";
 
-                segments = segments_;
+                segments = segments_;*/
             }
             else if (connectionDetails.HbciVersion == Convert.ToInt16(HBCI.v300))
             {
-                string segments_ =
+                SEG sEG = new SEG();
+                var sb = new StringBuilder();
+                sb.Append("HKIDN");
+                sb.Append(DEG.Separator);
+                sb.Append(SEG_NUM.Seg3);
+                sb.Append(DEG.Separator);
+                sb.Append("2");
+                sb.Append(sEG.Delimiter);
+                sb.Append(SEG_COUNTRY.Germany);
+                sb.Append(DEG.Separator);
+                sb.Append(connectionDetails.BlzPrimary);
+                sb.Append(sEG.Delimiter);
+                sb.Append(connectionDetails.UserId);
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append("1");
+                sb.Append(sEG.Terminator);
+                sb.Append("HKVVB");
+                sb.Append(DEG.Separator);
+                sb.Append(SEG_NUM.Seg4);
+                sb.Append(DEG.Separator);
+                sb.Append("3");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Delimiter);
+                sb.Append(FinTsGlobals.ProductId);
+                sb.Append(sEG.Delimiter);
+                sb.Append(FinTsGlobals.Version);
+                sb.Append(sEG.Terminator);
+                sb.Append("HKSYN");
+                sb.Append(DEG.Separator);
+                sb.Append(SEG_NUM.Seg5);
+                sb.Append(DEG.Separator);
+                sb.Append("3");
+                sb.Append(sEG.Delimiter);
+                sb.Append("0");
+                sb.Append(sEG.Terminator);
+
+                segments = sb.ToString();
+
+                /*string segments_ =
                     "HKIDN:" + SEG_NUM.Seg3 + ":2+" + SEG_COUNTRY.Germany + ":" + connectionDetails.BlzPrimary + "+" + connectionDetails.UserId + "+0+1'" +
                     "HKVVB:" + SEG_NUM.Seg4 + ":3+0+0+0+" + FinTsGlobals.ProductId + "+" + FinTsGlobals.Version + "'" +
                     "HKSYN:" + SEG_NUM.Seg5 + ":3+0'";
 
-                segments = segments_;
+                segments = segments_;*/
             }
             else
             {
