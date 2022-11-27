@@ -49,6 +49,8 @@ namespace libfintx.FinTS
         internal int HICAZS => 1;
         internal string HITAN { get; set; }
         internal int HISPAS { get; set; }
+        internal int HISPAS_Pain { get; set; }
+        internal bool HISPAS_AccountNationalAllowed { get; set; }
 
         public FinTsClient(ConnectionDetails conn, bool anon = false)
         {
