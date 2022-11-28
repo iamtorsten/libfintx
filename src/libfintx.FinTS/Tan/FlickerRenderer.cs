@@ -28,7 +28,7 @@
  *
  */
 
-/* Unter Windows muss diese Implementierung verwendet werden, da sonst das UI den Flickercode nicht erhält 
+/* Unter Windows muss diese Implementierung verwendet werden, da sonst das UI den Flickercode nicht erhält. 
    Zusätzlich muss die Library System.Windows.Forms in das Projekt libfintx.FinTS eingebunden werden.*/
 
 /*using System;
