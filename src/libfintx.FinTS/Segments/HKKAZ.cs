@@ -75,7 +75,7 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
                         segments = sEG.toSEG(new SEG_DATA {
-                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HICAZS, RefNum = 0, RawData = rawData}
+                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HIKAZS, RefNum = 0, RawData = rawData}
                         );
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N'";
                     }
@@ -97,7 +97,7 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
                         segments = sEG.toSEG(new SEG_DATA {
-                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HICAZS, RefNum = 0, RawData = rawData });
+                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HIKAZS, RefNum = 0, RawData = rawData });
 
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::" + SEG_COUNTRY.Germany + ":" + activeAccount.AccountBankCode + "+N'";
                     }
@@ -123,7 +123,7 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
                         segments = sEG.toSEG( new SEG_DATA {
-                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HICAZS, RefNum = 0, RawData = rawData });
+                            Header = "HKKAZ", Num = client.SEGNUM, Version = client.HIKAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N++++" + Startpoint + "'";
                     }  
                     else
@@ -147,7 +147,7 @@ namespace libfintx.FinTS
                         sb.Append(Startpoint);
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
-                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM, Version = client.HICAZS,
+                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM, Version = client.HIKAZS,
                             RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N++++" + Startpoint + "'";
                     }   
@@ -179,7 +179,7 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
                         segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
-                            Version = client.HICAZS, RefNum = 0, RawData = rawData });
+                            Version = client.HIKAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                     }
                     else
@@ -200,7 +200,7 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
                         segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
-                            Version = client.HICAZS, RefNum = 0, RawData = rawData });
+                            Version = client.HIKAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                     }
                 }
@@ -227,7 +227,7 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
                         segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
-                            Version = client.HICAZS, RefNum = 0, RawData = rawData });
+                            Version = client.HIKAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                     }
                     else
@@ -255,7 +255,7 @@ namespace libfintx.FinTS
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
                         segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
-                            Version = client.HICAZS, RefNum = 0, RawData = rawData });
+                            Version = client.HIKAZS, RefNum = 0, RawData = rawData });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "++" + Startpoint + "'";
                     }    
                 }
