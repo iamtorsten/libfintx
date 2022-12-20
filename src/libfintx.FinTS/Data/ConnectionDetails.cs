@@ -58,6 +58,11 @@ namespace libfintx.FinTS.Data
         public string Account { get; set; }
 
         /// <summary>
+        /// Subaccountfeature of the bank account
+        /// </summary>
+        public string SubAccount { get; set; }
+
+        /// <summary>
         /// Bankcode of the bank account
         /// </summary>
         public int Blz { get; set; }

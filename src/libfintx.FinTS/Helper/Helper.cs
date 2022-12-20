@@ -29,6 +29,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using libfintx.FinTS.Camt;
 using libfintx.FinTS.Data;
 using libfintx.FinTS.Data.Segment;
 using libfintx.Globals;
@@ -357,6 +358,16 @@ namespace libfintx.FinTS
                             if (segment.Version > client.HIKAZS)
                                 client.HIKAZS = segment.Version;
                         }
+                    }
+
+                    if (segment.Name == "HICAZS")
+                    {
+                        if (segment.Payload.Contains("camt.052.001.02"))
+                            client.HICAZS_Camt = CamtScheme.Camt052_001_02;
+                        else if (segment.Payload.Contains("camt.052.001.08"))
+                            client.HICAZS_Camt = CamtScheme.Camt052_001_08;
+                        else // Fallback
+                            client.HICAZS_Camt = CamtScheme.Camt052_001_02;
                     }
 
                     if (segment.Name == "HISPAS")

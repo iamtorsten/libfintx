@@ -25,7 +25,9 @@ namespace libfintx.FinTS.Camt
 {
     public static class CamtScheme
     {
-        public const string Camt052 = "urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.052.001.02";
+        public const string Camt052_001_02 = "urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.052.001.02";
+
+        public const string Camt052_001_08 = "urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.052.001.08";
 
         public const string Camt053 = "urn?:iso?:std?:iso?:20022?:tech?:xsd?:camt.053.001.02";
     }

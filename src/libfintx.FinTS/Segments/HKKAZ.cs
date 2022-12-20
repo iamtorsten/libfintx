@@ -52,6 +52,7 @@ namespace libfintx.FinTS
                 {
                     AccountNumber = connectionDetails.Account,
                     AccountBankCode = connectionDetails.Blz.ToString(),
+                    SubAccountFeature = connectionDetails.SubAccount,
                     AccountIban = connectionDetails.Iban,
                     AccountBic = connectionDetails.Bic,
                 };
@@ -67,6 +68,7 @@ namespace libfintx.FinTS
                         StringBuilder sb = new StringBuilder();
                         sb.Append(activeAccount.AccountNumber);
                         sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
                         sb.Append(DEG.Separator);
                         sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
@@ -88,6 +90,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append(activeAccount.AccountNumber);
                         sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
                         sb.Append(DEG.Separator);
                         sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
@@ -109,6 +112,7 @@ namespace libfintx.FinTS
                         StringBuilder sb = new StringBuilder();
                         sb.Append(activeAccount.AccountNumber);
                         sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
                         sb.Append(DEG.Separator);
                         sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
@@ -135,6 +139,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append(activeAccount.AccountNumber);
                         sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
                         sb.Append(DEG.Separator);
                         sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(activeAccount.AccountBankCode);
@@ -166,6 +171,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append(activeAccount.AccountNumber);
                         sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
                         sb.Append(DEG.Separator);
                         sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
@@ -187,6 +193,7 @@ namespace libfintx.FinTS
                         StringBuilder sb = new StringBuilder();
                         sb.Append(activeAccount.AccountNumber);
                         sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
                         sb.Append(DEG.Separator);
                         sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
@@ -211,6 +218,7 @@ namespace libfintx.FinTS
                         StringBuilder sb = new StringBuilder();
                         sb.Append(activeAccount.AccountNumber);
                         sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
                         sb.Append(DEG.Separator);
                         sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);
@@ -239,6 +247,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append(activeAccount.AccountNumber);
                         sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
                         sb.Append(DEG.Separator);
                         sb.Append(SEG_COUNTRY.Germany);
                         sb.Append(DEG.Separator);

@@ -47,6 +47,7 @@ namespace libfintx.FinTS
         internal int HISALS { get; set; }
         internal int HIKAZS { get; set; }
         internal int HICAZS => 1;
+        public string HICAZS_Camt { get; set; }
         internal string HITAN { get; set; }
         internal int HISPAS { get; set; }
         internal int HISPAS_Pain { get; set; }

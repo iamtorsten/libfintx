@@ -216,15 +216,18 @@ namespace libfintx.Sample.Ui
                 // TAN-Verfahren
                 client.HIRMS = txt_tanverfahren.Text;
 
+                if (!await InitTANMedium(client))
+                    return;
+
                 var accounts = await client.Accounts(CreateTANDialog(client));
 
                 HBCIOutput(accounts.Messages);
 
-                if (accounts.IsSuccess)
+                if (accounts.IsSuccess && !accounts.HasError)
                 {
                     foreach (var acc in accounts.Data)
                     {
-                        SimpleOutput("Inhaber: " + acc.AccountOwner + " | " + "IBAN: " + acc.AccountIban + " | " + "Typ: " + acc.AccountType);
+                        SimpleOutput("Inhaber: " + acc.AccountOwner + " | " + "Unterkontomerkmal: " + acc.SubAccountFeature + " | " + "IBAN: " + acc.AccountIban + " | " + "Typ: " + acc.AccountType);
 
                         foreach (var p in acc.AccountPermissions)
                         {
@@ -642,6 +645,7 @@ namespace libfintx.Sample.Ui
         private async Task<bool> InitTANMedium(FinTsClient client)
         {
             // TAN-Medium-Name
+            client.HITAB = txt_tan_medium.Text;
             var accounts = await client.Accounts(CreateTANDialog(client));
             if (!accounts.IsSuccess)
             {

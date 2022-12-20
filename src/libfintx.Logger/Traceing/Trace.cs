@@ -59,8 +59,8 @@ namespace libfintx.Logger.Trace
         /// <param name="pin"></param>
         public static void Write(string message, string userId, string pin)
         {
-            message = Regex.Replace(message, $@"\b{Regex.Escape(userId)}\b", new string('X', userId.Length));
-            message = Regex.Replace(message, $@"\b{Regex.Escape(pin)}\b", new string('X', pin.Length));
+            message = Regex.Replace(message, $@"\b{Regex.Escape(userId)}", new string('X', userId.Length));
+            message = Regex.Replace(message, $@"\b{Regex.Escape(pin)}", new string('X', pin.Length));
 
             Write(message);
         }

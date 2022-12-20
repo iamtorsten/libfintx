@@ -11,7 +11,7 @@
 // 
 // Dieser Quellcode wurde automatisch generiert von xsd, Version=4.8.3928.0.
 // 
-namespace libfintx.FinTS.Camt.Camt052
+namespace libfintx.FinTS.Camt.Camt052_002
 {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]

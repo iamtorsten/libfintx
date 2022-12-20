@@ -68,7 +68,7 @@ namespace libfintx.FinTS
                             sb.Append(DEG.Separator);
                             sb.Append(connectionDetails.Blz);
                             sb.Append(sEG.Delimiter);
-                            sb.Append(CamtScheme.Camt052);
+                            sb.Append(client.HICAZS_Camt);
                             sb.Append(sEG.Delimiter);
                             sb.Append(DEG.DeAdd);
                             sb.Append(sEG.Terminator);
@@ -96,7 +96,7 @@ namespace libfintx.FinTS
                             sb.Append(DEG.Separator);
                             sb.Append(connectionDetails.Blz);
                             sb.Append(sEG.Delimiter);
-                            sb.Append(CamtScheme.Camt052);
+                            sb.Append(client.HICAZS_Camt);
                             sb.Append(sEG.Delimiter);
                             sb.Append(DEG.DeAdd);
                             sb.Append(sEG.Delimiter);
@@ -132,7 +132,7 @@ namespace libfintx.FinTS
                             sb.Append(DEG.Separator);
                             sb.Append(connectionDetails.Blz);
                             sb.Append(sEG.Delimiter);
-                            sb.Append(CamtScheme.Camt052);
+                            sb.Append(client.HICAZS_Camt);
                             sb.Append(sEG.Delimiter);
                             sb.Append(DEG.DeAdd);
                             sb.Append(sEG.Delimiter);
@@ -164,7 +164,7 @@ namespace libfintx.FinTS
                             sb.Append(DEG.Separator);
                             sb.Append(connectionDetails.Blz);
                             sb.Append(sEG.Delimiter);
-                            sb.Append(CamtScheme.Camt052);
+                            sb.Append(client.HICAZS_Camt);
                             sb.Append(sEG.Delimiter);
                             sb.Append(DEG.DeAdd);
                             sb.Append(sEG.Delimiter);

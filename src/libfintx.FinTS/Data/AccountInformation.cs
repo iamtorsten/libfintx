@@ -30,6 +30,7 @@ namespace libfintx.FinTS
     public class AccountInformation
     {
         public string AccountIban { get; set; }
+        public string SubAccountFeature { get; set; }
         public string AccountNumber { get; set; }
         public string AccountBankCode { get; set; }
         public string AccountUserId { get; set; }

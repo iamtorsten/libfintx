@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2022 Torsten Klinger
+ *  Copyright (C) 2016 - 2021 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ namespace libfintx.FinTS
 
         public static AccountInformation GetAccountInformations(string accountnumber, string bankcode)
         {
-            return AccountList.FirstOrDefault(a => a.AccountNumber == accountnumber && a.AccountBankCode == bankcode);
+            return AccountList?.FirstOrDefault(a => a.AccountNumber == accountnumber && a.AccountBankCode == bankcode);
         }
 
         /// <summary>
@@ -65,6 +65,7 @@ namespace libfintx.FinTS
                         continue;
 
                     string Accountnumber = null;
+                    string SubAccountFeature = null;
                     string Accountbankcode = null;
                     string Accountiban = null;
                     string Accountuserid = null;
@@ -82,6 +83,7 @@ namespace libfintx.FinTS
                         if (matchInfo.Success)
                         {
                             Accountnumber = matchInfo.Groups[1].Value;
+                            SubAccountFeature = matchInfo.Groups[2].Value;
                             Accountbankcode = matchInfo.Groups[3].Value;
                         }
 
@@ -141,6 +143,7 @@ namespace libfintx.FinTS
                         AccountList.Add(new AccountInformation()
                         {
                             AccountNumber = Accountnumber,
+                            SubAccountFeature = SubAccountFeature,
                             AccountBankCode = Accountbankcode,
                             AccountIban = Accountiban,
                             AccountUserId = Accountuserid,
@@ -148,7 +151,7 @@ namespace libfintx.FinTS
                             AccountCurrency = Accountcurrency,
                             AccountOwner = Accountowner,
                             AccountPermissions = Accountpermissions
-                        });
+                        }); ;
                 }
 
                 if (AccountList.Count > 0)
