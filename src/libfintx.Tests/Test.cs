@@ -131,7 +131,8 @@ namespace libfintx.Tests
 
             #endregion
 
-            Console.ReadLine();
+            // disabled because you can't wait for user interaction in a unit test
+            //Console.ReadLine();
         }
 
         [Fact]
