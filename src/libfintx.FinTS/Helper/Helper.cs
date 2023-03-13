@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2022 Torsten Klinger
+ *  Copyright (C) 2016 - 2021 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -30,7 +30,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using libfintx.FinTS.Camt;
-using libfintx.FinTS.Data;
 using libfintx.FinTS.Data.Segment;
 using libfintx.Globals;
 using libfintx.Logger.Log;
@@ -106,22 +105,7 @@ namespace libfintx.FinTS
         /// <returns></returns>
         public static string Encrypt(string Segments)
         {
-            SEG sEG = new SEG();
-            StringBuilder sb = new StringBuilder();
-            sb.Append("HNVSD");
-            sb.Append(DEG.Separator);
-            sb.Append(Sig.SECFUNC_SIG_PT_1STEP);
-            sb.Append(DEG.Separator);
-            sb.Append("1");
-            sb.Append(sEG.Delimiter);
-            sb.Append("@");
-            sb.Append(Segments.Length);
-            sb.Append("@");
-            sb.Append(Segments);
-            sb.Append(sEG.Terminator);
-            return sb.ToString();
-
-            //return "HNVSD:999:1+@" + Segments.Length + "@" + Segments + "'";
+            return "HNVSD:999:1+@" + Segments.Length + "@" + Segments + "'";
         }
 
         /// <summary>
@@ -411,7 +395,7 @@ namespace libfintx.FinTS
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static bool Parse_Message(FinTsClient client, string Message)
+        public static List<Segment> Parse_Message(FinTsClient client, string Message)
         {
             List<string> values = SplitEncryptedSegments(Message);
 
@@ -444,7 +428,7 @@ namespace libfintx.FinTS
                 }
             }
 
-            return client.HNHBS > 0;
+            return segments;
         }
 
         /// <summary>
@@ -538,6 +522,11 @@ namespace libfintx.FinTS
             }
 
             return balance;
+        }
+
+        internal static string Parse_Transactions_Startpoint(string bankCode)
+        {
+            return Regex.Match(bankCode, @"\+3040::[^:]+:(?<startpoint>[^'\+:]+)['\+:]").Groups["startpoint"].Value;
         }
 
         /// <summary>
@@ -760,5 +749,3 @@ namespace libfintx.FinTS
 
     }
 }
-
-

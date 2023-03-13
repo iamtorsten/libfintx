@@ -53,7 +53,7 @@ namespace libfintx.FinTS
                 return result.TypedResult<List<SwiftStatement>>();
 
             result = await ProcessSCA(result, tanDialog);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<SwiftStatement>>();
 
             string startDateStr = startDate?.ToString("yyyyMMdd");
@@ -66,7 +66,7 @@ namespace libfintx.FinTS
                 return result.TypedResult<List<SwiftStatement>>();
 
             result = await ProcessSCA(result, tanDialog);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<SwiftStatement>>();
 
             BankCode = result.RawData;
@@ -86,11 +86,11 @@ namespace libfintx.FinTS
             {
                 Helper.Parse_Message(this, BankCode_);
 
-                string Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+                string Startpoint = Helper.Parse_Transactions_Startpoint(BankCode_);
 
                 BankCode_ = await Transaction.HKKAZ(this, startDateStr, endDateStr, Startpoint);
                 result = new HBCIDialogResult(Helper.Parse_BankCode(BankCode_), BankCode_);
-                if (!result.IsSuccess)
+                if (result.HasError)
                     return result.TypedResult<List<SwiftStatement>>();
 
                 result = await ProcessSCA(result, tanDialog);
@@ -126,7 +126,7 @@ namespace libfintx.FinTS
             DateTime? startDate = null, DateTime? endDate = null, bool saveCamtFile = false)
         {
             var result = await InitializeConnection();
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<CamtStatement>>();
 
             result = await ProcessSCA(result, tanDialog);
@@ -146,7 +146,7 @@ namespace libfintx.FinTS
                 return result.TypedResult<List<CamtStatement>>();
 
             result = await ProcessSCA(result, tanDialog);
-            if (!result.IsSuccess)
+            if (result.HasError)
                 return result.TypedResult<List<CamtStatement>>();
 
             BankCode = result.RawData;
@@ -213,10 +213,17 @@ namespace libfintx.FinTS
 
             while (BankCode_.Contains("+3040::"))
             {
-                string Startpoint = new Regex(@"\+3040::[^:]+:(?<startpoint>[^']+)'").Match(BankCode_).Groups["startpoint"].Value;
+                Helper.Parse_Message(this, BankCode_);
+
+                string Startpoint = Helper.Parse_Transactions_Startpoint(BankCode_);
+
                 BankCode_ = await Transaction.HKCAZ(this, startDateStr, endDateStr, Startpoint, camtVers);
                 result = new HBCIDialogResult<List<CamtStatement>>(Helper.Parse_BankCode(BankCode_), BankCode_);
-                if (!result.IsSuccess)
+                if (result.HasError)
+                    return result.TypedResult<List<CamtStatement>>();
+
+                result = await ProcessSCA(result, tanDialog);
+                if (result.HasError)
                     return result.TypedResult<List<CamtStatement>>();
 
                 BankCode_ = result.RawData;
