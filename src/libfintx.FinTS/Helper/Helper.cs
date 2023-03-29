@@ -2,7 +2,7 @@
  * 	
  *  This file is part of libfintx.
  *  
- *  Copyright (C) 2016 - 2021 Torsten Klinger
+ *  Copyright (C) 2016 - 2023 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
  *  
  *  This program is free software; you can redistribute it and/or
@@ -749,3 +749,5 @@ namespace libfintx.FinTS
 
     }
 }
+
+
