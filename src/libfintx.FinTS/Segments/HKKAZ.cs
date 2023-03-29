@@ -165,6 +165,34 @@ namespace libfintx.FinTS
                     if (Convert.ToInt16(client.HIKAZS) < 7)
                     {
                         StringBuilder sb = new StringBuilder();
+                        sb.Append(activeAccount.AccountNumber);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.SubAccountFeature);
+                        sb.Append(DEG.Separator);
+                        sb.Append(SEG_COUNTRY.Germany);
+                        sb.Append(DEG.Separator);
+                        sb.Append(activeAccount.AccountBankCode);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(DEG.DeAdd);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(FromDate);
+                        sb.Append(sEG.Delimiter);
+                        sb.Append(ToDate);
+                        sb.Append(sEG.Terminator);
+                        string rawData = sb.ToString();
+                        segments = sEG.toSEG(new SEG_DATA
+                        {
+                            Header = "HKKAZ",
+                            Num = client.SEGNUM,
+                            Version = client.HIKAZS,
+                            RefNum = 0,
+                            RawData = rawData
+                        });
+                        //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
+                    }
+                    else
+                    {
+                        StringBuilder sb = new StringBuilder();
                         sb.Append(activeAccount.AccountIban);
                         sb.Append(DEG.Separator);
                         sb.Append(activeAccount.AccountBic);
@@ -184,30 +212,14 @@ namespace libfintx.FinTS
                         sb.Append(ToDate);
                         sb.Append(sEG.Terminator);
                         string rawData = sb.ToString();
-                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
-                            Version = client.HIKAZS, RefNum = 0, RawData = rawData });
-                        //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
-                    }
-                    else
-                    {
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append(activeAccount.AccountNumber);
-                        sb.Append(DEG.Separator);
-                        sb.Append(activeAccount.SubAccountFeature);
-                        sb.Append(DEG.Separator);
-                        sb.Append(SEG_COUNTRY.Germany);
-                        sb.Append(DEG.Separator);
-                        sb.Append(activeAccount.AccountBankCode);
-                        sb.Append(sEG.Delimiter);
-                        sb.Append(DEG.DeAdd);
-                        sb.Append(sEG.Delimiter);
-                        sb.Append(FromDate);
-                        sb.Append(sEG.Delimiter);
-                        sb.Append(ToDate);
-                        sb.Append(sEG.Terminator);
-                        string rawData = sb.ToString();
-                        segments = sEG.toSEG(new SEG_DATA { Header = "HKKAZ", Num = client.SEGNUM,
-                            Version = client.HIKAZS, RefNum = 0, RawData = rawData });
+                        segments = sEG.toSEG(new SEG_DATA
+                        {
+                            Header = "HKKAZ",
+                            Num = client.SEGNUM,
+                            Version = client.HIKAZS,
+                            RefNum = 0,
+                            RawData = rawData
+                        });
                         //segments = "HKKAZ:" + client.SEGNUM + ":" + client.HIKAZS + "+" + activeAccount.AccountIban + ":" + activeAccount.AccountBic + ":" + activeAccount.AccountNumber + "::280:" + activeAccount.AccountBankCode + "+N+" + FromDate + "+" + ToDate + "'";
                     }
                 }

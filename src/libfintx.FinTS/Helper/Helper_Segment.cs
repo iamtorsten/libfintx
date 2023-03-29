@@ -89,7 +89,8 @@ namespace libfintx.FinTS
                 if (match == null)
                 {
                     // End of code
-                    dataElements.Add(code);
+                    currentDataElement.Append(code);
+                    dataElements.Add(currentDataElement.ToString());
                     break;
                 }
 
