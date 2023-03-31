@@ -7,7 +7,7 @@ namespace libfintx.Tests.Message
 {
     public class FinTSMessageTests
     {
-        [Fact]
+        [Fact(Skip = "You have to set the Arrange variables for this test")]
         public void CreateSync_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
@@ -23,7 +23,7 @@ namespace libfintx.Tests.Message
             Assert.True(false);
         }
 
-        [Fact]
+        [Fact(Skip = "You have to set the Arrange variables for this test")]
         public void Create_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
@@ -47,7 +47,7 @@ namespace libfintx.Tests.Message
             Assert.True(false);
         }
 
-        [Fact]
+        [Fact(Skip = "You have to set the Arrange variables for this test")]
         public async Task Send_StateUnderTest_ExpectedBehavior()
         {
             // Arrange

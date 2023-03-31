@@ -51,7 +51,7 @@ namespace libfintx.Tests
             this.output = output;
         }
 
-        [Fact]
+        [Fact(Skip = "You have to provide the connection details for this test")]
         public async void Test_Balance()
         {
             var connectionDetails = new ConnectionDetails()
@@ -84,7 +84,7 @@ namespace libfintx.Tests
             Console.ReadLine();
         }
 
-        [Fact]
+        [Fact(Skip = "You have to provide the connection details for this test")]
         public async void Test_Accounts()
         {
             var connectionDetails = new ConnectionDetails()
@@ -102,7 +102,7 @@ namespace libfintx.Tests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "You have to provide the connection details for this test")]
         public async void Test_Request_TANMediumName()
         {
             var connectionDetails = new ConnectionDetails()
@@ -134,7 +134,7 @@ namespace libfintx.Tests
             Console.ReadLine();
         }
 
-        [Fact]
+        [Fact(Skip = "matrixcode.txt file is missing")]
         public void Test_PhotoTAN()
         {
             var PhotoCode = File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}\\..\\..\\assets\\matrixcode.txt");
