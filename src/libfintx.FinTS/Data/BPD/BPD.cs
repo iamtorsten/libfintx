@@ -56,7 +56,7 @@ namespace libfintx.FinTS
             HIKAZS = new List<HIKAZS>();
             HITANS = new List<HITANS>();
 
-            List<string> segments = Helper.SplitSegments(bpd);
+            var segments = Helper.SplitSegments(bpd);
             foreach (var rawSegment in segments)
             {
                 try
