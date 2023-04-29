@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Xunit;
 using libfintx.FinTS;
 
@@ -7,7 +6,7 @@ namespace libfintx.Tests.Transactions
 {
     public class INITests
     {
-        [Fact]
+        [Fact(Skip = "You have to set the Arrange variables for this test")]
         public async Task Init_INI_StateUnderTest_ExpectedBehavior()
         {
             // Arrange

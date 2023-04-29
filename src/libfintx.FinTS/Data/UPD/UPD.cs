@@ -57,7 +57,7 @@ namespace libfintx.FinTS
             AccountList = new List<AccountInformation>();
             try
             {
-                List<string> segments = Helper.SplitSegments(message);
+                var segments = Helper.SplitSegments(message);
 
                 foreach (string segment in segments)
                 {

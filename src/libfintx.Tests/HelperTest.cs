@@ -1,15 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
-using System.Text;
 using libfintx.FinTS;
 using libfintx.FinTS.Data;
-using libfintx.FinTS.Data.Segment;
 using Xunit;
 
 namespace libfintx.Tests
 {
+    static class MessageHelper
+    {
+        /// <summary>
+        /// We cannot surely say if the new line is unix styled or windows styled.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static string ReplaceNewLine(this string message)
+        {
+            return message
+                .Replace("\r\n", string.Empty)
+                .Replace("\n", string.Empty);
+        }
+    }
+
     public class HelperTest
     {
         [Fact]
@@ -22,7 +33,7 @@ HNVSD:999:1+@187@
 HIRMG:2:2+9050::Teilweise fehlerhaft.'
 HIRMS:3:2:3+9210::Wert widerspricht Bankvorgaben.'
 HIRMS:4:2:4+9210::Auftrag abgelehnt - Zwei-Schritt-TAN inkonsistent. Eingereichter Auftrag gelösch''
-HNHBS:5:1+2'".Replace(Environment.NewLine, string.Empty);
+HNHBS:5:1+2'".ReplaceNewLine();
 
             var segments = Helper.SplitEncryptedSegments(message);
             Assert.Equal(5, segments.Count);
@@ -71,7 +82,7 @@ HIRMG:3:2+3060::Bitte beachten Sie die enthaltenen Warnungen/Hinweise.'
 HIRMS:4:2:3+3956::Starke Kundenauthentifizierung noch ausstehend.'
 HITAN:5:7:3+S++8578-06-23-13.22.43.709351'
 HNSHA:6:2+210042763957027''
-HNHBS:7:1+3'".Replace(Environment.NewLine, string.Empty);
+HNHBS:7:1+3'".ReplaceNewLine();
 
             var client = new FinTsClient(new ConnectionDetails());
             Helper.Parse_Message(client, message);
@@ -92,7 +103,7 @@ HIRMG:3:2+0010::Nachricht entgegengenommen.'
 HIRMS:4:2:4+0030::Auftrag empfangen - Sicherheitsfreigabe erforderlich'
 HITAN:5:6:4+4++76ma3j/MKH0BAABsRcJNhG?+owAQA+Eine neue TAN steht zur Abholung bereit.  Die TAN wurde reserviert am  16.11.2021 um 13?:54?:59 Uhr. Eine Push-Nachricht wurde versandt.  Bitte geben Sie die TAN ein.'
 HNSHA:6:2+1766933014065220''
-HNHBS:7:1+2'".Replace(Environment.NewLine, string.Empty);
+HNHBS:7:1+2'".ReplaceNewLine();
 
             var client = new FinTsClient(new ConnectionDetails());
             Helper.Parse_Message(client, message);
@@ -105,7 +116,7 @@ HNHBS:7:1+2'".Replace(Environment.NewLine, string.Empty);
         public void Test_Parse_Message_3()
         {
             var message =
-@"HNHBK:1:3+000000001602+300+000006GTTKI00L9SQT0FA5U9RD0U5O+1+000006GTTKI00L9SQT0FA5U9RD0U5O:1'
+@"HNHBK:1:3+000000001602+300+000006HEKDPILMK4SO0P82B4EVMA0D+1+000006HEKDPILMK4SO0P82B4EVMA0D:1'
 HNVSK:998:3+PIN:1+998+1+2::0+1+2:2:13:@8@        :6:1+280:50010517:XXXXXXXXXX:V:0:0+0'
 HNVSD:999:1+@1391@HIRMG:2:2:+3060::Teilweise liegen Warnungen/Hinweise vor.'
 HIRMS:3:2:3+0020::Angemeldet.'
@@ -133,13 +144,13 @@ HISALS:24:5:4+1+1'
 HICDES:25:1:4+1+1+1+4:1:360:00:00::0'
 DIPINS:26:1:4+1+1+HKSPA:N:HKPAE:J:HKCCS:J:HKTAN:N:HKKAZ:N:HKCDN:J:HKCSB:N:HKCSA:J:HKWPD:N:DKPAE:J:HKCDL:J:HKPRO:N:HKCSE:J:HKCSL:J:HKCDB:N:HKSAL:N:HKCDE:J'
 HIPINS:27:1:4+1+1+0+5:10:6:Kontonummer::HKSPA:N:HKPAE:J:HKCCS:J:HKTAN:N:HKKAZ:N:HKCDN:J:HKCSB:N:HKCSA:J:HKWPD:N:DKPAE:J:HKCDL:J:HKPRO:N:HKCSE:J:HKCSL:J:HKCDB:N:HKSAL:N:HKCDE:J'
-HISYN:28:4:5+000006GTTKIKNG0ESG1J399FF7DPGI''
-HNHBS:29:1+1''".Replace(Environment.NewLine, string.Empty);
+HISYN:28:4:5+000006HEKDQ7K24G0Q34JM6HJF878S''
+HNHBS:29:1+1'".ReplaceNewLine();
 
             var client = new FinTsClient(new ConnectionDetails());
             Helper.Parse_Message(client, message);
 
-            Assert.Equal(3, client.HNHBS);
+            Assert.Equal(2, client.HNHBS);
             Assert.Equal("900", client.HITAN);
         }
 
@@ -154,7 +165,7 @@ HIRMG:3:2+0010::Nachricht entgegengenommen.'
 HIRMS:4:2:4+0030::Auftrag empfangen - Sicherheitsfreigabe erforderlich'
 HITAN:5:6:4+4++eBYcsEe0unsBAAAXXkX5hG?+owAQA+Eine neue TAN steht zur Abholung bereit.  Die TAN wurde reserviert am  06.09.2021 um 13?:09?:55 Uhr. Eine Push-Nachricht wurde versandt.  Bitte geben Sie die TAN ein.'
 HNSHA:6:2+1876690780307344''
-HNHBS:7:1+2'".Replace(Environment.NewLine, string.Empty);
+HNHBS:7:1+2'".ReplaceNewLine();
 
             FinTsClient client = new FinTsClient(null);
             Helper.Parse_Segments(client, message);

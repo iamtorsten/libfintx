@@ -8,7 +8,7 @@ namespace libfintx.Tests.Pain
 {
     public class pain00100103Tests
     {
-        [Fact]
+        [Fact(Skip = "You have to set the Arrange variables for this test")]
         public void Create_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
@@ -38,7 +38,7 @@ namespace libfintx.Tests.Pain
             Assert.True(false);
         }
 
-        [Fact]
+        [Fact(Skip = "You have to set the Arrange variables for this test")]
         public void Create_StateUnderTest_ExpectedBehavior1()
         {
             // Arrange

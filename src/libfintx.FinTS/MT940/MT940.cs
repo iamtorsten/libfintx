@@ -361,6 +361,7 @@ namespace libfintx.FinTS.Statement
                         else
                             SWIFTTransaction.Description += value + " ";
                         AssignDescriptionSubField(SWIFTTransaction, value, ref lastDescriptionSubfield);
+                        SWIFTTransaction.Description = SWIFTTransaction.Description.TrimEnd(' ');
                     }
                     else if (key == 30)
                     {

@@ -36,7 +36,7 @@ namespace libfintx.FinTS
     {
         private static string ProcessSegmentBegin(string message, StringBuilder currentSegment)
         {
-            var match = Regex.Match(message, @"^[A-Z]+:\d+:\d+(:\d+)?\+");
+            var match = Regex.Match(message, @"^[A-Z]+:\d+:\d+(:\d+)?[+:]");
             if (!match.Success)
                 throw new ArgumentException($"Invalid segment. Expected segment begin. Message is: {Truncate(message)}");
 
@@ -134,10 +134,8 @@ namespace libfintx.FinTS
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        internal static List<string> SplitSegments(string message)
+        internal static IEnumerable<string> SplitSegments(string message)
         {
-            List<string> segments = new List<string>();
-
             StringBuilder currentSegment = new StringBuilder();
             message = ProcessSegmentBegin(message, currentSegment);
 
@@ -186,7 +184,7 @@ namespace libfintx.FinTS
                     case Delimiter.Segment:
                         {
                             currentSegment.Append(message.Substring(0, match.Index));
-                            segments.Add(currentSegment.ToString());
+                            yield return currentSegment.ToString();
                             currentSegment = new StringBuilder();
 
                             message = message.Substring(match.Index + match.Value.Length);
@@ -195,13 +193,8 @@ namespace libfintx.FinTS
 
                             break;
                         }
-                    default:
-                        break;
                 }
-
             }
-
-            return segments;
         }
 
 
@@ -238,7 +231,7 @@ namespace libfintx.FinTS
 
         internal static List<string> SplitEncryptedSegments(string message)
         {
-            var encodedSegments = SplitSegments(message);
+            var encodedSegments = SplitSegments(message).ToList();
             if (encodedSegments.Any(s => s.StartsWith("HNVSD")))
             {
                 var decodedSegments = DecryptSegments(encodedSegments);
