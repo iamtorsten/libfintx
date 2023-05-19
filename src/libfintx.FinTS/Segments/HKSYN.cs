@@ -55,7 +55,7 @@ namespace libfintx.FinTS
                 sb.Append(DEG.Separator);
                 sb.Append(connectionDetails.BlzPrimary);
                 sb.Append(sEG.Delimiter);
-                sb.Append(connectionDetails.UserId);
+                sb.Append(connectionDetails.UserIdEscaped);
                 sb.Append(sEG.Delimiter);
                 sb.Append("0");
                 sb.Append(sEG.Delimiter);
@@ -109,7 +109,7 @@ namespace libfintx.FinTS
                 sb.Append(DEG.Separator);
                 sb.Append(connectionDetails.BlzPrimary);
                 sb.Append(sEG.Delimiter);
-                sb.Append(connectionDetails.UserId);
+                sb.Append(connectionDetails.UserIdEscaped);
                 sb.Append(sEG.Delimiter);
                 sb.Append("0");
                 sb.Append(sEG.Delimiter);

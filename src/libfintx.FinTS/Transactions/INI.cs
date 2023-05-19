@@ -69,7 +69,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
-                        sb.Append(connectionDetails.UserId);
+                        sb.Append(connectionDetails.UserIdEscaped);
                         sb.Append(sEG.Delimiter);
                         sb.Append(client.SystemId);
                         sb.Append(sEG.Delimiter);
@@ -114,7 +114,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
-                        sb.Append(connectionDetails.UserId);
+                        sb.Append(connectionDetails.UserIdEscaped);
                         sb.Append(sEG.Delimiter);
                         sb.Append(client.SystemId);
                         sb.Append(sEG.Delimiter);
@@ -254,7 +254,7 @@ namespace libfintx.FinTS
 
                     client.SEGNUM = Convert.ToInt16(SEG_NUM.Seg4);
 
-                    string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserId, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
+                    string message = FinTsMessageAnonymous.Create(connectionDetails.HbciVersion, "1", "0", connectionDetails.Blz, connectionDetails.UserIdEscaped, connectionDetails.Pin, "0", segments, null, client.SEGNUM);
                     string response = await FinTSMessage.Send(client, message);
 
                     var messages = Helper.Parse_Segments(client, response);
@@ -284,7 +284,7 @@ namespace libfintx.FinTS
                         sb.Append(DEG.Separator);
                         sb.Append(connectionDetails.BlzPrimary);
                         sb.Append(sEG.Delimiter);
-                        sb.Append(connectionDetails.UserId);
+                        sb.Append(connectionDetails.UserIdEscaped);
                         sb.Append(sEG.Delimiter);
                         sb.Append(client.SystemId);
                         sb.Append(sEG.Delimiter);

@@ -44,6 +44,16 @@ namespace libfintx.FinTS
         private const string PatternResultMessage = @"(\d{4}):.*?:(.+)";
 
         /// <summary>
+        /// Escapes all special Characters (':', '+', ''') with a question mark '?'.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string EscapeHbciString(string str)
+        {
+            return str?.Replace(":", "?:").Replace("'", "?'").Replace("+", "?+");
+        }
+
+        /// <summary>
         /// Combine byte arrays
         /// </summary>
         /// <param name="first"></param>
@@ -696,7 +706,8 @@ namespace libfintx.FinTS
 
         private static string GetUPDFile(string dir, int BLZ, string UserID)
         {
-            return Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd");
+            //return Path.Combine(dir, "280_" + BLZ + "_" + UserID + ".upd");
+            return Path.Combine(dir, "280_" + BLZ + "_" + MakeFilenameValid(UserID) + ".upd");
         }
 
         public static void SaveUPD(int BLZ, string UserID, string upd)
@@ -704,6 +715,7 @@ namespace libfintx.FinTS
             string dir = GetUPDDir();
             Directory.CreateDirectory(dir);
             var file = GetUPDFile(dir, BLZ, UserID);
+            Log.Write($"Saving UPD to '{file}' ...");
             if (!File.Exists(file))
             {
                 using (File.Create(file)) { };
@@ -725,6 +737,7 @@ namespace libfintx.FinTS
             string dir = GetBPDDir();
             Directory.CreateDirectory(dir);
             var file = GetBPDFile(dir, BLZ);
+            Log.Write($"Saving BPD to '{file}' ...");
             if (!File.Exists(file))
             {
                 using (File.Create(file)) { };

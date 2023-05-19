@@ -43,6 +43,11 @@ namespace libfintx.FinTS.Data
         public string UserId { get; set; }
 
         /// <summary>
+        /// UserId with HBCI special characters escaped.
+        /// </summary>
+        public string UserIdEscaped => Helper.EscapeHbciString(UserId);
+
+        /// <summary>
         /// Logon-Pin for the bank account
         /// </summary>
         public string Pin { get; set; }
