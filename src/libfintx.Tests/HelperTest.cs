@@ -176,7 +176,7 @@ HNHBS:7:1+2'".ReplaceNewLine();
         [Fact]
         public void Test_Parse_Segments_HITAN_2()
         {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Resources\BankMessage_3.txt");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources/BankMessage_3.txt");
             var message = File.ReadAllText(path);
             var conn = new ConnectionDetails();
             conn.Blz = 1234567;
@@ -189,7 +189,7 @@ HNHBS:7:1+2'".ReplaceNewLine();
         [Fact]
         public void Test_Parse_Segments_HISALS()
         {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Resources\BankMessage_1.txt");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources/BankMessage_1.txt");
             var message = File.ReadAllText(path);
             var conn = new ConnectionDetails
             {
@@ -205,7 +205,7 @@ HNHBS:7:1+2'".ReplaceNewLine();
         [Fact]
         public void Test_Parse_Segments_HNHBK()
         {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Resources\BankMessage_2.txt");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources/BankMessage_2.txt");
             var message = File.ReadAllText(path);
             var conn = new ConnectionDetails()
             {
