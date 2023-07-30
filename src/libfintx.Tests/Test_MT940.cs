@@ -338,14 +338,5 @@ FEE GmbH?34997
             Assert.Equal("GEILER KAFFEE GmbH", tx.PartnerName);
             Assert.Equal("997", tx.TextKeyAddition);
         }
-
-        [Fact]
-        public void TestLeo()
-        {
-            using var sr = new StreamReader(@"C:\git\leo-schick\SharpMt940Lib.Core\Raptorious.SharpMt940Lib.Tests\Samples\MaerzUmsaetze_10944511_15042023.mta");
-            var f = sr.ReadToEnd();
-
-            var statements = MT940.Serialize(f);
-        }
     }
 }
