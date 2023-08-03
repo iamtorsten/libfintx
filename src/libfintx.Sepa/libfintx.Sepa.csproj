@@ -9,9 +9,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Helper\" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="Pain\pain_001_001_03\pain.001.001.03.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Helper\" />
+  </ItemGroup>
 </Project>

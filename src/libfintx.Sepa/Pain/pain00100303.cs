@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Security;
 using libfintx.Globals;
+using libfintx.Sepa.Helper;
 
 namespace libfintx.Sepa
 {
@@ -53,9 +54,9 @@ namespace libfintx.Sepa
 
             var Amount_ = Amount.ToString().Replace(",", ".");
 
-            var Accountholder_ = SecurityElement.Escape(Accountholder);
-            var Receiver_ = SecurityElement.Escape(Receiver);
-            var Usage_ = SecurityElement.Escape(Usage);
+            var Accountholder_ = SepaHelper.Escape(Accountholder);
+            var Receiver_ = SepaHelper.Escape(Receiver);
+            var Usage_ = SepaHelper.Escape(Usage);
 
             string Message = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
                 "<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.003.03\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:pain.001.003.03 pain.001.003.03.xsd\">" +

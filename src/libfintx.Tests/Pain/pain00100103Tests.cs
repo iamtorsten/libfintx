@@ -3,11 +3,26 @@ using Xunit;
 using libfintx.FinTS;
 using System.Collections.Generic;
 using libfintx.Sepa;
+using System.Reflection;
+using System.IO;
+using System.Text.RegularExpressions;
+using libfintx.Sepa.Helper;
+
 
 namespace libfintx.Tests.Pain
 {
     public class pain00100103Tests
     {
+        [Fact]
+        public void Test_Escape()
+        {
+            string str = SepaHelper.Escape(@"Hübner;;;\\\");
+            Assert.Equal("Huebner", str);
+
+            str = SepaHelper.Escape(@"Der Verwendungszweck der Überweisung ####ist die Mietzahlung.");
+            Assert.Equal("Der Verwendungszweck der Ueberweisung ist die Mietzahlung.", str);
+        }
+
         [Fact(Skip = "You have to set the Arrange variables for this test")]
         public void Create_StateUnderTest_ExpectedBehavior()
         {
