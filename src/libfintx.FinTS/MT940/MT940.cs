@@ -1,10 +1,10 @@
-﻿/*	
- * 	
+﻿/*
+ *
  *  This file is part of libfintx.
- *  
+ *
  *  Copyright (C) 2016 - 2022 Torsten Klinger
  * 	E-Mail: torsten.klinger@googlemail.com
- *  
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
@@ -18,7 +18,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * 	
+ *
  */
 
 /*
@@ -665,8 +665,31 @@ namespace libfintx.FinTS.Statement
             return line;
         }
 
-        public static List<SwiftStatement> Serialize(string STA, string Account, bool writeToFile = false, bool pending = false)
+        /// <summary>
+        /// Serializes a MT940 statement into a <see cref="SWIFTStatement"/> class object.
+        /// </summary>
+        /// <param name="STA">
+        /// The raw text of the MT940 statement.
+        /// </param>
+        /// <param name="account">
+        /// The account name. Only required when <paramref name="writeToFile"/> is <c>true</c>.
+        /// </param>
+        /// <param name="writeToFile">
+        /// If the MT940 statements shall be written to the disk.
+        /// </param>
+        /// <param name="pending"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">
+        /// Is thrown when <paramref name="writeToFile"/> is <c>true</c> and <paramref name="account"/> is <c>null</c>.
+        /// </exception>
+        public static List<SwiftStatement> Serialize(string STA, string account = null, bool writeToFile = false, bool pending = false)
         {
+            if (writeToFile)
+            {
+                if (account == null)
+                    throw new ArgumentNullException(nameof(account));
+            }
+
             int LineCounter = 0;
 
             string swiftTag = "";
@@ -685,7 +708,7 @@ namespace libfintx.FinTS.Statement
 
                 dir = Path.Combine(dir, "STA");
 
-                string filename = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".STA"));
+                string filename = Path.Combine(dir, Helper.MakeFilenameValid(account + "_" + DateTime.Now + ".STA"));
 
                 if (!Directory.Exists(dir))
                 {
@@ -852,7 +875,7 @@ namespace libfintx.FinTS.Statement
                         dir = FinTsGlobals.ProgramBaseDir;
                         dir = Path.Combine(dir, "MT940");
 
-                        string filename_ = Path.Combine(dir, Helper.MakeFilenameValid(Account + "_" + DateTime.Now + ".MT940"));
+                        string filename_ = Path.Combine(dir, Helper.MakeFilenameValid(account + "_" + DateTime.Now + ".MT940"));
 
                         if (!Directory.Exists(dir))
                         {

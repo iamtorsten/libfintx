@@ -144,7 +144,7 @@ namespace libfintx.Tests
             mCode.CodeImage.SaveAsPng(File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "matrixcode.png")));
         }
 
-        [Fact]
+        [Fact(Skip = "You have to provide the connection details for this test")]
         public async void Test_PushTAN()
         {
             string receiver = string.Empty;

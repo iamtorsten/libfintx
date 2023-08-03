@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using libfintx.FinTS.Statement;
 using Xunit;
 
@@ -318,8 +319,8 @@ FEE GmbH?34997
 
             var tx = stmt.SwiftTransactions[0];
 
-            Assert.Equal(new DateTime(2019, 09, 30), tx.ValueDate);
-            Assert.Equal(new DateTime(2019, 09, 30), tx.InputDate);
+            Assert.Equal(new DateTime(2019, 10, 1), tx.ValueDate);
+            Assert.Equal(new DateTime(2019, 10, 1), tx.InputDate);
             Assert.Equal(-3393.40m, tx.Amount);
             Assert.Equal("N029", tx.TransactionTypeId);
             Assert.Equal("NONREF", tx.CustomerReference);
@@ -328,10 +329,10 @@ FEE GmbH?34997
             Assert.Equal("116", tx.TypeCode);
             Assert.Equal("EINZELUEBERWEISUNG", tx.Text);
             Assert.Equal("9301", tx.Primanota);
-            Assert.Equal("EREF+4927411196-0000001KREF+4927411196SVWZ+RNr. 20190930001 RDat. 30.09.2019 KNr.C- 201701001", tx.Description);
+            Assert.Equal("EREF+4927411196-0000001KREF+4927411196SVWZ+RNr. 20190930001 RDat. 30.09.2019 KNr. C-201701001", tx.Description);
             Assert.Equal("4927411196-0000001", tx.EREF);
             Assert.Equal("4927411196", tx.KREF);
-            Assert.Equal("RNr. 20190930001 RDat. 30.09.2019 KNr.C - 201701001", tx.SVWZ);
+            Assert.Equal("RNr. 20190930001 RDat. 30.09.2019 KNr. C-201701001", tx.SVWZ);
             Assert.Equal("BYLADEM1FSI", tx.BankCode);
             Assert.Equal("DE49700510030025617937", tx.AccountCode);
             Assert.Equal("GEILER KAFFEE GmbH", tx.PartnerName);
