@@ -70,6 +70,9 @@ namespace libfintx.EBICS.Handler
                     case CddParams cdd:
                         cmd = new CddCommand {Params = cdd, Config = Config, Namespaces = Namespaces};
                         break;
+                    case C53Params c53:
+                        cmd = new C53Command { Params = c53, Config = Config, Namespaces = Namespaces };
+                        break;
                 }
 
                 s_logger.LogDebug("Command created: {cmd}", cmd?.ToString());
