@@ -25,11 +25,23 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libfintx.FinTSConfig\libfintx.FinTSConfig.csproj" />
-    <ProjectReference Include="..\libfintx.FinTS\libfintx.FinTS.csproj" />
-    <ProjectReference Include="..\libfintx.Globals\libfintx.Globals.csproj" />
-    <ProjectReference Include="..\libfintx.Logger\libfintx.Logger.csproj" />
-    <ProjectReference Include="..\libfintx.Sepa\libfintx.Sepa.csproj" />
-    <ProjectReference Include="..\libfintx.Settings\libfintx.Settings.csproj" />
+    <ProjectReference Include="..\libfintx.FinTSConfig\libfintx.FinTSConfig.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.FinTS\libfintx.FinTS.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.Globals\libfintx.Globals.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.Logger\libfintx.Logger.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.Sepa\libfintx.Sepa.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\libfintx.Settings\libfintx.Settings.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
   </ItemGroup>
 </Project>
