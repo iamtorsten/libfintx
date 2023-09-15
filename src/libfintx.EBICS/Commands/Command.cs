@@ -312,12 +312,17 @@ namespace libfintx.EBICS.Commands
 
         protected byte[] SignData(byte[] data, SignKeyPair kp)
         {
-            if (kp.Version != SignVersion.A005)
+            if (kp.Version == SignVersion.A005)
             {
-                throw new CryptographicException($"Only signature version {SignVersion.A005} is supported right now");
+                return kp.PrivateKey.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             }
+            else if (kp.Version == SignVersion.A006)
+            {
+                return kp.PrivateKey.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pss);
+            }
+            else
+                throw new CryptographicException($"Only signature version {SignVersion.A005} is supported right now");
 
-            return kp.PrivateKey.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         }
 
         public override string ToString()
